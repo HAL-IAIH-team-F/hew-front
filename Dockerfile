@@ -1,5 +1,5 @@
-LABEL authors="kigawa"
 FROM node:21 AS builder
+LABEL authors="kigawa"
 WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
