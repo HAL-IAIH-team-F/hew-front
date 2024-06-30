@@ -9,7 +9,7 @@ jobs:
   cd:
     runs-on: ubuntu-latest
     env:
-      preDockerBuildCmd: false
+      preDockerBuildCmd: ""
       repository: HAL-IAIH-team-F/k8s-hew
       manifestFile: ./hew-dev/front.yml
       dockerFile: Dockerfile
