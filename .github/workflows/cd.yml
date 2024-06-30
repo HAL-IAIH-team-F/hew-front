@@ -14,6 +14,8 @@ jobs:
       manifestFile: ./hew-dev/front.yml
       dockerFile: Dockerfile
       harborUser: robot$hal-iaih-hew
+      dockerArg: apiUrl=https://icha-api.kigawa.net
+      name: hew-front
 
     steps:
       # checkout
@@ -39,6 +41,7 @@ jobs:
           tags:
             harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.run_number }}
           file: ${{ env.dockerFile }}
+          build-args: ${{ env.dockerArg }}
 
       # argo
       - name: checkout manifest repository
