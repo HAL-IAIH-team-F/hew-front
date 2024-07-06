@@ -13,7 +13,7 @@ jobs:
       repository: HAL-IAIH-team-F/k8s-hew
       manifestFile: ./hew-dev/front.yml
       dockerFile: Dockerfile
-      harborUser: robot$hal-iaih-hew
+      harborUser: robot$test
       dockerArg: apiUrl=https://icha-api.kigawa.net
       name: hew-front
 
