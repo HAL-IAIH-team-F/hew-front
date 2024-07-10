@@ -47,7 +47,8 @@ jobs:
       - name: Build and Push
         run: |
           docker buildx build -f ${{ env.dockerFile }} --build-arg ${{ env.dockerArg }} \
-          --push -t harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.run_number }}
+          --push -t harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.run_number }} \
+          https://github.com/HAL-IAIH-team-F/hew-front.git#3e662a75a8f341f144de24bd8b7da93d3776ba24
 
       # argo
       - name: checkout manifest repository
