@@ -34,16 +34,20 @@ jobs:
           username: ${{ env.harborUser }}
           password: ${{ secrets.HARBOR_PASS }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags:
-            harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }}
-          file: ${{ env.dockerFile }}
-          build-args: ${{ env.dockerArg }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+#      - name: Build and push
+#        uses: docker/build-push-action@v6
+#        with:
+#          push: true
+#          tags:
+#            harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.run_number }}
+#          file: ${{ env.dockerFile }}
+#          build-args: ${{ env.dockerArg }}
+#          cache-from: type=gha
+#          cache-to: type=gha,mode=max
+      - name: Build and Push
+        run: |
+          docker buildx build -f ${{ env.dockerFile }} --build-arg ${{ env.dockerArg }} \
+          --push harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }}
 
       # argo
       - name: checkout manifest repository
