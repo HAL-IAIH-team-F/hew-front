@@ -47,7 +47,7 @@ jobs:
       - name: Build and Push
         run: |
           docker buildx build -f ${{ env.dockerFile }} --build-arg ${{ env.dockerArg }} \
-          --push harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.run_number }}
+          --push -t harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.run_number }}
 
       # argo
       - name: checkout manifest repository
