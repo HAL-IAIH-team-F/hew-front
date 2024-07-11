@@ -39,7 +39,7 @@ jobs:
         with:
           push: true
           tags:
-            harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.run_number }}
+            harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }}
           file: ${{ env.dockerFile }}
           build-args: ${{ env.dockerArg }}
           cache-from: type=gha
@@ -55,7 +55,7 @@ jobs:
 
       - name: Update YAML File
         run: |
-          yq -i '.spec.template.spec.containers[0].image = "harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.run_number }}"' \
+          yq -i '.spec.template.spec.containers[0].image = "harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }}"' \
           ${{ env.manifestFile }}
 
       - name: push
