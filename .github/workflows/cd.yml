@@ -14,7 +14,7 @@ jobs:
       manifestFile: ./hew-dev/front.yml
       dockerFile: Dockerfile
       harborUser: robot$test
-      dockerArg: apiUrl=https://icha-api.kigawa.net
+      dockerArg: --build-arg apiUrl=https://icha-api.kigawa.net
       name: hew-front
 
     steps:
@@ -34,16 +34,13 @@ jobs:
           username: ${{ env.harborUser }}
           password: ${{ secrets.HARBOR_PASS }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags:
-            harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }}
-          file: ${{ env.dockerFile }}
-          build-args: ${{ env.dockerArg }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: BuildAndPushImageOnHarbor
+        run: |
+          docker build -t harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }} \
+           -f ${{ env.dockerFile }} \
+          ${{ env.dockerArg }} \
+          ./ 
+          docker push harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }}
 
       # argo
       - name: checkout manifest repository

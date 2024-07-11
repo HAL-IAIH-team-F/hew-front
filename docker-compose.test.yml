@@ -10,7 +10,7 @@ services:
       - /src/
       - /app
       - --exclude
-      - .venv
+      - node_modules
     working_dir: /src
     volumes:
       - type: bind
@@ -20,6 +20,23 @@ services:
         source: app-data
         target: /app
   #########################################################
+  front-init:
+    image: node
+    command:
+      - npm
+      - ci
+    depends_on:
+      init-rsync:
+        condition: service_completed_successfully
+    working_dir: /app
+    volumes:
+      - type: volume
+        source: app-data
+        target: /app
+      - type: volume
+        source: root
+        target: /root
+  #########################################################
   front-test:
     image: node
     command:
@@ -28,6 +45,8 @@ services:
       - build
     depends_on:
       init-rsync:
+        condition: service_completed_successfully
+      front-init:
         condition: service_completed_successfully
     working_dir: /app
     volumes:
