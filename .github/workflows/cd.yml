@@ -1,10 +1,7 @@
-name: cd
-
 on:
   push:
     branches:
       - "develop"
-
 jobs:
   cd:
     runs-on: ubuntu-latest
@@ -13,7 +10,7 @@ jobs:
       repository: HAL-IAIH-team-F/k8s-hew
       manifestFile: ./hew-dev/front.yml
       dockerFile: Dockerfile
-      harborUser: robot$test
+      harborUser: robot$hew
       dockerArg: --build-arg apiUrl=https://icha-api.kigawa.net
       name: hew-front
 
