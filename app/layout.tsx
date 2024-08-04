@@ -20,8 +20,8 @@ export default function RootLayout(
   return (
     <html lang="en">
       <body className={inter.className}>
-        <LoginButton/>
-        <LogoutButton/>
+        <LoginButton className={"p-1"}/>
+        <LogoutButton className={"p-1"}/>
         {children}
       </body>
     </html>

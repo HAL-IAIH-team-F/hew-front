@@ -1,7 +1,8 @@
 "use client"
 import {HTMLAttributes, useState} from "react";
 import {ErrorMessage} from "@/app/_component/ErrorMessage";
-import {signOut} from "next-auth/react";
+import {signOut} from "@/app/_auth/authAction";
+
 
 export default function LogoutButton(
   {

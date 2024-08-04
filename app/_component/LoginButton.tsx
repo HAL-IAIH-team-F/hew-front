@@ -1,7 +1,8 @@
 "use client"
 import {HTMLAttributes, useState} from "react";
-import {signIn} from "next-auth/react";
 import {ErrorMessage} from "@/app/_component/ErrorMessage";
+import {signIn} from "@/app/_auth/authAction";
+
 
 export default function LoginButton(
   {
