@@ -16,12 +16,14 @@ ARG keycloakSecret
 ARG keycloakBaseUrl
 ARG authSecret
 ARG keycloakRealms
+ARG siteUrl
 
 RUN echo KEYCLOAK_ID="$keycloakId" >> ./.env \
   && echo KEYCLOAK_SECRET="$keycloakSecret" >> ./.env \
   && echo KEYCLOAK_BASEURL="$keycloakBaseUrl" >> ./.env \
   && echo AUTH_SECRET="$authSecret" >> ./.env \
-  && echo KEYCLOAK_REALMS="$keycloakRealms" >> ./.env
+  && echo KEYCLOAK_REALMS="$keycloakRealms" >> ./.env \
+  && echo NEXTAUTH_URL="$siteUrl" >> ./.env
 RUN npm run build
 
 

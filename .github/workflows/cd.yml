@@ -18,6 +18,7 @@ jobs:
         --build-arg keycloakBaseUrl="https://user.kigawa.net"
         --build-arg authSecret=${{ secrets.AUTH_SECRET }}
         --build-arg keycloakRealms="develop"
+        --build-arg siteUrl="https://hew-dev.kigawa.net"
 
     steps:
       # checkout
