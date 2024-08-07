@@ -19,6 +19,7 @@ export const nextAuth = NextAuth({
       issuer: keycloakConfig.issuer
     })
   ],
+  trustHost: true,
   callbacks: {
     async jwt({token, account}) {
       if (account?.refresh_token) {
