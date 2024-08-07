@@ -12,15 +12,16 @@ export async function signIn<
 export async function signOutAtServer(url: URL) {
   "use server"
   const session = await auth()
+  if (session == undefined)return
   const formData = new FormData()
   formData.append("client_id", keycloakConfig.clientId)
   formData.append("client_secret", keycloakConfig.clientSecret)
-  formData.append("refresh_token", session?.refresh_token || "")
+  formData.append("refresh_token", session.refresh_token || "")
   await nextAuth.signOut({redirect: false})
 
   const searchParams = new URLSearchParams()
   searchParams.append("post_logout_redirect_uri", url.toString())
-  searchParams.append("id_token_hint", session?.id_token || "")
+  searchParams.append("id_token_hint", session.id_token || "")
   redirect(new URL(
     `/realms/${keycloakConfig.realms}/protocol/openid-connect/logout?${searchParams.toString()}`,
     keycloakConfig.baseUrl
