@@ -13,6 +13,11 @@ jobs:
       harborUser: robot$hew
       dockerArg: --build-arg apiUrl=https://icha-api.kigawa.net
       name: hew-front
+      KEYCLOAK_ID: ${{ secrets.KEYCLOAK_ID }}
+      KEYCLOAK_SECRET: ${{ secrets.KEYCLOAK_SECRET }}
+      KEYCLOAK_BASEURL: "https://user.kigawa.net"
+      AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+      KEYCLOAK_REALMS: "develop"
 
     steps:
       # checkout
