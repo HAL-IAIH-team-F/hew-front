@@ -23,6 +23,7 @@ export const nextAuth = NextAuth({
     async jwt({token, account}) {
       if (account?.refresh_token) {
         token.refresh_token = account.refresh_token
+        token.id_token = account.id_token
       }
       return token
     },
@@ -31,6 +32,7 @@ export const nextAuth = NextAuth({
       if (token.sub) {
         session.user.id = token.sub;
       }
+      session.id_token = token.id_token
       session.refresh_token = token.refresh_token
       return session;
     },
@@ -43,10 +45,12 @@ export const {
 declare module "next-auth" {
   interface Session {
     refresh_token?: string
+    id_token?: string
   }
 }
 declare module "next-auth/jwt" {
   interface JWT {
     refresh_token?: string
+    id_token?: string
   }
 }
