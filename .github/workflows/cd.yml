@@ -12,7 +12,7 @@ jobs:
       dockerFile: Dockerfile
       harborUser: robot$hew
       name: hew-front
-      dockerArg: |-
+      dockerArg: 
         --build-arg keycloakId=${{ secrets.KEYCLOAK_ID }}
         --build-arg keycloakSecret=${{ secrets.KEYCLOAK_SECRET }}
         --build-arg keycloakBaseUrl="https://user.kigawa.net"
