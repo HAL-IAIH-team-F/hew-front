@@ -11,13 +11,13 @@ jobs:
       manifestFile: ./hew-dev/front.yml
       dockerFile: Dockerfile
       harborUser: robot$hew
-      dockerArg: --build-arg apiUrl=https://icha-api.kigawa.net
       name: hew-front
-      KEYCLOAK_ID: ${{ secrets.KEYCLOAK_ID }}
-      KEYCLOAK_SECRET: ${{ secrets.KEYCLOAK_SECRET }}
-      KEYCLOAK_BASEURL: "https://user.kigawa.net"
-      AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-      KEYCLOAK_REALMS: "develop"
+      dockerArg: |-
+        --build-arg keycloakId=${{ secrets.KEYCLOAK_ID }}
+        --build-arg keycloakSecret=${{ secrets.KEYCLOAK_SECRET }}
+        --build-arg keycloakBaseUrl="https://user.kigawa.net"
+        --build-arg authSecret=${{ secrets.AUTH_SECRET }}
+        --build-arg keycloakRealms="develop"
 
     steps:
       # checkout
