@@ -1,10 +1,7 @@
-name: cd
-
 on:
   push:
     branches:
       - "develop"
-
 jobs:
   cd:
     runs-on: ubuntu-latest
@@ -13,9 +10,15 @@ jobs:
       repository: HAL-IAIH-team-F/k8s-hew
       manifestFile: ./hew-dev/front.yml
       dockerFile: Dockerfile
-      harborUser: robot$test
-      dockerArg: --build-arg apiUrl=https://icha-api.kigawa.net
+      harborUser: robot$hew
       name: hew-front
+      dockerArg:
+        --build-arg keycloakId=${{ secrets.KEYCLOAK_ID }}
+        --build-arg keycloakSecret=${{ secrets.KEYCLOAK_SECRET }}
+        --build-arg keycloakBaseUrl="https://user.kigawa.net"
+        --build-arg authSecret=${{ secrets.AUTH_SECRET }}
+        --build-arg keycloakRealms="develop"
+        --build-arg siteUrl="https://hew-dev.kigawa.net"
 
     steps:
       # checkout

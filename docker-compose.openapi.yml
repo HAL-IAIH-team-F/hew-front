@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  #########################################################
+  openapi-generator:
+    image: node:22-bookworm
+    volumes:
+      - ./app:/app
+    command:
+      - bash
+      - -c
+      - |
+        mkdir -p /app/_api/
+        npx openapi-zod-client https://hew-dev-api.kigawa.net/openapi.json -o /app/_api/client.ts
+        chmod 777 -R /app/_api/
+volumes:
+  app-data-openapi:
+  db-data-openapi:
