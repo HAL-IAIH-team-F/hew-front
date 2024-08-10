@@ -1,8 +1,7 @@
 import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
-import LoginButton from "@/app/_component/LoginButton";
-import LogoutButton from "@/app/_component/LogoutButton";
+import Nav from "@/app/Nav";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -19,9 +18,8 @@ export default function RootLayout(
   }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <LoginButton className={"p-1"}/>
-        <LogoutButton className={"p-1"}/>
+      <body className={inter.className + " bg-white"}>
+        <Nav/>
         {children}
       </body>
     </html>
