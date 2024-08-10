@@ -6,37 +6,42 @@ let id = 0;
 export abstract class Block {
   readonly abstract height: number;
   readonly abstract width: number;
+  readonly abstract padTop: number;
+  readonly abstract padDown: number;
+  readonly abstract padLeft: number;
+  readonly abstract padRight: number;
   readonly id: number;
 
-  abstract node(offsetX: number, offsetY: number): ReactNode;
+  abstract node(top: number, left: number): ReactNode;
 
-  constructor(
-    readonly top: number,
-    readonly left: number,
-  ) {
+  constructor() {
     id++;
     this.id = id;
   }
 
-  static readonly blocks: ((top: number, left: number) => Block)[] = [
-    (top: number, left: number) => new Sample(top, left),
+  static readonly blocks: (() => Block)[] = [
+    () => new Sample(),
   ] as const;
 
-  static randomBlock(top: number, left: number): Block {
-    return Random.randomItem(this.blocks)(top, left);
+  static randomBlock(): Block {
+    return Random.randomItem(this.blocks)();
   }
 }
 
 class Sample extends Block {
-  height = 100;
-  width = 100;
+  height = 500;
+  width = 500;
+  padTop = 0;
+  padDown = 0;
+  padLeft = 0;
+  padRight = 0;
 
-  node(offsetX: number, offsetY: number): ReactNode {
+  node(top: number, left: number): ReactNode {
     return <div
-      key={this.id} className={"absolute h-[100px] w-[100px] bg-blue"}
+      key={this.id} className={"absolute h-[500px] w-[500px] bg-white shadow box-border border-2 border-black"}
       style={{
-        left: offsetX + this.left,
-        top: offsetY + this.top,
+        left,
+        top,
       }}
     ></div>;
   }

@@ -1,30 +1,12 @@
 "use client";
-import {useEffect} from "react";
-import {useSheet} from "@/app/timeline/useSheet";
+import {useSheet} from "@/app/timeline/sheet/useSheet";
+import {useBlock} from "@/app/timeline/block/useBlock";
 
 export default function Page(
   {}: {},
 ) {
   const sheet = useSheet();
-  useEffect(() => {
-    const durationFunc = [
-      () => {
-
-      },
-      () => {
-
-      },
-      () => {
-
-      },
-      () => {
-
-      },
-    ];
-    sheet.blocks.forEach(value => {
-    });
-  }, [sheet.blocks]);
-
+  useBlock(sheet);
   return <div
     ref={sheet.ref}
     className={"w-[100vw] h-[100vh] overflow-scroll"}
