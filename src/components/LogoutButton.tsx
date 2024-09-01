@@ -1,7 +1,7 @@
 "use client"
 import {HTMLAttributes, useState} from "react";
-import {ErrorMessage} from "@/app/_component/ErrorMessage";
-import {signOut} from "@/app/_auth/authClient";
+import {ErrorMessage} from "../util/err/ErrorMessage";
+import {signOut} from "@/_auth/authClient";
 
 
 export default function LogoutButton(
