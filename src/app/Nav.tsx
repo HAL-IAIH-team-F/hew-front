@@ -1,5 +1,5 @@
-import LoginButton from "@/app/_component/LoginButton";
-import LogoutButton from "@/app/_component/LogoutButton";
+import LoginButton from "~/LoginButton";
+import LogoutButton from "~/LogoutButton";
 
 export default function Nav(
   {

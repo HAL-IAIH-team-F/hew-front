@@ -1,5 +1,5 @@
 import * as React from "react";
-import {createContext, ReactNode} from "react";
+import {createContext, DetailedHTMLProps, FormHTMLAttributes, ReactNode} from "react";
 import {ErrorMessage} from "../err/ErrorMessage";
 
 
@@ -25,13 +25,13 @@ export function StyledForm(
       value={formError}
     >
       <ErrorMessage error={formError && formError["form"]}/>
-      <Form method={"POST"} {...props}/>
+      <form method={"POST"} {...props}/>
       <ErrorMessage error={formError && formError["form"]}/>
     </FormState.Context.Provider>
   )
 }
 
-export interface FormProps {
+export interface FormProps extends DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement> {
   children?: ReactNode
   formError: FormError | undefined
 }

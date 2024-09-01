@@ -1,6 +1,6 @@
 "use client"
 
-import {signOutAtServer} from "@/app/_auth/authAction";
+import {signOutAtServer} from "~/_auth/authAction";
 
 export async function signOut(path: string = "") {
   "use client"

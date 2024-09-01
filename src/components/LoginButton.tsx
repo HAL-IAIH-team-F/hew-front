@@ -1,7 +1,7 @@
 "use client"
 import {HTMLAttributes, useState} from "react";
 import {ErrorMessage} from "../util/err/ErrorMessage";
-import {signIn} from "@/_auth/authAction";
+import {signIn} from "~/_auth/authAction";
 
 
 export default function LoginButton(
