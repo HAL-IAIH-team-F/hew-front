@@ -1,0 +1,62 @@
+services:
+  #########################################################
+  init-rsync:
+    image: secoresearch/rsync
+    user: root:root
+    command:
+      - rsync
+      - --delete
+      - -av
+      - /src/
+      - /app
+      - --exclude
+      - node_modules
+    working_dir: /src
+    volumes:
+      - type: bind
+        source: .
+        target: /src
+      - type: volume
+        source: app-data
+        target: /app
+  #########################################################
+  front-init:
+    image: node
+    command:
+      - npm
+      - ci
+    depends_on:
+      init-rsync:
+        condition: service_completed_successfully
+    working_dir: /app
+    volumes:
+      - type: volume
+        source: app-data
+        target: /app
+      - type: volume
+        source: root
+        target: /root
+  #########################################################
+  front-test:
+    image: node
+    command:
+      - npm
+      - run
+      - build
+    depends_on:
+      init-rsync:
+        condition: service_completed_successfully
+      front-init:
+        condition: service_completed_successfully
+    working_dir: /app
+    volumes:
+      - type: volume
+        source: app-data
+        target: /app
+      - type: volume
+        source: root
+        target: /root
+  #########################################################
+volumes:
+  app-data:
+  root:
