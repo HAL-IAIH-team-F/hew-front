@@ -1,6 +1,5 @@
 import {StyledForm} from "../../../util/form/StyledForm";
 import {StyledInput} from "../../../util/form/StyledInput";
-import ItemBackground from "~/ItemBackground";
 
 export default function UserRegisterForm(
   {
@@ -11,9 +10,7 @@ export default function UserRegisterForm(
 
   return (
     <StyledForm>
-      <ItemBackground>
-        <StyledInput name={"icon"} type={"file"}/>
-      </ItemBackground>
+      <StyledInput name={"icon"} type={"file"}/>
       <StyledInput name={"display_name"} type={"text"}/>
     </StyledForm>
   )
