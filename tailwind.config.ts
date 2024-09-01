@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+import type {Config} from "tailwindcss";
 
 const config: Config = {
   content: [
@@ -11,7 +11,9 @@ const config: Config = {
       colors: {
         white: "#F8F8F8",
         blue: "#327AD9",
-        lightBlue: "#52D9CB"
+        lightBlue: "#52D9CB",
+        crystal: "#E9FFF87F",
+        backcolor: "#F5FEFF",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

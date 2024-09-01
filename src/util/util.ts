@@ -6,3 +6,10 @@ export namespace util {
     return reason.toString();
   }
 }
+
+export function sx(...classNames: (string | undefined)[]): string {
+  return classNames
+    .filter(value => value)
+    .map(value => value?.trim())
+    .join(" ")
+}

@@ -1,6 +1,8 @@
+"use client"
 import * as React from "react";
-import {createContext, DetailedHTMLProps, FormHTMLAttributes, ReactNode} from "react";
+import {createContext, DetailedHTMLProps, FormHTMLAttributes, useState} from "react";
 import {ErrorMessage} from "../err/ErrorMessage";
+import {sx} from "../util";
 
 
 export namespace FormState {
@@ -15,23 +17,31 @@ export type FormError = { [key: string]: string }
 
 export function StyledForm(
   {
-    formError,
+    action,
+    children,
+    className,
     ...props
   }: FormProps,
 ) {
+  const [formError, setFormError] = useState<FormError>()
 
   return (
     <FormState.Context.Provider
       value={formError}
     >
-      <ErrorMessage error={formError && formError["form"]}/>
-      <form method={"POST"} {...props}/>
-      <ErrorMessage error={formError && formError["form"]}/>
+      <form className={sx(className, "")} {...props} action={formData => {
+        action && action(formData).then(value => {
+          setFormError(value)
+        })
+      }}>
+        <ErrorMessage error={formError && formError["form"]}/>
+        {children}
+        <ErrorMessage error={formError && formError["form"]}/>
+      </form>
     </FormState.Context.Provider>
   )
 }
 
 export interface FormProps extends DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement> {
-  children?: ReactNode
-  formError: FormError | undefined
+  action?: (formData: FormData) => Promise<FormError | undefined>
 }
