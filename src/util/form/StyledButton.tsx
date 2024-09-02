@@ -1,8 +1,10 @@
 import {ButtonHTMLAttributes, DetailedHTMLProps} from "react";
+import {sx} from "../util";
 
 export function StyledButton(
   {
     onClick,
+    className,
     ...props
   }: StyledButtonProps,
 ) {
@@ -10,6 +12,7 @@ export function StyledButton(
 
   return (
     <button
+      className={sx("border-2 border-borderDef rounded py-1 px-4 bg-white hover:bg-lightGray",className)}
       {...props}
     />
   )

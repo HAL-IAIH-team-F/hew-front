@@ -12,7 +12,8 @@ const config: Config = {
         lightBlue: "#52D9CB",
         crystal: "#E9FFF87F",
         backcolor: "#F5FEFF",
-        borderDef: "#B4B4B4"
+        borderDef: "#B4B4B4",
+        lightGray: "#747989"
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
