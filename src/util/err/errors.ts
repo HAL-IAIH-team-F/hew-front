@@ -1,4 +1,4 @@
-import {ErrorData} from "@/app/_util/err/result";
+import {ErrorData} from "./result";
 
 export class ErrorIds {
   static readonly ACCESS_TOKEN_EXPIRED = createErrorId("ACCESS_TOKEN_EXPIRED");
