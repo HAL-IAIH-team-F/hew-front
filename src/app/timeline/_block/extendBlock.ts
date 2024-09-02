@@ -1,5 +1,5 @@
-import {BlockState, createBlockState, SheetStates} from "@/timeline/sheet/useSheet";
-import {Block} from "@/timeline/block/block";
+import {BlockState, createBlockState, SheetStates} from "@/timeline/_sheet/useSheet";
+import {Block} from "@/timeline/_block/block";
 import {Random} from "../../../util/random";
 
 const maxDistance = 40;

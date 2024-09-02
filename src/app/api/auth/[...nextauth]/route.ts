@@ -1,4 +1,4 @@
-import {handlers} from "@/app/_auth/auth";
+import {handlers} from "~/_auth/auth";
 
 
 export const {GET, POST} = handlers

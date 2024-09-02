@@ -1,7 +1,7 @@
 "use client";
 
-import {useBlock} from "@/timeline/block/useBlock";
-import {useSheet} from "@/timeline/sheet/useSheet";
+import {useBlock} from "@/timeline/_block/useBlock";
+import {useSheet} from "@/timeline/_sheet/useSheet";
 
 export default function Page(
   {}: {},
