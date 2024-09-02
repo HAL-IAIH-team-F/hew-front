@@ -1,5 +1,5 @@
 import {ReactNode} from "react";
-import {Random} from "@/app/_util/random";
+import {Random} from "../../../util/random";
 
 let id = 0;
 

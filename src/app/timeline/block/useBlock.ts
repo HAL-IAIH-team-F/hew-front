@@ -1,8 +1,8 @@
 import {useEffect} from "react";
-import {Block} from "@/app/timeline/block/block";
-import {Random} from "@/app/_util/random";
-import {createBlockState, SheetStates} from "@/app/timeline/sheet/useSheet";
-import {ExtendBlock} from "@/app/timeline/block/extendBlock";
+import {createBlockState, SheetStates} from "@/timeline/sheet/useSheet";
+import {Block} from "@/timeline/block/block";
+import {Random} from "../../../util/random";
+import {ExtendBlock} from "@/timeline/block/extendBlock";
 
 export function useBlock(sheet: SheetStates) {
   useEffect(() => {

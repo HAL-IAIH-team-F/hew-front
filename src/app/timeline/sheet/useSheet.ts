@@ -1,8 +1,8 @@
 import {ReactNode, RefObject, useEffect, useMemo, useRef, useState} from "react";
-import {TimelineExtender} from "@/app/timeline/sheet/extendSheet";
-import {useWindowSize} from "@/app/_hook/useWindowSize";
-import {useTopScroll} from "@/app/_hook/useTopScroll";
-import {Block} from "@/app/timeline/block/block";
+import {Block} from "@/timeline/block/block";
+import {useWindowSize} from "@/_hook/useWindowSize";
+import {useTopScroll} from "@/_hook/useTopScroll";
+import {TimelineExtender} from "@/timeline/sheet/extendSheet";
 
 export interface BlockState {
   block: Block;

@@ -1,5 +1,5 @@
-import {Scroll} from "@/app/_hook/useTopScroll";
-import {WindowSize} from "@/app/_hook/useWindowSize";
+import {Scroll} from "@/_hook/useTopScroll";
+import {WindowSize} from "@/_hook/useWindowSize";
 
 export namespace TimelineExtender {
   export function extendTop(
