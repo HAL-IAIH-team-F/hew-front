@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm ci
-COPY src/app ./app
+COPY src ./app
 COPY public ./public
 COPY tsconfig.json ./
 COPY next.config.js ./
