@@ -11,7 +11,7 @@ export default function Main(
 
 
   return (
-    <main {...props} className={sx("max-w-[1000px]","mx-auto","mt-32")}>
+    <main {...props} className={sx("max-w-[1000px]", "mx-auto", "mt-32", className)}>
       {children}
     </main>
   )
