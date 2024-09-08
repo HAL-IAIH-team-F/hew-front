@@ -4,7 +4,12 @@ import { useState } from 'react';
 export default function ImageGallery() {
     const imageUrls = [
       //画像URL
-  
+      "/109671135_p7_master1200.webp",
+      "/109671135_p6_master1200.webp",
+      "/109671135_p8_master1200.webp",
+      "/109671135_p11_master1200.webp",
+      "/109671135_p9_master1200.webp",
+      "/109671135_p2_master1200.webp",
     ];
   
     const totalImages = 200;
@@ -31,7 +36,7 @@ export default function ImageGallery() {
   
   
     const repeatedImageUrls = getRandomImageUrls(imageUrls, totalImages);
-    const heights: string[] = ['200px','230px','260px','290px','320px','360px'];
+    const heights: string[] = ['200px','230px','260px','290px','320px'];
   
     let previousHeight1: string = "0";
     let previousHeight2: string = "0";
