@@ -3,20 +3,7 @@ import { useState } from 'react';
 
 export default function ImageGallery() {
     const imageUrls = [
-      "https://images6.alphacoders.com/132/1320319.png",
-      "https://images6.alphacoders.com/135/1354956.png",
-      "https://images2.alphacoders.com/135/1354979.jpeg",
-      "https://images8.alphacoders.com/135/1354985.jpeg",
-      "https://images5.alphacoders.com/136/1369570.png",
-      "https://images2.alphacoders.com/134/1343087.jpeg",
-      "https://pbs.twimg.com/media/GWYJIEZbQAA87Ho?format=jpg&name=360x360",
-      "https://pbs.twimg.com/media/GUiT9_JbkAAwfgD?format=jpg&name=900x900",
-      "https://pbs.twimg.com/media/GWE3csjaMAEbOIu?format=jpg&name=4096x4096",
-      "https://pbs.twimg.com/media/GV2nwWiXkAAQa0b?format=jpg&name=4096x4096",
-      "https://pbs.twimg.com/media/GUHmTAVaoAARfwJ?format=jpg&name=large",
-      "https://pbs.twimg.com/media/GWPA0eiXoAA0brk?format=jpg&name=large",
-      "https://pbs.twimg.com/media/GWRNaCcbQAYiqdl?format=jpg&name=small",
-  
+      ""
     ];
   
     const totalImages = 200;
