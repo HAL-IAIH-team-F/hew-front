@@ -10,7 +10,7 @@ export default function Page(
   return <Main className={"leading-8"}>
     <h1 className={"text-6xl mb-8"}>タイトル</h1>
     <FlexBox className={"text-lg mb-8"} >
-      <Image alt={"サムネイル"} className={"max-w-96 flex-1 mr-8"}/>
+      <Image alt={"サムネイル"} className={"max-w-96 flex-1 mr-8"} src={"/sample/109671135_p0_master1200.jpg"}/>
       <ProductDetailSentence/>
     </FlexBox>
     <LabeledItem className={"text-2xl"} label={"作者"} multiline={true}>
