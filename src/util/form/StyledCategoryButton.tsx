@@ -1,4 +1,9 @@
+// ============================
 // util/form/StyledCategoryButton.tsx
+// Author: injectxr
+// Date: 2024-09-09
+// Description: カテゴリーボタンの関数コンポーネント
+// ============================
 import React from "react";
 import { sx } from "../util";
 

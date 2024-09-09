@@ -1,4 +1,10 @@
+// ============================
 // util/form/StyledSearchInput.tsx
+// Author: injectxr
+// Date: 2024-09-09
+// Description: 検索バーの関数コンポーネント
+// ============================
+
 import React from "react";
 import { sx } from "../util";
 

@@ -1,3 +1,9 @@
+// ============================
+// Author: injectxr
+// Date: 2024-09-07
+// Description: 商品出品フォームのコンポーネント
+// ============================
+
 "use client";
 
 import {StyledInput} from "../../../util/form/StyledInput";

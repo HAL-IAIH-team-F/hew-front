@@ -1,3 +1,10 @@
+// ============================
+// Author: injectxr
+// Date: 2024-09-09
+// Description: 200枚の画像をランダムにピックして表示するギャラリーコンポーネント　
+// ============================
+
+
 "use client";
 import { useState } from 'react';
 
@@ -34,7 +41,6 @@ export default function ImageGallery() {
       return urls;
   };
   
-  
     const repeatedImageUrls = getRandomImageUrls(imageUrls, totalImages);
     const heights: string[] = ['200px','230px','260px','290px','320px'];
   
@@ -53,28 +59,26 @@ export default function ImageGallery() {
       return newHeight;
     };
   
-  
     return (
       <div className="container mx-auto p-4">
         <div className="columns-6">
-          
-        {repeatedImageUrls.map((url, index) => (
-          
-        <div
-            key={index}
-            className="mb-4 overflow-hidden rounded-lg bg-center"
-            style={{
-              height: getRandomHeight(index % 6), 
-              width: '100%', 
-              marginBottom: '10px', 
-              marginRight: index % 6 !== 5 ? '10px' : '0', 
-              backgroundPosition: "center", 
-              backgroundSize: "cover", 
-              backgroundImage: `url(${url})`,
-            }}
-            />
+          {repeatedImageUrls.map((url, index) => (
+            <div
+              key={index}
+              className="relative mb-4 overflow-hidden rounded-lg bg-center"
+              style={{
+                height: getRandomHeight(index % 6),
+                width: '100%',
+                marginBottom: '10px',
+                marginRight: index % 6 !== 5 ? '10px' : '0',
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundImage: `url(${url})`,
+              }}
+            >
+              <div className="absolute inset-0 bg-black opacity-0 hover:opacity-50 transition-opacity duration-300"></div>
+            </div>
           ))}
-          
         </div>
       </div>
     );
