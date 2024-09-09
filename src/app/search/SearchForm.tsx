@@ -1,3 +1,8 @@
+// ============================
+// Author: injectxr
+// Date: 2024-09-09
+// Description: カテゴリ選択ボタンと検索バーと画像ギャラリーを含むフォーム
+// ============================
 "use client";
 
 import { useState } from "react";
@@ -42,7 +47,7 @@ export default function SearchForm() {
         <hr />
       </StyledForm>
 
-      <ImageGallery />
+      <ImageGallery/>
     </div>
   );
 }

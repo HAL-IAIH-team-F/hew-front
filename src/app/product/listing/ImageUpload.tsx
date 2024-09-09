@@ -1,3 +1,9 @@
+// ============================
+// Author: injectxr
+// Date: 2024-09-07
+// Description: ユーザーが画像をアップロードし、プレビューを表示するコンポーネント
+// ============================
+
 "use client";
 import { useState } from 'react';
 

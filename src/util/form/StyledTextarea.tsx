@@ -1,3 +1,10 @@
+// ============================
+// util/form/StyledTextarea.tsx
+// Author: injectxr
+// Date: 2024-09-07
+// Description: テキストエリアコンポーネント
+// ============================
+
 "use client"
 import {DetailedHTMLProps, TextareaHTMLAttributes, useContext, useRef, useState, useEffect} from "react";
 import {FormState} from "./StyledForm";
@@ -47,11 +54,10 @@ export function StyledTextarea(
         ref={invisibleTextAreaRef}
         value={value}
         onChange={() => {}}
-        tabIndex={-1} // tabでフォーカスされないようにする
-        style={{ position: 'fixed', top: -999, visibility: 'hidden' }} // 見えない範囲に配置
+        tabIndex={-1} 
+        style={{ position: 'fixed', top: -999, visibility: 'hidden' }} 
         className={sx("block w-full border-2 overflow-hidden resize-none border-borderDef rounded-lg px-3 py-1 text-lg")}
       />
-      <ErrorMessage error={name && formState && formState[name]} />
     </ItemBackground>
   );
 }
