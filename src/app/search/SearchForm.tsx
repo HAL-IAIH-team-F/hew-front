@@ -12,6 +12,7 @@ import { StyledCategoryButton } from "../../util/form/StyledCategoryButton";
 import FlexBox from "../../util/FlexBox";
 import Image from "next/image";
 import ImageGallery from "./ImageGallery";
+import { StyledNavigation } from "../../util/form/StyledNavigation";
 
 export default function SearchForm() {
   const categories = ["推しの子0", "推しの子1", "推しの子2", "推しの子3", "推しの子4", "推しの子5", "推しの子6", "推しの子7"];
@@ -46,7 +47,7 @@ export default function SearchForm() {
         </div>
         <hr />
       </StyledForm>
-
+      <StyledNavigation />
       <ImageGallery/>
     </div>
   );
