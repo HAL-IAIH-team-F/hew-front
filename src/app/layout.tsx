@@ -1,8 +1,8 @@
 import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
-import Nav from "@/Nav";
 import {ReactNode} from "react";
+import {StyledNavigation} from "~/Navigation";
 import BackgroundObject from "~/BackgroungObject";
 
 const inter = Inter({subsets: ["latin"]});
@@ -21,8 +21,8 @@ export default function RootLayout(
   return (
     <html lang="en">
       <body className={inter.className + " bg-backcolor"}>
+        <StyledNavigation />
         <BackgroundObject/>
-        <Nav/>
         {children}
       </body>
     </html>
