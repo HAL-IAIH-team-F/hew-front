@@ -4,7 +4,7 @@
 // Description: Backgroundにおしゃれな図形を表示する
 // How to use: インポートして<BackgroundObject /> を全体に入れるだけ
 // ============================
-
+"use client"
 
 import React, { useEffect, useState } from "react";
 
