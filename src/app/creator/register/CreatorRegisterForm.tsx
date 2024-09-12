@@ -12,7 +12,7 @@ export default function CreatorRegisterForm(
     <StyledForm {...props}>
       <StyledInput name={"contact_address"} label={"連絡先(一般に表示されます)"}/>
       <StyledInput name={"transfer_target"} label={"振込先"}/>
-      <FlexBox className={"justify-end px-10"}>
+      <FlexBox className={"justify-center px-10"}>
         <StyledButton>登録</StyledButton>
       </FlexBox>
     </StyledForm>
