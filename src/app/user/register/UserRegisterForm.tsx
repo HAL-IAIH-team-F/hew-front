@@ -67,10 +67,6 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
           className="hidden"
         />
       </div>
-
-      <StyledInput name="メールアドレス" type="text" />
-      <StyledInput name="パスワード" type="text" />
-      <StyledInput name="ユーザーネーム" type="text" />
       <StyledInput name="表示名" type="text" />
 
       {/* クリエイターとして登録のラジオボタン */}
