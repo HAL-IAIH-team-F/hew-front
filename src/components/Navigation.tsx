@@ -4,7 +4,7 @@
 // Date: 2024-09-12
 // Description: 動かせるNavigationの関数コンポーネント
 // ============================
-
+"use client"
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 
