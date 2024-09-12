@@ -1,5 +1,5 @@
 // ============================
-// util/form/StyledNavigation.tsx
+// components\Navigation.tsx
 // Author: injectxr
 // Date: 2024-09-12
 // Description: 動かせるNavigationの関数コンポーネント
