@@ -1,61 +1,116 @@
-"use client"
-import {StyledForm} from "../../../util/form/StyledForm";
-import {StyledInput} from "../../../util/form/StyledInput";
-import {StyledButton} from "../../../util/form/StyledButton";
+"use client";
+import { StyledForm } from "../../../util/form/StyledForm";
+import { StyledInput } from "../../../util/form/StyledInput";
+import { StyledButton } from "../../../util/form/StyledButton";
 import FlexBox from "../../../util/FlexBox";
-import {ChangeEvent, useState} from "react";
+import { ChangeEvent, useState } from "react";
 
+export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isCreator, setIsCreator] = useState<string>("no");
 
-export default function UserRegisterForm(
-    {
-        ...props
-    }: UserRegisterFormProps,
-) {
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
+  const handleCreatorChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setIsCreator(e.target.value);
+  };
 
-    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    return (
-        <StyledForm {...props}>
-            <label className="relative w-fit block">
-                <div className="w-[150px] h-[150px] overflow-hidden rounded-full bg-gray-200">
-                    {imagePreview ? (
-                        <img src={imagePreview} alt="プレビュー" className="w-full h-full object-cover"/>
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                            <img className={"w-full h-full"} src={"/curtain.png"}/>
-                        </div>
-                    )}
-                </div>
-                <div className={"rounded-3xl w-20 mx-auto py-1 hover:bg-lightGray mt-2 bg-white border-2 border-borderDef text-center"}>変更</div>
-                <input name={"icon"}
-                       type="file"
-                       onChange={handleImageChange}
-                       accept="image/*"
-                       className="invisible h-0 w-0 fixed"
+  return (
+    <StyledForm {...props}>
+      {/* アイコンと変更ボタンを横並びに配置 */}
+      <div className="flex items-center space-x-4 mb-4">
+        {/* 画像部分をクリックしてもファイル選択ダイアログを開く */}
+        <label className="relative cursor-pointer">
+          <div className="w-[150px] h-[150px] overflow-hidden rounded-full bg-gray-200">
+            {imagePreview ? (
+              <img
+                src={imagePreview}
+                alt="プレビュー"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <img
+                  className="w-full h-full"
+                  src="/curtain.png"
+                  alt="デフォルトアイコン"
                 />
-            </label>
-            <StyledInput name={"メールアドレス"} type={"text"}/>
-            <StyledInput name={"パスワード"} type={"text"}/>
-            <StyledInput name={"ユーザーネーム"} type={"text"}/>
-            <StyledInput name={"表示名"} type={"text"}/>
-            <StyledInput name={"register_creator"} type={"checkbox"}/>
-            <FlexBox className={"justify-end px-10"}>
-                <StyledButton>登録</StyledButton>
-            </FlexBox>
-        </StyledForm>
-    )
+              </div>
+            )}
+          </div>
+          {/* 隠しファイル入力 */}
+          <input
+            name="icon"
+            type="file"
+            onChange={handleImageChange}
+            accept="image/*"
+            className="hidden"
+          />
+        </label>
+
+        {/* 変更ボタン */}
+        <label htmlFor="icon-upload" className="cursor-pointer">
+          <div className="rounded-full px-4 py-2 bg-white border-2 border-borderDef hover:bg-lightGray text-center">
+            変更
+          </div>
+        </label>
+        <input
+          id="icon-upload"
+          name="icon"
+          type="file"
+          onChange={handleImageChange}
+          accept="image/*"
+          className="hidden"
+        />
+      </div>
+
+      <StyledInput name="メールアドレス" type="text" />
+      <StyledInput name="パスワード" type="text" />
+      <StyledInput name="ユーザーネーム" type="text" />
+      <StyledInput name="表示名" type="text" />
+
+      {/* クリエイターとして登録のラジオボタン */}
+      <div className="flex items-center space-x-2 mb-4">
+        <label htmlFor="register_creator">クリエイターとして登録</label>
+        <div className="flex items-center space-x-2">
+          <label>
+            <input
+              type="radio"
+              name="creator"
+              value="yes"
+              checked={isCreator === "yes"}
+              onChange={handleCreatorChange}
+            />
+            はい
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="creator"
+              value="no"
+              checked={isCreator === "no"}
+              onChange={handleCreatorChange}
+            />
+            いいえ
+          </label>
+        </div>
+      </div>
+
+      {/* ボタンを右側に配置する */}
+      <div className="flex justify-end">
+        <StyledButton>登録</StyledButton>
+      </div>
+    </StyledForm>
+  );
 }
 
-export interface UserRegisterFormProps {
-}
+export interface UserRegisterFormProps {}
