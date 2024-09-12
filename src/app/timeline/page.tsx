@@ -22,6 +22,7 @@ export default function Page(
       {sheet.blocks.map(value => value.node(sheet.offsetX, sheet.offsetY))}
       {/*<div className={"h-10 w-10 bg-blue absolute"} style={{top: offsetY, left: offsetX}}>*/}
       {/*</div>*/}
+      
     </div>
   </div>;
 }

@@ -1,5 +1,6 @@
 import {ReactNode} from "react";
 import {Random} from "../../../util/random";
+import Booktype1 from "../Bookshelf/Booktype1";
 
 let id = 0;
 
@@ -37,12 +38,16 @@ class Sample extends Block {
   padRight = 0;
 
   node(top: number, left: number): ReactNode {
-    return <div
-      key={this.id} className={"absolute h-[500px] w-[500px] bg-white shadow box-border border-2 border-black"}
-      style={{
-        left,
-        top,
-      }}
-    ></div>;
+    return (
+      <div
+        key={this.id} className={"absolute h-[500px] w-[500px] bg-white shadow box-border border-2 border-black flex items-center justify-center"}
+        style={{
+          left,
+          top,
+        }}
+      >
+        <span>< Booktype1/></span>
+      </div>
+    );
   }
 }
