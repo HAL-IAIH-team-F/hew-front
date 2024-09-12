@@ -1,4 +1,4 @@
-import { LabeledText } from "../../../../../util/label/LabeledText";
+import { LabeledText } from "../../../../util/label/LabeledText";
 import Main from "~/Main";
 
 export default function Page() {
