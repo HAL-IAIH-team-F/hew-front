@@ -1,6 +1,12 @@
+// ============================
+// components\Navigation.tsx
+// Author: injectxr
+// Date: 2024-09-12
+// Description: 動かせるNavigationの関数コンポーネント
+// ============================
 "use client"
 import * as React from "react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export function StyledNavigation() {
   const [isDragging, setIsDragging] = useState(false);
@@ -16,15 +22,15 @@ export function StyledNavigation() {
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
       });
+      setIsDragging(true);
     }
-    setIsDragging(true);
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e: MouseEvent) => {
     if (isDragging) {
       setPosition({
         x: e.clientX - offset.x,
@@ -33,7 +39,18 @@ export function StyledNavigation() {
     }
   };
 
-  // ボタンを押したときにアラートを表示する関数
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, offset]);
+
   const handleButtonClick = (buttonTitle: string) => {
     alert(buttonTitle);
   };
@@ -42,15 +59,12 @@ export function StyledNavigation() {
     <div
       ref={navRef}
       onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseUp}
-      className="absolute bg-gray-800 border border-gray-700 rounded-lg shadow-lg cursor-grab"
+      className="fixed bg-gray-800 border border-gray-700 rounded-lg shadow-lg cursor-grab"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        width: "270px", // ナビゲーションウィンドウの幅
-        height: "166px", // ナビゲーションウィンドウの高さ
+        width: "270px",
+        height: "166px",
         zIndex: 1000,
       }}
     >
@@ -59,7 +73,6 @@ export function StyledNavigation() {
       </div>
       <hr className="border-gray-600 w-1000" />
       <div className="flex justify-between">
-        {/* 右側のボタン群 */}
         <div className="w-1/2 pr-1 mt-1 ml-2.5">
           <button 
             className="font-bold block w-full my-1 py-1 text-left text-xs text-white hover:text-gray-400"
@@ -88,9 +101,8 @@ export function StyledNavigation() {
           </button>
         </div>
 
-        {/* 真ん中に区切り線を追加 */} 
         <div className="w-px bg-gray-600 mx-2 h-hull"></div>
-        {/* 左側のボタン群 */}
+
         <div className="w-1/2 pl-1 text-right">
           <button 
             className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
