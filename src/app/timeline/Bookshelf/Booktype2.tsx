@@ -7,12 +7,6 @@ export default function Booktype2() {
     "/109671135_p8_master1200.webp",
     "/109671135_p11_master1200.webp",
     "/109671135_p9_master1200.webp",
-    "/109671135_p2_master1200.webp",
-    "/109671135_p9_master1200.webp",
-    "/109671135_p2_master1200.webp",
-    "/109671135_p9_master1200.webp",
-    "/109671135_p2_master1200.webp",
-
   ];
 
   const totalImages = 36;
