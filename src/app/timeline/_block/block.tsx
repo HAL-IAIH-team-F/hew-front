@@ -1,6 +1,7 @@
-import {ReactNode} from "react";
-import {Random} from "../../../util/random";
+import { ReactNode } from "react";
+import { Random } from "../../../util/random";
 import Booktype1 from "../Bookshelf/Booktype1";
+import Booktype2 from "../Bookshelf/Booktype2";
 
 let id = 0;
 
@@ -36,17 +37,24 @@ class Sample extends Block {
   padDown = 0;
   padLeft = 0;
   padRight = 0;
+  private readonly selectedBookType: ReactNode;
+
+  constructor() {
+    super();
+    this.selectedBookType = Random.randomItem([<Booktype1 />, <Booktype2 />]);
+  }
 
   node(top: number, left: number): ReactNode {
     return (
       <div
-        key={this.id} className={"absolute h-[500px] w-[500px] bg-white shadow box-border border-2 border-black flex items-center justify-center"}
+        key={this.id}
+        className={"absolute h-[500px] w-[500px] bg-white shadow box-border border-2 border-black flex items-center justify-center overflow-hidden"}
         style={{
           left,
           top,
         }}
       >
-        <span>< Booktype1/></span>
+        <span>{this.selectedBookType}</span>
       </div>
     );
   }
