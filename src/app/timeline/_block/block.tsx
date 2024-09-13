@@ -53,8 +53,7 @@ class Sample extends Block {
           left,
           top,
         }}
-      >
-        <span>{this.selectedBookType}</span>
+      ><span>{this.selectedBookType}</span>
       </div>
     );
   }
