@@ -41,9 +41,6 @@ export default function Booktype2() {
             src={url}
             alt={`Image ${index + 1}`}
             className="object-cover h-full w-full rounded-lg"
-            style={{
-              objectFit: 'cover',
-            }}
           />
         </div>
       ))}

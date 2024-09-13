@@ -14,10 +14,7 @@ export default function Booktype1() {
   const repeatedImageUrls = Array.from({ length: totalImages }, (_, i) => imageUrls[i % imageUrls.length]);
 
   return (
-    
     <div className="relative">
-      
-
       <div className="grid grid-cols-3 gap-4 relative" style={{ zIndex: 1 }}>
         {repeatedImageUrls.map((url, index) => (
           <div
