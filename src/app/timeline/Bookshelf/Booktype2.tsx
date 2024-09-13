@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function Booktype2() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const imageUrls = [
     "/109671135_p7_master1200.webp",
     "/109671135_p6_master1200.webp",
@@ -12,6 +18,8 @@ export default function Booktype2() {
 
   const totalImages = 36;
   const repeatedImageUrls = Array.from({ length: totalImages }, (_, i) => imageUrls[i % imageUrls.length]);
+
+  if (!isMounted) return null;
 
   return (
     <div
@@ -36,6 +44,7 @@ export default function Booktype2() {
             src={url}
             alt={`Image ${index + 1}`}
             className="object-cover h-full w-full rounded-lg"
+            loading="lazy"
           />
         </div>
       ))}
