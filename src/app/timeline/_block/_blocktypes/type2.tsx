@@ -18,7 +18,7 @@ export class Sample2 extends Block {
   node({top, left}: { top: number, left: number }): ReactNode {
     return (
       <div
-        className={"absolute h-[500px] w-[500px] bg-white shadow box-border border-2 border-black flex items-center justify-center overflow-hidden"}
+        className={"absolute h-[500px] w-[500px] flex items-center justify-center overflow-hidden"}
         style={{
           left,
           top,

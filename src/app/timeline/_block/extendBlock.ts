@@ -72,12 +72,6 @@ export namespace ExtendBlock {
   function checkOverlapY(currentBlock: BlockState, top: number, down: number) {
     const currentTop = currentBlock.top + currentBlock.block.padTop;
     const currentDown = currentBlock.top + currentBlock.block.height - currentBlock.block.padDown;
-    console.debug("A", top, down, currentTop, currentDown,
-      top < currentTop && down > currentDown,
-      top > currentTop && down < currentDown,
-      currentTop < top && currentDown > top,
-      currentTop < down && currentDown > down,
-    );
     if (top <= currentTop && down >= currentDown) return true;
     if (top >= currentTop && down <= currentDown) return true;
     if (currentTop < top && currentDown > top) return true;
@@ -87,12 +81,6 @@ export namespace ExtendBlock {
   function checkOverlapX(currentBlock: BlockState, left: number, right: number) {
     const currentLeft = currentBlock.left + currentBlock.block.padLeft;
     const currentRight = currentBlock.left + currentBlock.block.width - currentBlock.block.padRight;
-    console.debug("B", left, right, currentLeft, currentRight,
-      left < currentLeft && right > currentRight,
-      left > currentLeft && right < currentRight,
-      currentLeft < left && currentRight > left,
-      currentLeft < right && currentRight > right,
-    );
     if (left <= currentLeft && right >= currentRight) return true;
     if (left >= currentLeft && right <= currentRight) return true;
     if (currentLeft < left && currentRight > left) return true;
