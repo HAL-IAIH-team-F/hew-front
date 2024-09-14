@@ -3,6 +3,7 @@ import {Block} from "@/timeline/_block/block";
 import {useWindowSize} from "@/_hook/useWindowSize";
 import {useTopScroll} from "@/_hook/useTopScroll";
 import {TimelineExtender} from "@/timeline/_sheet/extendSheet";
+import {Blocks} from "@/timeline/_block/Blocks";
 
 export interface BlockState {
   block: Block;
@@ -22,7 +23,7 @@ export function createBlockState(
     top,
     left,
     node(offsetX: number, offsetY: number): ReactNode {
-      return block.node(top + offsetY, left + offsetX);
+      return block.component(top + offsetY, left + offsetX);
     },
   };
 }
@@ -32,7 +33,7 @@ export function useSheet(): SheetStates {
   const [height, setHeight] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
-  const [blocks, setBlocks] = useState<BlockState[]>(() => [createBlockState(Block.randomBlock(), 0, 0)]);
+  const [blocks, setBlocks] = useState<BlockState[]>(() => [createBlockState(Blocks.randomBlock(), 0, 0)]);
   const windowSize = useWindowSize();
   const ref = useRef<HTMLDivElement>(null);
   const scroll = useTopScroll(ref);
