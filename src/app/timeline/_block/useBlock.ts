@@ -1,10 +1,11 @@
 import {useEffect} from "react";
 import {createBlockState, SheetStates} from "@/timeline/_sheet/useSheet";
-import {Random} from "../../../util/random";
 import {ExtendBlock} from "@/timeline/_block/extendBlock";
 import {Blocks} from "@/timeline/_block/Blocks";
+import {Random} from "../../../util/random";
 
 export function useBlock(sheet: SheetStates) {
+  console.log(sheet.yShaft.offset,sheet.yShaft.size)
   useEffect(() => {
     const timeout = setTimeout(() => sheet.setBlocks(prev => {
         for (const block of prev) {
@@ -17,20 +18,20 @@ export function useBlock(sheet: SheetStates) {
           }
         }
         return prev;
-      }), 25,
+      }), 30,
     );
     return () => clearTimeout(timeout);
-  }, [sheet.offsetX, sheet.offsetY, sheet.blocks]);
+  }, [sheet.xShaft.offset, sheet.yShaft.offset, sheet.blocks]);
   useEffect(() => {
     const timeout = setTimeout(() => sheet.setBlocks(prev => {
         const newBlocks = prev.filter(value => !ExtendBlock.isOverFlowState(sheet, value));
         if (newBlocks.length == 0)
           newBlocks.push(createBlockState(
-            Blocks.randomBlock(), (sheet.height / 2) - sheet.offsetY, (sheet.width / 2) - sheet.offsetX,
+            Blocks.randomBlock(), (sheet.yShaft.size / 2) - sheet.yShaft.offset, (sheet.xShaft.size / 2) - sheet.xShaft.offset,
           ));
         return newBlocks;
-      }), 20,
+      }), 25,
     );
     return () => clearTimeout(timeout);
-  }, [sheet.offsetY, sheet.offsetX]);
+  }, [sheet.yShaft.offset, sheet.xShaft.offset]);
 }

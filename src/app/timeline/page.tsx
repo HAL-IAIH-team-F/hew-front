@@ -14,12 +14,12 @@ export default function Page(
   >
     <div
       style={{
-        width: `${sheet.width}px`,
-        height: `${sheet.height}px`,
+        width: `${sheet.xShaft.size}px`,
+        height: `${sheet.yShaft.size}px`,
       }}
       className={"relative overflow-hidden"}
     >
-      {sheet.blocks.map(value => value.node(sheet.offsetX, sheet.offsetY))}
+      {sheet.blocks.map(value => value.node(sheet.xShaft.offset, sheet.yShaft.offset))}
     </div>
   </div>;
 }

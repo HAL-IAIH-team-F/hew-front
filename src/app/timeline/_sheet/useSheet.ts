@@ -2,8 +2,9 @@ import {ReactNode, RefObject, useEffect, useMemo, useRef, useState} from "react"
 import {Block} from "@/timeline/_block/block";
 import {useWindowSize} from "@/_hook/useWindowSize";
 import {useTopScroll} from "@/_hook/useTopScroll";
-import {TimelineExtender} from "@/timeline/_sheet/extendSheet";
+import {useExtendSheet} from "@/timeline/_sheet/useExtendSheet";
 import {Blocks} from "@/timeline/_block/Blocks";
+import {useReductionSheet} from "@/timeline/_sheet/useReducutionSheet";
 
 export interface BlockState {
   block: Block;
@@ -28,57 +29,56 @@ export function createBlockState(
   };
 }
 
+export interface Shaft {
+  size: number
+  offset: number
+}
+
 export function useSheet(): SheetStates {
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
-  const [offsetX, setOffsetX] = useState(0);
-  const [offsetY, setOffsetY] = useState(0);
+  const [xShaft, setXShaft] = useState<Shaft>({size: 1000, offset: 0})
+  const [yShaft, setYShaft] = useState<Shaft>({size: 1000, offset: 0})
   const [blocks, setBlocks] = useState<BlockState[]>(() => [createBlockState(Blocks.randomBlock(), 0, 0)]);
   const windowSize = useWindowSize();
   const ref = useRef<HTMLDivElement>(null);
   const scroll = useTopScroll(ref);
   const [windowSizeChangedReflectFlag, setWindowSizeChangedReflectFlag] = useState(false);
   useEffect(() => {
-    if (windowSize.height > height) {
-      setHeight(prevState => prevState + windowSize.height);
-      setWindowSizeChangedReflectFlag(!windowSizeChangedReflectFlag);
+    if (windowSize.height > yShaft.size) {
+      setYShaft(prevState => {
+        return {
+          size: prevState.size + windowSize.height,
+          offset: prevState.offset
+        }
+      });
     }
-    if (windowSize.width > width) {
-      setWidth(prevState => prevState + windowSize.width);
-      setWindowSizeChangedReflectFlag(!windowSizeChangedReflectFlag);
+    if (windowSize.width > xShaft.size) {
+      setYShaft(prevState => {
+        return {
+          size: prevState.size + windowSize.width,
+          offset: prevState.offset
+        }
+      });
     }
+    setWindowSizeChangedReflectFlag(!windowSizeChangedReflectFlag);
   }, [windowSize]);
-
-  useEffect(() => {
-    if (scroll.top < windowSize.height)
-      TimelineExtender.extendTop(ref.current, scroll, windowSize.height, setHeight, setOffsetY, windowSize, height);
-    if (scroll.top + windowSize.height * 2 > height)
-      TimelineExtender.extendBottom(setHeight, windowSize.height, windowSize, height, ref.current, scroll, setOffsetY);
-    if (scroll.left < windowSize.width)
-      TimelineExtender.extendLeft(ref.current, scroll, windowSize.width, setWidth, setOffsetX, windowSize, width);
-    if (scroll.left + windowSize.width * 2 > width)
-      TimelineExtender.extendRight(setWidth, windowSize.width, windowSize, width, ref.current, scroll, setOffsetX);
-  }, [windowSize, scroll, ref, windowSizeChangedReflectFlag]);
+  useExtendSheet(scroll, windowSize, ref, yShaft, xShaft, setYShaft, setXShaft, windowSizeChangedReflectFlag)
+  useReductionSheet(windowSize, yShaft, xShaft, setYShaft, setXShaft, scroll, ref, windowSizeChangedReflectFlag)
 
   return useMemo(() => {
     return {
       blocks,
       ref,
-      width,
-      height,
-      offsetX,
-      offsetY,
+      yShaft,
+      xShaft,
       setBlocks: setBlocks,
     } as const;
-  }, [blocks, ref, width, height, offsetX, offsetY]);
+  }, [blocks, ref, yShaft, xShaft]);
 }
 
 export interface SheetStates {
   blocks: BlockState[];
   ref: RefObject<HTMLDivElement>;
-  width: number,
-  height: number,
-  offsetX: number,
-  offsetY: number,
+  yShaft: Shaft
+  xShaft: Shaft
   setBlocks: (fun: (prev: BlockState[]) => BlockState[]) => void
 }
