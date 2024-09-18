@@ -3,6 +3,7 @@ import {Block} from "@/timeline/_block/block";
 import {useWindowSize} from "@/_hook/useWindowSize";
 import {useTopScroll} from "@/_hook/useTopScroll";
 import {TimelineExtender} from "@/timeline/_sheet/extendSheet";
+import {randomBlock} from "@/timeline/_block/blocks";
 
 export interface BlockState {
   block: Block;
@@ -32,7 +33,7 @@ export function useSheet(): SheetStates {
   const [height, setHeight] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
-  const [blocks, setBlocks] = useState<BlockState[]>(() => [createBlockState(Block.randomBlock(), 0, 0)]);
+  const [blocks, setBlocks] = useState<BlockState[]>(() => [createBlockState(randomBlock(), 0, 0)]);
   const windowSize = useWindowSize();
   const ref = useRef<HTMLDivElement>(null);
   const scroll = useTopScroll(ref);

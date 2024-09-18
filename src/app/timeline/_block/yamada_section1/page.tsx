@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import { Block } from "../block";
-
-
+import {Header} from "@/timeline/_block/yamada_section1/Header";
 
 
 export class Sample1 extends Block {
@@ -20,7 +19,8 @@ export class Sample1 extends Block {
         top,
       }}
     >
-      fafdafa
+      <p className={"text-center"}>aaa</p>
+      <Header />
     </div>;
   }
 }
