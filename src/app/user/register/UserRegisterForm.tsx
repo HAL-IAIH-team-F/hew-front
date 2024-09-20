@@ -7,10 +7,12 @@ import { ChangeEvent, useState } from "react";
 export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState<string>("no");
+  const [iconFile, setIconFile] = useState<File | null>(null);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setIconFile(file); 
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -23,8 +25,38 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
     setIsCreator(e.target.value);
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+  
+    if (iconFile) {
+      formData.append("icon", iconFile);
+    }
+    console.log("FormDataの内容:");
+    Array.from(formData.entries()).forEach(([key, value]) => {
+      if (value instanceof File) {
+        console.log(`${key}:`, value.name);  
+      } else {
+        console.log(`${key}:`, value);  
+      }
+    });
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || "登録に失敗しました");
+      }
+      console.log("登録に成功しました");
+    } catch (error) {
+      console.error("エラーが発生しました", error);
+    }
+  };
+
   return (
-    <StyledForm {...props}>
+    <StyledForm onSubmit={handleSubmit} {...props}>
       <div className="flex items-center space-x-4 mb-4">
         <label className="relative cursor-pointer">
           <div className="w-[150px] h-[150px] overflow-hidden rounded-full bg-gray-200">
@@ -45,14 +77,12 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
             )}
           </div>
           <input
-            name="icon"
             type="file"
             onChange={handleImageChange}
             accept="image/*"
             className="hidden"
           />
         </label>
-
         <label htmlFor="icon-upload" className="cursor-pointer">
           <div className="rounded-full px-4 py-2 bg-white border-2 border-borderDef hover:bg-lightGray text-center">
             変更
@@ -60,25 +90,23 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
         </label>
         <input
           id="icon-upload"
-          name="icon"
           type="file"
           onChange={handleImageChange}
           accept="image/*"
           className="hidden"
         />
       </div>
-      <StyledInput name="表示名" type="text" />
+      <StyledInput name="表示名" type="text"/>
 
-      {/* クリエイターとして登録のラジオボタン */}
-      <div className="flex items-center space-x-10 mb-4"> {/* 隙間を開ける */}
-        <label htmlFor="register_creator" className="mr-4"> {/* ラベルとの隙間 */}
+      <div className="flex items-center space-x-10 mb-4">
+        <label htmlFor="register_creator" className="mr-4">
           クリエイターとして登録
         </label>
-        <div className="flex items-center space-x-6"> {/* ラジオボタン間の隙間 */}
+        <div className="flex items-center space-x-6">
           <label className="flex items-center space-x-2">
             <input
               type="radio"
-              name="creator"
+              name="creator" 
               value="yes"
               checked={isCreator === "yes"}
               onChange={handleCreatorChange}
@@ -99,7 +127,7 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
       </div>
 
       <div className="flex justify-end">
-        <StyledButton>登録</StyledButton>
+        <StyledButton type="submit">登録</StyledButton>
       </div>
     </StyledForm>
   );
