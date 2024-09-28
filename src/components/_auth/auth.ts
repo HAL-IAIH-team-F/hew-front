@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import "next-auth/jwt";
 import Keycloak from "next-auth/providers/keycloak";
-import {refreshClient} from "@/_api/serverWrapper";
 
 
 const realms = process.env.NEXT_PUBLIC_KEYCLOAK_REALMS
@@ -25,13 +24,15 @@ export const nextAuth = NextAuth({
   trustHost: true,
   callbacks: {
     async jwt({token, account}) {
-      token.keycloak_refresh_token = account?.refresh_token
-      token.keycloak_id_token = account?.id_token
+      if (account) {
+        token.keycloak_refresh_token = account.refresh_token
+        token.keycloak_id_token = account.id_token
+      }
 
       if (account?.access_token) {
-        const res = await refreshClient(account.access_token)
-        token.refresh_token = res.refresh.token
-        token.access_token = res.access.token
+        // const res = await refreshClient(account.access_token)
+        // token.refresh_token = res.refresh.token
+        // token.access_token = res.access.token
       } else {
         token.refresh_token = undefined
         token.access_token = undefined

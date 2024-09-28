@@ -6,7 +6,7 @@ import {auth, keycloakConfig, nextAuth} from "~/_auth/auth";
 export async function signInAtServer<
   P extends BuiltInProviderType | (string & {})
 >(url: string, provider: P) {
-  return await nextAuth.signIn<P>(provider, {redirectTo: ""})
+  return await nextAuth.signIn<P>(provider, {redirectTo: url})
 }
 
 export async function signOutAtServer(url: string) {
@@ -16,7 +16,6 @@ export async function signOutAtServer(url: string) {
   await nextAuth.signOut({redirect: false})
 
   const searchParams = new URLSearchParams()
-  console.debug(url)
   searchParams.append("post_logout_redirect_uri", url)
   searchParams.append("id_token_hint", session.keycloak_id_token || "")
   redirect(new URL(

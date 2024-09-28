@@ -19,7 +19,7 @@ export function SignInButton(
         {...props}
         onClick={() => {
           setErr(undefined)
-          signIn("keycloak").catch(reason => {
+          signIn().catch(reason => {
             setErr(`ログインに失敗しました: ${reason.toString()}`)
           })
         }}>
