@@ -1,9 +1,12 @@
 import NextAuth from "next-auth";
 import "next-auth/jwt";
 import Keycloak from "next-auth/providers/keycloak";
+import {refreshClient} from "@/_api/serverWrapper";
 
-const realms = process.env.KEYCLOAK_REALMS
-const baseUrl = process.env.KEYCLOAK_BASEURL
+
+const realms = process.env.NEXT_PUBLIC_KEYCLOAK_REALMS
+const baseUrl = process.env.NEXT_PUBLIC_KEYCLOAK_BASEURL
+
 export const keycloakConfig = {
   clientId: process.env.KEYCLOAK_ID as string,
   clientSecret: process.env.KEYCLOAK_SECRET as string,
@@ -22,9 +25,16 @@ export const nextAuth = NextAuth({
   trustHost: true,
   callbacks: {
     async jwt({token, account}) {
-      if (account?.refresh_token) {
-        token.refresh_token = account.refresh_token
-        token.id_token = account.id_token
+      token.keycloak_refresh_token = account?.refresh_token
+      token.keycloak_id_token = account?.id_token
+
+      if (account?.access_token) {
+        const res = await refreshClient(account.access_token)
+        token.refresh_token = res.refresh.token
+        token.access_token = res.access.token
+      } else {
+        token.refresh_token = undefined
+        token.access_token = undefined
       }
       return token
     },
@@ -33,8 +43,10 @@ export const nextAuth = NextAuth({
       if (token.sub) {
         session.user.id = token.sub;
       }
-      session.id_token = token.id_token
+      session.keycloak_id_token = token.keycloak_id_token
+      session.keycloak_refresh_token = token.keycloak_refresh_token
       session.refresh_token = token.refresh_token
+      session.access_token = token.access_token
       return session;
     },
   }
@@ -45,13 +57,17 @@ export const {
 } = nextAuth
 declare module "next-auth" {
   interface Session {
+    keycloak_refresh_token?: string
+    keycloak_id_token?: string
     refresh_token?: string
-    id_token?: string
+    access_token?: string
   }
 }
 declare module "next-auth/jwt" {
   interface JWT {
+    keycloak_refresh_token?: string
+    keycloak_id_token?: string
     refresh_token?: string
-    id_token?: string
+    access_token?: string
   }
 }

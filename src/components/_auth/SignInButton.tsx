@@ -1,10 +1,10 @@
 "use client"
 import {HTMLAttributes, useState} from "react";
-import {ErrorMessage} from "../util/err/ErrorMessage";
-import {signIn} from "~/_auth/authAction";
+import {ErrorMessage} from "../../util/err/ErrorMessage";
+import {signIn} from "~/_auth/clientAuth";
 
 
-export default function LoginButton(
+export function SignInButton(
   {
     children,
     ...props

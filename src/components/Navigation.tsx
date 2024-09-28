@@ -6,12 +6,13 @@
 // ============================
 "use client"
 import * as React from "react";
-import { useState, useRef, useEffect } from "react";
+import {useEffect, useRef, useState} from "react";
+import {SignInOutButton} from "~/_auth/SignInOutButton";
 
 export function StyledNavigation() {
   const [isDragging, setIsDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 100, y: 100 });
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({x: 100, y: 100});
+  const [offset, setOffset] = useState({x: 0, y: 0});
   const navRef = useRef<HTMLDivElement | null>(null);
   const notificationCount = 3; // 通知数
 
@@ -68,20 +69,18 @@ export function StyledNavigation() {
         zIndex: 1000,
       }}
     >
-      <div className="ml-3 mt-1 mb-1 flex items-center text-white text-left cursor-grab text-sm font-bold" style={{ color: "#F5F5F5" }}>
+      <div className="ml-3 mt-1 mb-1 flex items-center text-white text-left cursor-grab text-sm font-bold"
+           style={{color: "#F5F5F5"}}>
         サービス名
       </div>
-      <hr className="border-gray-600 w-1000" />
+      <hr className="border-gray-600 w-1000"/>
       <div className="flex justify-between">
         <div className="w-1/2 pr-1 mt-1 ml-2.5">
-          <button 
+          <SignInOutButton
             className="font-bold block w-full my-1 py-1 text-left text-xs text-white hover:text-gray-400"
-            onClick={() => handleButtonClick("ログアウト")}
-          >
-            ログアウト
-          </button>
+          />
 
-          <button 
+          <button
             className="font-bold block w-full my-1 py-1 text-left relative text-xs text-white hover:text-gray-400"
             onClick={() => handleButtonClick(`通知: ${notificationCount}`)}
           >
@@ -93,7 +92,7 @@ export function StyledNavigation() {
             )}
           </button>
 
-          <button 
+          <button
             className="absolute bottom-1 left-3 text-xs text-slate-400 hover:text-white"
             onClick={() => handleButtonClick("利用規約")}
           >
@@ -104,25 +103,25 @@ export function StyledNavigation() {
         <div className="w-px bg-gray-600 mx-2 h-hull"></div>
 
         <div className="w-1/2 pl-1 text-right">
-          <button 
+          <button
             className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
             onClick={() => handleButtonClick("タイムライン")}
           >
             タイムライン
           </button>
-          <button 
+          <button
             className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
             onClick={() => handleButtonClick("商品出品")}
           >
             商品出品
           </button>
-          <button 
+          <button
             className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
             onClick={() => handleButtonClick("コラボ")}
           >
             コラボ
-          </button> 
-          <button 
+          </button>
+          <button
             className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
             onClick={() => handleButtonClick("マイページ")}
           >

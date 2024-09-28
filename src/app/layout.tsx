@@ -3,6 +3,7 @@ import {Inter} from "next/font/google";
 import "./globals.css";
 import {ReactNode} from "react";
 import {StyledNavigation} from "~/Navigation";
+import {SessionProvider} from "next-auth/react";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -20,9 +21,11 @@ export default function RootLayout(
   return (
     <html lang="en">
       <body className={inter.className + " bg-backcolor"}>
-        <StyledNavigation />
-        {/*<BackgroundObject/>*/}
-        {children}
+        <SessionProvider>
+          <StyledNavigation/>
+          {/*<BackgroundObject/>*/}
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );
