@@ -64,6 +64,13 @@ const endpoints = makeApi([
     ],
   },
   {
+    method: "get",
+    path: "/api/token/refresh",
+    alias: "token_refresh_api_token_refresh_get",
+    requestFormat: "json",
+    response: TokenRes,
+  },
+  {
     method: "post",
     path: "/api/user",
     alias: "post_user_api_user_post",

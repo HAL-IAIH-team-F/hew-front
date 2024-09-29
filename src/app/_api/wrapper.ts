@@ -71,19 +71,36 @@ export class ClientContext {
     if (!session) return Results.createErrorResult(ErrorIds.NoLogin, "session is undefined")
 
     return await apiClient.post_token_api_token_post({keycloak_token: token}).then(value => {
-      session.access = {
-        token: value.access.token,
-        expire: value.access.expire,
-      }
-      session.refresh = {
-        token: value.refresh.token,
-        expire: value.refresh.expire,
-      }
+      this.setTokenRes(session, value)
       return Results.createSuccessResult(value.access.token)
     }).catch(reason => Results.createErrorResult(ErrorIds.ApiError, reason))
   }
 
   private async refreshByRefreshToken(token: string): Promise<ApiResult<string>> {
-    return Results.createErrorResult(ErrorIds.NotImplement, "Todo")
+    const session = this.session
+    if (!session) return Results.createErrorResult(ErrorIds.NoLogin, "session is undefined")
+
+    return await apiClient.token_refresh_api_token_refresh_get({
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then(value => {
+      this.setTokenRes(session, value)
+      return Results.createSuccessResult(value.access.token)
+    }).catch(reason => Results.createErrorResult(ErrorIds.ApiError, reason))
+  }
+
+  private setTokenRes(
+    session: Session,
+    tokenRes: { access: { token: string, expire: string }, refresh: { token: string, expire: string } }
+  ) {
+    session.access = {
+      token: tokenRes.access.token,
+      expire: tokenRes.access.expire,
+    }
+    session.refresh = {
+      token: tokenRes.refresh.token,
+      expire: tokenRes.refresh.expire,
+    }
   }
 }
