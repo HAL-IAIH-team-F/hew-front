@@ -3,8 +3,11 @@ import {ErrorData} from "./result";
 export class ErrorIds {
   static readonly ACCESS_TOKEN_EXPIRED = createErrorId("ACCESS_TOKEN_EXPIRED");
   static readonly NoLogin = createErrorId("NoLogin");
+  static readonly InvalidLoginState = createErrorId("InvalidLoginState");
   static readonly NoId = createErrorId("NoId");
   static readonly UnknownError = createErrorId("Unknown");
+  static readonly NotImplement = createErrorId("NotImplement");
+  static readonly ApiError = createErrorId("ApiError");
   static readonly InvalidNumber = createErrorId("InvalidNumber");
   static readonly InvalidBody = createErrorId("InvalidBody");
 

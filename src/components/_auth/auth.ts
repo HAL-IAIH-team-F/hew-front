@@ -25,18 +25,10 @@ export const nextAuth = NextAuth({
   callbacks: {
     async jwt({token, account}) {
       if (account) {
-        token.keycloak_refresh_token = account.refresh_token
+        token.keycloak_access_token = account.access_token
         token.keycloak_id_token = account.id_token
       }
 
-      if (account?.access_token) {
-        // const res = await refreshClient(account.access_token)
-        // token.refresh_token = res.refresh.token
-        // token.access_token = res.access.token
-      } else {
-        token.refresh_token = undefined
-        token.access_token = undefined
-      }
       return token
     },
     async session({session, token}) {
@@ -45,9 +37,7 @@ export const nextAuth = NextAuth({
         session.user.id = token.sub;
       }
       session.keycloak_id_token = token.keycloak_id_token
-      session.keycloak_refresh_token = token.keycloak_refresh_token
-      session.refresh_token = token.refresh_token
-      session.access_token = token.access_token
+      session.keycloak_access_token = token.keycloak_access_token
       return session;
     },
   }
@@ -58,17 +48,21 @@ export const {
 } = nextAuth
 declare module "next-auth" {
   interface Session {
-    keycloak_refresh_token?: string
+    keycloak_access_token?: string
     keycloak_id_token?: string
-    refresh_token?: string
-    access_token?: string
+    access?: {
+      token: string,
+      expire: string
+    },
+    refresh?: {
+      token: string,
+      expire: string
+    },
   }
 }
 declare module "next-auth/jwt" {
   interface JWT {
-    keycloak_refresh_token?: string
+    keycloak_access_token?: string
     keycloak_id_token?: string
-    refresh_token?: string
-    access_token?: string
   }
 }

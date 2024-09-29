@@ -9,7 +9,7 @@ export function SignInOutButton(
   }: SignInOutButtonProps,
 ) {
   const session = useSession().data
-console.debug(session)
+
   return (
     <>
       {session?.user ? <SignOutButton {...props}/> :  <SignInButton {...props}/> }

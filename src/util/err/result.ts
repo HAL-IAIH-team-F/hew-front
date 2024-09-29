@@ -23,4 +23,7 @@ export namespace Results {
     return {error: errorId.createData(util.createErrorMessage(reason))};
   }
 
+  export function createSuccessResult<T>(value: T): SuccessResult<T> {
+    return {value: value};
+  }
 }
