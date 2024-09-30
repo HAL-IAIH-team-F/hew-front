@@ -1,23 +1,24 @@
 import {createApiClient} from "@/_api/client";
-import {AxiosRequestConfig} from "axios";
+import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Session} from "next-auth";
 import {add, isAfter, isBefore, parseISO} from "date-fns";
 import {ApiResult, Results} from "../../util/err/result";
-import {ErrorIds} from "../../util/err/errors";
+import {ErrorRes} from "../../util/err/errorRes";
+import {ErrorIds} from "../../util/err/errorIds";
+import {Err} from "../../util/err/err";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL as string;
+const cors = process.env.NEXT_PUBLIC_CORS as string;
+console.debug("baseUrl", baseUrl)
+export const apiClient = createApiClient(baseUrl, {});
 
-export const apiClient = createApiClient("/", {
-  axiosConfig: {baseURL: baseUrl}
-});
-
-export function getClientContext(session: Session): ClientContext {
+export function getClientContext(session: Session | null): ClientContext {
   return new ClientContext(session)
 }
 
 export class ClientContext {
   constructor(
-    private readonly session: Session | undefined
+    private readonly session: Session | null
   ) {
   }
 
@@ -38,7 +39,10 @@ export class ClientContext {
       },
       ...opt,
     }).then(value => Results.createSuccessResult(value))
-      .catch(reason => Results.createErrorResult(ErrorIds.ApiError, reason))
+      .catch(reason => {
+        console.error(reason)
+        return Results.errorResultByErrIdReason(ErrorIds.ApiError, reason)
+      })
   }
 
   private async accessToken(): Promise<ApiResult<string>> {
@@ -66,19 +70,24 @@ export class ClientContext {
 
   private async refreshByKeycloak(): Promise<ApiResult<string>> {
     const token = this.session?.keycloak_access_token
-    if (!token) return Results.createErrorResult(ErrorIds.NoLogin, "keycloak token is undefined")
+    if (!token) return Results.errorResultByErrIdReason(ErrorIds.NoLogin, "keycloak token is undefined")
     const session = this.session
-    if (!session) return Results.createErrorResult(ErrorIds.NoLogin, "session is undefined")
+    if (!session) return Results.errorResultByErrIdReason(ErrorIds.NoLogin, "session is undefined")
 
     return await apiClient.post_token_api_token_post({keycloak_token: token}).then(value => {
       this.setTokenRes(session, value)
       return Results.createSuccessResult(value.access.token)
-    }).catch(reason => Results.createErrorResult(ErrorIds.ApiError, reason))
+    }).catch(reason => {
+      if (!axios.isAxiosError(reason)) return Results.errorResultByErrIdReason(ErrorIds.ApiError, reason)
+      const res: AxiosResponse<ErrorRes> | undefined = reason.response
+      if (!res) return Results.errorResultByErrIdReason(ErrorIds.ApiError, reason)
+      return Results.errorResByErrorData(Err.createErrorData(res.data))
+    })
   }
 
   private async refreshByRefreshToken(token: string): Promise<ApiResult<string>> {
     const session = this.session
-    if (!session) return Results.createErrorResult(ErrorIds.NoLogin, "session is undefined")
+    if (!session) return Results.errorResultByErrIdReason(ErrorIds.NoLogin, "session is undefined")
 
     return await apiClient.token_refresh_api_token_refresh_get({
       headers: {
@@ -87,7 +96,10 @@ export class ClientContext {
     }).then(value => {
       this.setTokenRes(session, value)
       return Results.createSuccessResult(value.access.token)
-    }).catch(reason => Results.createErrorResult(ErrorIds.ApiError, reason))
+    }).catch(reason => {
+      console.error(reason)
+      return Results.errorResultByErrIdReason(ErrorIds.ApiError, reason)
+    })
   }
 
   private setTokenRes(

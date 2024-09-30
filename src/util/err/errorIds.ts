@@ -1,4 +1,4 @@
-import {ErrorData} from "./result";
+import {ErrorData} from "./err";
 
 export class ErrorIds {
   static readonly ACCESS_TOKEN_EXPIRED = createErrorId("ACCESS_TOKEN_EXPIRED");
@@ -17,6 +17,12 @@ export class ErrorIds {
 
 }
 
+export interface ErrorId {
+  name: string;
+
+  createData(msg: string): ErrorData;
+}
+
 function createErrorId(name: string): ErrorId {
   return {
     name: name,
@@ -24,10 +30,4 @@ function createErrorId(name: string): ErrorId {
       return {error_id: name, message: msg};
     },
   };
-}
-
-export interface ErrorId {
-  name: string;
-
-  createData(msg: string): ErrorData;
 }

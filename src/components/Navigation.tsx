@@ -8,6 +8,9 @@
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
 import {SignInOutButton} from "~/_auth/SignInOutButton";
+import {useClientContext} from "@/_api/clientWrapper";
+import {useSession} from "next-auth/react";
+import {apiClient} from "@/_api/wrapper";
 
 export function StyledNavigation() {
   const [isDragging, setIsDragging] = useState(false);
@@ -55,7 +58,18 @@ export function StyledNavigation() {
   const handleButtonClick = (buttonTitle: string) => {
     alert(buttonTitle);
   };
-
+  const [userName, setUserName] = useState<string>()
+  const session = useSession().data
+  const context = useClientContext(session)
+  useEffect(() => {
+    if (session) context.exec(apiClient.get_user_api_user_self_get, {})
+      .then(value => {
+        if (value.value) return setUserName(value.value.user_id)
+        setUserName(undefined)
+        console.error(value.error)
+      })
+    else setUserName(undefined)
+  }, [context]);
   return (
     <div
       ref={navRef}
@@ -76,6 +90,7 @@ export function StyledNavigation() {
       <hr className="border-gray-600 w-1000"/>
       <div className="flex justify-between">
         <div className="w-1/2 pr-1 mt-1 ml-2.5">
+          {userName && <p>{userName}</p>}
           <SignInOutButton
             className="font-bold block w-full my-1 py-1 text-left text-xs text-white hover:text-gray-400"
           />
