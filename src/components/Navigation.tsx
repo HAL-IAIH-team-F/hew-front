@@ -11,6 +11,7 @@ import {SignInOutButton} from "~/_auth/SignInOutButton";
 import {useClientContext} from "@/_api/clientWrapper";
 import {useSession} from "next-auth/react";
 import {apiClient} from "@/_api/wrapper";
+import {ErrorIds} from "../util/err/errorIds";
 
 export function StyledNavigation() {
   const [isDragging, setIsDragging] = useState(false);
@@ -66,6 +67,7 @@ export function StyledNavigation() {
       .then(value => {
         if (value.value) return setUserName(value.value.user_id)
         setUserName(undefined)
+        if (ErrorIds.USER_NOT_FOUND.equals(value.error?.error_id)) return
         console.error(value.error)
       })
     else setUserName(undefined)

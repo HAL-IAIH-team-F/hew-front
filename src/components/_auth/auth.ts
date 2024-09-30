@@ -5,7 +5,7 @@ import Keycloak from "next-auth/providers/keycloak";
 
 const realms = process.env.NEXT_PUBLIC_KEYCLOAK_REALMS
 const baseUrl = process.env.NEXT_PUBLIC_KEYCLOAK_BASEURL
-
+export const tokenUrl = new URL(`/realms/${realms}/protocol/openid-connect/token`,baseUrl)
 export const keycloakConfig = {
   clientId: process.env.KEYCLOAK_ID as string,
   clientSecret: process.env.KEYCLOAK_SECRET as string,
@@ -26,9 +26,11 @@ export const nextAuth = NextAuth({
     async jwt({token, account}) {
       if (account) {
         token.keycloak_access_token = account.access_token
+        token.keycloak_refresh_token = account.refresh_token
         token.keycloak_id_token = account.id_token
+        if (account.expires_in)
+          token.accessTokenExpires = Date.now() + account.expires_in * 1000
       }
-
       return token
     },
     async session({session, token}) {
@@ -38,6 +40,8 @@ export const nextAuth = NextAuth({
       }
       session.keycloak_id_token = token.keycloak_id_token
       session.keycloak_access_token = token.keycloak_access_token
+      session.keycloak_refresh_token = token.keycloak_refresh_token
+      session.accessTokenExpires = token.accessTokenExpires
       return session;
     },
   }
@@ -49,7 +53,9 @@ export const {
 declare module "next-auth" {
   interface Session {
     keycloak_access_token?: string
+    keycloak_refresh_token?: string
     keycloak_id_token?: string
+    accessTokenExpires?: number
     access?: {
       token: string,
       expire: string
@@ -63,6 +69,8 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     keycloak_access_token?: string
+    keycloak_refresh_token?: string
     keycloak_id_token?: string
+    accessTokenExpires?: number
   }
 }
