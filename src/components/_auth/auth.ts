@@ -1,6 +1,7 @@
-import NextAuth from "next-auth";
+import NextAuth, {Account} from "next-auth";
 import "next-auth/jwt";
 import Keycloak from "next-auth/providers/keycloak";
+import {JWT} from "@auth/core/jwt";
 
 
 const realms = process.env.NEXT_PUBLIC_KEYCLOAK_REALMS
@@ -23,13 +24,16 @@ export const nextAuth = NextAuth({
   ],
   trustHost: true,
   callbacks: {
-    async jwt({token, account}) {
+    async jwt({token, account}: {token: JWT,account: Account | null}) {
       if (account) {
         token.keycloak_access_token = account.access_token
         token.keycloak_refresh_token = account.refresh_token
         token.keycloak_id_token = account.id_token
         if (account.expires_in)
           token.accessTokenExpires = Date.now() + account.expires_in * 1000
+        console.debug(account)
+        if (account.refresh_expire_in)
+          token.refreshTokenExpires = Date.now() + account.refresh_expires_in * 1000
       }
       return token
     },
@@ -42,6 +46,8 @@ export const nextAuth = NextAuth({
       session.keycloak_access_token = token.keycloak_access_token
       session.keycloak_refresh_token = token.keycloak_refresh_token
       session.accessTokenExpires = token.accessTokenExpires
+      session.refreshTokenExpires = token.refreshTokenExpires
+
       return session;
     },
   }
@@ -56,6 +62,7 @@ declare module "next-auth" {
     keycloak_refresh_token?: string
     keycloak_id_token?: string
     accessTokenExpires?: number
+    refreshTokenExpires?: number
     access?: {
       token: string,
       expire: string
@@ -65,6 +72,9 @@ declare module "next-auth" {
       expire: string
     },
   }
+  interface Account {
+    refresh_expires_in: number
+  }
 }
 declare module "next-auth/jwt" {
   interface JWT {
@@ -72,5 +82,6 @@ declare module "next-auth/jwt" {
     keycloak_refresh_token?: string
     keycloak_id_token?: string
     accessTokenExpires?: number
+    refreshTokenExpires?: number
   }
 }

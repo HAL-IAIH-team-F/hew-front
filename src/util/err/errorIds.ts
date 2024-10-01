@@ -9,6 +9,8 @@ export class ErrorIds {
   static readonly UnknownError = createErrorId("Unknown");
   static readonly NotImplement = createErrorId("NotImplement");
   static readonly ApiError = createErrorId("ApiError");
+  static readonly InvalidKeycloakToken = createErrorId("InvalidKeycloakToken");
+  static readonly RefreshTokenError = createErrorId("RefreshTokenError");
   static readonly KeycloakRefreshError = createErrorId("KeycloakRefreshError");
   static readonly KeycloakRefreshResponseError = createErrorId("KeycloakRefreshResponseError");
   static readonly InvalidBody = createErrorId("InvalidBody");
@@ -23,7 +25,7 @@ export interface ErrId {
 
   createData(msg: string): ErrorData;
 
-  equals(errId: string): boolean
+  equals(errId: string | undefined): boolean
 }
 
 function createErrorId(name: string): ErrId {
@@ -32,7 +34,7 @@ function createErrorId(name: string): ErrId {
     createData(msg: string): ErrorData {
       return {error_id: name, message: msg};
     },
-    equals(errId: string): boolean {
+    equals(errId: string | undefined): boolean {
       return errId == name
     }
   };

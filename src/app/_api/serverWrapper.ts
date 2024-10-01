@@ -4,10 +4,7 @@ import {ApiResult, Results} from "../../util/err/result";
 import {add, isAfter, isBefore, parseISO} from "date-fns";
 import {ErrorIds} from "../../util/err/errorIds";
 import {Session} from "next-auth";
-import axios, {AxiosResponse} from "axios";
-import {ErrorRes} from "../../util/err/errorRes";
-import {Err} from "../../util/err/err";
-import {auth, keycloakConfig, tokenUrl} from "~/_auth/auth";
+import {auth, nextAuth} from "~/_auth/auth";
 import {apiClient} from "@/_api/wrapper";
 
 export async function accessToken(): Promise<ApiResult<string>> {
@@ -46,10 +43,7 @@ async function refreshByKeycloak(session: Session): Promise<ApiResult<string>> {
     setTokenRes(session, value)
     return Results.createSuccessResult(value.access.token)
   }).catch(reason => {
-    if (!axios.isAxiosError(reason)) return Results.errResultByErrIdReason(ErrorIds.ApiError, reason)
-    const res: AxiosResponse<ErrorRes> | undefined = reason.response
-    if (!res) return Results.errResultByErrIdReason(ErrorIds.ApiError, reason)
-    return Results.errResultByErrorData(Err.createErrorData(res.data))
+    return Results.errResultByReason(reason, ErrorIds.RefreshTokenError)
   })
 }
 
@@ -57,44 +51,8 @@ async function keycloakAccessToken(session: Session): Promise<ApiResult<string>>
   const expire = session.accessTokenExpires || 0
   if (session.keycloak_access_token && Date.now() < expire - 1000)
     return Results.createSuccessResult(session.keycloak_access_token)
-  return await refreshKeycloak(session)
-}
-
-async function refreshKeycloak(session: Session): Promise<ApiResult<string>> {
-  const refreshToken = session.keycloak_refresh_token
-  if (!refreshToken)
-    return Results.errResultByErrIdReason(ErrorIds.KeycloakRefreshError, "keycloak refresh token is undefined")
-
-  try {
-    const formData = new FormData()
-    formData.append("client_id", keycloakConfig.clientId)
-    formData.append("client_secret", keycloakConfig.clientSecret)
-    formData.append("grant_type", "refresh_token")
-    formData.append("refresh_token", refreshToken)
-
-    const response = await fetch(tokenUrl, {
-      headers: {},
-      body: formData,
-      method: "POST",
-    }).then(value => Results.createSuccessResult(value))
-      .catch(reason => Results.errResultByErrIdReason(ErrorIds.KeycloakRefreshError, reason))
-    if (response.error) return response
-    const refreshedTokens = await response.value.json()
-
-    if (!response.value.ok) {
-      return Results.errResultByErrIdReason(
-        ErrorIds.KeycloakRefreshResponseError,
-        response.value.status + ": " + response.value.statusText + ", " + JSON.stringify(refreshedTokens)
-      )
-    }
-
-    session.keycloak_access_token = refreshedTokens.access_token
-    session.accessTokenExpires = Date.now() + refreshedTokens.expires_in * 1000
-    session.keycloak_refresh_token = refreshedTokens.refresh_token || refreshToken
-    return refreshedTokens.access_token
-  } catch (error) {
-    return Results.errResultByErrIdReason(ErrorIds.KeycloakRefreshError, error)
-  }
+  await nextAuth.signIn("keycloak")
+  return Results.errResultByErrIdReason(ErrorIds.KeycloakRefreshError, "failed to sign in")
 }
 
 async function refreshByRefreshToken(token: string, session: Session): Promise<ApiResult<string>> {
