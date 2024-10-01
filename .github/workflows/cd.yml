@@ -8,7 +8,7 @@ jobs:
     env:
       preDockerBuildCmd: ""
       repository: HAL-IAIH-team-F/k8s-hew
-      manifestFile: ./hew-dev/front.yml
+      manifestFile: ./hew-dev/front/front.yml
       dockerFile: Dockerfile
       harborUser: robot$hew
       name: hew-front
