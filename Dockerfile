@@ -21,9 +21,9 @@ ARG baseUrl
 
 RUN echo KEYCLOAK_ID="$keycloakId" >> ./.env \
   && echo KEYCLOAK_SECRET="$keycloakSecret" >> ./.env \
-  && echo KEYCLOAK_BASEURL="$keycloakBaseUrl" >> ./.env \
+  && echo NEXT_PUBLIC_KEYCLOAK_BASEURL="$keycloakBaseUrl" >> ./.env \
   && echo AUTH_SECRET="$authSecret" >> ./.env \
-  && echo KEYCLOAK_REALMS="$keycloakRealms" >> ./.env \
+  && echo NEXT_PUBLIC_KEYCLOAK_REALMS="$keycloakRealms" >> ./.env \
   && echo NEXT_PUBLIC_BASE_URL="$baseUrl" >> ./.env \
   && echo NEXTAUTH_URL="$siteUrl" >> ./.env
 RUN npm run build
