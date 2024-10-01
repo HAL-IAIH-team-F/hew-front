@@ -3,7 +3,8 @@ export namespace util {
     if (reason instanceof Error && reason.message) {
       return reason.message;
     }
-    return reason.toString();
+    if (reason === undefined) return "undefined"
+    return reason && reason.toString();
   }
 }
 

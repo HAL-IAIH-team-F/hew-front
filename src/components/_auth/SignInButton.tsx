@@ -1,10 +1,10 @@
 "use client"
 import {HTMLAttributes, useState} from "react";
-import {ErrorMessage} from "../util/err/ErrorMessage";
-import {signIn} from "~/_auth/authAction";
+import {ErrorMessage} from "../../util/err/ErrorMessage";
+import {signIn} from "~/_auth/clientAuth";
 
 
-export default function LoginButton(
+export function SignInButton(
   {
     children,
     ...props
@@ -19,7 +19,7 @@ export default function LoginButton(
         {...props}
         onClick={() => {
           setErr(undefined)
-          signIn("keycloak").catch(reason => {
+          signIn().catch(reason => {
             setErr(`ログインに失敗しました: ${reason.toString()}`)
           })
         }}>

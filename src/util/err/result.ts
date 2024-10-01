@@ -1,26 +1,35 @@
-import {ErrorId} from "./errors";
 import {util} from "../util";
+import {Err, ErrorData} from "./err";
+import {ErrId} from "./errorIds";
 
-export type ApiResult<T> = SuccessResult<T> | ErrorResult
+export type ApiResult<T> = SuccessResult<T> | ErrResult
 
 export interface SuccessResult<T> {
   value: T;
   error?: undefined;
 }
 
-export interface ErrorResult {
+export interface ErrResult {
   value?: undefined;
   error: ErrorData;
 }
 
-export interface ErrorData {
-  error_id: string;
-  message: string;
-}
-
 export namespace Results {
-  export function createErrorResult(errorId: ErrorId, reason: any): ErrorResult {
-    return {error: errorId.createData(util.createErrorMessage(reason))};
+  export function errResultByErrIdReason(errorId: ErrId, reason: any): ErrResult {
+    return errResultByErrorData(errorId.createData(util.createErrorMessage(reason)));
   }
 
+  export function errResultByErrorData(errorData: ErrorData): ErrResult {
+    return {error: errorData}
+  }
+
+  export function errResultByReason(reason: any, errId: ErrId): ErrResult {
+    const data = Err.errDataByAxiosErr(reason)
+    if (data) return errResultByErrorData(data)
+    return errResultByErrIdReason(errId, reason)
+  }
+
+  export function createSuccessResult<T>(value: T): SuccessResult<T> {
+    return {value: value};
+  }
 }
