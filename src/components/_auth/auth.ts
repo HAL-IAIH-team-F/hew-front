@@ -31,7 +31,6 @@ export const nextAuth = NextAuth({
         token.keycloak_id_token = account.id_token
         if (account.expires_in)
           token.accessTokenExpires = Date.now() + account.expires_in * 1000
-        console.debug(account)
         if (account.refresh_expire_in)
           token.refreshTokenExpires = Date.now() + account.refresh_expires_in * 1000
       }

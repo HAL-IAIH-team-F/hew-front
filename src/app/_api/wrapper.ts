@@ -25,6 +25,7 @@ export class ClientContext {
       authorization = opt.headers?.Authorization
     } else if (this.session) {
       const result = await accessToken()
+      if (!result) return Results.errResultByErrIdReason(ErrorIds.UnknownError,"result is undefined")
       if (result.error) return result
       authorization = `Bearer ${result.value}`
     }

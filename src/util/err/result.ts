@@ -25,6 +25,7 @@ export namespace Results {
 
   export function errResultByReason(reason: any, errId: ErrId): ErrResult {
     const data = Err.errDataByAxiosErr(reason)
+
     if (data) return errResultByErrorData(data)
     return errResultByErrIdReason(errId, reason)
   }

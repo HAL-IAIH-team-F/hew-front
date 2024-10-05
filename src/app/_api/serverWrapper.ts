@@ -65,8 +65,7 @@ async function refreshByRefreshToken(token: string, session: Session): Promise<A
     setTokenRes(session, value)
     return Results.createSuccessResult(value.access.token)
   }).catch(reason => {
-    console.error(reason)
-    return Results.errResultByErrIdReason(ErrorIds.ApiError, reason)
+    return Results.errResultByReason(reason, ErrorIds.ApiError)
   })
 }
 

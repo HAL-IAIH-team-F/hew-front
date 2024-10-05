@@ -16,6 +16,8 @@ export namespace Err {
     if (!axios.isAxiosError(reason)) return undefined
     const res: AxiosResponse<ErrorRes> | undefined = reason.response
     if (!res) return undefined
+    if (!res.data.error_id) return undefined
+    if (!res.data.message) return undefined
     return Err.createErrorData(res.data)
   }
 }
