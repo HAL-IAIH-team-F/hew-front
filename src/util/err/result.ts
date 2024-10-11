@@ -24,10 +24,11 @@ export namespace Results {
   }
 
   export function errResultByReason(reason: any, errId: ErrId): ErrResult {
-    const data = Err.errDataByAxiosErr(reason)
-
-    if (data) return errResultByErrorData(data)
-    return errResultByErrIdReason(errId, reason)
+    const data = Err.reasonIfAxiosErr(reason)
+    if (!data) return errResultByErrIdReason(errId, reason)
+    if (!data.error_id) return errResultByErrIdReason(errId, data)
+    if (!data.message) return errResultByErrIdReason(errId, data)
+    return errResultByErrorData(Err.createErrorData(data))
   }
 
   export function createSuccessResult<T>(value: T): SuccessResult<T> {

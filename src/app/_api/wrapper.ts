@@ -19,24 +19,21 @@ export class ClientContext {
   ) {
   }
 
-  async exec<T extends AxiosRequestConfig, R>(func: (opt: T) => Promise<R>, opt: T): Promise<ApiResult<R>> {
-    let authorization = undefined
-    if (opt.headers?.Authorization) {
-      authorization = opt.headers?.Authorization
-    } else if (this.session) {
-      const result = await accessToken()
-      if (!result) return Results.errResultByErrIdReason(ErrorIds.UnknownError,"result is undefined")
-      if (result.error) return result
-      authorization = `Bearer ${result.value}`
+  async exec<B, R>(func: (body: B, opt: AxiosRequestConfig) => Promise<R>, body: B, opt?: AxiosRequestConfig): Promise<ApiResult<R>> {
+    const newOpt: AxiosRequestConfig = opt || {}
+    if (!newOpt.headers) {
+      newOpt.headers = {}
+    }
+    if (!newOpt.headers.Authorization) {
+      if (this.session) {
+        const result = await accessToken()
+        if (!result) return Results.errResultByErrIdReason(ErrorIds.UnknownError, "result is undefined")
+        if (result.error) return result
+        newOpt.headers.Authorization = `Bearer ${result.value}`
+      }
     }
 
-    return await func({
-      headers: {
-        Authorization: authorization,
-        ...opt.headers,
-      },
-      ...opt,
-    }).then(value => Results.createSuccessResult(value))
+    return await func(body, newOpt).then(value => Results.createSuccessResult(value))
       .catch(reason => {
         return Results.errResultByReason(reason, ErrorIds.ApiError)
       })

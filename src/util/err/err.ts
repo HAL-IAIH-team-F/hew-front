@@ -12,12 +12,18 @@ export namespace Err {
     return {error_id: errorRes.error_id, message: errorRes.message}
   }
 
-  export function errDataByAxiosErr(reason: any) {
+  export function reasonIfAxiosErr(reason: any) {
     if (!axios.isAxiosError(reason)) return undefined
     const res: AxiosResponse<ErrorRes> | undefined = reason.response
     if (!res) return undefined
-    if (!res.data.error_id) return undefined
-    if (!res.data.message) return undefined
-    return Err.createErrorData(res.data)
+    return res.data
+  }
+
+  export function errDataIfAxiosErr(reason: any) {
+    const data = reasonIfAxiosErr(reason)
+    if (!data) return undefined
+    if (!data.error_id) return undefined
+    if (!data.message) return undefined
+    return Err.createErrorData(data)
   }
 }
