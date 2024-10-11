@@ -19,7 +19,7 @@ export class ClientContext {
   ) {
   }
 
-  async exec<B, R>(func: (body: B, opt: AxiosRequestConfig) => Promise<R>, body: B, opt?: AxiosRequestConfig): Promise<ApiResult<R>> {
+  async execBody<B, R>(func: (body: B, opt: AxiosRequestConfig) => Promise<R>, body: B, opt?: AxiosRequestConfig): Promise<ApiResult<R>> {
     const newOpt: AxiosRequestConfig = opt || {}
     if (!newOpt.headers) {
       newOpt.headers = {}
@@ -37,6 +37,10 @@ export class ClientContext {
       .catch(reason => {
         return Results.errResultByReason(reason, ErrorIds.ApiError)
       })
+  }
+
+  async exec<R>(func: (opt: AxiosRequestConfig) => Promise<R>, opt?: AxiosRequestConfig): Promise<ApiResult<R>> {
+    return this.execBody((body, opt1) => func(opt1), null, opt)
   }
 
 }
