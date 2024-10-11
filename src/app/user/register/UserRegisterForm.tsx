@@ -6,11 +6,13 @@ import { ChangeEvent, useState } from "react";
 import { apiClient } from "@/_api/wrapper";
 import { useClientContext } from "@/_api/clientWrapper";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/dist/server/api-utils";
+import { useRouter } from 'next/navigation';
 
 export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState<string>("no");
-
+  const router = useRouter()
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -40,11 +42,14 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
         err.userName = "ユーザーネームを入力してください";
         return err;  // エラーがあればここで処理を終了
       }
-
-      clientContext.execBody(apiClient.post_user_api_user_post, {user_name: user_name ,user_icon_uuid: icon_data}).then(value => {
+      
+      const response = clientContext.execBody(apiClient.post_user_api_user_post, {user_name: user_name ,user_icon_uuid: icon_data}).then(value => {
         console.log(value)
+        if (value != undefined)
+        {
+          router.push('/timeline');
+        }
       })
-
       return undefined
     }}>
       <div className="flex items-center space-x-4 mb-4">
