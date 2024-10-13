@@ -1,13 +1,18 @@
 "use client";
-import { StyledForm } from "../../../util/form/StyledForm";
+import { FormError, StyledForm } from "../../../util/form/StyledForm";
 import { StyledInput } from "../../../util/form/StyledInput";
 import { StyledButton } from "../../../util/form/StyledButton";
 import { ChangeEvent, useState } from "react";
+import { apiClient } from "@/_api/wrapper";
+import { useClientContext } from "@/_api/clientWrapper";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/dist/server/api-utils";
+import { useRouter } from 'next/navigation';
 
 export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState<string>("no");
-
+  const router = useRouter()
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -23,8 +28,30 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
     setIsCreator(e.target.value);
   };
 
+  const session = useSession().data
+  const clientContext = useClientContext(session)
+  
   return (
-    <StyledForm {...props}>
+    <StyledForm {...props} action={async formData => {
+
+      const err: FormError = {}
+      const icon_data = null // あとでimage api 
+      const user_name = formData.get("user_name");
+  
+      if (typeof user_name !== 'string' || !user_name) {
+        err.userName = "ユーザーネームを入力してください";
+        return err;  // エラーがあればここで処理を終了
+      }
+      
+      const response = clientContext.execBody(apiClient.post_user_api_user_post, {user_name: user_name ,user_icon_uuid: icon_data}).then(value => {
+        console.log(value)
+        if (value != undefined)
+        {
+          router.push('/timeline');
+        }
+      })
+      return undefined
+    }}>
       <div className="flex items-center space-x-4 mb-4">
         <label className="relative cursor-pointer">
           <div className="w-[150px] h-[150px] overflow-hidden rounded-full bg-gray-200">
@@ -67,7 +94,7 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
           className="hidden"
         />
       </div>
-      <StyledInput name="表示名" type="text" />
+      <StyledInput name="user_name" label="ユーザーネーム" type="text" />
 
       {/* クリエイターとして登録のラジオボタン */}
       <div className="flex items-center space-x-10 mb-4"> {/* 隙間を開ける */}
