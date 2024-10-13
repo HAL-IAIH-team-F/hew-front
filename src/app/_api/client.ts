@@ -1,13 +1,18 @@
 import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
 import { z } from "zod";
 
-const PostUserBody = z.object({ user_name: z.string() }).passthrough();
+const PostUserBody = z
+  .object({
+    user_name: z.string(),
+    user_icon_uuid: z.union([z.string(), z.null()]),
+  })
+  .passthrough();
 const SelfUserRes = z
   .object({
-    user_id: z.string(),
+    user_id: z.string().uuid(),
     user_name: z.string(),
     user_screen_id: z.string(),
-    user_icon_uuid: z.string(),
+    user_icon_uuid: z.union([z.string(), z.null()]),
     user_date: z.string().datetime({ offset: true }),
     user_mail: z.string(),
   })
@@ -30,6 +35,19 @@ const TokenInfo = z
 const TokenRes = z
   .object({ access: TokenInfo, refresh: TokenInfo })
   .passthrough();
+const ImgTokenRes = z.object({ upload: TokenInfo }).passthrough();
+const name = z.union([z.array(z.string()), z.null()]).optional();
+const post_by = z.union([z.array(z.string().uuid()), z.null()]).optional();
+const start_datetime = z.union([z.string(), z.null()]).optional();
+const following = z.union([z.boolean(), z.null()]).optional();
+const read_limit_number = z.union([z.number(), z.null()]).optional();
+const PostCreatorBody = z
+  .object({
+    user_id: z.string().uuid(),
+    contact_address: z.string(),
+    transfer_target: z.string(),
+  })
+  .passthrough();
 
 export const schemas = {
   PostUserBody,
@@ -39,9 +57,37 @@ export const schemas = {
   PostTokenBody,
   TokenInfo,
   TokenRes,
+  ImgTokenRes,
+  name,
+  post_by,
+  start_datetime,
+  following,
+  read_limit_number,
+  PostCreatorBody,
 };
 
 const endpoints = makeApi([
+  {
+    method: "post",
+    path: "/api/creator",
+    alias: "post_creator_api_creator_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: PostCreatorBody,
+      },
+    ],
+    response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
   {
     method: "post",
     path: "/api/token",
@@ -65,6 +111,13 @@ const endpoints = makeApi([
   },
   {
     method: "get",
+    path: "/api/token/image",
+    alias: "image_token_api_token_image_get",
+    requestFormat: "json",
+    response: ImgTokenRes,
+  },
+  {
+    method: "get",
     path: "/api/token/refresh",
     alias: "token_refresh_api_token_refresh_get",
     requestFormat: "json",
@@ -79,7 +132,7 @@ const endpoints = makeApi([
       {
         name: "body",
         type: "Body",
-        schema: z.object({ user_name: z.string() }).passthrough(),
+        schema: PostUserBody,
       },
     ],
     response: SelfUserRes,
@@ -104,6 +157,57 @@ const endpoints = makeApi([
     alias: "health_health_get",
     requestFormat: "json",
     response: z.unknown(),
+  },
+  {
+    method: "get",
+    path: "/products/",
+    alias: "read_products_products__get",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "name",
+        type: "Query",
+        schema: name,
+      },
+      {
+        name: "tag",
+        type: "Query",
+        schema: name,
+      },
+      {
+        name: "post_by",
+        type: "Query",
+        schema: post_by,
+      },
+      {
+        name: "start_datetime",
+        type: "Query",
+        schema: start_datetime,
+      },
+      {
+        name: "end_datetime",
+        type: "Query",
+        schema: start_datetime,
+      },
+      {
+        name: "following",
+        type: "Query",
+        schema: following,
+      },
+      {
+        name: "read_limit_number",
+        type: "Query",
+        schema: read_limit_number,
+      },
+    ],
+    response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
   },
 ]);
 
