@@ -7,10 +7,6 @@ import {sx} from "../util";
 
 export namespace FormState {
   export const Context = createContext<FormError | undefined>(undefined)
-
-  export function error(error: FormError) {
-    // return json(error)
-  }
 }
 
 export type FormError = { [key: string]: string }
@@ -34,9 +30,13 @@ export function StyledForm(
           setFormError(value)
         })
       }}>
-        <ErrorMessage error={formError && formError["form"]}/>
+        {formError && Object.keys(formError).map(value =>
+          <ErrorMessage error={value + ": " + formError[value]} key={value}/>
+        )}
         {children}
-        <ErrorMessage error={formError && formError["form"]}/>
+        {formError && Object.keys(formError).map(value =>
+          <ErrorMessage error={value + ": " + formError[value]} key={value}/>
+        )}
       </form>
     </FormState.Context.Provider>
   )

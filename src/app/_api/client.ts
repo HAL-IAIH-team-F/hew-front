@@ -7,12 +7,18 @@ const PostUserBody = z
     user_icon_uuid: z.union([z.string(), z.null()]),
   })
   .passthrough();
+const Img = z
+  .object({
+    image_uuid: z.string().uuid(),
+    token: z.union([z.string(), z.null()]),
+  })
+  .passthrough();
 const SelfUserRes = z
   .object({
     user_id: z.string().uuid(),
     user_name: z.string(),
     user_screen_id: z.string(),
-    user_icon_uuid: z.union([z.string(), z.null()]),
+    user_icon: z.union([Img, z.null()]),
     user_date: z.string().datetime({ offset: true }),
     user_mail: z.string(),
   })
@@ -51,6 +57,7 @@ const PostCreatorBody = z
 
 export const schemas = {
   PostUserBody,
+  Img,
   SelfUserRes,
   ValidationError,
   HTTPValidationError,
