@@ -56,7 +56,6 @@ async function keycloakAccessToken(session: Session): Promise<ApiResult<string>>
 }
 
 async function refreshByRefreshToken(token: string, session: Session): Promise<ApiResult<string>> {
-
   return await apiClient.token_refresh_api_token_refresh_get({
     headers: {
       Authorization: `Bearer ${token}`

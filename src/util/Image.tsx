@@ -9,8 +9,8 @@ export default function Image(
   }: ImageProps,
 ) {
   return (
-    <figure className={sx("aspect-video flex justify-center items-center border-borderDef border-2 bg-w" , className)}>
-      <img alt={alt} {...props} className={sx("max-h-full max-w-full p-2 block")}/>
+    <figure className={sx("aspect-video flex justify-center items-center" , className)}>
+      <img alt={alt} {...props} className={sx("max-h-full max-w-full block")}/>
     </figure>
   )
 }

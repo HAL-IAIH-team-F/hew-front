@@ -10,8 +10,9 @@ import {useEffect, useRef, useState} from "react";
 import {SignInOutButton} from "~/_auth/SignInOutButton";
 import {useClientContext} from "@/_api/clientWrapper";
 import {useSession} from "next-auth/react";
-import {apiClient} from "@/_api/wrapper";
+import {apiClient, Img} from "@/_api/wrapper";
 import {ErrorIds} from "../util/err/errorIds";
+import Image from "../util/Image";
 
 export function StyledNavigation() {
   const [isDragging, setIsDragging] = useState(false);
@@ -59,18 +60,34 @@ export function StyledNavigation() {
   const handleButtonClick = (buttonTitle: string) => {
     alert(buttonTitle);
   };
-  const [userName, setUserName] = useState<string>()
+  const [user, setUser] = useState<{ name: string, icon: Img | undefined }>()
   const session = useSession().data
   const context = useClientContext(session)
   useEffect(() => {
     if (session) context.exec(apiClient.get_user_api_user_self_get, {})
       .then(value => {
-        if (value.value) return setUserName(value.value.user_id)
-        setUserName(undefined)
-        if (ErrorIds.USER_NOT_FOUND.equals(value.error?.error_id)) return
-        console.error(value.error)
+        if (!value.value) {
+          setUser(undefined)
+          if (ErrorIds.USER_NOT_FOUND.equals(value.error?.error_id)) return
+          console.error(value.error)
+          return
+        }
+        if (value.value.user_icon) Img.create(value.value.user_icon.image_uuid, value.value.user_icon.token)
+          .then(value1 => {
+            setUser({
+              name: value.value.user_name,
+              icon: value1.value,
+            })
+            if (value1.error) {
+              console.error(value1.error.error_id + ": " + value1.error.message)
+            }
+          })
+        else setUser({
+          name: value.value.user_name,
+          icon: undefined,
+        })
       })
-    else setUserName(undefined)
+    else setUser(undefined)
   }, [context]);
   return (
     <div
@@ -92,7 +109,10 @@ export function StyledNavigation() {
       <hr className="border-gray-600 w-1000"/>
       <div className="flex justify-between">
         <div className="w-1/2 pr-1 mt-1 ml-2.5">
-          {userName && <p>{userName}</p>}
+          {user && <div className={"flex text-white"}>
+            {user.icon && <Image alt={"icon"} src={user.icon.strUrl()} className={"h-8"}/>}
+            <p>{user.name}</p>
+          </div>}
           <SignInOutButton
             className="font-bold block w-full my-1 py-1 text-left text-xs text-white hover:text-gray-400"
           />
