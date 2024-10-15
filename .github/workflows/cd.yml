@@ -20,6 +20,7 @@ jobs:
         --build-arg keycloakRealms="develop"
         --build-arg siteUrl="https://hew-dev.kigawa.net"
         --build-arg baseUrl="https://hew-dev-api.kigawa.net/"
+        --build-arg imgBaseUrl="https://hew-dev-image.kigawa.net/"
 
     steps:
       # checkout
