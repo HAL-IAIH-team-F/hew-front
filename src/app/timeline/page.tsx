@@ -1,13 +1,13 @@
 import Main from "~/Main";
-import DeepSeaScene from "./DeepSeaScene";
+import Timeline from "./timeline";
 
 
-export default function timeline(
+export default function page(
   {}: {}
 ) {
   return(
   <Main>
-    <DeepSeaScene />
+    <Timeline />
   </Main>
   )
 }
