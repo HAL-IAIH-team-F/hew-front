@@ -62,10 +62,10 @@ export namespace ExtendBlock {
   function checkOverflow(
     sheet: SheetStates, top: number, down: number, left: number, right: number,
   ) {
-    if (sheet.offsetY + down < 0) return true;
-    if (sheet.offsetY + top > sheet.height) return true;
-    if (sheet.offsetX + right < 0) return true;
-    return sheet.offsetX + left > sheet.width;
+    if (sheet.yShaft.offset + down < 0) return true;
+    if (sheet.yShaft.offset + top > sheet.yShaft.size) return true;
+    if (sheet.xShaft.offset + right < 0) return true;
+    return sheet.xShaft.offset + left > sheet.xShaft.size;
 
   }
 
