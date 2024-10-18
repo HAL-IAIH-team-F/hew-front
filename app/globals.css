@@ -1,9 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @layer utilities {
+    .bg-wood-pattern {
+      background-image: url('/2.jpg'); /* 木目のテクスチャ画像のURLを指定 */
+      background-size: cover;
+    }
+
+    .bg-shelf-wood {
+        background-image: url('/2.jpg'); /* 棚板用の木目画像 */
+        background-size: cover;
+    }
+
+
   .text-balance {
     text-wrap: balance;
   }
 }
+
