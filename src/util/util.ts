@@ -6,6 +6,10 @@ export namespace util {
     if (reason === undefined) return "undefined"
     return reason && reason.toString();
   }
+
+  export function getValue<T>(value: T | (() => T)) {
+    return value instanceof Function ? value() : value;
+  }
 }
 
 export function sx(...classNames: (string | undefined)[]): string {
