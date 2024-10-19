@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import {useThree} from "@react-three/fiber";
 import {ReactNode, useMemo} from "react";
+import useWindow from "../../../../util/hook/useWindow";
 
 export default function Animation(
   {
@@ -8,8 +9,10 @@ export default function Animation(
   }: AnimationProps,
 ) {
   const {camera, gl} = useThree();
+  const window = useWindow();
 
   useMemo(() => {
+    if (window == undefined) return
     // ウィンドウのリサイズ時にカメラとレンダラーを更新するイベントリスナーを作成
     const handleResize = () => {
       const {innerWidth, innerHeight} = window;
@@ -27,7 +30,7 @@ export default function Animation(
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [camera, gl]);
+  }, [camera, gl, window]);
 
   useMemo(() => {
     gl.shadowMap.enabled = true;

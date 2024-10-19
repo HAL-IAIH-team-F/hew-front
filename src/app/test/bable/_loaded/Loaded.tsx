@@ -2,10 +2,13 @@
 import {Canvas} from "@react-three/fiber";
 import Animation from "./Animation";
 import FoamWithCircle from "./FoamWithCircle";
+import useWindow from "../../../../util/hook/useWindow";
 
 export default function Loaded(
   {}: LoadingProps,
 ) {
+  const window = useWindow()
+
   return (
     <div
       style={{
