@@ -1,6 +1,7 @@
 "use client";
 import * as THREE from "three";
 import { gsap } from "gsap";
+import { Manager } from "../manager/manager";
 
 
 export const getRandomPositionWithExclusion = (minX: number,maxX: number,minY: number,maxY: number,bubbles: THREE.Mesh[],exclusionRadius: number,scale: number,sessionId:number) => {
@@ -48,8 +49,23 @@ export const moveBubblesToPosition = (bubbles: THREE.Mesh[], currentSessionId: n
     if ((bubble as any).sessionId === currentSessionId) {
       gsap.to(bubble.position, {
         z: 200,
-        duration: Math.random() * 1.5 + 1.5,
+        duration: Math.random() * 1.2 + 1,
         ease: 'power2.out',
+      });
+    }
+  });
+};
+
+export const initmoveBubblesToPosition = (bubbles: THREE.Mesh[], currentSessionId: number,nextstate: string,manager: Manager) => {
+  bubbles.forEach((bubble) => {
+    if ((bubble as any).sessionId === currentSessionId) {
+      gsap.to(bubble.position, {
+        z: 200,
+        duration: Math.random() * 1.2 + 1,
+        ease: 'power2.out',
+        onComplete: () => {
+          manager.update.animstate(nextstate)
+        }
       });
     }
   });

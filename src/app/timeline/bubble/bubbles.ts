@@ -5,9 +5,9 @@ import { gsap } from "gsap";
 import { Manager } from "../manager/manager"
 import { showProduct } from "../product/product";
 import { createGradientBackground } from "../background/background"
+import Effects from "../effects/camera/Effects"
 
-
-export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: number,bubbles: THREE.Mesh[]) => {
+export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: number,bubbles: THREE.Mesh[],) => {
   const textureLoader = new THREE.TextureLoader();
 
   for (let i = 0; i < bubblecnt; i++) {
@@ -109,7 +109,7 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
   return bubbles;
 };
 
-export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera, scene: THREE.Scene ) => {
+export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera, scene: THREE.Scene , effects: Effects) => {
   const mouse = new THREE.Vector2(
     (event.clientX / window.innerWidth) * 2 - 1,
     -(event.clientY / window.innerHeight) * 2 + 1
@@ -122,63 +122,71 @@ export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THR
 
   if (intersects.length > 0) {
     const clickedBubble = intersects[0].object as THREE.Mesh;
-    manager.update.animstate("onClickBubble");
+    
     (clickedBubble as any).stopAnimation();
-
+    
     if ((clickedBubble as any).bubbleId == 999)
     {
+      console.log(manager.value.animstate);
       if (manager.value.animstate != "product")
       {
         showProduct(clickedBubble,scene,camera,manager)
         manager.update.animstate("product");
       }
-      
     }else{
-      createGradientBackground(scene, manager.value.sessionId);
-      gsap.to(clickedBubble.position, {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z - 200,
-        duration: 1.5,
-        ease: "power2.inOut",
-      });
-      gsap.to(clickedBubble.scale, {
-        x: 3.3,
-        y: 3.3,
-        duration: 1.5,
-        ease: "power2.inOut",
-        onComplete: () => {
-          (clickedBubble as any).bubbleId = 999;
-          manager: manager.update.sessionId(manager.value.sessionId + 1),
-          manager.update.animstate("idle");
-          const newBubbles = createBubbles(scene, manager.value.bbnum - 1, manager.value.sessionId, bubbles);
-          moveBubblesToPosition(newBubbles, manager.value.sessionId);
-        },
-      });
+      if (manager.value.animstate == "idle")
+      {
+        manager.update.animstate("onclickBubble")
+        createGradientBackground(scene, manager.value.sessionId);
+        effects.clickBubbleAnimesionBlur()
+        
+        gsap.to(clickedBubble.position, {
+          x: camera.position.x,
+          y: camera.position.y,
+          z: camera.position.z - 200,
+          duration: 1.5,
+          ease: "power2.inOut",
+        });
+        gsap.to(clickedBubble.scale, {
+          x: 3.3,
+          y: 3.3,
+          duration: 1.5,
+          ease: "power2.inOut",
+          onComplete: () => {
+            (clickedBubble as any).bubbleId = 999;
+            manager.update.sessionId(manager.value.sessionId + 1);
+            const newBubbles = createBubbles(scene, manager.value.bbnum - 1, manager.value.sessionId, bubbles);
+            moveBubblesToPosition(newBubbles, manager.value.sessionId);
+          },
+        });
 
-      bubbles.forEach((bubble) => {
-        if (bubble !== clickedBubble) {
-          (bubble as any).stopAnimation();
-          gsap.to(bubble.position, {
-            y: bubble.position.y,
-            z: bubble.position.z + 300,
-            duration: Math.random() * 0.4 + 1, 
-            ease: "power4.inOut"
-          });
-          gsap.to(bubble.material, {
-            opacity: 0,
-            duration: 3,
-            ease: "power2.inOut",
-            onComplete: () => {
-              scene.remove(bubble);
-              const bubbleIndex = bubbles.indexOf(bubble);
-              if (bubbleIndex !== -1) {
-                bubbles.splice(bubbleIndex, 1);
-              }
-            },
-          });
-        }
-      });
+        bubbles.forEach((bubble) => {
+          if (bubble !== clickedBubble) {
+            (bubble as any).stopAnimation();
+            gsap.to(bubble.position, {
+              y: bubble.position.y,
+              z: bubble.position.z + 300,
+              duration: Math.random() * 0.4 + 1, 
+              ease: "power4.inOut"
+            });
+            gsap.to(bubble.material, {
+              opacity: 0,
+              duration: 3,
+              ease: "power2.inOut",
+              onComplete: () => {
+                scene.remove(bubble);
+                const bubbleIndex = bubbles.indexOf(bubble);
+                if (bubbleIndex !== -1) {
+                  bubbles.splice(bubbleIndex, 1);
+                }
+                manager.update.animstate("idle")
+              },
+            });
+          }
+        });
+      }else{
+        console.log(manager.value.animstate)
+      }
     }
   }
 };

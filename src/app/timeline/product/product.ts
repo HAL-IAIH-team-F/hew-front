@@ -61,6 +61,7 @@ export const showProduct = (clickedBubble: THREE.Mesh, scene: THREE.Scene, camer
     htmlBox.style.opacity = '0'; 
     htmlBox.innerHTML = '<p>5000円</p>';
     document.body.appendChild(htmlBox);
+    
     const updateHtmlPosition = () => {
       const vector = new THREE.Vector3();
       box.getWorldPosition(vector);
