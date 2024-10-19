@@ -1,0 +1,64 @@
+/* trail.css */
+.trail {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(173, 216, 230, 0.6), rgba(173, 216, 230, 0.1));
+    box-shadow: 0 0 30px 10px rgba(173, 216, 230, 0.3);
+    pointer-events: none;
+    transition: transform 0.3s ease-out, opacity 0.6s ease-out;
+    transform: scale(1);
+    opacity: 1;
+    animation: rippleEffect 1s forwards;
+}
+
+@keyframes rippleEffect {
+    30% {
+        transform: scale(0.7);
+        opacity: 0.8;
+        box-shadow: 0 0 40px 15px rgba(173, 216, 230, 0.4);
+    }
+    70% {
+        transform: scale(0.9);
+        opacity: 0.4;
+        box-shadow: 0 0 50px 20px rgba(173, 216, 230, 0.2);
+    }
+    to {
+        transform: scale(1.5);
+        opacity: 0;
+        box-shadow: 0 0 60px 30px rgba(173, 216, 230, 0.1);
+    }
+}
+
+.click-ripple {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(173, 216, 230, 0.5), rgba(173, 216, 230, 0));
+    pointer-events: none;
+    transform: scale(0);
+    opacity: 1;
+    animation: rippleSpread 1s forwards;
+}
+body {
+  font-family: sans-serif;
+  scrollbar-width: none;
+}
+
+
+@keyframes rippleSpread {
+    0% {
+        transform: scale(10);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(20);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(50);
+        opacity: 0;
+    }
+}
