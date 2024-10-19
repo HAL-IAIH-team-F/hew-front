@@ -1,8 +1,8 @@
-import Foam from "./Foam.tsx";
+import Foam from "./Foam";
 import {Vector3} from "@react-three/fiber";
 import {useMemo} from "react";
 import * as THREE from "three";
-import setFoamNoise from "./setFoamNoise.ts";
+import setFoamNoise from "./setFoamNoise";
 import {useTexture} from "@react-three/drei";
 
 export default function FoamWithCircle(

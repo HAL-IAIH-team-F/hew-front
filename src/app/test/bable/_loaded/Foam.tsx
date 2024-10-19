@@ -2,7 +2,7 @@ import * as THREE from "three";
 import {useMemo} from "react";
 import {Vector3} from "@react-three/fiber";
 import {createNoise3D, NoiseFunction3D} from "simplex-noise";
-import useFoamFrame from "./useFoamFrame.ts";
+import useFoamFrame from "./useFoamFrame";
 
 export default function Foam(
   {

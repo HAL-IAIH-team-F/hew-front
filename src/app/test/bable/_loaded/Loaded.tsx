@@ -2,7 +2,6 @@
 import {Canvas} from "@react-three/fiber";
 import Animation from "./Animation";
 import FoamWithCircle from "./FoamWithCircle";
-import Image from "next/image";
 
 export default function Loaded(
   {}: LoadingProps,

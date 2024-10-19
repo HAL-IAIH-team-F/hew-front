@@ -1,6 +1,6 @@
 import {useFrame} from "@react-three/fiber";
 import {BufferAttribute, BufferGeometry} from "three";
-import setFoamNoise from "./setFoamNoise.ts";
+import setFoamNoise from "./setFoamNoise";
 
 export default function useFoamFrame(
   speed: number,
