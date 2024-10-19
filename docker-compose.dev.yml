@@ -1,0 +1,22 @@
+services:
+  keycloak-dev:
+    image: quay.io/keycloak/keycloak:26.0.0
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: 'admin'
+      KC_BOOTSTRAP_ADMIN_PASSWORD: 'admin'
+    volumes:
+      - type: volume
+        source: keycloak-data
+        target: /opt/keycloak/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: '3'
+    ports:
+      - target: 8080
+        published: 8080
+    command:
+      - start-dev
+volumes:
+  keycloak-data:
