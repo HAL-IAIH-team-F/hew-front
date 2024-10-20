@@ -3,7 +3,7 @@ import "./overlay.css"
 const overlay = () => {
     return (
         <div>
-            <div className="overlay"></div> {/* 黒い枠のオーバーレイ */}
+            <div className="overlay"></div>
             <div className="cornerFrame topLeft"></div>
             <div className="cornerFrame topRight"></div>
             <div className="cornerFrame bottomLeft"></div>

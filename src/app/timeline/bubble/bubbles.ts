@@ -138,7 +138,7 @@ export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THR
       {
         manager.update.animstate("onclickBubble")
         createGradientBackground(scene, manager.value.sessionId);
-        effects.clickBubbleAnimesionBlur()
+        effects.clickBubbleAnimesion()
         
         gsap.to(clickedBubble.position, {
           x: camera.position.x,
@@ -169,6 +169,7 @@ export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THR
               duration: Math.random() * 0.4 + 1, 
               ease: "power4.inOut"
             });
+            
             gsap.to(bubble.material, {
               opacity: 0,
               duration: 3,
@@ -180,6 +181,7 @@ export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THR
                   bubbles.splice(bubbleIndex, 1);
                 }
                 manager.update.animstate("idle")
+                
               },
             });
           }

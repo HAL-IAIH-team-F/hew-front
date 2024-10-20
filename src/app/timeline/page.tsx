@@ -12,7 +12,7 @@ export default function Page({}: {}) {
       <Main>
         <Timeline />
         <MouseTrail />
-        <Overlay />
+        <Overlay/>
       </Main>
     </div>
   );

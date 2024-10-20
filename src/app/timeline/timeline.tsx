@@ -5,7 +5,6 @@ import { createBubbles, onClickBubble } from "./bubble/bubbles";
 import { Manager } from "./manager/manager";
 import { EffectComposer } from "three-stdlib";
 import { createGradientBackground } from "./background/background";
-import { moveBubblesToPosition } from "./bubble/position";
 import { generateGomi } from "./effects/gomi/gomi";
 import Effects from "./effects/camera/Effects";
 
