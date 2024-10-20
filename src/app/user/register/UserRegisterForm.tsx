@@ -1,13 +1,17 @@
 "use client";
-import { StyledForm } from "../../../util/form/StyledForm";
-import { StyledInput } from "../../../util/form/StyledInput";
-import { StyledButton } from "../../../util/form/StyledButton";
-import { ChangeEvent, useState } from "react";
+import {FormError, StyledForm} from "../../../util/form/StyledForm";
+import {StyledInput} from "../../../util/form/StyledInput";
+import {StyledButton} from "../../../util/form/StyledButton";
+import {ChangeEvent, useState} from "react";
+import {apiClient} from "@/_api/wrapper";
+import {useClientContext} from "@/_api/clientWrapper";
+import {useSession} from "next-auth/react";
+import {useRouter} from 'next/navigation';
 
-export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
+export default function UserRegisterForm({...props}: UserRegisterFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState<string>("no");
-
+  const router = useRouter()
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -23,10 +27,44 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
     setIsCreator(e.target.value);
   };
 
+  const session = useSession().data
+  const clientContext = useClientContext(session)
+
   return (
-    <StyledForm {...props}>
+    <StyledForm {...props} action={async formData => {
+console.debug(formData)
+      const err: FormError = {}
+      const icon_file = formData.get("icon") as File | undefined;
+      const user_name = formData.get("user_name");
+
+      if (typeof user_name !== 'string' || !user_name) {
+        err.user_name = "ユーザーネームを入力してください";
+        return err;  // エラーがあればここで処理を終了
+      }
+      let iconUuid: string | null = null
+      if (icon_file) {
+        const imgResult = await clientContext.uploadImg(icon_file)
+        if (imgResult.error) {
+          err.icon = imgResult.error.error_id + ": " + imgResult.error.message;
+          return err;
+        }
+        iconUuid = imgResult.value.image_uuid
+      }
+
+      const postUserResult = await clientContext.execBody(
+        apiClient.post_user_api_user_post,
+        {user_name: user_name, user_icon_uuid: iconUuid}
+      )
+      if (postUserResult.error) {
+        err.icon = postUserResult.error.error_id + ": " + postUserResult.error.message;
+        return err;
+      }
+      router.push('/timeline');
+      return undefined
+
+    }}>
       <div className="flex items-center space-x-4 mb-4">
-        <label className="relative cursor-pointer">
+        <label className="relative cursor-pointer" htmlFor={"icon-upload"}>
           <div className="w-[150px] h-[150px] overflow-hidden rounded-full bg-gray-200">
             {imagePreview ? (
               <img
@@ -44,13 +82,6 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
               </div>
             )}
           </div>
-          <input
-            name="icon"
-            type="file"
-            onChange={handleImageChange}
-            accept="image/*"
-            className="hidden"
-          />
         </label>
 
         <label htmlFor="icon-upload" className="cursor-pointer">
@@ -67,7 +98,7 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
           className="hidden"
         />
       </div>
-      <StyledInput name="表示名" type="text" />
+      <StyledInput name="user_name" label="ユーザーネーム" type="text"/>
 
       {/* クリエイターとして登録のラジオボタン */}
       <div className="flex items-center space-x-10 mb-4"> {/* 隙間を開ける */}
@@ -105,4 +136,5 @@ export default function UserRegisterForm({ ...props }: UserRegisterFormProps) {
   );
 }
 
-export interface UserRegisterFormProps {}
+export interface UserRegisterFormProps {
+}

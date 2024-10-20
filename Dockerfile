@@ -18,6 +18,7 @@ ARG authSecret
 ARG keycloakRealms
 ARG siteUrl
 ARG baseUrl
+ARG imgBaseUrl
 
 RUN echo KEYCLOAK_ID="$keycloakId" >> ./.env \
   && echo KEYCLOAK_SECRET="$keycloakSecret" >> ./.env \
@@ -25,6 +26,7 @@ RUN echo KEYCLOAK_ID="$keycloakId" >> ./.env \
   && echo AUTH_SECRET="$authSecret" >> ./.env \
   && echo NEXT_PUBLIC_KEYCLOAK_REALMS="$keycloakRealms" >> ./.env \
   && echo NEXT_PUBLIC_BASE_URL="$baseUrl" >> ./.env \
+  && echo NEXT_PUBLIC_IMG_BASE_URL="$imgBaseUrl" >> ./.env \
   && echo NEXTAUTH_URL="$siteUrl" >> ./.env
 RUN npm run build
 
