@@ -1,14 +1,13 @@
 "use client"
 import {Canvas} from "@react-three/fiber";
 import Animation from "./Animation";
-import FoamWithCircle from "./FoamWithCircle";
 import useWindow from "../../../../util/hook/useWindow";
+import Foam from "@/test/bable/_loaded/Foam";
 
 export default function Loaded(
   {}: LoadingProps,
 ) {
   const window = useWindow()
-
   return (
     <div
       style={{
@@ -38,7 +37,7 @@ export default function Loaded(
         <Animation>
           {/*<ambientLight args={[0xffffff, 2]} position={[10, 400, -500]}/>*/}
           <ambientLight args={[0xffffff, 0.0001]} position={[0, 0, 10]}/>
-          <FoamWithCircle texturePath={"/2020-01-01_09.26.42.png"}/>
+          <Foam/>
         </Animation>
       </Canvas>
     </div>
