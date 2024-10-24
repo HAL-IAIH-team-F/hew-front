@@ -7,7 +7,7 @@ export function OrErrorMessage(
   }: OrErrorMessageProps,
 ) {
   return (
-    <ErrorMessage {...props}/> || children
+    props.error?<ErrorMessage {...props}/> : children
   )
 }
 
