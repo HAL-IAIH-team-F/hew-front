@@ -1,19 +1,18 @@
-// page.tsx
+// page_fiber.tsx
 "use client";
 
 import Main from "~/Main";
-import Timeline from "./timeline";
+import TimelineFiber from "./timeline";
 import { MouseTrail } from "./effects/mouse/mouseTrail";
 import Overlay from "./effects/overlay/overlay";
-import Filter from "./effects/filter/filter"; // 新しいコンポーネントをインポート
 
-export default function Page({}: {}) {
+export default function PageFiber() {
   return (
     <div className="mainContainer">
       <Main>
-        <Timeline />
+        <TimelineFiber />
         <MouseTrail />
-        <Overlay/>
+        <Overlay />
       </Main>
     </div>
   );

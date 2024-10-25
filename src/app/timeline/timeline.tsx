@@ -38,17 +38,16 @@ const Timeline = () => {
       renderer.setSize(window.innerWidth, window.innerHeight);
       rendererRef.current = renderer;
       mountRef.current.appendChild(renderer.domElement);
-
-      // Composer setup for bloom effect
       
       const effects = new Effects(renderer, scene, camera);
       effectsRef.current = effects; // Effectsインスタンスを参照に保存
+      
       const { composer } = effects;
       composerRef.current = composer;
-      
+ 
       generateGomi(scene, glowingGomiRef.current, 300, manager.value.riseSpeed,manager);
-      bubblesRef.current = createBubbles(scene, manager.value.bbnum, manager.value.sessionId, []);
-
+      bubblesRef.current = createBubbles(scene, manager.value.bbnum, manager.value.sessionId, [],camera);
+      
       if (manager.value.sessionId == 1) {
         effects.startAnimesion(bubblesRef.current,manager)
       }
@@ -57,7 +56,7 @@ const Timeline = () => {
         requestAnimationFrame(animateHighFPS);
         const currentTime = time / 1000;
         const deltaTime = currentTime - manager.value.lastFrameTimeHigh;
-
+        
         if (deltaTime >= 1 / manager.value.fpshigh) {
           manager.value.lastFrameTimeHigh = currentTime;
           if (cameraRef.current) {
@@ -89,8 +88,8 @@ const Timeline = () => {
       mousePosition.current.x = (event.clientX / window.innerWidth) * 2 - 1;
       mousePosition.current.y = (event.clientY / window.innerHeight) * 2 - 1;
     
-      targetCameraRotation.current.x = -mousePosition.current.x * 0.01;
-      targetCameraRotation.current.y = -mousePosition.current.y * 0.01;
+      targetCameraRotation.current.x = -mousePosition.current.x * 0.07;
+      targetCameraRotation.current.y = -mousePosition.current.y * 0.07;
     };
     
     const handleClick = (event: MouseEvent) => {

@@ -1,7 +1,8 @@
 "use client";
 import * as THREE from "three";
 import { gsap } from "gsap";
-import { Manager } from "../manager/manager";
+import { Manager } from "../system/manager";
+import { ManagerRef } from "../system/interface";
 
 
 export const getRandomPositionWithExclusion = (minX: number,maxX: number,minY: number,maxY: number,bubbles: THREE.Mesh[],exclusionRadius: number,scale: number,sessionId:number) => {
@@ -56,7 +57,8 @@ export const moveBubblesToPosition = (bubbles: THREE.Mesh[], currentSessionId: n
   });
 };
 
-export const initmoveBubblesToPosition = (bubbles: THREE.Mesh[], currentSessionId: number,nextstate: string,manager: Manager) => {
+export const initmoveBubblesToPosition = (bubbles: THREE.Mesh[], currentSessionId: number,nextstate: string,manager: ManagerRef) => {
+  if (!bubbles) return;
   let completedAnimations = 0;
   const totalAnimations = bubbles.length;
 

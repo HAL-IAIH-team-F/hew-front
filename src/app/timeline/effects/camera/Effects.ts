@@ -20,6 +20,7 @@ class Effects {
     this.composer.addPass(renderPass);
 
     // 水平方向のブラー
+    
     this.horizontalBlurPass = new ShaderPass(BlurShader);
     this.horizontalBlurPass.material.uniforms['resolution'].value = new THREE.Vector2(window.innerWidth, window.innerHeight);
     this.horizontalBlurPass.material.uniforms['direction'].value = new THREE.Vector2(0.0, 0.0);
