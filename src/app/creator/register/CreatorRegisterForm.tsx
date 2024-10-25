@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { FormError, StyledForm } from "../../../util/form/StyledForm";
 import { StyledInput } from "../../../util/form/StyledInput";
 import FlexBox from "../../../util/FlexBox";
@@ -10,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { apiClient } from "@/_api/wrapper"; // apiClient をインポート
 
 export default function CreatorRegisterForm({ ...props }: CreatorRegisterFormProps) {
-  const [errors, setErrors] = useState<FormError>({});
   const router = useRouter();
 
   // セッションとクライアントコンテキストの取得
@@ -24,10 +22,10 @@ export default function CreatorRegisterForm({ ...props }: CreatorRegisterFormPro
     const transferTarget = formData.get("transfer_target") as string;
 
     if (!contactAddress) {
-      newErrors.contact_address = ""; // エラーメッセージ（フロントエンドで設定可）
+      newErrors.contact_address = "連絡先を入力してください"; // エラーメッセージ（フロントエンドで設定可）
     }
     if (!transferTarget) {
-      newErrors.transfer_target = ""; // エラーメッセージ（フロントエンドで設定可）
+      newErrors.transfer_target = "振込先を入力してください"; // エラーメッセージ（フロントエンドで設定可）
     }
     return newErrors;
   };
@@ -39,10 +37,8 @@ export default function CreatorRegisterForm({ ...props }: CreatorRegisterFormPro
         // 入力チェック
         const formErrors = validateForm(formData);
         if (Object.keys(formErrors).length > 0) {
-          setErrors(formErrors);
           return formErrors;
         }
-        setErrors({});
 
         // `user_id` を含むデータベースへの保存
         const contactAddress = formData.get("contact_address") as string;
@@ -50,7 +46,6 @@ export default function CreatorRegisterForm({ ...props }: CreatorRegisterFormPro
         const userId = session?.user?.id;  // ユーザーIDを取得
 
         if (!userId) {
-          setErrors({ submit: "ユーザーIDが見つかりません。" });
           return { submit: "ユーザーIDが見つかりません。" };
         }
 
@@ -62,8 +57,7 @@ export default function CreatorRegisterForm({ ...props }: CreatorRegisterFormPro
         // エラーハンドリング
         if (postCreatorResult.error) {
           const errorInfo = postCreatorResult.error;
-          setErrors({ submit: `${errorInfo.error_id}: ${errorInfo.message}` });
-          return { submit: errorInfo.message };
+          return { submit: `${errorInfo.error_id}: ${errorInfo.message}` };
         }
 
         // 成功した場合のリダイレクト
@@ -73,19 +67,10 @@ export default function CreatorRegisterForm({ ...props }: CreatorRegisterFormPro
     >
       <div>
         <StyledInput name="contact_address" label="連絡先(一般に表示されます)" />
-        {errors.contact_address && (
-          <p className="text-red-500 text-sm">{errors.contact_address}</p>
-        )}
       </div>
       <div>
         <StyledInput name="transfer_target" label="振込先" />
-        {errors.transfer_target && (
-          <p className="text-red-500 text-sm">{errors.transfer_target}</p>
-        )}
       </div>
-      {errors.submit && (
-        <p className="text-red-500 text-sm">{errors.submit}</p>
-      )}
       <FlexBox className="justify-end px-10">
         <StyledButton>登録</StyledButton>
       </FlexBox>
