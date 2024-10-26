@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react";
-import {createContext, FormHTMLAttributes, useState} from "react";
+import {createContext, ReactNode, useState} from "react";
 import {ErrorMessage} from "../err/ErrorMessage";
 import {sx} from "../util";
 
@@ -42,6 +42,8 @@ export function StyledForm(
   )
 }
 
-export interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
+export interface FormProps {
   action?: (formData: FormData) => Promise<FormError | undefined>
+  children?: ReactNode
+  className?: string
 }
