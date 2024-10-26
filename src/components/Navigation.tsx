@@ -13,6 +13,7 @@ import {useSession} from "next-auth/react";
 import {apiClient, Img} from "@/_api/wrapper";
 import {ErrorIds} from "../util/err/errorIds";
 import Image from "../util/Image";
+import Link from "next/link"; // 追加
 
 export function StyledNavigation() {
   const [isDragging, setIsDragging] = useState(false);
@@ -60,35 +61,44 @@ export function StyledNavigation() {
   const handleButtonClick = (buttonTitle: string) => {
     alert(buttonTitle);
   };
+
   const [user, setUser] = useState<{ name: string, icon: Img | undefined }>()
   const session = useSession().data
   const context = useClientContext(session)
+
   useEffect(() => {
-    if (session) context.exec(apiClient.get_user_api_user_self_get, {})
-      .then(value => {
-        if (!value.value) {
-          setUser(undefined)
-          if (ErrorIds.USER_NOT_FOUND.equals(value.error?.error_id)) return
-          console.error(value.error)
-          return
-        }
-        if (value.value.user_icon) Img.create(value.value.user_icon.image_uuid, value.value.user_icon.token)
-          .then(value1 => {
+    if (session) {
+      context.exec(apiClient.get_user_api_user_self_get, {})
+        .then(value => {
+          if (!value.value) {
+            setUser(undefined)
+            if (ErrorIds.USER_NOT_FOUND.equals(value.error?.error_id)) return
+            console.error(value.error)
+            return
+          }
+          if (value.value.user_icon) {
+            Img.create(value.value.user_icon.image_uuid, value.value.user_icon.token)
+              .then(value1 => {
+                setUser({
+                  name: value.value.user_name,
+                  icon: value1.value,
+                })
+                if (value1.error) {
+                  console.error(value1.error.error_id + ": " + value1.error.message)
+                }
+              })
+          } else {
             setUser({
               name: value.value.user_name,
-              icon: value1.value,
+              icon: undefined,
             })
-            if (value1.error) {
-              console.error(value1.error.error_id + ": " + value1.error.message)
-            }
-          })
-        else setUser({
-          name: value.value.user_name,
-          icon: undefined,
+          }
         })
-      })
-    else setUser(undefined)
+    } else {
+      setUser(undefined)
+    }
   }, [context]);
+
   return (
     <div
       ref={navRef}
@@ -117,53 +127,59 @@ export function StyledNavigation() {
             className="font-bold block w-full my-1 py-1 text-left text-xs text-white hover:text-gray-400"
           />
 
-          <button
-            className="font-bold block w-full my-1 py-1 text-left relative text-xs text-white hover:text-gray-400"
-            onClick={() => handleButtonClick(`通知: ${notificationCount}`)}
-          >
-            通知
-            {notificationCount > 0 && (
-              <span className="ml-3 mt-1 mr-1 bg-red-700 text-white text-xxs rounded-full px-1.5 py-0.5">
-                {notificationCount}
-              </span>
-            )}
-          </button>
+          <Link href="" passHref> {/* 通知リンクに変更 */}
+            <button
+              className="font-bold block w-full my-1 py-1 text-left relative text-xs text-white hover:text-gray-400"
+            >
+              通知
+              {notificationCount > 0 && (
+                <span className="ml-3 mt-1 mr-1 bg-red-700 text-white text-xxs rounded-full px-1.5 py-0.5">
+                  {notificationCount}
+                </span>
+              )}
+            </button>
+          </Link>
 
-          <button
-            className="absolute bottom-1 left-3 text-xs text-slate-400 hover:text-white"
-            onClick={() => handleButtonClick("利用規約")}
-          >
-            利用規約
-          </button>
+          <Link href="" passHref> {/* 利用規約リンクに変更 */}
+            <button
+              className="absolute bottom-1 left-3 text-xs text-slate-400 hover:text-white"
+            >
+              利用規約
+            </button>
+          </Link>
         </div>
 
         <div className="w-px bg-gray-600 mx-2 h-hull"></div>
 
         <div className="w-1/2 pl-1 text-right">
-          <button
-            className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
-            onClick={() => handleButtonClick("タイムライン")}
-          >
-            タイムライン
-          </button>
-          <button
-            className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
-            onClick={() => handleButtonClick("商品出品")}
-          >
-            商品出品
-          </button>
-          <button
-            className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
-            onClick={() => handleButtonClick("コラボ")}
-          >
-            コラボ
-          </button>
-          <button
-            className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
-            onClick={() => handleButtonClick("マイページ")}
-          >
-            マイページ
-          </button>
+          <Link href="/timeline" passHref> {/* タイムラインリンクに変更 */}
+            <button
+              className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
+            >
+              タイムライン
+            </button>
+          </Link>
+          <Link href="/product/listing" passHref> {/* 商品出品リンクに変更 */}
+            <button
+              className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
+            >
+              商品出品
+            </button>
+          </Link>
+          <Link href="" passHref> {/* コラボリンクに変更 */}
+            <button
+              className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
+            >
+              コラボ
+            </button>
+          </Link>
+          <Link href="/user/register" passHref> {/* マイページリンクに変更 */}
+            <button
+              className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
+            >
+              マイページ
+            </button>
+          </Link>
         </div>
       </div>
     </div>

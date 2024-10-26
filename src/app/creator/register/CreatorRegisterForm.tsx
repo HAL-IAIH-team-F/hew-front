@@ -5,11 +5,10 @@ import {StyledButton} from "../../../util/form/StyledButton";
 
 export default function CreatorRegisterForm(
   {
-    ...props
   }: CreatorRegisterFormProps,
 ) {
   return (
-    <StyledForm {...props}>
+    <StyledForm >
       <StyledInput name={"contact_address"} label={"連絡先(一般に表示されます)"}/>
       <StyledInput name={"transfer_target"} label={"振込先"}/>
       <FlexBox className={"justify-end px-10"}>
