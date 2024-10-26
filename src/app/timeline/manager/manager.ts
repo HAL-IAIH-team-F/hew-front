@@ -14,8 +14,8 @@ export class Manager {
         fpslow: number = 0,
         lastFrameTimeHigh: number = 0,
         lastFrameTimeLow: number = 0,
-        riseSpeed: number = 10,
-        animstate: string = "idle"
+        riseSpeed: number = 1,
+        animstate: string = "init"
     ) {
         this._sessionId = sessionId;
         this._bbnum = bbnum;
@@ -53,6 +53,7 @@ export class Manager {
         };
     }
     get value() {
+        
         return {
             sessionId: this._sessionId,
             bbnum: this._bbnum,
@@ -63,6 +64,7 @@ export class Manager {
             riseSpeed: this._riseSpeed,
             animstate: this._animstate,
         };
+        
     }
     public update: {
         sessionId: (value: number) => void;
@@ -74,6 +76,10 @@ export class Manager {
         riseSpeed: (value: number) => void;
         animstate: (value: string) => void;
     };
+    public outputLog(): void {
+        console.log(this.value);
+    }
+    
 }
 
 // // 初期化の例（引数なしでもデフォルト値が設定される）
