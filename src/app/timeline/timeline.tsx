@@ -40,7 +40,7 @@ const Timeline = () => {
       mountRef.current.appendChild(renderer.domElement);
       
       const effects = new Effects(renderer, scene, camera);
-      effectsRef.current = effects; // Effectsインスタンスを参照に保存
+      effectsRef.current = effects;
       
       const { composer } = effects;
       composerRef.current = composer;
@@ -60,8 +60,8 @@ const Timeline = () => {
         if (deltaTime >= 1 / manager.value.fpshigh) {
           manager.value.lastFrameTimeHigh = currentTime;
           if (cameraRef.current) {
-            cameraRef.current.position.x += (targetCameraPosition.current.x - cameraRef.current.position.x) * parallaxStrength;
-            cameraRef.current.position.y += (targetCameraPosition.current.y - cameraRef.current.position.y) * parallaxStrength;
+            // cameraRef.current.position.x += (targetCameraPosition.current.x - cameraRef.current.position.x) * parallaxStrength;
+            // // cameraRef.current.position.y += (targetCameraPosition.current.y - cameraRef.current.position.y) * parallaxStrength;
             cameraRef.current.rotation.x += (targetCameraRotation.current.y - cameraRef.current.rotation.x) * rotationStrength;
             cameraRef.current.rotation.y += (targetCameraRotation.current.x - cameraRef.current.rotation.y) * rotationStrength;
           }

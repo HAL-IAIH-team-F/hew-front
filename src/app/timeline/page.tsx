@@ -5,7 +5,6 @@ import Main from "~/Main";
 import Timeline from "./timeline";
 import { MouseTrail } from "./effects/mouse/mouseTrail";
 import Overlay from "./effects/overlay/overlay";
-import Filter from "./effects/filter/filter"; // 新しいコンポーネントをインポート
 
 export default function Page({}: {}) {
   return (

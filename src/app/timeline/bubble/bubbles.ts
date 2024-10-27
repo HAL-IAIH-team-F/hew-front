@@ -12,7 +12,7 @@ const vertexShader = `
   uniform float spikes;
   varying vec2 vUv;
 
-   // パーリンノイズ関数
+  // パーリンノイズ関数
   float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
   }
@@ -39,13 +39,21 @@ const vertexShader = `
     float noiseValue = noise(newPosition.xy * spikes + time); // spikesを使ってノイズの周波数を制御
     float ratio = noiseValue * 0.05 + 0.98; // ratioを計算
 
-    newPosition *= ratio; // 頂点位置にratioを適用
+    // 中心からの距離に基づいて縮小率を計算
+    float dist = length(newPosition.xy);
+    float shrinkFactor = smoothstep(0.37, 0.5, dist); // 距離によって縮小率を調整
+
+    // 縮小率を適用して位置を内側に移動
+    newPosition *= mix(1.0, 0.8, shrinkFactor); // 0.8は縮小率の例
+
+    // ノイズによる変形を適用
+    newPosition *= ratio;
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
   }
 `;
 
-const fragmentShader = `
+const fragmentShaderold = `
   uniform sampler2D map;
   varying vec2 vUv;
   uniform float time;
@@ -56,7 +64,7 @@ const fragmentShader = `
 
     // 泡のエッジを透明にするためのアルファ調整
     float edgeAlpha = smoothstep(0.45, 0.5, dist);
-
+    
     // 泡の内部に動きのある歪みを追加
     vec2 distortion = vec2(
       sin(time + dist * 15.0) * 0.01, 
@@ -76,7 +84,7 @@ const fragmentShader = `
     
     // 泡の内側の淡い色と透明感
     vec3 innerColor = vec3(0.9, 0.95, 1.0);
-    float innerBlend = smoothstep(0.0, 0.3, dist);
+    float innerBlend = smoothstep(0.0, 0.1, dist);
     color.rgb = mix(innerColor, distortedColor.rgb, innerBlend);
 
     // 泡のエッジに輝きを追加
@@ -100,25 +108,84 @@ const fragmentShader = `
     gl_FragColor = color;
   }
 `;
+const fragmentShader = `
+  uniform sampler2D map;
+  varying vec2 vUv;
+  uniform float time;
 
+  void main() {
+    vec4 originalColor = texture2D(map, vUv);
+    float dist = length(vUv - 0.5); // 中心からの距離
+
+    // 泡の外縁のグラデーションを追加
+    float outerGlow = smoothstep(0.45, 0.5, dist);
+    vec3 glowColor = vec3(0.2, 0.5, 0.8); // 外縁の色を調整（より控えめな青系に）
+
+    // 円形にクリッピングするためのアルファ値の計算
+    float alpha = 1.0 - smoothstep(0.48, 0.5, dist);
+
+    // 泡の内部に動きのある歪みを追加
+    vec2 distortion = vec2(
+      sin(time * 2.0 + dist * 12.0) * 0.004, 
+      cos(time * 2.0 + dist * 12.0) * 0.004
+    );
+    vec2 uvDistorted = vUv + distortion;
+
+    vec4 distortedColor = texture2D(map, uvDistorted);
+
+    // 泡の色を歪みとアルファ値に応じて調整
+    vec4 color = mix(originalColor, distortedColor, alpha);
+
+    // 泡の表面の輝き（ハイライト）を追加
+    float highlight = smoothstep(0.45, 0.48, dist) * 0.2; // ハイライトの影響を減らす
+    color.rgb += vec3(1.0) * highlight;
+
+    // 最終的な色の出力、外縁のグロウ効果を追加
+    color.rgb += glowColor * outerGlow;
+    gl_FragColor = vec4(color.rgb, alpha * originalColor.a);
+  }
+`;
+
+const txr = [ ["/timelineSample/hikakin.jpg"],
+              ["/timelineSample/mao.webp"],
+              ["/timelineSample/free1.jpg"],
+              ["/timelineSample/free2.jpg"],
+              ["/timelineSample/freelen.jpg"],
+              ["/timelineSample/00000211.jpg"],
+              ["/timelineSample/00000219.jpg"],
+              ["/timelineSample/00000221.jpg"],
+              ["/timelineSample/00000232.jpg"],
+              ["/timelineSample/00000240.jpg"],
+              ["/timelineSample/euph_st09_03.png"],
+              ["/timelineSample/euph_st13_02.png"],
+              ["/timelineSample/euph_st13_05.png"],
+              ["/timelineSample/charlotte_twicon1-tomori.jpg"],
+              ["/timelineSample/001.jpg"],
+              ["/timelineSample/002.jpg"],
+              ["/timelineSample/003.jpg"],
+              ["/timelineSample/008.jpg"],
+              ["/timelineSample/023.jpg"],
+              ["/timelineSample/028.jpg"],
+              ["/timelineSample/yuko.png"],
+            ]
 
 export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: number,bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera) => {
   const textureLoader = new THREE.TextureLoader();
-
   for (let i = 0; i < bubblecnt; i++) {
-    const bubbleTexture = textureLoader.load('/icon.png');
+    const txrpath = txr[i][0]
+    const bubbleTexture = textureLoader.load(txrpath);
     const bubbleMaterial = new THREE.ShaderMaterial({
       uniforms: {
         time  : { value: 0.0 },
-        spikes: { value: 0.7 },
+        spikes: { value: 0.25 },
         map   : { value: bubbleTexture }, 
       },
       vertexShader,
       fragmentShader,
       transparent: true,
     });
-
-    const bubbleGeometry = new THREE.CircleGeometry(20, 32);
+    
+    const bubbleGeometry = new THREE.CircleGeometry(15, 32);
     const bubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
 
     const scale = Math.random() * 0.5 + 0.6;
@@ -151,7 +218,7 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
         return distance < bubbleRadius + otherBubbleRadius + 10;
       });
     }
-
+    (bubble as any).texturePath = txrpath;
     (bubble as any).sessionId = sessionId;
     (bubble as any).bubbleId = bubbles.length;
 
@@ -207,7 +274,7 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
 
     (bubble as any).startAnimation = startBubbleAnimation;
     (bubble as any).stopAnimation = stopBubbleAnimation;
-    // アニメーションループに揺れの更新を追加
+    
     const animateBubble = () => {
       bubbleMaterial.uniforms.time.value += 0.01;
       requestAnimationFrame(animateBubble);
@@ -216,7 +283,6 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
     animateBubble();
 
   }
-
   return bubbles;
 };
 
@@ -240,8 +306,9 @@ export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THR
       console.log(manager.value.animstate);
       if (manager.value.animstate != "product")
       {
-        showProduct(clickedBubble,scene,camera,manager)
+        showProduct(clickedBubble,scene,camera,manager,effects)
         manager.update.animstate("product");
+        
       }
     }else{
       if (manager.value.animstate == "idle")
