@@ -1,10 +1,10 @@
 "use client";
 import * as THREE from "three";
-import { getRandomPosition, getRandomPositionWithExclusion, moveBubblesToPosition } from "./position";
-import { gsap } from "gsap";
-import { Manager } from "../manager/manager"
-import { showProduct } from "../product/product";
-import { createGradientBackground } from "../background/background"
+import {getRandomPosition, getRandomPositionWithExclusion, moveBubblesToPosition} from "./position";
+import {gsap} from "gsap";
+import {Manager} from "../manager/manager"
+import {showProduct} from "../product/product";
+import {createGradientBackground} from "../background/background"
 import Effects from "../effects/camera/Effects"
 
 const vertexShader = `
@@ -146,45 +146,48 @@ const fragmentShader = `
   }
 `;
 
-const txr = [ ["/timelineSample/hikakin.jpg"],
-              ["/timelineSample/mao.webp"],
-              ["/timelineSample/free1.jpg"],
-              ["/timelineSample/free2.jpg"],
-              ["/timelineSample/freelen.jpg"],
-              ["/timelineSample/00000211.jpg"],
-              ["/timelineSample/00000219.jpg"],
-              ["/timelineSample/00000221.jpg"],
-              ["/timelineSample/00000232.jpg"],
-              ["/timelineSample/00000240.jpg"],
-              ["/timelineSample/euph_st09_03.png"],
-              ["/timelineSample/euph_st13_02.png"],
-              ["/timelineSample/euph_st13_05.png"],
-              ["/timelineSample/charlotte_twicon1-tomori.jpg"],
-              ["/timelineSample/001.jpg"],
-              ["/timelineSample/002.jpg"],
-              ["/timelineSample/003.jpg"],
-              ["/timelineSample/008.jpg"],
-              ["/timelineSample/023.jpg"],
-              ["/timelineSample/028.jpg"],
-              ["/timelineSample/yuko.png"],
-            ]
+const txr = [
+  ["/2020-01-01_09.26.42.png"],
+  // ["/timelineSample/hikakin.jpg"],
+  // ["/timelineSample/mao.webp"],
+  // ["/timelineSample/free1.jpg"],
+  // ["/timelineSample/free2.jpg"],
+  // ["/timelineSample/freelen.jpg"],
+  // ["/timelineSample/00000211.jpg"],
+  // ["/timelineSample/00000219.jpg"],
+  // ["/timelineSample/00000221.jpg"],
+  // ["/timelineSample/00000232.jpg"],
+  // ["/timelineSample/00000240.jpg"],
+  // ["/timelineSample/euph_st09_03.png"],
+  // ["/timelineSample/euph_st13_02.png"],
+  // ["/timelineSample/euph_st13_05.png"],
+  // ["/timelineSample/charlotte_twicon1-tomori.jpg"],
+  // ["/timelineSample/001.jpg"],
+  // ["/timelineSample/002.jpg"],
+  // ["/timelineSample/003.jpg"],
+  // ["/timelineSample/008.jpg"],
+  // ["/timelineSample/023.jpg"],
+  // ["/timelineSample/028.jpg"],
+  // ["/timelineSample/yuko.png"],
+]
 
-export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: number,bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera) => {
+export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: number, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera) => {
   const textureLoader = new THREE.TextureLoader();
   for (let i = 0; i < bubblecnt; i++) {
-    const txrpath = txr[i][0]
+    const txrpath = txr[0][0]
+    // const txrpath = txr[i][0]
     const bubbleTexture = textureLoader.load(txrpath);
     const bubbleMaterial = new THREE.ShaderMaterial({
       uniforms: {
-        time  : { value: 0.0 },
-        spikes: { value: 0.25 },
-        map   : { value: bubbleTexture }, 
+        time: {value: 0.0},
+        spikes: {value: 0.25},
+        map: {value: bubbleTexture},
       },
       vertexShader,
       fragmentShader,
       transparent: true,
     });
-    
+
     const bubbleGeometry = new THREE.CircleGeometry(15, 32);
     const bubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
 
@@ -193,11 +196,11 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
 
     let overlap = true;
     while (overlap) {
-      const { x: newX, y: newY } = getRandomPositionWithExclusion(
-        -400, 400, 
-        -200, 200, 
+      const {x: newX, y: newY} = getRandomPositionWithExclusion(
+        -400, 400,
+        -200, 200,
         bubbles,
-        50, 
+        50,
         scale,
         sessionId
       );
@@ -241,7 +244,7 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
     const rotationAnimation = gsap.to(bubble.rotation, {
       x: `+=${randomRotationSpeed}`,
       y: `+=${randomRotationSpeed}`,
-      
+
       duration: randomDuration,
       ease: 'power1.inOut',
       yoyo: true,
@@ -250,9 +253,9 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
     });
 
     const positionAnimation = gsap.to(bubble.position, {
-      y: `+=${randomAmplitude}`, 
-      x: `+=${randomAmplitude}`, 
-      duration: randomDuration,  
+      y: `+=${randomAmplitude}`,
+      x: `+=${randomAmplitude}`,
+      duration: randomDuration,
       ease: 'power1.inOut',
       yoyo: true,
       repeat: -1,
@@ -260,7 +263,7 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
     });
 
     const startBubbleAnimation = () => {
-      
+
       rotationAnimation.play();
       positionAnimation.play();
     };
@@ -274,7 +277,7 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
 
     (bubble as any).startAnimation = startBubbleAnimation;
     (bubble as any).stopAnimation = stopBubbleAnimation;
-    
+
     const animateBubble = () => {
       bubbleMaterial.uniforms.time.value += 0.01;
       requestAnimationFrame(animateBubble);
@@ -286,7 +289,7 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
   return bubbles;
 };
 
-export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera, scene: THREE.Scene , effects: Effects) => {
+export const onClickBubble = (manager: Manager, event: MouseEvent, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera, scene: THREE.Scene, effects: Effects) => {
   const mouse = new THREE.Vector2(
     (event.clientX / window.innerWidth) * 2 - 1,
     -(event.clientY / window.innerHeight) * 2 + 1
@@ -299,24 +302,21 @@ export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THR
 
   if (intersects.length > 0) {
     const clickedBubble = intersects[0].object as THREE.Mesh;
-    
+
     (clickedBubble as any).stopAnimation();
-    if ((clickedBubble as any).bubbleId == 999)
-    {
+    if ((clickedBubble as any).bubbleId == 999) {
       console.log(manager.value.animstate);
-      if (manager.value.animstate != "product")
-      {
-        showProduct(clickedBubble,scene,camera,manager,effects)
+      if (manager.value.animstate != "product") {
+        showProduct(clickedBubble, scene, camera, manager, effects)
         manager.update.animstate("product");
-        
+
       }
-    }else{
-      if (manager.value.animstate == "idle")
-      {
+    } else {
+      if (manager.value.animstate == "idle") {
         manager.update.animstate("onclickBubble")
         createGradientBackground(scene, manager.value.sessionId);
         effects.clickBubbleAnimesion()
-        
+
         gsap.to(clickedBubble.position, {
           x: camera.position.x,
           y: camera.position.y,
@@ -332,7 +332,7 @@ export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THR
           onComplete: () => {
             (clickedBubble as any).bubbleId = 999;
             manager.update.sessionId(manager.value.sessionId + 1);
-            const newBubbles = createBubbles(scene, manager.value.bbnum - 1, manager.value.sessionId, bubbles,camera);
+            const newBubbles = createBubbles(scene, manager.value.bbnum - 1, manager.value.sessionId, bubbles, camera);
             moveBubblesToPosition(newBubbles, manager.value.sessionId);
           },
         });
@@ -343,10 +343,10 @@ export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THR
             gsap.to(bubble.position, {
               y: bubble.position.y,
               z: bubble.position.z + 350,
-              duration: Math.random() * 0.4 + 1, 
+              duration: Math.random() * 0.4 + 1,
               ease: "power4.inOut"
             });
-            
+
             gsap.to(bubble.material, {
               opacity: 0,
               duration: 3,
@@ -358,12 +358,12 @@ export const onClickBubble = (manager : Manager, event: MouseEvent, bubbles: THR
                   bubbles.splice(bubbleIndex, 1);
                 }
                 manager.update.animstate("idle")
-                
+
               },
             });
           }
         });
-      }else{
+      } else {
         console.log(manager.value.animstate)
       }
     }
