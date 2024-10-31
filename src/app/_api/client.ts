@@ -1,6 +1,40 @@
 import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
 import { z } from "zod";
 
+const ChatRes = z
+  .object({ chat_id: z.string().uuid(), users: z.array(z.string().uuid()) })
+  .passthrough();
+const PostChatBody = z
+  .object({ users: z.array(z.string().uuid()) })
+  .passthrough();
+const ValidationError = z
+  .object({
+    loc: z.array(z.union([z.string(), z.number()])),
+    msg: z.string(),
+    type: z.string(),
+  })
+  .passthrough();
+const HTTPValidationError = z
+  .object({ detail: z.array(ValidationError) })
+  .partial()
+  .passthrough();
+const name = z.union([z.array(z.string()), z.null()]).optional();
+const start_datetime = z.union([z.string(), z.null()]).optional();
+const following = z.union([z.boolean(), z.null()]).optional();
+const read_limit_number = z
+  .union([z.number(), z.null()])
+  .optional()
+  .default(20);
+const OrderDirection = z.enum(["asc", "desc"]);
+const time_order = OrderDirection.optional();
+const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
+const TokenInfo = z
+  .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
+  .passthrough();
+const TokenRes = z
+  .object({ access: TokenInfo, refresh: TokenInfo })
+  .passthrough();
+const ImgTokenRes = z.object({ upload: TokenInfo }).passthrough();
 const PostUserBody = z
   .object({
     user_name: z.string(),
@@ -23,30 +57,6 @@ const SelfUserRes = z
     user_mail: z.string(),
   })
   .passthrough();
-const ValidationError = z
-  .object({
-    loc: z.array(z.union([z.string(), z.number()])),
-    msg: z.string(),
-    type: z.string(),
-  })
-  .passthrough();
-const HTTPValidationError = z
-  .object({ detail: z.array(ValidationError) })
-  .partial()
-  .passthrough();
-const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
-const TokenInfo = z
-  .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
-  .passthrough();
-const TokenRes = z
-  .object({ access: TokenInfo, refresh: TokenInfo })
-  .passthrough();
-const ImgTokenRes = z.object({ upload: TokenInfo }).passthrough();
-const name = z.union([z.array(z.string()), z.null()]).optional();
-const post_by = z.union([z.array(z.string().uuid()), z.null()]).optional();
-const start_datetime = z.union([z.string(), z.null()]).optional();
-const following = z.union([z.boolean(), z.null()]).optional();
-const read_limit_number = z.union([z.number(), z.null()]).optional();
 const PostCreatorBody = z
   .object({
     user_id: z.string().uuid(),
@@ -56,24 +66,55 @@ const PostCreatorBody = z
   .passthrough();
 
 export const schemas = {
-  PostUserBody,
-  Img,
-  SelfUserRes,
+  ChatRes,
+  PostChatBody,
   ValidationError,
   HTTPValidationError,
+  name,
+  start_datetime,
+  following,
+  read_limit_number,
+  OrderDirection,
+  time_order,
   PostTokenBody,
   TokenInfo,
   TokenRes,
   ImgTokenRes,
-  name,
-  post_by,
-  start_datetime,
-  following,
-  read_limit_number,
+  PostUserBody,
+  Img,
+  SelfUserRes,
   PostCreatorBody,
 };
 
 const endpoints = makeApi([
+  {
+    method: "get",
+    path: "/api/chat",
+    alias: "gc_api_chat_get",
+    requestFormat: "json",
+    response: z.array(ChatRes),
+  },
+  {
+    method: "post",
+    path: "/api/chat",
+    alias: "pc_api_chat_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: PostChatBody,
+      },
+    ],
+    response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
   {
     method: "post",
     path: "/api/creator",
@@ -167,8 +208,8 @@ const endpoints = makeApi([
   },
   {
     method: "get",
-    path: "/products/",
-    alias: "read_products_products__get",
+    path: "/products",
+    alias: "read_products_products_get",
     requestFormat: "json",
     parameters: [
       {
@@ -184,7 +225,7 @@ const endpoints = makeApi([
       {
         name: "post_by",
         type: "Query",
-        schema: post_by,
+        schema: name,
       },
       {
         name: "start_datetime",
@@ -205,6 +246,26 @@ const endpoints = makeApi([
         name: "read_limit_number",
         type: "Query",
         schema: read_limit_number,
+      },
+      {
+        name: "time_order",
+        type: "Query",
+        schema: time_order,
+      },
+      {
+        name: "name_order",
+        type: "Query",
+        schema: time_order,
+      },
+      {
+        name: "like_order",
+        type: "Query",
+        schema: time_order,
+      },
+      {
+        name: "sort",
+        type: "Query",
+        schema: z.array(z.string()).optional(),
       },
     ],
     response: z.unknown(),
