@@ -163,46 +163,6 @@ class Effects {
       })
     )
 
-
-    // tl.to(camera.position, {
-    //   x: 40,
-    //   duration: 1.2,
-    //   ease: 'power2.out',
-    // })
-    //   .to(camera.position, {
-    //     x: 120,
-    //     duration: 1.5,
-    //     ease: 'power2.out',
-    //   })
-    //   .to(htmlBox, {
-    //     right: "0px",
-    //     opacity: 1,
-    //     duration: 1.5,
-    //     ease: "power2.out",
-    //   }, "<");
-
-    // tl.to(this.horizontalBlurPass.material.uniforms['direction'].value, {
-    //   x: 0.3,
-    //   duration: 0.5,
-    //   ease: 'power2.out',
-    // });
-
-    // tl.to(this.verticalBlurPass.material.uniforms['direction'].value, {
-    //   y: 0.3,
-    //   duration: 0.5,
-    //   ease: 'power2.out',
-    // }, "<"); 
-
-    // tl.to(this.horizontalBlurPass.material.uniforms['direction'].value, {
-    //   x: 0,
-    //   duration: 1,
-    //   ease: 'power2.out',
-    // });
-    // tl.to(this.verticalBlurPass.material.uniforms['direction'].value, {
-    //   y: 0,
-    //   duration: 1,
-    //   ease: 'power2.out',
-    // }, "<"); 
   }
 }
 
