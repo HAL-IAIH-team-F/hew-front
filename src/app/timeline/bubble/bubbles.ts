@@ -147,8 +147,8 @@ const fragmentShader = `
 `;
 
 const txr = [
-  ["/2020-01-01_09.26.42.png"],
-  // ["/timelineSample/hikakin.jpg"],
+  //["/2020-01-01_09.26.42.png"],
+   ["/hikakin.jpg"],
   // ["/timelineSample/mao.webp"],
   // ["/timelineSample/free1.jpg"],
   // ["/timelineSample/free2.jpg"],
@@ -161,7 +161,7 @@ const txr = [
   // ["/timelineSample/euph_st09_03.png"],
   // ["/timelineSample/euph_st13_02.png"],
   // ["/timelineSample/euph_st13_05.png"],
-  // ["/timelineSample/charlotte_twicon1-tomori.jpg"],
+  // ["/h.jpg"],
   // ["/timelineSample/001.jpg"],
   // ["/timelineSample/002.jpg"],
   // ["/timelineSample/003.jpg"],
