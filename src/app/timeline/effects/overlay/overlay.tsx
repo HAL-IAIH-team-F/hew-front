@@ -1,14 +1,34 @@
-import "./overlay.css"
+import "./overlay.css";
 
-const overlay = () => {
+const Overlay = () => {
+    const depth = 500
     return (
-        <div>
-            <div className="overlay"></div> {/* 黒い枠のオーバーレイ */}
-            <div className="cornerFrame topLeft"></div>
-            <div className="cornerFrame topRight"></div>
-            <div className="cornerFrame bottomLeft"></div>
-            <div className="cornerFrame bottomRight"></div>
+        <div className="overlay">
+            <div className="depthContainer">
+                <div className="depthMeter">
+                    <div className="depthBar" style={{ height: `${depth / 10}%` }}></div>
+                </div>
+                <div className="depthText">{`Depth: ${depth}m`}</div>
+            </div>
+            <div className="cornerLine lineTop"></div>
+            <div className="cornerLine lineBottom"></div>
+            <div className="cornerLine lineLeft"></div>
+            <div className="cornerLine lineRight"></div>
+
+            <div className="cornerDetails topLeft"></div>
+            <div className="cornerDetails topRight"></div>
+            <div className="cornerDetails bottomLeft"></div>
+            <div className="cornerDetails bottomRight"></div>
+
+            <div className="grid"></div>
+
+            <div className="infoText">
+                XXXXXXXXXXXX XXXXXX<br/>
+                XXXXXXXX <br/>
+                XXXXX XXXXXXXX
+            </div>
         </div>
-    )
+    );
 }
-export default overlay;
+
+export default Overlay;

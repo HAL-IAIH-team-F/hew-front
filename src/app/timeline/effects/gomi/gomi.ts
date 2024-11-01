@@ -5,9 +5,9 @@ import { gsap } from "gsap";
 export const createGlowingGomi = (() => {
   const GomiGeometry = new THREE.SphereGeometry(10, 16, 16);
   const GomiMaterial = new THREE.MeshBasicMaterial({
-    color: 0xffffff,
+    color: 0xbce2e8,
     transparent: true,
-    opacity: 0.7,
+    opacity: 0.4,
   });
 
   return (scene: THREE.Scene, Gomis: THREE.Mesh[], riseSpeed: number) => {
@@ -16,7 +16,7 @@ export const createGlowingGomi = (() => {
     // 泡の初期位置をランダムに設定
     Gomi.position.x = Math.random() * 800 - 400;
     Gomi.position.y = Math.random() * 400 - 200;
-    Gomi.position.z = 0;
+    Gomi.position.z = Math.random() * 400 - 200;
 
     // 泡のサイズをランダムに縮小
     const scale = 0.05;
@@ -43,20 +43,23 @@ export const createGlowingGomi = (() => {
 
       // Z方向に上昇させるアニメーションを追加
       timeline.to(Gomi.position, {
-        z: "+=800",
-        duration: 20 / riseSpeed,
+        z: "+=500",
+        duration: 100 / riseSpeed,
         ease: "linear",
       });
     };
 
-    // 泡の光るエフェクト (フェードイン・フェードアウト)
-    gsap.to(Gomi.material, {
-      opacity: 1,
-      duration: 2,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
+    // ランダムな揺れを永続的にアニメーション
+    const randomizePosition = () => {
+      gsap.to(Gomi.position, {
+        x: `+=${Math.random() * 40 - 20}`, // ランダムな範囲で揺れる
+        y: `+=${Math.random() * 40 - 20}`, // ランダムな範囲で揺れる
+        duration: 2,
+        ease: "sine.inOut",
+        onComplete: randomizePosition, // アニメーション完了時に再度実行
+      });
+    };
+    randomizePosition();
 
     // アニメーションを開始
     animateGomi();
@@ -71,11 +74,11 @@ export const generateGomi = (
   Gomis: THREE.Mesh[],
   interval: number,
   riseSpeed: number,
-  manager: { value: { animstate: string } }
+  manager: { value: { animstate: string } },
 ) => {
   setInterval(() => {
     // Gomiが30個以上ある場合は新しいGomiを生成しない
-    if (Gomis.length >= 50) return;
+    if (Gomis.length >= 100) return;
 
     const timeline = createGlowingGomi(scene, Gomis, riseSpeed);
 
@@ -83,22 +86,20 @@ export const generateGomi = (
 
     // animstateの監視
     const watchAnimState = () => {
-      if (manager.value.animstate === "onclickBubble") {
-        console.log("aaa");
-        
-        // 速度を1から8に変更（イージング）
+      if (manager.value.animstate === "init" || manager.value.animstate === "onclickBubble") {
+        // 速度を変更
         gsap.to(timeline, {
-          timeScale: 8,
-          duration: 0.5, // 0.5秒かけて速度を変更
-          ease: "power2.out" // イージングの種類
+          timeScale: 30,
+          duration: 0.5,
+          ease: "power2.out",
         });
 
-        // 1秒後に速度を8から1に戻す
+        // 1秒後に速度を戻す
         setTimeout(() => {
           gsap.to(timeline, {
             timeScale: 1,
-            duration: 1.0, // 0.5秒かけて元の速度に戻す
-            ease: "power2.out" // イージングの種類
+            duration: 1.5,
+            ease: "power2.out",
           });
         }, 1000);
       }
@@ -110,6 +111,6 @@ export const generateGomi = (
     // Gomiが削除されたときに監視を停止する
     setTimeout(() => {
       clearInterval(animStateInterval);
-    }, 20000); // 20秒後に監視を停止する（任意で調整可能）
+    }, 20000);
   }, interval);
 };

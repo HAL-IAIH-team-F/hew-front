@@ -57,6 +57,9 @@ export const moveBubblesToPosition = (bubbles: THREE.Mesh[], currentSessionId: n
 };
 
 export const initmoveBubblesToPosition = (bubbles: THREE.Mesh[], currentSessionId: number,nextstate: string,manager: Manager) => {
+  let completedAnimations = 0;
+  const totalAnimations = bubbles.length;
+
   bubbles.forEach((bubble) => {
     if ((bubble as any).sessionId === currentSessionId) {
       gsap.to(bubble.position, {
@@ -64,7 +67,10 @@ export const initmoveBubblesToPosition = (bubbles: THREE.Mesh[], currentSessionI
         duration: Math.random() * 1.2 + 1,
         ease: 'power2.out',
         onComplete: () => {
-          manager.update.animstate(nextstate)
+          completedAnimations++;
+          if (completedAnimations === totalAnimations) {
+            manager.update.animstate(nextstate);
+          }
         }
       });
     }

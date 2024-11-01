@@ -9,7 +9,7 @@ export class Manager {
     private _animstate: string;
     constructor(
         sessionId: number = 1, 
-        bbnum: number = 20, 
+        bbnum: number = 21, 
         fpshigh: number = 60,
         fpslow: number = 0,
         lastFrameTimeHigh: number = 0,
