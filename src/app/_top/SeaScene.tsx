@@ -91,12 +91,14 @@ export const SeaScene: React.FC<SeaSceneProps> = ({ onButtonClick }) => {
   });
 
   useEffect(() => {
+
     if (isInitialRender.current) {
       setTimeout(() => {
         isInitialRender.current = false;
-      }, 0);
+      }, 10);
       return;
     }
+
     if (onButtonClick) {
       gsap.to(camera.position, {
         y: camera.position.y - 50,

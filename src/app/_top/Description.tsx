@@ -44,23 +44,32 @@ export const DescriptionButton: React.FC<DescriptionButtonProps> = ({ onClick })
         fontFamily: 'UDEVGothic, sans-serif',
         color: 'rgba(255, 255, 255, 0.9)',
         fontWeight: 'bold',
-        fontSize: "0.7em",
+        fontSize: "0.8em",
         backgroundColor: 'transparent',
         border: 'none',
         cursor: 'pointer',
-        padding: '0',
         opacity: isClicked ? 0 : 1,
         transition: 'opacity 0.3s ease, color 0.3s ease, transform 0.3s ease, top 0.3s ease',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.color = 'rgba(255, 255, 255, 1)';
-        e.currentTarget.style.transform = 'translateX(-50%) scale(1.05)';
+        e.currentTarget.style.transform = 'translateX(-50%) scale(1.1)';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)';
         e.currentTarget.style.transform = 'translateX(-50%) scale(1)';
       }}
     >
+      <span
+        style={{
+          position: 'absolute',
+          top: '-20px', 
+          bottom: '-20px', 
+          left: '-40px', 
+          right: '-40px', 
+          content: '""',
+        }}
+      />
       {buttonText}
     </button>
   );
