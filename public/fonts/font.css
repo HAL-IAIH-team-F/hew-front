@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'UDEVGothic';
+  font-weight: normal;
+  font-style: normal;
+  src: url('./UDEVGothic/UDEVGothic35HS-Regular.ttf')
+}
+body {
+  font-family: 'UDEVGothic', sans-serif;
+}
