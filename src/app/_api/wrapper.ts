@@ -14,10 +14,6 @@ export const imgApiClient = createImgApiClient(imgBaseUrl, {});
 
 export const apiClient = createApiClient(baseUrl, {});
 
-
-export type State = "Public" | "Private"
-
-
 export class Img {
   constructor(
     readonly image_uuid: string,
