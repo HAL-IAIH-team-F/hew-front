@@ -3,7 +3,7 @@ import { FormError, StyledForm } from "../../../util/form/StyledForm";
 import { StyledInput } from "../../../util/form/StyledInput";
 import FlexBox from "../../../util/FlexBox";
 import { StyledButton } from "../../../util/form/StyledButton";
-import { useClientContext } from "~/api/clientWrapper";
+import { useClientContext } from "~/api/useClientContext";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { apiClient } from "~/api/wrapper"; // apiClient をインポート

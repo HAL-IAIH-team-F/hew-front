@@ -4,7 +4,7 @@ import {StyledInput} from "../../../util/form/StyledInput";
 import {StyledButton} from "../../../util/form/StyledButton";
 import {ChangeEvent, useState} from "react";
 import {apiClient} from "~/api/wrapper";
-import {useClientContext} from "~/api/clientWrapper";
+import {useClientContext} from "~/api/useClientContext";
 import {useSession} from "next-auth/react";
 import {useRouter} from 'next/navigation';
 

@@ -50,7 +50,7 @@ async function keycloakAccessToken(session: Session): Promise<ApiResult<string>>
   const expire = session.keycloakTokenBundle?.access?.expire || 0
   if (session.keycloakTokenBundle?.access?.token && Date.now() < expire - 1000)
     return Results.createSuccessResult(session.keycloakTokenBundle?.access.token)
-  await nextAuth.signOut()
+  await nextAuth.signIn()
   return Results.errResultByErrIdReason(ErrorIds.KeycloakRefreshError, "failed to sign out")
 }
 
