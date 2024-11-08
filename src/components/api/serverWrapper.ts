@@ -6,13 +6,13 @@ import {ErrorIds} from "../../util/err/errorIds";
 import {Session} from "next-auth";
 import {auth, nextAuth} from "~/auth/auth";
 import {apiClient} from "~/api/wrapper";
+import {TokenBundleUtil} from "~/auth/TokenBundle";
 
 export async function accessToken(): Promise<ApiResult<string>> {
   const session = await auth()
-  const access = session?.access
+  const access = session?.apiTokenBundle?.access
   if (access) {
-    let expire = parseISO(access.expire)
-    expire = add(expire, {minutes: -1})
+    const expire = add(new Date(access.expire || 0), {minutes: -1})
     if (isBefore(expire, Date.now())) return Results.createSuccessResult(access.token)
   }
   return await refreshToken()
@@ -22,12 +22,11 @@ async function refreshToken(): Promise<ApiResult<string>> {
   const session = await auth()
   if (!session) return Results.errResultByErrIdReason(ErrorIds.NoLogin, "session is undefined")
 
-  const refresh = session?.refresh
+  const refresh = session?.apiTokenBundle?.refresh
   if (!refresh) {
     return refreshByKeycloak(session)
   }
-  let expire = parseISO(refresh.expire)
-  expire = add(expire, {minutes: -1})
+  const expire = add(new Date(refresh.expire), {minutes: -1})
   if (isAfter(expire, Date.now())) {
     return refreshByKeycloak(session)
   }
@@ -48,9 +47,9 @@ async function refreshByKeycloak(session: Session): Promise<ApiResult<string>> {
 }
 
 async function keycloakAccessToken(session: Session): Promise<ApiResult<string>> {
-  const expire = session.accessTokenExpires || 0
-  if (session.keycloak_access_token && Date.now() < expire - 1000)
-    return Results.createSuccessResult(session.keycloak_access_token)
+  const expire = session.keycloakTokenBundle?.access?.expire || 0
+  if (session.keycloakTokenBundle?.access?.token && Date.now() < expire - 1000)
+    return Results.createSuccessResult(session.keycloakTokenBundle?.access.token)
   await nextAuth.signOut()
   return Results.errResultByErrIdReason(ErrorIds.KeycloakRefreshError, "failed to sign out")
 }
@@ -72,12 +71,12 @@ function setTokenRes(
   session: Session,
   tokenRes: { access: { token: string, expire: string }, refresh: { token: string, expire: string } }
 ) {
-  session.access = {
-    token: tokenRes.access.token,
-    expire: tokenRes.access.expire,
-  }
-  session.refresh = {
-    token: tokenRes.refresh.token,
-    expire: tokenRes.refresh.expire,
-  }
+  session.apiTokenBundle = TokenBundleUtil.create({
+      token: tokenRes.access.token,
+      expire: parseISO(tokenRes.access.expire).getTime(),
+    }, {
+      token: tokenRes.refresh.token,
+      expire: parseISO(tokenRes.refresh.expire).getTime(),
+    }
+  )
 }

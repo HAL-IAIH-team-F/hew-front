@@ -3,6 +3,8 @@ import "next-auth/jwt";
 import Keycloak from "next-auth/providers/keycloak";
 import {JWT} from "@auth/core/jwt";
 import {Env} from "~/env";
+import {TokenBundle, TokenBundleUtil} from "~/auth/TokenBundle";
+import {Token} from "~/auth/Token";
 
 export const keycloakConfig = {
   clientId: Env.keycloak.clientId,
@@ -23,13 +25,17 @@ export const nextAuth = NextAuth({
   callbacks: {
     async jwt({token, account}: { token: JWT, account: Account | null }) {
       if (account) {
-        token.keycloak_access_token = account.access_token
-        token.keycloak_refresh_token = account.refresh_token
+        const access: Token | undefined = account.access_token && account.expires_in ? {
+          token: account.access_token,
+          expire: Date.now() + account.expires_in * 1000
+        } : undefined
+        const refresh: Token | undefined = account.refresh_token && account.refresh_expires_in ? {
+          token: account.refresh_token,
+          expire: Date.now() + account.refresh_expires_in * 1000
+        } : undefined
+
+        token.keycloakTokenBundle = TokenBundleUtil.create(access, refresh)
         token.keycloak_id_token = account.id_token
-        if (account.expires_in)
-          token.accessTokenExpires = Date.now() + account.expires_in * 1000
-        if (account.refresh_expire_in)
-          token.refreshTokenExpires = Date.now() + account.refresh_expires_in * 1000
       }
       return token
     },
@@ -39,10 +45,7 @@ export const nextAuth = NextAuth({
         session.user.id = token.sub;
       }
       session.keycloak_id_token = token.keycloak_id_token
-      session.keycloak_access_token = token.keycloak_access_token
-      session.keycloak_refresh_token = token.keycloak_refresh_token
-      session.accessTokenExpires = token.accessTokenExpires
-      session.refreshTokenExpires = token.refreshTokenExpires
+      session.keycloakTokenBundle = token.keycloakTokenBundle
 
       return session;
     },
@@ -54,19 +57,9 @@ export const {
 } = nextAuth
 declare module "next-auth" {
   interface Session {
-    keycloak_access_token?: string
-    keycloak_refresh_token?: string
+    apiTokenBundle?: TokenBundle
+    keycloakTokenBundle?: TokenBundle
     keycloak_id_token?: string
-    accessTokenExpires?: number
-    refreshTokenExpires?: number
-    access?: {
-      token: string,
-      expire: string
-    },
-    refresh?: {
-      token: string,
-      expire: string
-    },
   }
 
   interface Account {
@@ -75,10 +68,7 @@ declare module "next-auth" {
 }
 declare module "next-auth/jwt" {
   interface JWT {
-    keycloak_access_token?: string
-    keycloak_refresh_token?: string
+    keycloakTokenBundle?: TokenBundle
     keycloak_id_token?: string
-    accessTokenExpires?: number
-    refreshTokenExpires?: number
   }
 }
