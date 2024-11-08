@@ -1,11 +1,11 @@
 "use client"
 
 import {useMemo} from "react";
-import {ClientContext, getClientContext} from "./wrapper";
 import {Session} from "next-auth";
+import {ClientContext, ClientContextUtil} from "~/api/ClientContext";
 
 export function useClientContext(session: Session | null): ClientContext {
   return useMemo(() => {
-    return getClientContext(session)
+    return ClientContextUtil.getClientContext(session)
   }, [session])
 }

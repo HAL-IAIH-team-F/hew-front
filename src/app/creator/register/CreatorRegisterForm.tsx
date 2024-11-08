@@ -3,10 +3,10 @@ import { FormError, StyledForm } from "../../../util/form/StyledForm";
 import { StyledInput } from "../../../util/form/StyledInput";
 import FlexBox from "../../../util/FlexBox";
 import { StyledButton } from "../../../util/form/StyledButton";
-import { useClientContext } from "@/_api/clientWrapper";
+import { useClientContext } from "~/api/useClientContext";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { apiClient } from "@/_api/wrapper"; // apiClient をインポート
+import { apiClient } from "~/api/wrapper"; // apiClient をインポート
 
 export default function CreatorRegisterForm({ ...props }: CreatorRegisterFormProps) {
   const router = useRouter();
