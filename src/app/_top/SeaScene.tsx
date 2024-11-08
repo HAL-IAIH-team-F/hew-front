@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import * as THREE from "three";
-import { useFrame, useThree } from "@react-three/fiber";
-import { EffectComposer, FilmPass, RenderPass, UnrealBloomPass, Water } from "three-stdlib";
+import {useFrame, useThree} from "@react-three/fiber";
+import {EffectComposer, RenderPass, UnrealBloomPass, Water} from "three-stdlib";
 import gsap from "gsap";
 
 type SeaSceneProps = {
@@ -10,22 +10,31 @@ type SeaSceneProps = {
 };
 
 const animate = (composer: EffectComposer<THREE.WebGLRenderTarget<THREE.Texture>>, water: Water) => {
-    const animateLoop = () => {
-      requestAnimationFrame(animateLoop);
-      if (water && water.material && water.material.uniforms) {
-        water.material.uniforms["time"].value += 1.0 / 60.0;
-      }
-      composer.render();
-    };
-    animateLoop();
+  const animateLoop = () => {
+    requestAnimationFrame(animateLoop);
+    if (water && water.material && water.material.uniforms) {
+      water.material.uniforms["time"].value += 1.0 / 60.0;
+    }
+    composer.render();
   };
+  animateLoop();
+};
 
-export const SeaScene: React.FC<SeaSceneProps> = ({ onButtonClick }) => {
-  const { scene, camera, gl: renderer } = useThree(); 
+export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
+  const {scene, camera, gl: renderer} = useThree();
   const waterRef = useRef<THREE.Mesh>();
   const isInitialRender = useRef(true);
+  const [FilmPass, setFilmPass] = useState<{ constructor: any }>()
 
   useEffect(() => {
+    import("three-stdlib").then(value => {
+      const {FilmPass} = value
+      setFilmPass({constructor: FilmPass})
+    });
+  }, []);
+
+  useEffect(() => {
+    if (FilmPass === undefined) return
     scene.background = new THREE.Color(0xbce2e8);
     camera.position.set(0, 20, 316);
     camera.lookAt(-500, 323, -4);
@@ -69,9 +78,9 @@ export const SeaScene: React.FC<SeaSceneProps> = ({ onButtonClick }) => {
       0.47,
       0.71
     );
-    
-    const filmPass = new FilmPass(0, 1, 648, false);
-    
+
+    const filmPass = new FilmPass.constructor(0, 1, 648, false);
+
     composer.addPass(bloomPass);
     composer.addPass(filmPass);
     animate(composer, water);
@@ -82,7 +91,7 @@ export const SeaScene: React.FC<SeaSceneProps> = ({ onButtonClick }) => {
       scene.remove(pointLight2);
       scene.remove(ambientLight);
     };
-  }, [scene, camera, renderer]);
+  }, [scene, camera, renderer, FilmPass === undefined]);
 
   useFrame(() => {
     if (waterRef.current) {

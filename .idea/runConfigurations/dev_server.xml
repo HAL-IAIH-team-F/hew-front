@@ -6,9 +6,7 @@
       <script value="dev" />
     </scripts>
     <node-interpreter value="project" />
-    <envs>
-      <env name="PORT" value="3001" />
-    </envs>
+    <envs />
     <method v="2" />
   </configuration>
 </component>
