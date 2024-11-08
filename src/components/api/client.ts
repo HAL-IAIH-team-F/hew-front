@@ -29,6 +29,17 @@ const read_limit_number = z
   .default(20);
 const OrderDirection = z.enum(["asc", "desc"]);
 const time_order = OrderDirection.optional();
+const GetProductsResponse = z
+  .object({
+    product_text: z.string(),
+    product_id: z.string().uuid(),
+    product_thumbnail_uuid: z.string().uuid(),
+    product_price: z.number().int(),
+    product_title: z.string(),
+    product_date: z.string().datetime({ offset: true }),
+    product_contents_uuid: z.string().uuid(),
+  })
+  .passthrough();
 const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
 const TokenInfo = z
   .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
@@ -78,6 +89,7 @@ export const schemas = {
   read_limit_number,
   OrderDirection,
   time_order,
+  GetProductsResponse,
   PostTokenBody,
   TokenInfo,
   TokenRes,
@@ -108,7 +120,7 @@ const endpoints = makeApi([
         schema: PostChatBody,
       },
     ],
-    response: z.unknown(),
+    response: ChatRes,
     errors: [
       {
         status: 422,
@@ -270,7 +282,7 @@ const endpoints = makeApi([
         schema: z.array(z.string()).optional(),
       },
     ],
-    response: z.unknown(),
+    response: z.array(GetProductsResponse),
     errors: [
       {
         status: 422,
