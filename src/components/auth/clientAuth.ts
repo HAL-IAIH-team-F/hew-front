@@ -1,8 +1,8 @@
 "use client"
 
-import {signOutAtServer} from "~/_auth/serverAuth";
+import {signOutAtServer} from "~/auth/serverAuth";
 
-export async function signIn(path: string = "", provider: string = "keycloak") {
+export async function signIn() {
   const x = window.innerWidth / 2;
   const y = window.innerHeight / 2;
   open('/login', 'Login', `width=500,height=600, left=${x},top=${y}`);

@@ -2,17 +2,14 @@ import NextAuth, {Account} from "next-auth";
 import "next-auth/jwt";
 import Keycloak from "next-auth/providers/keycloak";
 import {JWT} from "@auth/core/jwt";
+import {Env} from "~/env";
 
-
-const realms = process.env.NEXT_PUBLIC_KEYCLOAK_REALMS
-const baseUrl = process.env.NEXT_PUBLIC_KEYCLOAK_BASEURL
-export const tokenUrl = new URL(`/realms/${realms}/protocol/openid-connect/token`,baseUrl)
 export const keycloakConfig = {
-  clientId: process.env.KEYCLOAK_ID as string,
-  clientSecret: process.env.KEYCLOAK_SECRET as string,
-  baseUrl: baseUrl,
-  realms: realms,
-  issuer: new URL(`/realms/${realms}`, baseUrl).toString(),
+  clientId: Env.keycloak.clientId,
+  clientSecret: Env.keycloak.clientSecret,
+  baseUrl: Env.keycloak.baseUrl,
+  realms: Env.keycloak.realms,
+  issuer: new URL(`/realms/${Env.keycloak.realms}`, Env.keycloak.baseUrl).toString(),
 }
 export const nextAuth = NextAuth({
   providers: [
@@ -24,7 +21,7 @@ export const nextAuth = NextAuth({
   ],
   trustHost: true,
   callbacks: {
-    async jwt({token, account}: {token: JWT,account: Account | null}) {
+    async jwt({token, account}: { token: JWT, account: Account | null }) {
       if (account) {
         token.keycloak_access_token = account.access_token
         token.keycloak_refresh_token = account.refresh_token
@@ -71,6 +68,7 @@ declare module "next-auth" {
       expire: string
     },
   }
+
   interface Account {
     refresh_expires_in: number
   }

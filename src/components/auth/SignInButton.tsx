@@ -1,7 +1,7 @@
 "use client"
 import {HTMLAttributes, useState} from "react";
 import {ErrorMessage} from "../../util/err/ErrorMessage";
-import {signIn} from "~/_auth/clientAuth";
+import {signIn} from "~/auth/clientAuth";
 
 
 export function SignInButton(

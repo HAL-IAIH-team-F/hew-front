@@ -1,6 +1,6 @@
 import {HTMLAttributes} from "react";
-import {SignInButton} from "~/_auth/SignInButton";
-import {SignOutButton} from "~/_auth/SignOutButton";
+import {SignInButton} from "~/auth/SignInButton";
+import {SignOutButton} from "~/auth/SignOutButton";
 import {useSession} from "next-auth/react";
 
 export function SignInOutButton(

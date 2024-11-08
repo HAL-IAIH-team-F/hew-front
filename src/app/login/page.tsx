@@ -1,6 +1,6 @@
 "use client"
 import {useEffect, useState} from "react";
-import {signInAtServer} from "~/_auth/serverAuth";
+import {signInAtServer} from "~/auth/serverAuth";
 import {ErrorMessage} from "../../util/err/ErrorMessage";
 import {useSession} from "next-auth/react";
 

@@ -4,8 +4,8 @@ import {ApiResult, Results} from "../../util/err/result";
 import {add, isAfter, isBefore, parseISO} from "date-fns";
 import {ErrorIds} from "../../util/err/errorIds";
 import {Session} from "next-auth";
-import {auth, nextAuth} from "~/_auth/auth";
-import {apiClient} from "@/_api/wrapper";
+import {auth, nextAuth} from "~/auth/auth";
+import {apiClient} from "~/api/wrapper";
 
 export async function accessToken(): Promise<ApiResult<string>> {
   const session = await auth()
@@ -52,7 +52,7 @@ async function keycloakAccessToken(session: Session): Promise<ApiResult<string>>
   if (session.keycloak_access_token && Date.now() < expire - 1000)
     return Results.createSuccessResult(session.keycloak_access_token)
   await nextAuth.signOut()
-  return Results.errResultByErrIdReason(ErrorIds.KeycloakRefreshError, "failed to sign in")
+  return Results.errResultByErrIdReason(ErrorIds.KeycloakRefreshError, "failed to sign out")
 }
 
 async function refreshByRefreshToken(token: string, session: Session): Promise<ApiResult<string>> {

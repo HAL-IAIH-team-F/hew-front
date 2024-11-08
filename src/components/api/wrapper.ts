@@ -1,18 +1,17 @@
-import {createApiClient} from "@/_api/client";
-import {createApiClient as createImgApiClient} from "@/_api/imgClient";
+import {createApiClient} from "~/api/client";
+import {createApiClient as createImgApiClient} from "~/api/imgClient";
 import {AxiosRequestConfig} from "axios";
 import {Session} from "next-auth";
 import {ApiResult, Results} from "../../util/err/result";
 import {ErrorIds} from "../../util/err/errorIds";
-import {accessToken} from "@/_api/serverWrapper";
+import {accessToken} from "~/api/serverWrapper";
+import {Env} from "~/env";
 import createSuccessResult = Results.createSuccessResult;
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL as string;
-const imgBaseUrl = process.env.NEXT_PUBLIC_IMG_BASE_URL as string;
-export const imgApiClient = createImgApiClient(imgBaseUrl, {});
+export const imgApiClient = createImgApiClient(Env.imgBaseUrl, {});
 
 
-export const apiClient = createApiClient(baseUrl, {});
+export const apiClient = createApiClient(Env.baseUrl, {});
 
 export class Img {
   constructor(
@@ -33,7 +32,7 @@ export class Img {
   }
 
   url() {
-    const url = new URL(`/img/${this.image_uuid}/${this.preference.filename}`, imgBaseUrl)
+    const url = new URL(`/img/${this.image_uuid}/${this.preference.filename}`, Env.imgBaseUrl)
     if (this.token) {
       url.searchParams.set("q", this.token)
     }

@@ -3,8 +3,8 @@ import {FormError, StyledForm} from "../../../util/form/StyledForm";
 import {StyledInput} from "../../../util/form/StyledInput";
 import {StyledButton} from "../../../util/form/StyledButton";
 import {ChangeEvent, useState} from "react";
-import {apiClient} from "@/_api/wrapper";
-import {useClientContext} from "@/_api/clientWrapper";
+import {apiClient} from "~/api/wrapper";
+import {useClientContext} from "~/api/clientWrapper";
 import {useSession} from "next-auth/react";
 import {useRouter} from 'next/navigation';
 
