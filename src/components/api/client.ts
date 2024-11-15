@@ -1,5 +1,3 @@
-// noinspection JSUnusedGlobalSymbols
-
 import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
 import { z } from "zod";
 
@@ -19,6 +17,29 @@ const ValidationError = z
 const HTTPValidationError = z
   .object({ detail: z.array(ValidationError) })
   .partial()
+  .passthrough();
+const PostChatMessageBody = z
+  .object({ message: z.string(), images: z.array(z.string().uuid()) })
+  .passthrough();
+const ChatMessageRes = z
+  .object({
+    chat_id: z.string().uuid(),
+    chat_message_id: z.string().uuid(),
+    index: z.number().int(),
+    message: z.string(),
+    images: z.array(z.string().uuid()),
+  })
+  .passthrough();
+const MessageRes = z
+  .object({
+    chat_message_id: z.string().uuid(),
+    index: z.number().int(),
+    message: z.string(),
+    images: z.array(z.string().uuid()),
+  })
+  .passthrough();
+const ChatMessagesRes = z
+  .object({ chat_id: z.string().uuid(), messages: z.array(MessageRes) })
   .passthrough();
 const name = z.union([z.array(z.string()), z.null()]).optional();
 const start_datetime = z.union([z.string(), z.null()]).optional();
@@ -48,6 +69,13 @@ const TokenRes = z
   .object({ access: TokenInfo, refresh: TokenInfo })
   .passthrough();
 const ImgTokenRes = z.object({ upload: TokenInfo }).passthrough();
+const PostCreatorBody = z
+  .object({
+    user_id: z.string().uuid(),
+    contact_address: z.string(),
+    transfer_target: z.string(),
+  })
+  .passthrough();
 const PostUserBody = z
   .object({
     user_name: z.string(),
@@ -70,19 +98,16 @@ const SelfUserRes = z
     user_mail: z.string(),
   })
   .passthrough();
-const PostCreatorBody = z
-  .object({
-    user_id: z.string().uuid(),
-    contact_address: z.string(),
-    transfer_target: z.string(),
-  })
-  .passthrough();
 
 export const schemas = {
   ChatRes,
   PostChatBody,
   ValidationError,
   HTTPValidationError,
+  PostChatMessageBody,
+  ChatMessageRes,
+  MessageRes,
+  ChatMessagesRes,
   name,
   start_datetime,
   following,
@@ -94,17 +119,17 @@ export const schemas = {
   TokenInfo,
   TokenRes,
   ImgTokenRes,
+  PostCreatorBody,
   PostUserBody,
   Img,
   SelfUserRes,
-  PostCreatorBody,
 };
 
 const endpoints = makeApi([
   {
     method: "get",
     path: "/api/chat",
-    alias: "gc_api_chat_get",
+    alias: "gcs_api_chat_get",
     requestFormat: "json",
     response: z.array(ChatRes),
   },
@@ -121,6 +146,53 @@ const endpoints = makeApi([
       },
     ],
     response: ChatRes,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/api/chat/:chat_id/message",
+    alias: "pcm_api_chat__chat_id__message_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: PostChatMessageBody,
+      },
+      {
+        name: "chat_id",
+        type: "Path",
+        schema: z.string().uuid(),
+      },
+    ],
+    response: ChatMessageRes,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/api/chat/:chat_id/message",
+    alias: "gcms_api_chat__chat_id__message_get",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "chat_id",
+        type: "Path",
+        schema: z.string().uuid(),
+      },
+    ],
+    response: ChatMessagesRes,
     errors: [
       {
         status: 422,
