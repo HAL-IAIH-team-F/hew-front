@@ -1,0 +1,24 @@
+/* スクロールバー全体のスタイル */
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+/* スクロールバーのトラック（部分） */
+::-webkit-scrollbar-track {
+background: #242424;
+border-radius: 6px;
+}
+
+/* スクロールバーのハンドル */
+::-webkit-scrollbar-thumb {
+background: #525151;
+border-radius: 6px;
+border: 3px solid #3b3a3a;
+}
+
+/* ホバー時のスクロールバーのハンドル */
+::-webkit-scrollbar-thumb:hover {
+background: #555;
+}
+
+
