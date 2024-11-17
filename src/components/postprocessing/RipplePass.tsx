@@ -1,5 +1,5 @@
-import React, { Suspense, useEffect, useMemo, useRef, FC } from 'react';
-import { ShaderPass } from 'three-stdlib';
+import React, { Suspense, useEffect, useMemo, useRef, FC, RefObject } from 'react';
+import { EffectComposer, RenderPass, ShaderPass } from 'three-stdlib';
 import { useTexture } from '@react-three/drei';
 import { extend, useFrame } from '@react-three/fiber';
 import { RippleRenderer } from './ripple';
@@ -8,14 +8,15 @@ extend({ ShaderPass })
 
 type RipplePassType = {
 	enabled?: boolean
+	composerRef: RefObject<EffectComposer>
 }
 
 export const RipplePass: FC<RipplePassType> = props => {
-	const { enabled = true } = props
+	const { enabled = true , composerRef} = props
 
 	return (
 		<Suspense fallback={null}>
-			<Ripple enabled={enabled} />
+			<Ripple enabled={enabled} composerRef={composerRef}/>
 		</Suspense>
 	)
 }
@@ -23,16 +24,17 @@ export const RipplePass: FC<RipplePassType> = props => {
 // ========================================================
 type RippleType = {
 	enabled?: boolean
+	composerRef: RefObject<EffectComposer>
 }
 
 const Ripple: FC<RippleType> = props => {
-	const { enabled = true } = props
+	const { enabled = true , composerRef} = props
 
 	const shaderRef = useRef<ShaderPass>(null)
 
 	const rippleTexture = useTexture("/brush.png")
 	const effect = useMemo(() => new RippleRenderer(rippleTexture), [rippleTexture])
-
+	const renderRef = useRef<RenderPass>(null)
 	const shader = useMemo(() => {
 		return {
 			uniforms: {
@@ -40,17 +42,27 @@ const Ripple: FC<RippleType> = props => {
 				u_displacement: { value: null }
 			},
 			vertexShader: vertexShader,
-			fragmentShader: fragmentShader,
+			fragmentShader: fragmentShader
 		}
 	}, [])
-
 	useEffect(() => {
 		return () => effect.dispose()
-	}, [effect])
-
+	},[effect])
 	useFrame(({ gl }) => {
 		effect.update(gl, shaderRef.current!.uniforms.u_displacement)
 	})
+
+	useEffect(() => {
+		if (!shaderRef.current) return
+		if (!composerRef.current) return
+		const composer = composerRef.current
+		const render = shaderRef.current
+	
+		composer.addPass(render)
+		return () => composer.removePass(render);
+	}, []);
+
+	
 
 	return <shaderPass ref={shaderRef} attach="passes" args={[shader]} enabled={enabled} />
 }
@@ -84,6 +96,5 @@ void main() {
 
   gl_FragColor = color;
   // gl_FragColor = texture2D(u_displacement, v_uv);
-  
 }
 `

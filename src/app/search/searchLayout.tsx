@@ -1,49 +1,59 @@
 // components/Layout.tsx
-import React from 'react';
-import { useEffect, useState } from "react";
-import { useSmoothScroll } from "../_hook/useSmoothScroll"
-import { FaSearch } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { FaSearch } from "react-icons/fa";
 
 interface searchLayoutProps {
   children: React.ReactNode;
 }
 
-const searchLayout: React.VFC<searchLayoutProps> = ({ children }) => {
-    const [containerId, setContainerId] = useState('');
+const SearchLayout: React.FC<searchLayoutProps> = ({ children }) => {
+  const [isMobileView, setIsMobileView] = useState(false);
 
-    return (
-        <div className="flex h-screen">
-            <div className="w-1/4 bg-black text-white p-8 h-screen">
-                <h1 className="text-2xl font-bold mb-4">検索ページ</h1>
-                <div className="relative mb-4">
-                    <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
-                        <FaSearch />
-                    </span>
-                    <input 
-                        type="text" 
-                        placeholder="検索する" 
-                        className="w-full pl-10 pr-4 py-2 bg-gray-800 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                </div>
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 820); // 768px以下をモバイルビューとする
+    };
 
-                <p className="text-sm">
-                    にします
-                </p>
-            </div>
-            <div className="w-3/4 bg-black text-white p-8 h-screen overflow-y-scroll" id={containerId}>
-                <h1 className="text-2xl font-bold mb-4">xxxxxxxxx</h1>
-                <p className="text-sm">
-                    xxxxxxxxxxxxxxxxxx 
-                </p>
-                <p className="mt-4 text-sm">
-                    xxxxxxxxxxxxxxxxxx
-                </p>
-                <div className="space-y-8">
-                    {children}
-                </div>
-            </div>
+    handleResize(); // 初回実行
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <div className="h-screen relative bg-black">
+      {/* 検索バー */}
+      <div
+        className={`${
+          isMobileView
+            ? "fixed top-0 left-0 w-full z-20 bg-black"
+            : "absolute z-10 bg-black"
+        } text-white p-8`}
+      >
+        <h1 className="text-2xl font-bold mb-4">検索ページ</h1>
+        <div className="relative mb-4">
+          <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
+            <FaSearch />
+          </span>
+          <input
+            type="text"
+            placeholder="検索する"
+            className="w-full pl-10 pr-4 py-2 bg-gray-800 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
-    );
+      </div>
+
+      {/* コンテンツ */}
+      <div
+        className={`bg-black text-white ${
+          isMobileView ? "pt0" : "h-screen"
+        } `}
+        id=""
+      >
+        {children}
+      </div>
+    </div>
+  );
 };
 
-export default searchLayout;
+export default SearchLayout;
