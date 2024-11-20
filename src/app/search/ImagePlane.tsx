@@ -1,8 +1,9 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { Plane, useTexture } from '@react-three/drei';
-import { useSpring, animated } from '@react-spring/three';
-import "./serchBar.css"
+import { useFrame } from '@react-three/fiber';
+import "./serchBar.css";
+
 export const ImagePlane: FC = () => {
   const textures = useTexture([
     "/pic/akasi.jpg",
@@ -11,23 +12,39 @@ export const ImagePlane: FC = () => {
     "/pic/enoshima.jpg",
     "/pic/nagoya.jpg",
     "/pic/shinjuku.jpg",
+    "/pic/akasi.jpg",
+    "/pic/gyoen.jpg",
+    "/pic/asakusa.jpg",
+    "/pic/enoshima.jpg",
+    "/pic/nagoya.jpg",
+    "/pic/shinjuku.jpg",
+    "/pic/akasi.jpg",
+    "/pic/gyoen.jpg",
+    "/pic/asakusa.jpg",
+    "/pic/enoshima.jpg",
+    "/pic/nagoya.jpg",
+    "/pic/shinjuku.jpg",
   ]);
 
-  const [columns, setColumns] = useState(3); // Initial number of columns
-  const fixedAspectRatio = 18 / 9; // Target aspect ratio
-  const fixedWidth = 1.6; // Fixed width
-  const fixedHeight = fixedWidth / fixedAspectRatio; // Fixed height
+  const scrollOffset = useRef(0); // スクロール位置を追跡
+  const scrollSpeed = 0.005; // スクロールの速さ
+  const groupRef = useRef<THREE.Group>(null);
+
+  const [columns, setColumns] = useState(3); // 列数の初期設定
+  const fixedAspectRatio = 18 / 9; // アスペクト比
+  const fixedWidth = 1.6; // 画像の固定幅
+  const fixedHeight = fixedWidth / fixedAspectRatio; // 画像の高さ
 
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
 
       if (width > 1250) {
-        setColumns(3); // 3 columns
+        setColumns(3);
       } else if (width > 820) {
-        setColumns(2); // 2 columns
+        setColumns(2);
       } else {
-        setColumns(1); // 1 column
+        setColumns(1); 
       }
     };
 
@@ -47,34 +64,46 @@ export const ImagePlane: FC = () => {
       fragmentShader: fragmentShader,
     });
 
-  return (
-    <group position={[0, 1.5, 0]}>
-      {textures.map((texture, i) => {
-        const xOffset = ((i % columns) - (columns - 1) / 2) * 3.3; // Horizontal offset
-        const yOffset = -Math.floor(i / columns) * 1.7; // Vertical offset
+  const onScroll = (e: WheelEvent) => {
+    scrollOffset.current += e.deltaY * scrollSpeed;
+  
+    if (scrollOffset.current < 0) {
+      scrollOffset.current = 0;
+    }
+  };
 
-        // Define the animation using React Spring
-        const springProps = useSpring({
-          position: [xOffset, yOffset, 0],
-          config: { tension: 170, friction: 26 }, // Animation speed and bounce
-        });
+  useEffect(() => {
+    window.addEventListener("wheel", onScroll);
+    return () => window.removeEventListener("wheel", onScroll);
+  }, []);
+
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.position.y = scrollOffset.current;
+    }
+  });
+
+  return (
+    <group position={[0, 1.5, 0]} ref={groupRef}>
+      {textures.map((texture, i) => {
+        const xOffset = ((i % columns) - (columns - 1) / 2) * 3.3; 
+        const yOffset = -Math.floor(i / columns) * 1.7; 
 
         return (
-          <animated.mesh
+          <mesh
             key={i}
-            position={springProps.position.to((x, y, z) => [x, y, z])} // Map to a compatible array format
+            position={[xOffset, yOffset, 0]}
           >
             <Plane args={[fixedWidth * 2, fixedHeight * 2]}>
               <primitive attach="material" object={material(texture)} />
             </Plane>
-          </animated.mesh>
+          </mesh>
         );
       })}
     </group>
   );
 };
 
-// Shader code
 const vertexShader = `
 varying vec2 v_uv;
 

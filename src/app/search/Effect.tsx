@@ -21,6 +21,7 @@ export const Effect: FC = () => {
 	const composerRef = useRef<EffectComposer>(null)
 	const { gl, scene, camera, size } = useThree()
 	const renderRef = useRef<RenderPass>(null)
+	
 	useFrame(() => {
 		composerRef.current!.render()
 	},1)
@@ -35,9 +36,6 @@ export const Effect: FC = () => {
 		return () => composer.removePass(render);
 	  }, [renderRef, composerRef]);
 
-	
-	
-	console.log(composerRef.current?.passes)
 	return (
 		<>
 			<effectComposer ref={composerRef} args={[gl] } />

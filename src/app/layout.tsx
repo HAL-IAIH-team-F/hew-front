@@ -22,7 +22,7 @@ export default function RootLayout(
     <html lang="en">
       <body className={inter.className + " bg-backcolor"}>
         <SessionProvider>
-          <StyledNavigation/>
+          {/* <StyledNavigation/> */}
           {/*<BackgroundObject/>*/}
           {children}
         </SessionProvider>

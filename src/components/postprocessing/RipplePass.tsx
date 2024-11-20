@@ -88,7 +88,7 @@ void main() {
   vec2 uv = v_uv;
 
   vec4 disp = texture2D(u_displacement, uv);
-  float theta = disp.r * 2.0 * PI;
+  float theta = disp.r * 0.7 * PI;
   vec2 dir = vec2(sin(theta), cos(theta));
   uv += dir * disp.r * 0.1;
 

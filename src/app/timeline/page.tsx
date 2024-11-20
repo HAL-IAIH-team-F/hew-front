@@ -5,6 +5,7 @@ import Main from "~/Main";
 import Timeline from "./timeline";
 import { MouseTrail } from "./effects/mouse/mouseTrail";
 import Overlay from "./effects/overlay/overlay";
+import SearchButton from "~/SearchButton";
 
 export default function Page({}: {}) {
   return (
@@ -12,7 +13,8 @@ export default function Page({}: {}) {
       <Main>
         <Timeline />
         <MouseTrail />
-        <Overlay/>
+        <SearchButton/>
+        {/* <Overlay/> */}
       </Main>
     </div>
   );
