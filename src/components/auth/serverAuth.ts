@@ -1,7 +1,7 @@
 "use server"
 import type {BuiltInProviderType} from "@auth/core/providers";
 import {redirect} from "next/navigation";
-import {auth, keycloakConfig, nextAuth} from "~/_auth/auth";
+import {auth, keycloakConfig, nextAuth} from "~/auth/auth";
 
 export async function signInAtServer<
   P extends BuiltInProviderType | (string & {})

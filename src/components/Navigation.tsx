@@ -7,10 +7,10 @@
 "use client"
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
-import {SignInOutButton} from "~/_auth/SignInOutButton";
-import {useClientContext} from "@/_api/clientWrapper";
+import {SignInOutButton} from "~/auth/SignInOutButton";
+import {useClientContext} from "~/api/useClientContext";
 import {useSession} from "next-auth/react";
-import {apiClient, Img} from "@/_api/wrapper";
+import {apiClient, Img} from "~/api/wrapper";
 import {ErrorIds} from "../util/err/errorIds";
 import Image from "../util/Image";
 
