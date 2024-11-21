@@ -147,28 +147,7 @@ const fragmentShader = `
 `;
 
 const txr = [
-  //["/2020-01-01_09.26.42.png"],
-   ["/hikakin.jpg"],
-  // ["/timelineSample/mao.webp"],
-  // ["/timelineSample/free1.jpg"],
-  // ["/timelineSample/free2.jpg"],
-  // ["/timelineSample/freelen.jpg"],
-  // ["/timelineSample/00000211.jpg"],
-  // ["/timelineSample/00000219.jpg"],
-  // ["/timelineSample/00000221.jpg"],
-  // ["/timelineSample/00000232.jpg"],
-  // ["/timelineSample/00000240.jpg"],
-  // ["/timelineSample/euph_st09_03.png"],
-  // ["/timelineSample/euph_st13_02.png"],
-  // ["/timelineSample/euph_st13_05.png"],
-  // ["/h.jpg"],
-  // ["/timelineSample/001.jpg"],
-  // ["/timelineSample/002.jpg"],
-  // ["/timelineSample/003.jpg"],
-  // ["/timelineSample/008.jpg"],
-  // ["/timelineSample/023.jpg"],
-  // ["/timelineSample/028.jpg"],
-  // ["/timelineSample/yuko.png"],
+   ["/curtain.png"]
 ]
 
 export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: number, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera) => {

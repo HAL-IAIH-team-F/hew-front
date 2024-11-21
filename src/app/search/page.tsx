@@ -1,12 +1,11 @@
+"use client"
+import "./style.css"
+import SearchPage from "./search";
 
-import Main from "~/Main";
-import SearchForm from "./SearchForm";
+const Page: React.FC = () => {
+  return (
+    <SearchPage/>
+  );
+};
 
-
-export default function Page(
-  {}: {}
-) {
-  return <Main>
-    <SearchForm/>
-  </Main>
-}
+export default Page;
