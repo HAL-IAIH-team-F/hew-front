@@ -1,5 +1,6 @@
 // LoginButton.tsx
 import React from 'react';
+import {signIn} from "~/auth/clientAuth";
 
 const LoginButton = () => {
     return (
@@ -30,6 +31,7 @@ const LoginButton = () => {
                 target.style.color = 'rgba(255, 255, 255, 0.8)';
                 target.style.borderColor = 'rgba(255, 255, 255, 0.8)';
             }}
+                onClick={()=>signIn()}
         >
             Login
         </button>
