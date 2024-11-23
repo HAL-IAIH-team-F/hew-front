@@ -12,7 +12,6 @@ services:
         rsync --delete -av /src/public /app/
         rsync --delete -av /src/.env /app/
         rsync --delete -av /src/next.config.js /app/
-        rsync --delete -av /src/next-env.d.ts /app/
         rsync --delete -av /src/package.json /app/
         rsync --delete -av /src/package-lock.json /app/
         rsync --delete -av /src/postcss.config.mjs /app/
