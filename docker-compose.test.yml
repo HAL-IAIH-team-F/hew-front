@@ -1,16 +1,22 @@
 services:
   #########################################################
   init-rsync:
-    image: secoresearch/rsync
+    image: secoresearch/rsync:ubuntu
     user: root:root
     command:
-      - rsync
-      - --delete
-      - -av
-      - /src/
-      - /app
-      - --exclude
-      - node_modules
+      - bash
+      - -c
+      - |
+        set -ue
+        rsync --delete -av /src/src /app/
+        rsync --delete -av /src/public /app/
+        rsync --delete -av /src/.env /app/
+        rsync --delete -av /src/next.config.js /app/
+        rsync --delete -av /src/package.json /app/
+        rsync --delete -av /src/package-lock.json /app/
+        rsync --delete -av /src/postcss.config.mjs /app/
+        rsync --delete -av /src/tailwind.config.ts /app/
+        rsync --delete -av /src/tsconfig.json /app/
     working_dir: /src
     volumes:
       - type: bind
