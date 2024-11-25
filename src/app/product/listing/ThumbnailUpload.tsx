@@ -18,7 +18,7 @@ export default function ThumbnailUpload({ label, name }: { label: string, name: 
     };
   
     return (
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mr-11">
         <div className="relative max-h-96 aspect-video h-96 border rounded-md bg-gray-50 p-2">
           {thumbnail ? (
             <img
