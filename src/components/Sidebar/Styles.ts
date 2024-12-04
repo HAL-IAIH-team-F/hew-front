@@ -20,6 +20,7 @@ export const styles: { [key: string]: CSSProperties } = {
     borderRadius: '30px',
     zIndex: 1000,
     transition: 'left 0.3s ease, height 0.3s ease',
+    
   },
   collapsedSidebar: {
     backgroundColor: 'rgba(142, 142, 147, 0.35)',
@@ -70,8 +71,9 @@ export const styles: { [key: string]: CSSProperties } = {
     fontSize: '27px',
     color: '#fff',
     position: 'absolute',
-    top: '22px',
-    left: '22px',
+    transform: 'translate(-50%, -50%)',
+    top: '50%',
+    left: '50%',
   },
   profileIcon: {
     backgroundColor: 'rgba(70, 107, 143, 0.8)',
@@ -92,7 +94,7 @@ export const styles: { [key: string]: CSSProperties } = {
     transform: 'translate(-50%, -50%)',
     border: '2px solid rgba(0, 0, 0, 0.8)',
     top: '50%',
-    left: '35px',
+    left: '50%',
   },
   iconLabel: {
     fontSize: '16px',
@@ -103,6 +105,18 @@ export const styles: { [key: string]: CSSProperties } = {
     top: '23px',
     left: '70px',
   },
+  // ↓ ｗ
+  inAppPageWindowinAppWindowStyle:{
+    backgroundColor: 'rgba(142, 142, 147, 0.35)',
+    backdropFilter: 'blur(12px)',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.3)',
+    border: '1px solid rgba(128, 128, 128, 0.2)',
+    width: "calc(100% - 300px)", // 左右5pxずつの余白を考慮
+    height: "calc(100% - 170px)", // 左右5pxずつの余白を考慮
+    position: 'fixed',
+    borderRadius: '28px',
+    zIndex: 999,
+  }
 };
 
 export const iconContainerStyle = (isOpen: boolean): CSSProperties => ({
@@ -114,20 +128,17 @@ export const iconContainerStyle = (isOpen: boolean): CSSProperties => ({
   alignItems: 'center',
   position: 'relative',
   borderRadius: '17px',
-  boxShadow: `
-    0 8px 20px rgba(0, 0, 0, 0.35),
-    inset 0 4px 6px rgba(255, 255, 255, 0.2),
-    inset 0 -6px 8px rgba(210, 210, 210, 0.2)
-  `,
   transition: 'width 0.3s ease, box-shadow 0.3s ease',
-  border: '5px solid rgba(174, 174, 178, 0.9)',
-  backdropFilter: 'blur(5px)',
   overflow: 'hidden',
   borderTopRightRadius: '24px',
   borderTopLeftRadius: '24px',
   borderBottomRightRadius: '24px',
   borderBottomLeftRadius: '24px',
   pointerEvents: 'auto',
+  background: "linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.2))",
+  backdropFilter: "blur(15px)",
+  boxShadow: `${2}px ${4 }px ${6 }px rgba(0, 0, 0, 0.5), inset 0 0 ${10}px rgba(255, 255, 255, 0.3)`,
+  border: `${2}px solid rgba(255, 255, 255, 0.2)`,
 });
 
 export const pageWindowStyle = (isOpen: boolean, isAnimating: boolean): CSSProperties => ({
@@ -147,7 +158,7 @@ export const pageWindowStyle = (isOpen: boolean, isAnimating: boolean): CSSPrope
   zIndex: 999,
 });
 
-export const WindowPageStyle: CSSProperties = {
+export const inAppPageStyle = (isAnimating: boolean): CSSProperties => ({
   position: 'fixed',
   top: '50%',
   left: '50%',
@@ -156,4 +167,13 @@ export const WindowPageStyle: CSSProperties = {
   height: 'calc(100% - 13px)',
   overflow: 'hidden',
   borderRadius: '30px',
-};
+  opacity: isAnimating ? 1 : 0,
+  transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
+  border: 'none', // 実際のボーダーは非表示
+  boxShadow: `
+    0 0 15px 5px rgba(255, 255, 255, 0.4),
+    inset 0 0 10px 3px rgba(255, 255, 255, 0.4) 
+  `,
+});
+
+

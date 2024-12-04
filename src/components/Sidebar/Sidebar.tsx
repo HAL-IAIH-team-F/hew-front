@@ -4,6 +4,7 @@ import { GiBubbles } from 'react-icons/gi';
 import { FaRegMessage } from 'react-icons/fa6';
 import { useSession } from 'next-auth/react';
 import Image from "../../util/Image";
+
 import PageWindow from './PageWindow';
 import { iconContainerStyle, styles } from './Styles';
 import { useUserData } from '~/api/useUserData';
@@ -14,10 +15,58 @@ const Sidebar: React.FC = () => {
   const [value, setValue] = useState<string>('undefined');
 
   const { user } = useUserData();
-
   const toggleSidebar = () => setIsOpen(!isOpen);
-  const togglePageWindow = () => setIsVisible(!isVisible);
   const changePageWindow = (newValue: string | undefined) => setValue(newValue ?? 'undefined');
+
+  function checkPageValue(newValue: string | undefined) {
+    if (isSamePage(newValue)) {
+        handleSamePage();
+        return;
+    }
+
+    if (isUndefinedPage()) {
+        handleUndefinedPage(newValue);
+        return;
+    }
+
+      handleDifferentPage(newValue);
+    }
+
+    function isSamePage(newValue: string | undefined): boolean {
+        return value === newValue;
+    }
+
+    function isUndefinedPage(): boolean {
+        return value === "undefined";
+    }
+
+    function handleSamePage() {
+        togglePageWindow();
+    }
+
+    function handleUndefinedPage(newValue: string | undefined) {
+        changePageWindow(newValue);
+        togglePageWindow();
+    }
+
+    async function handleDifferentPage(newValue: string | undefined) {
+        await togglePageWindow();
+        changePageWindow("undefined");
+
+        if (newValue) {
+            setTimeout(() => {
+                changePageWindow(newValue);
+                setIsVisible(true);
+            }, 300);
+        }
+    }
+
+    function togglePageWindow(): Promise<void> {
+        return new Promise((resolve) => {
+            setIsVisible(!isVisible);
+            setTimeout(resolve, 300);
+        });
+    }
 
   return (
     <div>
@@ -33,13 +82,12 @@ const Sidebar: React.FC = () => {
         </button>
 
         {/* アイコンボタン */}
-        {['Bubbles', 'Search', 'Notification', 'Message', 'Calendar', 'Account'].map((item) => (
+        {['Search', 'Notification', 'Message', 'Calendar', 'Account'].map((item) => (
           <button
             key={item}
             style={iconContainerStyle(isOpen)}
             onClick={() => {
-              togglePageWindow();
-              changePageWindow(item);
+              checkPageValue(item);
             }}
           >
             {renderIcon(item,user)}
@@ -51,14 +99,12 @@ const Sidebar: React.FC = () => {
   );
 };
 
-// アイコンを描画する関数
 const renderIcon = (item: string,user: any) => {
   switch (item) {
-    case 'Bubbles': return <GiBubbles style={styles.icon} />;
-    case 'Search': return <FaSearch style={styles.icon} />;
+    case 'Search': return       <FaSearch style={styles.icon} />;
     case 'Notification': return <FaBell style={styles.icon} />;
-    case 'Message': return <FaRegMessage style={styles.icon} />;
-    case 'Calendar': return <FaCalendarAlt style={styles.icon} />;
+    case 'Message': return      <FaRegMessage style={styles.icon} />;
+    case 'Calendar': return     <FaCalendarAlt style={styles.icon} />;
     case 'Account':
       return user && user.icon ? (
         <Image

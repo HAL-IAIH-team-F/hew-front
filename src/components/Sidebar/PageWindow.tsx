@@ -1,6 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { pageWindowStyle, WindowPageStyle } from './Styles';
+import { inAppPageStyle, pageWindowStyle} from './Styles';
 import SearchPage from '@/search/search';
+import { el } from 'date-fns/locale';
+import AccontPage from '@/user/profile/page';
+import NotificationPage from '@/user/notification/page';
+import MessagePage from '@/user/message/page';
 
 
 const PageWindow: React.FC<{ isOpen: boolean; isVisible: boolean; value: string }> = ({ isOpen, isVisible, value }) => {
@@ -17,34 +21,36 @@ const PageWindow: React.FC<{ isOpen: boolean; isVisible: boolean; value: string 
 
   return (
     <div style={pageWindowStyle(isOpen, isAnimating)}>
-      <div style={WindowPageStyle}>{renderPageContent(value)}</div>
+      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(value)}</div>
     </div>
   );
 };
 
+const renderPageContent = (initialTab: string) => {
+  const [activeTab, setActiveTab] = useState(initialTab);
+  useEffect(() => {
+      setActiveTab(initialTab)
+  }, [initialTab]); 
 
-// searchPageRef ここがまじでだめ ほんとに
-
-const renderPageContent = (value: string) => {
-    const pageContent = useMemo(() => {
-        switch (value) {
-          case "Search":
-            return <SearchPage />;
-          case "Notification":
-            return <div>通知w</div>;
-          case "Bubbles":
-            return <div>泡ページw</div>;
-          case "Message":
-            return <div>メッセージページw</div>;
-          case "Calendar":
-            return <div>カレンダーページw</div>;
-          case "Account":
-            return <div>アカウントページw</div>;
-          default:
-            return <div>error 114514</div>;
-        }
-      }, [value]); 
-    return <>{pageContent}</>;
+  return (
+    <>
+      <div style={{ display: activeTab === "Search" ? "block" : "none" }}>
+        <SearchPage />
+      </div>
+      <div style={{ display: activeTab === "Notification" ? "block" : "none" }}>
+        <NotificationPage />
+      </div>
+      <div style={{ display: activeTab === "Message" ? "block" : "none" }}>
+        <MessagePage />
+      </div>
+      <div style={{ display: activeTab === "Calendar" ? "block" : "none" }}>
+        カレンダーページw
+      </div>
+      <div style={{ display: activeTab === "Account" ? "block" : "none" }}>
+        <AccontPage />
+      </div>
+    </>
+  );
 };
 
 export default PageWindow;

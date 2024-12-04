@@ -5,7 +5,7 @@ import { useClientContext } from './useClientContext';
 import { ErrorIds } from '../../util/err/errorIds';
 
 export const useUserData = () => {
-  const [user, setUser] = useState<{ name: string; icon: Img | undefined }>();
+  const [user, setUser] = useState<{ id:string; name: string; icon: Img | undefined }>();
   const session = useSession().data;
   const context = useClientContext(session);
 
@@ -21,6 +21,7 @@ export const useUserData = () => {
         if (value.value.user_icon) {
           Img.create(value.value.user_icon.image_uuid, value.value.user_icon.token).then((value1) => {
             setUser({
+              id: value.value.user_screen_id,
               name: value.value.user_name,
               icon: value1.value,
             });
@@ -30,6 +31,7 @@ export const useUserData = () => {
           });
         } else {
           setUser({
+            id: value.value.user_screen_id,
             name: value.value.user_name,
             icon: undefined,
           });
