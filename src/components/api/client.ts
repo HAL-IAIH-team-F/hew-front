@@ -36,6 +36,7 @@ const MessageRes = z
     index: z.number().int(),
     message: z.string(),
     images: z.array(z.string().uuid()),
+    post_user_id: z.string().uuid(),
   })
   .passthrough();
 const ChatMessagesRes = z
@@ -52,13 +53,35 @@ const OrderDirection = z.enum(["asc", "desc"]);
 const time_order = OrderDirection.optional();
 const GetProductsResponse = z
   .object({
-    product_text: z.string(),
+    product_description: z.string(),
     product_id: z.string().uuid(),
     product_thumbnail_uuid: z.string().uuid(),
     product_price: z.number().int(),
     product_title: z.string(),
     product_date: z.string().datetime({ offset: true }),
     product_contents_uuid: z.string().uuid(),
+  })
+  .passthrough();
+const PostProductBody = z
+  .object({
+    price: z.number().int(),
+    product_title: z.string(),
+    product_description: z.string(),
+    purchase_date: z.string().datetime({ offset: true }),
+    product_thumbnail_uuid: z.string().uuid(),
+    product_contents_uuid: z.string().uuid(),
+  })
+  .passthrough();
+const ProductRes = z
+  .object({
+    product_id: z.string().uuid(),
+    product_price: z.number().int(),
+    product_title: z.string(),
+    product_description: z.string(),
+    listing_date: z.string().datetime({ offset: true }),
+    product_thumbnail_uuid: z.string().uuid(),
+    product_contents_uuid: z.string().uuid(),
+    creator_id: z.string().uuid(),
   })
   .passthrough();
 const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
@@ -70,11 +93,7 @@ const TokenRes = z
   .passthrough();
 const ImgTokenRes = z.object({ upload: TokenInfo }).passthrough();
 const PostCreatorBody = z
-  .object({
-    user_id: z.string().uuid(),
-    contact_address: z.string(),
-    transfer_target: z.string(),
-  })
+  .object({ contact_address: z.string(), transfer_target: z.string() })
   .passthrough();
 const PostUserBody = z
   .object({
@@ -115,6 +134,8 @@ export const schemas = {
   OrderDirection,
   time_order,
   GetProductsResponse,
+  PostProductBody,
+  ProductRes,
   PostTokenBody,
   TokenInfo,
   TokenRes,
@@ -224,6 +245,98 @@ const endpoints = makeApi([
   },
   {
     method: "post",
+    path: "/api/product",
+    alias: "pp_api_product_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: PostProductBody,
+      },
+    ],
+    response: ProductRes,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/api/products",
+    alias: "gps_api_products_get",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "name",
+        type: "Query",
+        schema: name,
+      },
+      {
+        name: "tag",
+        type: "Query",
+        schema: name,
+      },
+      {
+        name: "post_by",
+        type: "Query",
+        schema: name,
+      },
+      {
+        name: "start_datetime",
+        type: "Query",
+        schema: start_datetime,
+      },
+      {
+        name: "end_datetime",
+        type: "Query",
+        schema: start_datetime,
+      },
+      {
+        name: "following",
+        type: "Query",
+        schema: following,
+      },
+      {
+        name: "read_limit_number",
+        type: "Query",
+        schema: read_limit_number,
+      },
+      {
+        name: "time_order",
+        type: "Query",
+        schema: time_order,
+      },
+      {
+        name: "name_order",
+        type: "Query",
+        schema: time_order,
+      },
+      {
+        name: "like_order",
+        type: "Query",
+        schema: time_order,
+      },
+      {
+        name: "sort",
+        type: "Query",
+        schema: z.array(z.string()).optional(),
+      },
+    ],
+    response: z.array(GetProductsResponse),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "post",
     path: "/api/token",
     alias: "post_token_api_token_post",
     requestFormat: "json",
@@ -291,77 +404,6 @@ const endpoints = makeApi([
     alias: "health_health_get",
     requestFormat: "json",
     response: z.unknown(),
-  },
-  {
-    method: "get",
-    path: "/products",
-    alias: "read_products_products_get",
-    requestFormat: "json",
-    parameters: [
-      {
-        name: "name",
-        type: "Query",
-        schema: name,
-      },
-      {
-        name: "tag",
-        type: "Query",
-        schema: name,
-      },
-      {
-        name: "post_by",
-        type: "Query",
-        schema: name,
-      },
-      {
-        name: "start_datetime",
-        type: "Query",
-        schema: start_datetime,
-      },
-      {
-        name: "end_datetime",
-        type: "Query",
-        schema: start_datetime,
-      },
-      {
-        name: "following",
-        type: "Query",
-        schema: following,
-      },
-      {
-        name: "read_limit_number",
-        type: "Query",
-        schema: read_limit_number,
-      },
-      {
-        name: "time_order",
-        type: "Query",
-        schema: time_order,
-      },
-      {
-        name: "name_order",
-        type: "Query",
-        schema: time_order,
-      },
-      {
-        name: "like_order",
-        type: "Query",
-        schema: time_order,
-      },
-      {
-        name: "sort",
-        type: "Query",
-        schema: z.array(z.string()).optional(),
-      },
-    ],
-    response: z.array(GetProductsResponse),
-    errors: [
-      {
-        status: 422,
-        description: `Validation Error`,
-        schema: HTTPValidationError,
-      },
-    ],
   },
 ]);
 
