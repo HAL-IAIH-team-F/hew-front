@@ -42,29 +42,6 @@ const MessageRes = z
 const ChatMessagesRes = z
   .object({ chat_id: z.string().uuid(), messages: z.array(MessageRes) })
   .passthrough();
-const PostCreatorBody = z
-  .object({ contact_address: z.string(), transfer_target: z.string() })
-  .passthrough();
-const CreatorResponse = z
-  .object({
-    creator_id: z.string().uuid(),
-    user_id: z.string().uuid(),
-    contact_address: z.string(),
-    transfer_target: z.string(),
-  })
-  .passthrough();
-const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
-const CartRes = z
-  .object({
-    product_id: z.string().uuid(),
-    product_price: z.number().int(),
-    product_title: z.string(),
-    product_description: z.string(),
-    purchase_date: z.string().datetime({ offset: true }),
-    product_contents_uuid: z.string().uuid(),
-    product_thumbnail_uuid: z.string().uuid(),
-  })
-  .passthrough();
 const name = z.union([z.array(z.string()), z.null()]).optional();
 const start_datetime = z.union([z.string(), z.null()]).optional();
 const following = z.union([z.boolean(), z.null()]).optional();
@@ -104,25 +81,42 @@ const ProductRes = z
     creator_id: z.string().uuid(),
   })
   .passthrough();
-const RecruitRes = z
+const CartRes = z
   .object({
-    recruit_id: z.string().uuid(),
-    creator_id: z.string().uuid(),
-    title: z.string(),
-    description: z.string(),
+    product_id: z.string().uuid(),
+    product_price: z.number().int(),
+    product_title: z.string(),
+    product_description: z.string(),
+    purchase_date: z.string().datetime({ offset: true }),
+    product_contents_uuid: z.string().uuid(),
+    product_thumbnail_uuid: z.string().uuid(),
   })
   .passthrough();
-const PostRecruitBody = z
-  .object({ title: z.string(), description: z.string() })
-  .passthrough();
-const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
 const TokenInfo = z
   .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
   .passthrough();
 const TokenRes = z
   .object({ access: TokenInfo, refresh: TokenInfo })
   .passthrough();
-const ImgTokenRes = z.object({ upload: TokenInfo }).passthrough();
+const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
+const TokenInfoOld = z
+  .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
+  .passthrough();
+const TokenResOld = z
+  .object({ access: TokenInfoOld, refresh: TokenInfoOld })
+  .passthrough();
+const ImgTokenRes = z.object({ upload: TokenInfoOld }).passthrough();
+const PostCreatorBody = z
+  .object({ contact_address: z.string(), transfer_target: z.string() })
+  .passthrough();
+const CreatorResponse = z
+  .object({
+    creator_id: z.string().uuid(),
+    user_id: z.string().uuid(),
+    contact_address: z.string(),
+    transfer_target: z.string(),
+  })
+  .passthrough();
 const PostUserBody = z
   .object({
     user_name: z.string(),
@@ -145,6 +139,18 @@ const SelfUserRes = z
     user_mail: z.string(),
   })
   .passthrough();
+const PostRecruitBody = z
+  .object({ title: z.string(), description: z.string() })
+  .passthrough();
+const RecruitRes = z
+  .object({
+    recruit_id: z.string().uuid(),
+    creator_id: z.string().uuid(),
+    title: z.string(),
+    description: z.string(),
+  })
+  .passthrough();
+const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
 
 export const schemas = {
   ChatRes,
@@ -155,10 +161,6 @@ export const schemas = {
   ChatMessageRes,
   MessageRes,
   ChatMessagesRes,
-  PostCreatorBody,
-  CreatorResponse,
-  UserFollow,
-  CartRes,
   name,
   start_datetime,
   following,
@@ -168,15 +170,21 @@ export const schemas = {
   GetProductsResponse,
   PostProductBody,
   ProductRes,
-  RecruitRes,
-  PostRecruitBody,
-  PostTokenBody,
+  CartRes,
   TokenInfo,
   TokenRes,
+  PostTokenBody,
+  TokenInfoOld,
+  TokenResOld,
   ImgTokenRes,
+  PostCreatorBody,
+  CreatorResponse,
   PostUserBody,
   Img,
   SelfUserRes,
+  PostRecruitBody,
+  RecruitRes,
+  UserFollow,
 };
 
 const endpoints = makeApi([
@@ -383,6 +391,27 @@ const endpoints = makeApi([
     ],
   },
   {
+    method: "post",
+    path: "/api/recruit",
+    alias: "pr_api_recruit_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: PostRecruitBody,
+      },
+    ],
+    response: RecruitRes,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
     method: "get",
     path: "/api/recruit",
     alias: "grs_api_recruit_get",
@@ -409,25 +438,11 @@ const endpoints = makeApi([
     ],
   },
   {
-    method: "post",
-    path: "/api/recruit",
-    alias: "pr_api_recruit_post",
+    method: "get",
+    path: "/api/token",
+    alias: "gtr_api_token_get",
     requestFormat: "json",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: PostRecruitBody,
-      },
-    ],
-    response: RecruitRes,
-    errors: [
-      {
-        status: 422,
-        description: `Validation Error`,
-        schema: HTTPValidationError,
-      },
-    ],
+    response: TokenRes,
   },
   {
     method: "post",
@@ -441,7 +456,7 @@ const endpoints = makeApi([
         schema: z.object({ keycloak_token: z.string() }).passthrough(),
       },
     ],
-    response: TokenRes,
+    response: TokenResOld,
     errors: [
       {
         status: 422,
@@ -462,7 +477,7 @@ const endpoints = makeApi([
     path: "/api/token/refresh",
     alias: "token_refresh_api_token_refresh_get",
     requestFormat: "json",
-    response: TokenRes,
+    response: TokenResOld,
   },
   {
     method: "post",

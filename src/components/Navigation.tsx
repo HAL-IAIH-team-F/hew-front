@@ -13,6 +13,7 @@ import {useSession} from "next-auth/react";
 import {apiClient, Img} from "~/api/wrapper";
 import {ErrorIds} from "../util/err/errorIds";
 import Image from "../util/Image";
+import Link from "next/link";
 
 export function StyledNavigation() {
   const [isDragging, setIsDragging] = useState(false);
@@ -61,10 +62,15 @@ export function StyledNavigation() {
     alert(buttonTitle);
   };
   const [user, setUser] = useState<{ name: string, icon: Img | undefined }>()
-  const session = useSession().data
+  const session = useSession()
   const context = useClientContext(session)
+
   useEffect(() => {
-    if (session) context.exec(apiClient.get_user_api_user_self_get, {})
+    if (!context.isLogin()) {
+      setUser(undefined)
+      return
+    }
+    context.exec(apiClient.get_user_api_user_self_get, {})
       .then(value => {
         if (!value.value) {
           setUser(undefined)
@@ -87,8 +93,8 @@ export function StyledNavigation() {
           icon: undefined,
         })
       })
-    else setUser(undefined)
-  }, [context]);
+
+  }, [context.isLogin()]);
   return (
     <div
       ref={navRef}
@@ -140,24 +146,24 @@ export function StyledNavigation() {
         <div className="w-px bg-gray-600 mx-2 h-hull"></div>
 
         <div className="w-1/2 pl-1 text-right">
-          <button
+          <Link
+            href={"/timeline"}
             className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
-            onClick={() => handleButtonClick("タイムライン")}
           >
             タイムライン
-          </button>
+          </Link>
           <button
             className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
             onClick={() => handleButtonClick("商品出品")}
           >
             商品出品
           </button>
-          <button
+          <Link
+            href={"/colab/recruit/register"}
             className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
-            onClick={() => handleButtonClick("コラボ")}
           >
             コラボ
-          </button>
+          </Link>
           <button
             className="font-bold block w-full my-2 py-1 text-left text-xs text-white hover:text-gray-400"
             onClick={() => handleButtonClick("マイページ")}

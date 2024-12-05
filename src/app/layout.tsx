@@ -2,8 +2,8 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import {ReactNode} from "react";
-import {StyledNavigation} from "~/Navigation";
 import {SessionProvider} from "next-auth/react";
+import TokenReloader from "~/api/TokenReloader";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -19,10 +19,11 @@ export default function RootLayout(
     children: ReactNode;
   }>) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <body className={inter.className + " bg-backcolor"}>
         <SessionProvider>
-          {/* <StyledNavigation/> */}
+          <TokenReloader/>
+          {/*<StyledNavigation/>*/}
           {/*<BackgroundObject/>*/}
           {children}
         </SessionProvider>
