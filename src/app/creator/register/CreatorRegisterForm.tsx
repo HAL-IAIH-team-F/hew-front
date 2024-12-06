@@ -13,7 +13,7 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
   const router = useRouter();
 
   // セッションとクライアントコンテキストの取得
-  const session = useSession().data;
+  const session = useSession();
   const clientContext = useClientContext(session);
 
   // 入力チェックの関数
@@ -44,14 +44,14 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
         // `user_id` を含むデータベースへの保存
         const contactAddress = formData.get("contact_address") as string;
         const transferTarget = formData.get("transfer_target") as string;
-        const userId = session?.user?.id;  // ユーザーIDを取得
+        const userId = session.data?.user?.id;  // ユーザーIDを取得
 
         if (!userId) {
           return {submit: "ユーザーIDが見つかりません。"};
         }
 
         const postCreatorResult = await clientContext.execBody(
-          apiClient.post_creator_api_creator_post,  // エンドポイント名を修正
+          apiClient.pc_api_creator_post,  // エンドポイント名を修正
           {user_id: userId, contact_address: contactAddress, transfer_target: transferTarget}
         );
 

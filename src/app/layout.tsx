@@ -4,6 +4,7 @@ import "./globals.css";
 import {ReactNode} from "react";
 import {SessionProvider} from "next-auth/react";
 import TokenReloader from "~/api/TokenReloader";
+import {StyledNavigation} from "~/Navigation";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -23,7 +24,7 @@ export default function RootLayout(
       <body className={inter.className + " bg-backcolor"}>
         <SessionProvider>
           <TokenReloader/>
-          {/*<StyledNavigation/>*/}
+          <StyledNavigation/>
           {/*<BackgroundObject/>*/}
           {children}
         </SessionProvider>
