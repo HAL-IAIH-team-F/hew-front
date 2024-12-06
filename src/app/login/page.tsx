@@ -1,23 +1,29 @@
 "use client"
 import {useEffect, useState} from "react";
-import {signInAtServer} from "~/auth/serverAuth";
 import {ErrorMessage} from "../../util/err/ErrorMessage";
 import {useSession} from "next-auth/react";
+import {useRouter} from "next/navigation";
+import {signInAtServerCurrentPage} from "~/auth/serverAuth";
 
 export default function Page(
   {}: {}
 ) {
   const [err, setErr] = useState<string>()
-  const session = useSession().data
+  const session = useSession()
+  const router = useRouter()
   useEffect(() => {
-    if (session) {
+    if (session.status == "loading") return;
+    if (session.status == "authenticated") {
       const win = window.open('', '_self');
       if (win) {
         win.close()
+        return
       }
-      return
+      router.push("/timeline")
+      return;
     }
-    signInAtServer(location.href, "keycloak").catch(reason => {
+    if (err != undefined) return;
+    signInAtServerCurrentPage("keycloak").catch(reason => {
       console.error(reason)
       setErr(reason.toString())
     })

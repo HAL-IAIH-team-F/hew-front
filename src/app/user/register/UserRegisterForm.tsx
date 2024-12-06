@@ -1,5 +1,5 @@
 "use client";
-import {FormError, StyledForm} from "../../../util/form/StyledForm";
+import {StyledForm} from "../../../util/form/StyledForm";
 import {StyledInput} from "../../../util/form/StyledInput";
 import {StyledButton} from "../../../util/form/StyledButton";
 import {ChangeEvent, useState} from "react";
@@ -27,26 +27,24 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
     setIsCreator(e.target.value);
   };
 
-  const session = useSession().data
+  const session = useSession()
   const clientContext = useClientContext(session)
 
   return (
     <StyledForm {...props} action={async formData => {
-console.debug(formData)
-      const err: FormError = {}
       const icon_file = formData.get("icon") as File | undefined;
       const user_name = formData.get("user_name");
 
       if (typeof user_name !== 'string' || !user_name) {
-        err.user_name = "ユーザーネームを入力してください";
-        return err;  // エラーがあればここで処理を終了
+        formData.append("user_name", "ユーザーネームを入力してください");
+        return   // エラーがあればここで処理を終了
       }
       let iconUuid: string | null = null
       if (icon_file) {
         const imgResult = await clientContext.uploadImg(icon_file)
         if (imgResult.error) {
-          err.icon = imgResult.error.error_id + ": " + imgResult.error.message;
-          return err;
+          formData.append("icon", imgResult.error.error_id + ": " + imgResult.error.message);
+          return
         }
         iconUuid = imgResult.value.image_uuid
       }
@@ -56,8 +54,8 @@ console.debug(formData)
         {user_name: user_name, user_icon_uuid: iconUuid}
       )
       if (postUserResult.error) {
-        err.icon = postUserResult.error.error_id + ": " + postUserResult.error.message;
-        return err;
+        formData.append("icon", postUserResult.error.error_id + ": " + postUserResult.error.message);
+        return
       }
       router.push('/timeline');
       return undefined
