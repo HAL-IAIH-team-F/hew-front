@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import AccountCard from "./accountCard";
 import { styles } from "~/Sidebar/Styles";
 import { SignInOutButton } from "~/auth/SignInOutButton";
-
 const Page: React.FC = () => {
   return (
     <div
@@ -110,6 +109,8 @@ const Page: React.FC = () => {
         </div>
       </div>
     </div>
+
+
   );
 };
 

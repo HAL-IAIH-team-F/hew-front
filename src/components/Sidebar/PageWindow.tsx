@@ -5,6 +5,7 @@ import { el } from 'date-fns/locale';
 import AccontPage from '@/user/profile/page';
 import NotificationPage from '@/user/notification/page';
 import MessagePage from '@/user/message/page';
+import ProductListingForm from '@/product/listing/ProductListingForm';
 
 
 const PageWindow: React.FC<{ isOpen: boolean; isVisible: boolean; value: string }> = ({ isOpen, isVisible, value }) => {
@@ -48,6 +49,9 @@ const renderPageContent = (initialTab: string) => {
       </div>
       <div style={{ display: activeTab === "Account" ? "block" : "none" }}>
         <AccontPage />
+      </div>
+      <div style={{ display: activeTab === "ProductListing" ? "block" : "none" }}>
+        <ProductListingForm/>
       </div>
     </>
   );

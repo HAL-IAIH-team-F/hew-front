@@ -117,6 +117,7 @@ export const styles: { [key: string]: CSSProperties } = {
     borderRadius: '28px',
     zIndex: 999,
   }
+
 };
 
 export const iconContainerStyle = (isOpen: boolean): CSSProperties => ({

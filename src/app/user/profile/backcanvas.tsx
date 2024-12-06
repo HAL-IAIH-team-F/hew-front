@@ -1,52 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { OrbitControls, PerspectiveCamera, RoundedBox } from "@react-three/drei";
+import { Html, OrbitControls, PerspectiveCamera, RoundedBox,Text } from "@react-three/drei";
 import * as THREE from "three";
+import { RoundedBoxGeometry } from "three-stdlib";
+import Card from "./cardDesign";
 
 interface User {
     icon?: {
       strUrl: () => string;
     };
+    name: string,
+    id: string,
   }
-THREE.TextureLoader.prototype.crossOrigin = "*"
 
-// カーブ状にカードを配置
 const RotatingCard : React.FC<{ user: User | undefined }> = ({ user }) => {
     const cardRef = React.useRef<any>();
-    const [aspectRatio, setAspectRatio] = useState(1); // アスペクト比を保存
-    if(user?.icon === undefined) return
-    // テクスチャを読み込む（画像ファイルのパスを指定）
-    
-    const texture = useLoader(THREE.TextureLoader, user.icon.strUrl());
-    useEffect(() => {
-        if (texture) {
-          // 画像の幅と高さからアスペクト比を計算
-          setAspectRatio(texture.image.width / texture.image.height);
-        }
-      }, [texture]);
-    // カードを回転させるアニメーション
+
     useFrame(() => {
-      if (cardRef.current) {
-        cardRef.current.rotation.y += 0.005; // Y軸を基準に回転
-      }
+        if (cardRef.current) {
+            cardRef.current.rotation.y += 0.006; 
+        }
     });
   
     return (
-        <mesh ref={cardRef} rotation={[0,0, -0.2]} position={[0,2.7,0]}>
-            {/* カードの形状 */}
-            <RoundedBox args={[20, 13, 0.36]} radius={0.2} smoothness={14}>
-                <meshStandardMaterial color={'#ffffff'} />
+        <mesh ref={cardRef} rotation={[0, 0, -0.2]} position={[0, 2.7, 0]}>
+            
+            <RoundedBox args={[20, 13, 0.6]} radius={0.3} smoothness={12}>
+                <meshStandardMaterial color="black" metalness={0.8} roughness={0.2} side={THREE.FrontSide}/>
+                {/* 表側のHTML */}
+                <Html
+                    transform
+                    position={[0, -0.45, 0.05]} // 少し前面に配置
+                    >
+                    <div
+                        style={{
+                        width: "100%",
+                        height: "100%",
+                        overflow: "hidden",
+                        }}
+                    >
+                        <Card user={user}/>
+                    </div>
+                </Html>
             </RoundedBox>
-            <meshStandardMaterial color={'#ffffff'} />
-            {/* 画像用の小さな平面 */}
-            <mesh position={[6, 0.5, 0.2002]}> {/* カードの正面に少し浮かせる */}
-                {/* アスペクト比を反映してサイズを調整 */}
-                <planeGeometry args={[6.5, 6.5 / aspectRatio]} />
-                <meshStandardMaterial 
-                map={texture}
-                />
-                
-            </mesh>
         </mesh>
     );
   };

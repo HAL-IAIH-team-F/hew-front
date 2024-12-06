@@ -4,7 +4,7 @@ import { GiBubbles } from 'react-icons/gi';
 import { FaRegMessage } from 'react-icons/fa6';
 import { useSession } from 'next-auth/react';
 import Image from "../../util/Image";
-
+import { MdOutlineBubbleChart } from "react-icons/md";
 import PageWindow from './PageWindow';
 import { iconContainerStyle, styles } from './Styles';
 import { useUserData } from '~/api/useUserData';
@@ -82,7 +82,7 @@ const Sidebar: React.FC = () => {
         </button>
 
         {/* アイコンボタン */}
-        {['Search', 'Notification', 'Message', 'Calendar', 'Account'].map((item) => (
+        {['Search', 'Notification', 'Message', 'Calendar', 'Account',"ProductListing"].map((item) => (
           <button
             key={item}
             style={iconContainerStyle(isOpen)}
@@ -101,10 +101,11 @@ const Sidebar: React.FC = () => {
 
 const renderIcon = (item: string,user: any) => {
   switch (item) {
-    case 'Search': return       <FaSearch style={styles.icon} />;
-    case 'Notification': return <FaBell style={styles.icon} />;
-    case 'Message': return      <FaRegMessage style={styles.icon} />;
-    case 'Calendar': return     <FaCalendarAlt style={styles.icon} />;
+    case 'Search': return         <FaSearch style={styles.icon} />;
+    case 'Notification': return   <FaBell style={styles.icon} />;
+    case 'Message': return        <FaRegMessage style={styles.icon} />;
+    case 'Calendar': return       <FaCalendarAlt style={styles.icon} />;
+    case 'ProductListing': return <MdOutlineBubbleChart style={styles.icon} />;
     case 'Account':
       return user && user.icon ? (
         <Image
@@ -117,6 +118,7 @@ const renderIcon = (item: string,user: any) => {
       ) : (
         <FaSpinner style={styles.spinner} />
       );
+    
     default: return null;
   }
 };
