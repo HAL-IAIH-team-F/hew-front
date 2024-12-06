@@ -11,7 +11,7 @@ export default function ColabRegisterForm(
     ...props
   }: ColabRegisterFormProps,
 ) {
-  const session = useSession().data
+  const session = useSession()
   const clientContext = useClientContext(session)
 
   return (

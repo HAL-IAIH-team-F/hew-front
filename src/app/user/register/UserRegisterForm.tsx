@@ -27,7 +27,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
     setIsCreator(e.target.value);
   };
 
-  const session = useSession().data
+  const session = useSession()
   const clientContext = useClientContext(session)
 
   return (

@@ -23,7 +23,15 @@ export const nextAuth = NextAuth({
   ],
   trustHost: true,
   callbacks: {
-    async jwt({token, account}: { token: JWT, account: Account | null }) {
+    async jwt(
+      {token, account, session}:
+      {
+        token: JWT, account: Account | null, session?: {
+          accessToken?: Token
+          loaded?: boolean
+        }
+      }
+    ) {
       if (account) {
         const access: Token | undefined = account.access_token && account.expires_in ? {
           token: account.access_token,
@@ -37,6 +45,10 @@ export const nextAuth = NextAuth({
         token.keycloakTokenBundle = TokenBundleUtil.create(access, refresh)
         token.keycloak_id_token = account.id_token
       }
+
+      if (session == undefined) return token
+      if (session.accessToken) token.accessToken = session.accessToken
+      if (session.loaded) token.loaded = session.loaded
       return token
     },
     async session({session, token}) {
@@ -46,7 +58,8 @@ export const nextAuth = NextAuth({
       }
       session.keycloak_id_token = token.keycloak_id_token
       session.keycloakTokenBundle = token.keycloakTokenBundle
-
+      session.accessToken = token.accessToken
+      session.loaded = token.loaded
       return session;
     },
   }
@@ -57,7 +70,8 @@ export const {
 } = nextAuth
 declare module "next-auth" {
   interface Session {
-    apiTokenBundle?: TokenBundle
+    accessToken?: Token
+    loaded?: boolean
     keycloakTokenBundle?: TokenBundle
     keycloak_id_token?: string
   }
@@ -68,6 +82,8 @@ declare module "next-auth" {
 }
 declare module "next-auth/jwt" {
   interface JWT {
+    accessToken?: Token
+    loaded?: boolean
     keycloakTokenBundle?: TokenBundle
     keycloak_id_token?: string
   }

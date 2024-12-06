@@ -9,6 +9,12 @@ export async function signInAtServer<
   return await nextAuth.signIn<P>(provider, {redirectTo: url})
 }
 
+export async function signInAtServerCurrentPage<
+  P extends BuiltInProviderType | (string & {})
+>(provider: P) {
+  return await nextAuth.signIn<P>(provider)
+}
+
 export async function signOutAtServer(url: string) {
   "use server"
   const session = await auth()
