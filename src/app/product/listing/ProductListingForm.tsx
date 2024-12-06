@@ -12,13 +12,14 @@ import { apiClient } from "~/api/wrapper";
 import { useClientContext } from "~/api/useClientContext";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import {StyledFormData} from "../../../util/form/StyledFormData";
 
 export default function ProductListingForm() {
-  const session = useSession().data;
+  const session = useSession();
   const clientContext = useClientContext(session);
   const router = useRouter();
 
-  const validateForm = (formData: FormData): FormError => {
+  const validateForm = (formData: StyledFormData): FormError => {
     const errors: FormError = {};
     const productName = formData.get("product_name") as string | null;
     const price = Number(formData.get("price"));
@@ -35,7 +36,7 @@ export default function ProductListingForm() {
 
   return (
     <StyledForm
-      action={async (formData: FormData) => {
+      action={async (formData: StyledFormData) => {
         const errors = validateForm(formData);
         if (Object.keys(errors).length > 0) {
           return errors;
@@ -49,7 +50,7 @@ export default function ProductListingForm() {
         const thumbnail = formData.get("thumbnail") as File | null;
         const productImages = formData.getAll("product_images") as File[];
 
-        const userId = session?.user?.id;
+        const userId = session?.data?.user?.id;
         if (!userId) {
           return { submit: "ユーザーIDが見つかりません。" };
         }
