@@ -36,6 +36,7 @@ const MessageRes = z
     index: z.number().int(),
     message: z.string(),
     images: z.array(z.string().uuid()),
+    post_user_id: z.string().uuid(),
   })
   .passthrough();
 const ChatMessagesRes = z
@@ -44,15 +45,12 @@ const ChatMessagesRes = z
 const name = z.union([z.array(z.string()), z.null()]).optional();
 const start_datetime = z.union([z.string(), z.null()]).optional();
 const following = z.union([z.boolean(), z.null()]).optional();
-const read_limit_number = z
-  .union([z.number(), z.null()])
-  .optional()
-  .default(20);
+const limit = z.union([z.number(), z.null()]).optional().default(20);
 const OrderDirection = z.enum(["asc", "desc"]);
 const time_order = OrderDirection.optional();
 const GetProductsResponse = z
   .object({
-    product_text: z.string(),
+    product_description: z.string(),
     product_id: z.string().uuid(),
     product_thumbnail_uuid: z.string().uuid(),
     product_price: z.number().int(),
@@ -61,16 +59,59 @@ const GetProductsResponse = z
     product_contents_uuid: z.string().uuid(),
   })
   .passthrough();
-const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
+const PostProductBody = z
+  .object({
+    price: z.number().int(),
+    product_title: z.string(),
+    product_description: z.string(),
+    purchase_date: z.string().datetime({ offset: true }),
+    product_thumbnail_uuid: z.string().uuid(),
+    product_contents_uuid: z.string().uuid(),
+  })
+  .passthrough();
+const ProductRes = z
+  .object({
+    product_id: z.string().uuid(),
+    product_price: z.number().int(),
+    product_title: z.string(),
+    product_description: z.string(),
+    listing_date: z.string().datetime({ offset: true }),
+    product_thumbnail_uuid: z.string().uuid(),
+    product_contents_uuid: z.string().uuid(),
+    creator_id: z.string().uuid(),
+  })
+  .passthrough();
+const CartRes = z
+  .object({
+    product_id: z.string().uuid(),
+    product_price: z.number().int(),
+    product_title: z.string(),
+    product_description: z.string(),
+    purchase_date: z.string().datetime({ offset: true }),
+    product_contents_uuid: z.string().uuid(),
+    product_thumbnail_uuid: z.string().uuid(),
+  })
+  .passthrough();
 const TokenInfo = z
   .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
   .passthrough();
 const TokenRes = z
   .object({ access: TokenInfo, refresh: TokenInfo })
   .passthrough();
-const ImgTokenRes = z.object({ upload: TokenInfo }).passthrough();
+const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
+const TokenInfoOld = z
+  .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
+  .passthrough();
+const TokenResOld = z
+  .object({ access: TokenInfoOld, refresh: TokenInfoOld })
+  .passthrough();
+const ImgTokenRes = z.object({ upload: TokenInfoOld }).passthrough();
 const PostCreatorBody = z
+  .object({ contact_address: z.string(), transfer_target: z.string() })
+  .passthrough();
+const CreatorResponse = z
   .object({
+    creator_id: z.string().uuid(),
     user_id: z.string().uuid(),
     contact_address: z.string(),
     transfer_target: z.string(),
@@ -98,6 +139,18 @@ const SelfUserRes = z
     user_mail: z.string(),
   })
   .passthrough();
+const PostRecruitBody = z
+  .object({ title: z.string(), description: z.string() })
+  .passthrough();
+const RecruitRes = z
+  .object({
+    recruit_id: z.string().uuid(),
+    creator_id: z.string().uuid(),
+    title: z.string(),
+    description: z.string(),
+  })
+  .passthrough();
+const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
 
 export const schemas = {
   ChatRes,
@@ -111,21 +164,37 @@ export const schemas = {
   name,
   start_datetime,
   following,
-  read_limit_number,
+  limit,
   OrderDirection,
   time_order,
   GetProductsResponse,
-  PostTokenBody,
+  PostProductBody,
+  ProductRes,
+  CartRes,
   TokenInfo,
   TokenRes,
+  PostTokenBody,
+  TokenInfoOld,
+  TokenResOld,
   ImgTokenRes,
   PostCreatorBody,
+  CreatorResponse,
   PostUserBody,
   Img,
   SelfUserRes,
+  PostRecruitBody,
+  RecruitRes,
+  UserFollow,
 };
 
 const endpoints = makeApi([
+  {
+    method: "put",
+    path: "/api/cart_buy",
+    alias: "cart_buy_api_cart_buy_put",
+    requestFormat: "json",
+    response: z.unknown(),
+  },
   {
     method: "get",
     path: "/api/chat",
@@ -204,7 +273,7 @@ const endpoints = makeApi([
   {
     method: "post",
     path: "/api/creator",
-    alias: "post_creator_api_creator_post",
+    alias: "pc_api_creator_post",
     requestFormat: "json",
     parameters: [
       {
@@ -213,7 +282,7 @@ const endpoints = makeApi([
         schema: PostCreatorBody,
       },
     ],
-    response: z.unknown(),
+    response: CreatorResponse,
     errors: [
       {
         status: 422,
@@ -224,17 +293,17 @@ const endpoints = makeApi([
   },
   {
     method: "post",
-    path: "/api/token",
-    alias: "post_token_api_token_post",
+    path: "/api/product",
+    alias: "pp_api_product_post",
     requestFormat: "json",
     parameters: [
       {
         name: "body",
         type: "Body",
-        schema: z.object({ keycloak_token: z.string() }).passthrough(),
+        schema: PostProductBody,
       },
     ],
-    response: TokenRes,
+    response: ProductRes,
     errors: [
       {
         status: 422,
@@ -245,57 +314,15 @@ const endpoints = makeApi([
   },
   {
     method: "get",
-    path: "/api/token/image",
-    alias: "image_token_api_token_image_get",
+    path: "/api/product_cart",
+    alias: "read_product_cart_api_product_cart_get",
     requestFormat: "json",
-    response: ImgTokenRes,
+    response: z.array(CartRes),
   },
   {
     method: "get",
-    path: "/api/token/refresh",
-    alias: "token_refresh_api_token_refresh_get",
-    requestFormat: "json",
-    response: TokenRes,
-  },
-  {
-    method: "post",
-    path: "/api/user",
-    alias: "post_user_api_user_post",
-    requestFormat: "json",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: PostUserBody,
-      },
-    ],
-    response: SelfUserRes,
-    errors: [
-      {
-        status: 422,
-        description: `Validation Error`,
-        schema: HTTPValidationError,
-      },
-    ],
-  },
-  {
-    method: "get",
-    path: "/api/user/self",
-    alias: "get_user_api_user_self_get",
-    requestFormat: "json",
-    response: SelfUserRes,
-  },
-  {
-    method: "get",
-    path: "/health",
-    alias: "health_health_get",
-    requestFormat: "json",
-    response: z.unknown(),
-  },
-  {
-    method: "get",
-    path: "/products",
-    alias: "read_products_products_get",
+    path: "/api/products",
+    alias: "gps_api_products_get",
     requestFormat: "json",
     parameters: [
       {
@@ -329,9 +356,9 @@ const endpoints = makeApi([
         schema: following,
       },
       {
-        name: "read_limit_number",
+        name: "limit",
         type: "Query",
-        schema: read_limit_number,
+        schema: limit,
       },
       {
         name: "time_order",
@@ -362,6 +389,151 @@ const endpoints = makeApi([
         schema: HTTPValidationError,
       },
     ],
+  },
+  {
+    method: "post",
+    path: "/api/recruit",
+    alias: "pr_api_recruit_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: PostRecruitBody,
+      },
+    ],
+    response: RecruitRes,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/api/recruit",
+    alias: "grs_api_recruit_get",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "limit",
+        type: "Query",
+        schema: limit,
+      },
+      {
+        name: "name",
+        type: "Query",
+        schema: name,
+      },
+    ],
+    response: z.array(RecruitRes),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/api/token",
+    alias: "gtr_api_token_get",
+    requestFormat: "json",
+    response: TokenRes,
+  },
+  {
+    method: "post",
+    path: "/api/token",
+    alias: "post_token_api_token_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: z.object({ keycloak_token: z.string() }).passthrough(),
+      },
+    ],
+    response: TokenResOld,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/api/token/image",
+    alias: "image_token_api_token_image_get",
+    requestFormat: "json",
+    response: ImgTokenRes,
+  },
+  {
+    method: "get",
+    path: "/api/token/refresh",
+    alias: "token_refresh_api_token_refresh_get",
+    requestFormat: "json",
+    response: TokenResOld,
+  },
+  {
+    method: "post",
+    path: "/api/user",
+    alias: "post_user_api_user_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: PostUserBody,
+      },
+    ],
+    response: SelfUserRes,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/api/user_follow",
+    alias: "cfc_api_user_follow_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: z.object({ creator_id: z.string().uuid() }).passthrough(),
+      },
+    ],
+    response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/api/user/self",
+    alias: "get_user_api_user_self_get",
+    requestFormat: "json",
+    response: SelfUserRes,
+  },
+  {
+    method: "get",
+    path: "/health",
+    alias: "health_health_get",
+    requestFormat: "json",
+    response: z.object({}).partial().passthrough(),
   },
 ]);
 

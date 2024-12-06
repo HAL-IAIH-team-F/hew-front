@@ -1,8 +1,9 @@
 "use client"
 import * as React from "react";
 import {createContext, ReactNode, useState} from "react";
-import {ErrorMessage} from "../err/ErrorMessage";
 import {sx} from "../util";
+import FormErrList from "./FormErrList";
+import {StyledFormData} from "./StyledFormData";
 
 
 export namespace FormState {
@@ -19,31 +20,31 @@ export function StyledForm(
     ...props
   }: FormProps,
 ) {
-  const [formError, setFormError] = useState<FormError>()
+  const [formError, setFormError] = useState<FormError | undefined>()
 
   return (
     <FormState.Context.Provider
       value={formError}
     >
       <form className={sx(className, "")} {...props} action={formData => {
-        action && action(formData).then(value => {
-          setFormError(value)
+        setFormError(undefined)
+        const styledData = new StyledFormData(formData)
+        action && action(styledData).then(_ => {
+          setFormError(styledData.formError)
+        }).catch(reason => {
+          styledData.append("submit", reason.toString())
         })
       }}>
-        {formError && Object.keys(formError).map(value =>
-          <ErrorMessage error={value + ": " + formError[value]} key={value}/>
-        )}
+        <FormErrList formError={formError}/>
         {children}
-        {formError && Object.keys(formError).map(value =>
-          <ErrorMessage error={value + ": " + formError[value]} key={value}/>
-        )}
+        <FormErrList formError={formError}/>
       </form>
     </FormState.Context.Provider>
   )
 }
 
 export interface FormProps {
-  action?: (formData: FormData) => Promise<FormError | undefined>
+  action?: (formData: StyledFormData) => Promise<FormError | undefined>
   children?: ReactNode
   className?: string
 }
