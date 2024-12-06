@@ -6,7 +6,7 @@ import { ErrorIds } from '../../util/err/errorIds';
 
 export const useUserData = () => {
   const [user, setUser] = useState<{ id:string; name: string; icon: Img | undefined }>();
-  const session = useSession().data;
+  const session = useSession();
   const context = useClientContext(session);
 
   useEffect(() => {

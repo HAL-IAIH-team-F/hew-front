@@ -1,14 +1,13 @@
-import * as THREE from 'three'
-import { useEffect, useRef, useState } from 'react'
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
-import { useCursor, MeshPortalMaterial, CameraControls, Gltf, Text, Preload } from '@react-three/drei'
+import {FC, useState} from 'react'
+import {Canvas} from '@react-three/fiber'
 
 interface User {
   icon?: {
     strUrl: () => string;
   };
 }
-export const Header: React.FC<{ user: User | undefined }> = ({ user }) => {
+
+export const Header: FC<{ user: User | undefined }> = ({user}) => {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <Canvas
@@ -18,7 +17,7 @@ export const Header: React.FC<{ user: User | undefined }> = ({ user }) => {
         marginTop: "5px",
         marginRight: "5px",
         marginLeft: "5px",
-        backgroundColor: "black", 
+        backgroundColor: "black",
         borderTopRightRadius: "28px",
         borderTopLeftRadius: "28px",
         borderBottomRightRadius: "10px",
@@ -32,13 +31,13 @@ export const Header: React.FC<{ user: User | undefined }> = ({ user }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Three.js のシーンやオブジェクト */}
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} />
+      <ambientLight intensity={0.5}/>
+      <pointLight position={[10, 10, 10]}/>
       <mesh>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="turquoise" />
+        <boxGeometry args={[1, 1, 1]}/>
+        <meshStandardMaterial color="turquoise"/>
       </mesh>
-  </Canvas>
+    </Canvas>
   )
 }
 export default Header;

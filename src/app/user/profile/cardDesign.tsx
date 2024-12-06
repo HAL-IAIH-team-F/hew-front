@@ -1,6 +1,5 @@
 // ProfileCard.tsx
 import React from "react";
-import Image from "../../../util/Image"; // 必要に応じてパスを変更してください
 
 interface User {
   icon?: {
@@ -11,8 +10,8 @@ interface User {
   bio?: string; // ユーザーの自己紹介
 }
 
-const ProfileCard: React.FC<{ user: User | undefined }> = ({ user }) => {
-  
+const ProfileCard: React.FC<{ user: User | undefined }> = ({user}) => {
+
   const iconStyle: React.CSSProperties = {
     backgroundImage: user?.icon ? `url(${user.icon.strUrl()})` : "./icon.png",
     backgroundSize: "cover",
@@ -23,7 +22,7 @@ const ProfileCard: React.FC<{ user: User | undefined }> = ({ user }) => {
     transition: "transform 0.3s ease, box-shadow 0.3s ease",
     cursor: "pointer",
   };
-  
+
   return (
     <div style={styles.card}>
       <div style={styles.header}>

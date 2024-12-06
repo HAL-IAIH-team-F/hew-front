@@ -1,10 +1,9 @@
 "use client"
-import { useEffect, useRef, useState } from "react";
 
 const NotificationPage: React.FC = () => {
   return (
     <div>
-        NotificationPage
+      NotificationPage
     </div>
   );
 };

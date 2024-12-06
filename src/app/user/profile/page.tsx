@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import AccountCard from "./accountCard";
-import { styles } from "~/Sidebar/Styles";
-import { SignInOutButton } from "~/auth/SignInOutButton";
+import {styles} from "~/Sidebar/Styles";
+import {SignInOutButton} from "~/auth/SignInOutButton";
+
 const Page: React.FC = () => {
   return (
     <div
@@ -13,7 +14,7 @@ const Page: React.FC = () => {
         fontFamily: "'Roboto', 'Arial', sans-serif",
         color: "#fff", // テキストの色を白に
         overflow: "hidden",
-        position:"relative",
+        position: "relative",
         backdropFilter: 'blur(12px)', // 背景ブラー効果
       }}
     >
@@ -28,9 +29,9 @@ const Page: React.FC = () => {
           boxShadow: "2px 0 10px rgba(0, 0, 0, 0.5)",
         }}
       >
-        <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "20px" }}>Menu</h2>
-        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-          <li style={{ marginBottom: "10px" }}>
+        <h2 style={{fontSize: "1.5rem", fontWeight: "bold", marginBottom: "20px"}}>Menu</h2>
+        <ul style={{listStyle: "none", padding: 0, margin: 0}}>
+          <li style={{marginBottom: "10px"}}>
             <a
               href="#profile"
               style={{
@@ -45,7 +46,7 @@ const Page: React.FC = () => {
               Profile
             </a>
           </li>
-          <li style={{ marginBottom: "10px" }}>
+          <li style={{marginBottom: "10px"}}>
             <a
               href="#settings"
               style={{
@@ -60,7 +61,7 @@ const Page: React.FC = () => {
               Settings
             </a>
           </li>
-          <li style={{ marginBottom: "10px" }}>
+          <li style={{marginBottom: "10px"}}>
             <a
               href="#notifications"
               style={{
@@ -87,13 +88,13 @@ const Page: React.FC = () => {
               onMouseOut={(e) => (e.currentTarget.style.color = "#d1e1ff")}
             >
               <SignInOutButton
-            className="font-bold block w-full my-1 py-1 text-left text-xs text-white hover:text-gray-400"
-          />
+                className="font-bold block w-full my-1 py-1 text-left text-xs text-white hover:text-gray-400"
+              />
             </a>
           </li>
         </ul>
       </div>
-      
+
       {/* Main Content */}
       <div
         style={{
