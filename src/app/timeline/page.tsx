@@ -3,19 +3,13 @@
 
 import Main from "~/Main";
 import Timeline from "./timeline";
-import { MouseTrail } from "./effects/mouse/mouseTrail";
-import SearchButton from "~/SearchButton";
-import ProductListingButton from "~/ProductListingButton";
+import Sidebar from "~/Sidebar/Sidebar"
 
 export default function Page({}: {}) {
   return (
-    <div className="mainContainer">
-      <Main>
-        <Timeline />
-        <MouseTrail />
-        <SearchButton/>
-        <ProductListingButton />
-      </Main>
-    </div>
+    <Main>
+      <Timeline/>
+      <Sidebar/>
+    </Main>
   );
 }

@@ -10,7 +10,7 @@ const useButtonStyles = (isHovered: boolean) => {
     button: {
       position: "absolute" as const,
       top: 15,
-      left: 60,
+      left: 100,
       zIndex: 1,
       backgroundColor: "transparent",
       border: "none",
