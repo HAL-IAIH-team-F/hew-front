@@ -1,10 +1,11 @@
 on:
   push:
-    branches:
-      - "develop"
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
   cd:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
     env:
       preDockerBuildCmd: ""
       repository: HAL-IAIH-team-F/k8s-hew
