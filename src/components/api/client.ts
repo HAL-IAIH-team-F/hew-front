@@ -151,6 +151,9 @@ const RecruitRes = z
   })
   .passthrough();
 const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
+const PostColabRequestBody = z
+  .object({ recruit_id: z.string().uuid() })
+  .passthrough();
 
 export const schemas = {
   ChatRes,
@@ -185,6 +188,7 @@ export const schemas = {
   PostRecruitBody,
   RecruitRes,
   UserFollow,
+  PostColabRequestBody,
 };
 
 const endpoints = makeApi([
@@ -262,6 +266,27 @@ const endpoints = makeApi([
       },
     ],
     response: ChatMessagesRes,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/api/colab/request",
+    alias: "pcr_api_colab_request_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: z.object({ recruit_id: z.string().uuid() }).passthrough(),
+      },
+    ],
+    response: z.unknown(),
     errors: [
       {
         status: 422,
