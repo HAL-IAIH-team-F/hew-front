@@ -154,6 +154,17 @@ const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
 const PostColabRequestBody = z
   .object({ recruit_id: z.string().uuid() })
   .passthrough();
+const NotificationType = z.literal("colab");
+const ColabNotificationData = z
+  .object({ sender_creator_id: z.string().uuid() })
+  .passthrough();
+const NotificationRes = z
+  .object({
+    notification_id: z.string().uuid(),
+    notification_type: NotificationType,
+    data: ColabNotificationData,
+  })
+  .passthrough();
 
 export const schemas = {
   ChatRes,
@@ -189,6 +200,9 @@ export const schemas = {
   RecruitRes,
   UserFollow,
   PostColabRequestBody,
+  NotificationType,
+  ColabNotificationData,
+  NotificationRes,
 };
 
 const endpoints = makeApi([
@@ -315,6 +329,13 @@ const endpoints = makeApi([
         schema: HTTPValidationError,
       },
     ],
+  },
+  {
+    method: "get",
+    path: "/api/notification",
+    alias: "gns_api_notification_get",
+    requestFormat: "json",
+    response: z.array(NotificationRes),
   },
   {
     method: "post",
