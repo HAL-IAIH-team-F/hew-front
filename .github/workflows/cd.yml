@@ -6,6 +6,7 @@ jobs:
   cd:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
+    needs: [test]
     env:
       preDockerBuildCmd: ""
       repository: HAL-IAIH-team-F/k8s-hew
