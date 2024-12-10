@@ -23,6 +23,16 @@ export class StyledFormData {
     return value
   }
 
+    getAll(key: string, message: string = `${key}を入力してください`): (string|File | FileList | undefined)[] {
+    const value = this.formData.getAll(key);
+    if (!value) {
+      if (!this.formError) this.formError = {}
+      this.formError[key] = message;
+      return []
+    }
+    return value
+  }
+
   getStr(key: string, message: string = `${key}を入力してください`): string | undefined {
     const value = this.formData.get(key);
     if (typeof value !== 'string' || !value) {
