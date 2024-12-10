@@ -27,7 +27,7 @@ export const ImagePlane: FC = () => {
   ]);
 
   const scrollOffset = useRef(0); // スクロール位置を追跡
-  const scrollSpeed = 0.005; // スクロールの速さ
+  const scrollSpeed = 0; // スクロールの速さ
   const groupRef = useRef<THREE.Group>(null);
 
   const [columns, setColumns] = useState(3); // 列数の初期設定

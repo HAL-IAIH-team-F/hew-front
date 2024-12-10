@@ -145,8 +145,7 @@ export const iconContainerStyle = (isOpen: boolean): CSSProperties => ({
 export const pageWindowStyle = (isOpen: boolean, isAnimating: boolean): CSSProperties => ({
   backgroundColor: 'rgba(142, 142, 147, 0.35)',
   backdropFilter: 'blur(12px)',
-  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.3)',
-  border: '1px solid rgba(128, 128, 128, 0.2)',
+  border: '1px solid rgba(128, 128, 128, 0.9)',
   width: isOpen ? 'calc(90% - 110px )' : '90%',
   height: '90%',
   position: 'fixed',
@@ -166,15 +165,11 @@ export const inAppPageStyle = (isAnimating: boolean): CSSProperties => ({
   transform: 'translate(-50%, -50%)',
   width: 'calc(100% - 13px)',
   height: 'calc(100% - 13px)',
-  overflow: 'hidden',
+  overflow: 'auto',
   borderRadius: '30px',
   opacity: isAnimating ? 1 : 0,
   transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
-  border: 'none', // 実際のボーダーは非表示
-  boxShadow: `
-    0 0 15px 5px rgba(255, 255, 255, 0.4),
-    inset 0 0 10px 3px rgba(255, 255, 255, 0.4) 
-  `,
+
 });
 
 
