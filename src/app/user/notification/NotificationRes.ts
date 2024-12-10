@@ -4,17 +4,15 @@ export interface NotificationRes {
 }
 
 interface Data {
-  notification_type: string
+  notification_type: "colab_approve" | "colab"
 }
 
 export interface CollaboData extends Data {
-  notification_type: "colab"
   collabo_id: string
   sender_creator_id: string
 }
 
 export interface CollaboApproveData extends Data {
-  notification_type: "colab_approve"
   collabo_id: string
   approve_id: string
 }
