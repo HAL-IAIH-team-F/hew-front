@@ -6,7 +6,7 @@ jobs:
   cd:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
-    needs: [ test ]
+    needs: [test]
     env:
       preDockerBuildCmd: ""
       repository: HAL-IAIH-team-F/k8s-hew
@@ -41,13 +41,13 @@ jobs:
           username: ${{ env.harborUser }}
           password: ${{ secrets.HARBOR_PASS }}
 
-      #      - name: BuildAndPushImageOnHarbor
-      #        run: |
-      #          docker build -t harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }} \
-      #           -f ${{ env.dockerFile }} \
-      #          ${{ env.dockerArg }} \
-      #          ./
-      #          docker push harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }}
+#      - name: BuildAndPushImageOnHarbor
+#        run: |
+#          docker build -t harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }} \
+#           -f ${{ env.dockerFile }} \
+#          ${{ env.dockerArg }} \
+#          ./
+#          docker push harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }}
 
       - uses: docker/build-push-action@v5
         with:
