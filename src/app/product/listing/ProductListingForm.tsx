@@ -97,9 +97,9 @@ export default function ProductListingForm() {
         );
 
         if (postProductResult.error) {
-          return {
-            submit: `エラー: ${postProductResult.error.message}`,
-          };
+          formData.append("submit",`エラー: ${postProductResult.error.message}`)
+          
+          return
         }
 
         // 成功した場合に timeline にリダイレクト

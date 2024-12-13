@@ -51,6 +51,7 @@ export function StyledNavigation() {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     }
+    
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
