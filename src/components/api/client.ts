@@ -92,23 +92,6 @@ const CartRes = z
     product_thumbnail_uuid: z.string().uuid(),
   })
   .passthrough();
-const name = z.union([z.array(z.string()), z.null()]).optional();
-const start_datetime = z.union([z.string(), z.null()]).optional();
-const following = z.union([z.boolean(), z.null()]).optional();
-const limit = z.union([z.number(), z.null()]).optional().default(20);
-const OrderDirection = z.enum(["asc", "desc"]);
-const time_order = OrderDirection.optional();
-const GetProductsResponse = z
-  .object({
-    product_description: z.string(),
-    product_id: z.string().uuid(),
-    product_thumbnail_uuid: z.string().uuid(),
-    product_price: z.number().int(),
-    product_title: z.string(),
-    product_date: z.string().datetime({ offset: true }),
-    product_contents_uuid: z.string().uuid(),
-  })
-  .passthrough();
 const PostProductBody = z
   .object({
     price: z.number().int(),
@@ -129,6 +112,24 @@ const ProductRes = z
     product_thumbnail_uuid: z.string().uuid(),
     product_contents_uuid: z.string().uuid(),
     creator_id: z.string().uuid(),
+  })
+  .passthrough();
+const name = z.union([z.array(z.string()), z.null()]).optional();
+const start_datetime = z.union([z.string(), z.null()]).optional();
+const following = z.union([z.boolean(), z.null()]).optional();
+const limit = z.union([z.number(), z.null()]).optional().default(20);
+const OrderDirection = z.enum(["asc", "desc"]);
+const time_order = OrderDirection.optional();
+const GetProductsResponse = z
+  .object({
+    product_description: z.string(),
+    product_id: z.string().uuid(),
+    product_thumbnail_uuid: z.string().uuid(),
+    product_price: z.number().int(),
+    product_title: z.string(),
+    purchase_date: z.string().datetime({ offset: true }),
+    product_contents_uuid: z.string().uuid(),
+    creator_ids: z.array(z.string().uuid()),
   })
   .passthrough();
 const RecruitRes = z
@@ -198,6 +199,8 @@ export const schemas = {
   CollaboApproveNotificationData,
   NotificationRes,
   CartRes,
+  PostProductBody,
+  ProductRes,
   name,
   start_datetime,
   following,
@@ -205,8 +208,6 @@ export const schemas = {
   OrderDirection,
   time_order,
   GetProductsResponse,
-  PostProductBody,
-  ProductRes,
   RecruitRes,
   PostRecruitBody,
   TokenInfo,
@@ -396,15 +397,8 @@ const endpoints = makeApi([
   },
   {
     method: "get",
-    path: "/api/product_cart",
-    alias: "read_product_cart_api_product_cart_get",
-    requestFormat: "json",
-    response: z.array(CartRes),
-  },
-  {
-    method: "get",
-    path: "/api/products",
-    alias: "gps_api_products_get",
+    path: "/api/product",
+    alias: "gps_api_product_get",
     requestFormat: "json",
     parameters: [
       {
@@ -471,6 +465,13 @@ const endpoints = makeApi([
         schema: HTTPValidationError,
       },
     ],
+  },
+  {
+    method: "get",
+    path: "/api/product_cart",
+    alias: "read_product_cart_api_product_cart_get",
+    requestFormat: "json",
+    response: z.array(CartRes),
   },
   {
     method: "get",
