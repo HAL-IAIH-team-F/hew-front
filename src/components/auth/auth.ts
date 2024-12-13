@@ -33,6 +33,7 @@ export const nextAuth = NextAuth({
       }
     ) {
       if (account) {
+        console.debug("account", account)
         const access: Token | undefined = account.access_token && account.expires_in ? {
           token: account.access_token,
           expire: Date.now() + account.expires_in * 1000
@@ -41,9 +42,9 @@ export const nextAuth = NextAuth({
           token: account.refresh_token,
           expire: Date.now() + account.refresh_expires_in * 1000
         } : undefined
-
         token.keycloakTokenBundle = TokenBundleUtil.create(access, refresh)
         token.keycloak_id_token = account.id_token
+        token.session_state = account.session_state
       }
 
       if (session == undefined) return token
@@ -60,6 +61,7 @@ export const nextAuth = NextAuth({
       session.keycloakTokenBundle = token.keycloakTokenBundle
       session.accessToken = token.accessToken
       session.loaded = token.loaded
+      session.session_state = token.session_state
       return session;
     },
   }
@@ -74,10 +76,12 @@ declare module "next-auth" {
     loaded?: boolean
     keycloakTokenBundle?: TokenBundle
     keycloak_id_token?: string
+    session_state?: string
   }
 
   interface Account {
     refresh_expires_in: number
+    session_state?: string
   }
 }
 declare module "next-auth/jwt" {
@@ -86,5 +90,6 @@ declare module "next-auth/jwt" {
     loaded?: boolean
     keycloakTokenBundle?: TokenBundle
     keycloak_id_token?: string
+    session_state?: string
   }
 }
