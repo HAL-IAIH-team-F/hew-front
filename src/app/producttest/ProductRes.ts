@@ -6,5 +6,5 @@ export interface ProductRes {
     product_title: string,
     product_date: string,
     product_contents_uuid: string,
-
+    
 }
