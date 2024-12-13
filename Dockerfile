@@ -20,7 +20,7 @@ ARG siteUrl
 ARG baseUrl
 ARG imgBaseUrl
 
-RUN echo KEYCLOAK_ID="$keycloakId" >> ./.env \
+RUN echo NEXT_PUBLIC_KEYCLOAK_ID="$keycloakId" >> ./.env \
   && echo KEYCLOAK_SECRET="$keycloakSecret" >> ./.env \
   && echo NEXT_PUBLIC_KEYCLOAK_BASEURL="$keycloakBaseUrl" >> ./.env \
   && echo AUTH_SECRET="$authSecret" >> ./.env \
