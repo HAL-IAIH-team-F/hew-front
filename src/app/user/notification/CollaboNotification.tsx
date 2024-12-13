@@ -21,11 +21,12 @@ export default function CollaboNotification(
   return (
     <div>
       <p>data</p>
+      <p>collabo: {collabo.collabo_id}</p>
       <p>sender: {collabo.sender_creator_id}</p>
       <button onClick={() => {
         setErr(undefined)
         setDisabled(true)
-        clientContext.execBody(apiClient.pca_api_colab_approve_post, {collabo_id: collabo.sender_creator_id})
+        clientContext.execBody(apiClient.pca_api_colab_approve_post, {collabo_id: collabo.collabo_id})
           .then(value => {
             setDisabled(false)
             if (!value.error) return

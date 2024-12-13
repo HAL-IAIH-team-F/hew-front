@@ -1,6 +1,7 @@
-import {NotificationRes} from "@/user/notification/NotificationRes";
+import {CollaboApproveData, CollaboData, NotificationRes} from "@/user/notification/NotificationRes";
 import {ReactNode} from "react";
 import CollaboNotification from "@/user/notification/CollaboNotification";
+import CollaboApproveNotification from "@/user/notification/CollaboApproveNotification";
 
 export default function Notification(
   {
@@ -13,7 +14,11 @@ export default function Notification(
 
   switch (notification.data.notification_type) {
     case "colab":
-      node = <CollaboNotification collabo={notification.data}/>
+      node = <CollaboNotification collabo={notification.data as CollaboData}/>
+      break
+    case "colab_approve":
+      node = <CollaboApproveNotification collaboApprove={notification.data as CollaboApproveData}/>
+      break;
   }
 
   return (

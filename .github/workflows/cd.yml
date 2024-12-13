@@ -14,15 +14,15 @@ jobs:
       dockerFile: Dockerfile
       harborUser: robot$hew
       name: hew-front
-      dockerArg:
-        --build-arg keycloakId=${{ secrets.KEYCLOAK_ID }}
-        --build-arg keycloakSecret=${{ secrets.KEYCLOAK_SECRET }}
-        --build-arg keycloakBaseUrl="https://user.kigawa.net"
-        --build-arg authSecret=${{ secrets.AUTH_SECRET }}
-        --build-arg keycloakRealms="develop"
-        --build-arg siteUrl="https://hew-dev.kigawa.net"
-        --build-arg baseUrl="https://hew-dev-api.kigawa.net/"
-        --build-arg imgBaseUrl="https://hew-dev-image.kigawa.net/"
+      dockerArg: |
+        keycloakId=${{ secrets.KEYCLOAK_ID }}
+        keycloakSecret=${{ secrets.KEYCLOAK_SECRET }}
+        keycloakBaseUrl="https://user.kigawa.net"
+        authSecret=${{ secrets.AUTH_SECRET }}
+        keycloakRealms="develop"
+        siteUrl="https://hew-dev.kigawa.net"
+        baseUrl="https://hew-dev-api.kigawa.net/"
+        imgBaseUrl="https://hew-dev-image.kigawa.net/"
       dir: ./
     steps:
       # checkout
@@ -54,7 +54,7 @@ jobs:
           context: ${{ env.dir }}
           file: ${{ env.dir }}/${{ env.dockerFile }}
           push: true
-          tags: ${{ github.ref_name }}-${{ github.sha }}
+          tags: harbor.kigawa.net/private/${{ env.name }}:${{ github.ref_name }}-${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: ${{ env.dockerArg }}
