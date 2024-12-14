@@ -1,5 +1,5 @@
 import {ReactNode} from "react";
-import {ApiResult, SuccessResult} from "./result";
+import {Result, SuccessResult} from "./result";
 import {ErrorMessage} from "./ErrorMessage";
 
 export function SuccessOrErrMsg<T>(
@@ -15,6 +15,6 @@ export function SuccessOrErrMsg<T>(
 }
 
 export interface SuccessOrErrorProps<T> {
-  result: ApiResult<T>
+  result: Result<T>
   success: (result: SuccessResult<T>) => ReactNode
 }

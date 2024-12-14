@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {inAppPageStyle, pageWindowStyle} from './Styles';
-import SearchPage from '@/search/search';
-import AccontPage from '@/user/profile/page';
-import NotificationPage from '@/user/notification/page';
-import MessagePage from '@/user/message/page';
-import ProductListingForm from '@/product/listing/ProductListingForm';
+import SearchPage from '@/(main)/search/search';
+import AccontPage from '@/(main)/user/profile/page';
+import NotificationPage from '@/(main)/user/notification/page';
+import MessagePage from '@/(main)/user/message/page';
+import ProductListingForm from '@/(main)/product/listing/ProductListingForm';
 
 
 const PageWindow: React.FC<{ isOpen: boolean; isVisible: boolean; value: string }> = ({isOpen, isVisible, value}) => {

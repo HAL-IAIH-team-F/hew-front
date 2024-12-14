@@ -1,6 +1,6 @@
 // LoginButton.tsx
 import React from 'react';
-import {signIn} from "~/auth/clientAuth";
+import {signIn} from "~/auth/nextauth/clientAuth";
 
 const LoginButton = () => {
     return (

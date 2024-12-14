@@ -7,10 +7,10 @@
 "use client"
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
-import {SignInOutButton} from "~/auth/SignInOutButton";
-import {useClientContext} from "~/api/useClientContext";
+import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
+import {useClientContext} from "~/api/context/useClientContext";
 import {useSession} from "next-auth/react";
-import {apiClient, Img} from "~/api/wrapper";
+import {apiClient, Img} from "~/api/context/wrapper";
 import {ErrorIds} from "../util/err/errorIds";
 import Image from "../util/Image";
 import Link from "next/link";
@@ -72,24 +72,24 @@ export function StyledNavigation() {
     }
     context.exec(apiClient.get_user_api_user_self_get, {})
       .then(value => {
-        if (!value.value) {
+        if (!value.success) {
           setUser(undefined)
           if (ErrorIds.USER_NOT_FOUND.equals(value.error?.error_id)) return
           console.error(value.error)
           return
         }
-        if (value.value.user_icon) Img.create(value.value.user_icon.image_uuid, value.value.user_icon.token)
+        if (value.success.user_icon) Img.create(value.success.user_icon.image_uuid, value.success.user_icon.token)
           .then(value1 => {
             setUser({
-              name: value.value.user_name,
-              icon: value1.value,
+              name: value.success.user_name,
+              icon: value1.success,
             })
             if (value1.error) {
               console.error(value1.error.error_id + ": " + value1.error.message)
             }
           })
         else setUser({
-          name: value.value.user_name,
+          name: value.success.user_name,
           icon: undefined,
         })
       })
