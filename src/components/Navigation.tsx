@@ -8,8 +8,7 @@
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
 import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
-import {useClientContext} from "~/api/context/useClientContext";
-import {useSession} from "next-auth/react";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {apiClient, Img} from "~/api/context/wrapper";
 import {ErrorIds} from "../util/err/errorIds";
 import Image from "../util/Image";
@@ -62,15 +61,15 @@ export function StyledNavigation() {
     alert(buttonTitle);
   };
   const [user, setUser] = useState<{ name: string, icon: Img | undefined }>()
-  const session = useSession()
-  const context = useClientContext(session)
+  const context = useClientContextState()
 
   useEffect(() => {
-    if (!context.isLogin()) {
+    if (context.state == "loading") return;
+    if (context.state == "unauthenticated") {
       setUser(undefined)
       return
     }
-    context.exec(apiClient.get_user_api_user_self_get, {})
+    context.context.exec(apiClient.get_user_api_user_self_get, {})
       .then(value => {
         if (!value.success) {
           setUser(undefined)
@@ -94,7 +93,7 @@ export function StyledNavigation() {
         })
       })
 
-  }, [context.isLogin()]);
+  }, [context.state]);
   return (
     <div
       ref={navRef}

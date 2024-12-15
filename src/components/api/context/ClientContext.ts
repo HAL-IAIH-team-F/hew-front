@@ -2,27 +2,20 @@ import {AxiosRequestConfig} from "axios";
 import {Result, Results} from "../../../util/err/result";
 import {ErrorIds} from "../../../util/err/errorIds";
 import {apiClient, imgApiClient} from "~/api/context/wrapper";
-import {SessionContextValue} from "next-auth/react";
+import {LoginSession} from "~/auth/session/refresh/LoginSession";
+import {IdTokenState} from "~/auth/keycloak/idtoken/IdTokenState";
 
 export class ClientContext {
   constructor(
-    private readonly session: SessionContextValue
+    readonly session: LoginSession,
+    public readonly idToken: IdTokenState,
   ) {
   }
 
-  isLogin() {
-    if (this.session.status == "loading") return false
-    if (this.session.data == undefined) return false
-    if (!this.session.data.loaded) return false
-    return this.session.status == "authenticated"
-  }
-
-  isLoading() {
-    const session = this.session;
-    if (session.status == "loading") return true
-    if (session.status == "unauthenticated") return false
-    if (session.data == undefined) return false
-    return !session.data.loaded
+  status(): "loading" | "unauthenticated" | "authenticated" {
+    if (this.session.state == "loading") return "loading"
+    if (this.session.state == "unauthenticated") return "unauthenticated"
+    return "authenticated"
   }
 
   async execBody<B, R>(func: (body: B, opt: AxiosRequestConfig) => Promise<R>, body: B, opt?: AxiosRequestConfig): Promise<Result<R>> {
@@ -31,8 +24,8 @@ export class ClientContext {
       newOpt.headers = {}
     }
 
-    if (!newOpt.headers.Authorization && this.session?.status == "authenticated") {
-      const token = this.session.data.accessToken?.token
+    if (!newOpt.headers.Authorization && this.session.state == "authenticated") {
+      const token = this.session.token.access?.token
       if (!token) return Results.errResultByReason("token is undefined", ErrorIds.UnknownError,)
       newOpt.headers.Authorization = `Bearer ${token}`
     }
@@ -60,11 +53,5 @@ export class ClientContext {
       .catch(reason => {
         return Results.errResultByReason(reason, ErrorIds.ApiError)
       })
-  }
-}
-
-export namespace ClientContextUtil {
-  export function getClientContext(session: SessionContextValue): ClientContext {
-    return new ClientContext(session)
   }
 }

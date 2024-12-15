@@ -1,19 +1,20 @@
 "use client"
 import {useEffect, useState} from "react";
-import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {signInAtServerCurrentPage} from "~/auth/nextauth/server";
 import {ErrorMessage} from "../../../util/err/ErrorMessage";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
 
 export default function Page(
   {}: {}
 ) {
   const [err, setErr] = useState<string>()
-  const session = useSession()
   const router = useRouter()
+  const clientContext = useClientContextState()
+
   useEffect(() => {
-    if (session.status == "loading") return;
-    if (session.status == "authenticated") {
+    if (clientContext.state == "loading") return;
+    if (clientContext.state == "authenticated") {
       const win = window.open('', '_self');
       if (win) {
         win.close()
@@ -27,7 +28,7 @@ export default function Page(
       console.error(reason)
       setErr(reason.toString())
     })
-  }, [session]);
+  }, [clientContext]);
 
   return <ErrorMessage error={err}/>
 }

@@ -10,11 +10,10 @@ import getClockTolerance = OidcInternal.getClockTolerance;
 import Client = OidcInternal.Client;
 import validatePresence = OidcInternal.validatePresence;
 import validateIssuer = OidcInternal.validateIssuer;
-import validateAudience = OidcInternal.validateAudience;
 import assertClient = OidcInternal.assertClient;
 import jwtClaimNames = OidcInternal.jwtClaimNames;
 
-export class AuthenticationImplicitFlowIdToken extends AbstractAuthenticateIdAccessFlowToken {
+export class AuthenticationImplicitFlowAccessToken extends AbstractAuthenticateIdAccessFlowToken {
 
   /**
    * Returns ID Token claims validated during {@link processRefreshTokenResponse} or
@@ -24,19 +23,16 @@ export class AuthenticationImplicitFlowIdToken extends AbstractAuthenticateIdAcc
    *   {@link processDeviceCodeResponse}.
    *
    * @returns JWT Claims Set from an ID Token, or undefined if there is no ID Token in `ref`.
-   * @param idToken
+   * @param accessToken
    * @param context
-   * @param expireDate
    */
-  static async instance(
-    idToken: string, context: OidcContext, expireDate: Date
-  ): Promise<AuthenticationImplicitFlowIdToken> {
+  static async instance(accessToken: string, context: OidcContext): Promise<AuthenticationImplicitFlowAccessToken> {
     const client: Client = context.client;
     assertClient(client)
     const requiredClaims: (keyof typeof jwtClaimNames)[] = ['aud', 'exp', 'iat', 'iss', 'sub']
 
     const {claims, jwt} = await validateJwt(
-      idToken,
+      accessToken,
       checkSigningAlgorithm.bind(
         undefined,
         context.client.id_token_signed_response_alg,
@@ -50,8 +46,13 @@ export class AuthenticationImplicitFlowIdToken extends AbstractAuthenticateIdAcc
     )
       .then(validatePresence.bind(undefined, requiredClaims))
       .then(validateIssuer.bind(undefined, context.as))
-      .then(validateAudience.bind(undefined, client.client_id))
 
-    return new AuthenticationImplicitFlowIdToken(claims, jwt, expireDate)
+
+    if (claims.exp == undefined) throw new Error(
+      'ID Token "exp" claim is missing',
+    )
+    const date = new Date(claims.exp * 1000)
+
+    return new AuthenticationImplicitFlowAccessToken(claims, jwt, date)
   }
 }

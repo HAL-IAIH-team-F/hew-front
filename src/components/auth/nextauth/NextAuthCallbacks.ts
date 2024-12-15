@@ -22,8 +22,10 @@ export namespace NextAuthCallbacks {
       if (session.loaded) token.loaded = session.loaded
       return token
     }
-    if (session.type == "token") {
-      token.keycloak_id_token = session.data.idToken
+    if (session.type == "login_session") {
+      if (session.data.type == "authenticated") {
+        token.apiTokens = session.data.token
+      }
     }
     return token
   }
@@ -51,7 +53,7 @@ export namespace NextAuthCallbacks {
     }
     session.keycloak_id_token = token.keycloak_id_token
     session.keycloakTokenBundle = token.keycloakTokenBundle
-    session.accessToken = token.accessToken
+    session.apiTokens = token.apiTokens
     session.loaded = token.loaded
     session.session_state = token.session_state
     return session;

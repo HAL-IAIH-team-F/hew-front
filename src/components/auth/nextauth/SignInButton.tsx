@@ -2,6 +2,7 @@
 import {HTMLAttributes, useState} from "react";
 import {ErrorMessage} from "../../../util/err/ErrorMessage";
 import {signIn} from "~/auth/nextauth/clientAuth";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
 
 
 export function SignInButton(
@@ -11,6 +12,7 @@ export function SignInButton(
   }: LoginButtonProps,
 ) {
   const [err, setErr] = useState<string>()
+  const clientContext = useClientContextState()
 
   return (
     <>
@@ -19,8 +21,8 @@ export function SignInButton(
         {...props}
         onClick={() => {
           setErr(undefined)
-          signIn().catch(reason => {
-            setErr(`ログインに失敗しました: ${reason.toString()}`)
+          signIn(clientContext).catch(reason => {
+            setErr(`ログインに失敗しました: {${reason.toString()}}`)
           })
         }}>
         {children || "Login"}

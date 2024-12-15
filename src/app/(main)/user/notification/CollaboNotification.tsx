@@ -1,7 +1,7 @@
 import {CollaboData} from "@/(main)/user/notification/NotificationRes";
 import {apiClient} from "~/api/context/wrapper";
 import {useSession} from "next-auth/react";
-import {useClientContext} from "~/api/context/useClientContext";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {useState} from "react";
 import {ErrorData} from "../../../../util/err/err";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
@@ -15,7 +15,7 @@ export default function CollaboNotification(
 ) {
   const [err, setErr] = useState<ErrorData>()
   const session = useSession()
-  const clientContext = useClientContext(session)
+  const clientContext = useClientContextState(session)
   const [disabled, setDisabled] = useState(false)
 
   return (

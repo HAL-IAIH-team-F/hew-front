@@ -2,6 +2,7 @@
 import {HTMLAttributes, useState} from "react";
 import {ErrorMessage} from "../../../util/err/ErrorMessage";
 import {signOut} from "~/auth/nextauth/clientAuth";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
 
 
 export function SignOutButton(
@@ -11,7 +12,7 @@ export function SignOutButton(
   }: LogoutButtonProps,) {
 
   const [err, setErr] = useState<string>()
-
+  const clientContext = useClientContextState()
   return (
     <>
       <ErrorMessage error={err}/>
@@ -19,7 +20,7 @@ export function SignOutButton(
         {...props}
         onClick={() => {
           setErr(undefined)
-          signOut().catch(reason => {
+          signOut(clientContext).catch(reason => {
             setErr(`ログアウトに失敗しました: ${reason.toString()}`)
           })
         }}>

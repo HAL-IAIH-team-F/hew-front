@@ -1,5 +1,5 @@
 "use client";
-import {useClientContext} from "~/api/context/useClientContext";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {apiClient} from "~/api/context/wrapper";
@@ -15,7 +15,7 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
 
   // セッションとクライアントコンテキストの取得
   const session = useSession();
-  const clientContext = useClientContext(session);
+  const clientContext = useClientContextState(session);
 
   // 入力チェックの関数
   const validateForm = (formData: StyledFormData) => {

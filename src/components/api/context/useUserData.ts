@@ -1,17 +1,15 @@
 import {useEffect, useState} from 'react';
-import {useSession} from 'next-auth/react';
 import {apiClient, Img} from './wrapper';
-import {useClientContext} from './useClientContext';
 import {ErrorIds} from '../../../util/err/errorIds';
+import {useClientContextState} from './ClientContextProvider';
 
 export const useUserData = () => {
-  const [user, setUser] = useState<{ id:string; name: string; icon: Img | undefined }>();
-  const session = useSession();
-  const context = useClientContext(session);
+  const [user, setUser] = useState<{ id: string; name: string; icon: Img | undefined }>();
+  const context = useClientContextState();
 
   useEffect(() => {
-    if (session) {
-      context.exec(apiClient.get_user_api_user_self_get, {}).then((value) => {
+    if (context.state == "authenticated") {
+      context.context.exec(apiClient.get_user_api_user_self_get, {}).then((value) => {
         if (!value.success) {
           setUser(undefined);
           if (ErrorIds.USER_NOT_FOUND.equals(value.error?.error_id)) return;
@@ -40,6 +38,6 @@ export const useUserData = () => {
     } else {
       setUser(undefined);
     }
-  }, [context, session]);
-  return { user };
+  }, [context, context.state]);
+  return {user};
 };

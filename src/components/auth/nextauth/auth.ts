@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import "next-auth/jwt";
 import Keycloak from "next-auth/providers/keycloak";
 import {TokenBundle} from "~/auth/nextauth/TokenBundle";
-import {Token} from "~/auth/nextauth/Token";
 import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
 import {NextAuthCallbacks} from "~/auth/nextauth/NextAuthCallbacks";
 
@@ -26,7 +25,7 @@ export const {
 } = nextAuth
 declare module "next-auth" {
   interface Session {
-    accessToken?: Token
+    apiTokens?: TokenBundle
     loaded?: boolean
     keycloakTokenBundle?: TokenBundle
     keycloak_id_token?: string
@@ -43,7 +42,7 @@ declare module "next-auth" {
 }
 declare module "next-auth/jwt" {
   interface JWT {
-    accessToken?: Token
+    apiTokens?: TokenBundle
     loaded?: boolean
     keycloakTokenBundle?: TokenBundle
     keycloak_id_token?: string

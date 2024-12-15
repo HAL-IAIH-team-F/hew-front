@@ -10,22 +10,22 @@ export default function Page(
   const [result, setResult] = useState<URLSearchParams>()
 
   useEffect(() => {
-    if (executed.current) return;
+    // if (executed.current) return;
     executed.current = true;
 
     const param = new URLSearchParams(location.hash.slice(1))
     setResult(param)
-    window.parent.postMessage({
+    console.debug("callback")
+    target(params).postMessage({
       type: "callback_ready",
     }, location.origin)
   }, []);
   useMessageEvent(evt => {
     if (result == undefined) return
     if (evt.origin != location.origin) return
-    // console.debug(evt)
     if (evt.data.type != "callback_request") return
-
-    window.parent.postMessage({
+    console.debug("message received", params.mode)
+    target(params).postMessage({
       type: "callback_result",
       param: result.toString()
     }, location.origin)
@@ -34,4 +34,14 @@ export default function Page(
   return <div>
     empty page <Link href="/timeline" className={"underline"}>timeline</Link>
   </div>
+}
+
+function target(params: { mode: string }) {
+  if (params.mode == "iframe") {
+    return window.parent
+  }
+  if (params.mode == "popup") {
+    return window.opener
+  }
+  throw new Error("unknown mode")
 }

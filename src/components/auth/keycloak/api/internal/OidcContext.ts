@@ -8,6 +8,7 @@ import {
 } from "~/auth/keycloak/api/internal/authentication/implicit-flow/AuthenticationImplicitFlowResponse";
 import {Result, Results} from "../../../../../util/err/result";
 import {ErrorIds} from "../../../../../util/err/errorIds";
+import {Nonce} from "~/auth/keycloak/api/internal/Nonce";
 import AuthorizationServer = OidcInternal.AuthorizationServer;
 
 export class OidcContext {
@@ -34,7 +35,7 @@ export class OidcContext {
   }
 
   async authenticationImplicitFlowResponse(
-    params: URLSearchParams, nonce: string
+    params: URLSearchParams, nonce: Nonce
   ): Promise<Result<AuthenticationImplicitFlowResponse>> {
     return AuthenticationImplicitFlowResponse.instance(this, this.as, this.client, params, nonce)
       .then(value => Results.createSuccessResult(value))

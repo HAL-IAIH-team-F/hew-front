@@ -1,6 +1,5 @@
 import {RecruitRes} from "./RecruitRes"
-import {useSession} from "next-auth/react";
-import {useClientContext} from "~/api/context/useClientContext";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {apiClient} from "~/api/context/wrapper";
 import {useState} from "react";
 import {ErrorData} from "../../../../util/err/err";
@@ -13,8 +12,7 @@ export default function Recruit(
     recruit: RecruitRes
   },
 ) {
-  const session = useSession()
-  const clientContext = useClientContext(session)
+  const clientContext = useClientContextState()
   const [err, setErr] = useState<ErrorData>()
 
   return (
@@ -25,7 +23,7 @@ export default function Recruit(
       <p>creator: {recruit.creator_id}</p>
       <button onClick={() => {
         setErr(undefined)
-        clientContext.execBody(apiClient.pcr_api_colab_request_post, {recruit_id: recruit.recruit_id})
+        clientContext.context.execBody(apiClient.pcr_api_colab_request_post, {recruit_id: recruit.recruit_id})
           .then(value => {
             if (!value.error) return
             setErr(value.error)

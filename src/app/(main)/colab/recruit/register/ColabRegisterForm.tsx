@@ -1,7 +1,6 @@
 "use client"
 import {apiClient} from "~/api/context/wrapper";
-import {useSession} from "next-auth/react";
-import {useClientContext} from "~/api/context/useClientContext";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {StyledForm} from "../../../../../util/form/StyledForm";
 import {StyledInput} from "../../../../../util/form/StyledInput";
 import {StyledButton} from "../../../../../util/form/StyledButton";
@@ -11,8 +10,7 @@ export default function ColabRegisterForm(
     ...props
   }: ColabRegisterFormProps,
 ) {
-  const session = useSession()
-  const clientContext = useClientContext(session)
+  const clientContext = useClientContextState()
 
   return (
     <StyledForm {...props} action={async formData => {
@@ -21,7 +19,7 @@ export default function ColabRegisterForm(
 
       if (!title || !description) return
 
-      const result = await clientContext.execBody(
+      const result = await clientContext.context.execBody(
         apiClient.pr_api_recruit_post,
         {
           title: title,

@@ -1,7 +1,6 @@
-import TokenReloader from "~/api/context/TokenReloader";
-import SessionPersister from "~/auth/session/SessionPersister";
 import {StyledNavigation} from "~/Navigation";
 import {ReactNode} from "react";
+import {ClientContextProvider} from "~/api/context/ClientContextProvider";
 
 export default function Layout(
   {
@@ -13,11 +12,12 @@ export default function Layout(
 
   return (
     <>
-      <TokenReloader/>
-      <SessionPersister/>
-      <StyledNavigation/>
-      {/*<BackgroundObject/>*/}
-      {children}
+      <ClientContextProvider>
+        {/*<TokenReloader/>*/}
+        <StyledNavigation/>
+        {/*<BackgroundObject/>*/}
+        {children}
+      </ClientContextProvider>
     </>
   )
 }

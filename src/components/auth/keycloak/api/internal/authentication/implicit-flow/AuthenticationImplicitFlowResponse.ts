@@ -5,6 +5,10 @@ import {
 } from "~/auth/keycloak/api/internal/authentication/implicit-flow/AuthenticationImplicitFlowIdToken";
 import {Result, Results} from "../../../../../../../util/err/result";
 import {ErrorIds} from "../../../../../../../util/err/errorIds";
+import {
+  AuthenticationImplicitFlowAccessToken
+} from "~/auth/keycloak/api/internal/authentication/implicit-flow/AuthenticationImplicitFlowAccessToken";
+import {Nonce} from "~/auth/keycloak/api/internal/Nonce";
 import assertAs = OidcInternal.assertAs;
 import assertClient = OidcInternal.assertClient;
 import CodedTypeError = OidcInternal.CodedTypeError;
@@ -20,13 +24,13 @@ import INVALID_RESPONSE = OidcInternal.INVALID_RESPONSE;
 import AuthorizationResponseError = OidcInternal.AuthorizationResponseError;
 import AuthorizationServer = OidcInternal.AuthorizationServer;
 
-import generateRandomCodeVerifier = OidcInternal.generateRandomCodeVerifier;
-
 export class AuthenticationImplicitFlowResponse {
   private constructor(
     readonly context: OidcContext,
     readonly params: URLSearchParams,
     private readonly idToken_: string,
+    private readonly accessToken_: string,
+    private readonly sessionState_: string,
   ) {
   }
 
@@ -57,7 +61,7 @@ export class AuthenticationImplicitFlowResponse {
     as: AuthorizationServer,
     client: Client,
     parameters: URLSearchParams | URL,
-    nonce: string,
+    nonce: Nonce,
     expectedState?: string | typeof expectNoState | typeof skipStateCheck,
   ): Promise<AuthenticationImplicitFlowResponse> {
     assertAs(as)
@@ -133,22 +137,48 @@ export class AuthenticationImplicitFlowResponse {
     if (id_token == undefined) {
       throw OPE('response parameter "id_token" missing', INVALID_RESPONSE, {parameters})
     }
+    const accessToken = getURLSearchParameter(parameters, 'access_token')
+    if (accessToken == undefined) {
+      throw OPE('response parameter "access_token" missing', INVALID_RESPONSE, {parameters})
+    }
     // const token = getURLSearchParameter(parameters, 'token')
     // if (id_token !== undefined || token !== undefined) {
     //   throw new UnsupportedOperationError('implicit and hybrid flows are not supported')
     // }
     const params = brand(new URLSearchParams(parameters))
 
+    const sessionState = getURLSearchParameter(params, 'session_state')
+    if (sessionState == undefined) {
+      throw OPE('response parameter "session_state" missing', INVALID_RESPONSE, {parameters})
+    }
+
     return new AuthenticationImplicitFlowResponse(
       context,
       params,
       id_token,
+      accessToken,
+      sessionState,
     )
   }
 
+  sessionState() {
+    return this.sessionState_;
+  }
+
   async idToken(): Promise<Result<AuthenticationImplicitFlowIdToken>> {
+    const expire = this.params.get('expires_in') || "0"
+    const expireDate = new Date(Date.now() + parseInt(expire) * 1000)
     return AuthenticationImplicitFlowIdToken.instance(
       this.idToken_,
+      this.context,
+      expireDate,
+    ).then(value => Results.createSuccessResult(value))
+      .catch(reason => Results.errResultByReason(reason, ErrorIds.UnknownError));
+  }
+
+  async accessToken(): Promise<Result<AuthenticationImplicitFlowAccessToken>> {
+    return AuthenticationImplicitFlowAccessToken.instance(
+      this.accessToken_,
       this.context,
     ).then(value => Results.createSuccessResult(value))
       .catch(reason => Results.errResultByReason(reason, ErrorIds.UnknownError));

@@ -1,7 +1,7 @@
 "use client"
 import {useEffect, useState} from "react";
 import {useSession} from "next-auth/react";
-import {useClientContext} from "~/api/context/useClientContext";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {apiClient} from "~/api/context/wrapper";
 import {ErrorData} from "../../../../util/err/err";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
@@ -14,7 +14,7 @@ export default function Page(
   const [recruits, setRecruits] = useState<RecruitRes[]>()
   const [err, setErr] = useState<ErrorData>()
   const session = useSession()
-  const client = useClientContext(session)
+  const client = useClientContextState(session)
 
   useEffect(() => {
     client.exec(apiClient.grs_api_recruit_get, {}).then(value => {

@@ -1,22 +1,26 @@
 import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
 import {useEffect, useRef} from "react";
-import {useSession} from "next-auth/react";
 import useMessageEvent from "~/auth/keycloak/hook/useMessageEvent";
+import {LoginSession} from "~/auth/session/refresh/LoginSession";
+import {IdTokenState} from "~/auth/keycloak/idtoken/IdTokenState";
 
 export default function OpWatcher(
   {
-    reload,
+    reload, loginSession, idToken,
   }: {
-    reload: () => void
+    reload: () => void,
+    loginSession: LoginSession,
+    idToken: IdTokenState
   },
 ) {
   const ref = useRef<HTMLIFrameElement | null>(null);
-  const session = useSession()
+
   useEffect(() => {
     const element = ref.current
     if (!element) return;
-    if (session.status != "authenticated") return;
-    const session_state = session.data.session_state
+    if (loginSession.state != "authenticated") return;
+    if (idToken.state != "authenticated") return;
+    const session_state = idToken.sessionState
     const win = element.contentWindow
     const interval = setInterval(() => {
       win?.postMessage(`${KeycloakConfig.clientId} ${session_state}`, {targetOrigin: new URL(KeycloakConfig.baseUrl).origin})
@@ -25,7 +29,7 @@ export default function OpWatcher(
     return () => {
       clearInterval(interval)
     };
-  }, [ref.current, session.status, session.data?.session_state]);
+  }, [ref.current, loginSession.state, idToken]);
   useMessageEvent(evt => {
     if (evt.origin !== new URL(KeycloakConfig.baseUrl).origin) return
     if (evt.data == "unchanged") return
