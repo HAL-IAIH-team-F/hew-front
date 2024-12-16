@@ -3767,7 +3767,7 @@ export namespace OidcInternal {
     return processAuthorizationCodeOAuth2Response(as, client, response, options)
   }
 
- export async function processAuthorizationCodeOpenIDResponse(
+  export async function processAuthorizationCodeOpenIDResponse(
     as: AuthorizationServer,
     client: Client,
     response: Response,
@@ -6037,5 +6037,4 @@ export namespace OidcInternal {
    * @internal
    */
   export const _expectedIssuer: unique symbol = Symbol()
-
 }

@@ -1,5 +1,3 @@
-import * as oauth from "oauth4webapi";
-import {allowInsecureRequests} from "oauth4webapi";
 import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
 import {Env} from "~/env";
 import {OidcInternal} from "~/auth/keycloak/api/internal/OidcInternal";
@@ -10,10 +8,14 @@ import {Result, Results} from "../../../../../util/err/result";
 import {ErrorIds} from "../../../../../util/err/errorIds";
 import {Nonce} from "~/auth/keycloak/api/internal/Nonce";
 import AuthorizationServer = OidcInternal.AuthorizationServer;
+import None = OidcInternal.None;
+import allowInsecureRequests = OidcInternal.allowInsecureRequests;
+import discoveryRequest = OidcInternal.discoveryRequest;
+import processDiscoveryResponse = OidcInternal.processDiscoveryResponse;
 
 export class OidcContext {
-  readonly clientAuth = oauth.None()
-  readonly client: oauth.Client
+  readonly clientAuth = None()
+  readonly client: OidcInternal.Client
 
   private constructor(
     clientId: string,
@@ -29,9 +31,8 @@ export class OidcContext {
 
   private static async authorizationServer() {
     // noinspection JSDeprecatedSymbols
-    return await oauth
-      .discoveryRequest(KeycloakConfig.issuerUrl, {algorithm: "oidc", [allowInsecureRequests]: Env.debug})
-      .then(response => oauth.processDiscoveryResponse(KeycloakConfig.issuerUrl, response))
+    return await discoveryRequest(KeycloakConfig.issuerUrl, {algorithm: "oidc", [allowInsecureRequests]: Env.debug})
+      .then(response => processDiscoveryResponse(KeycloakConfig.issuerUrl, response))
   }
 
   async authenticationImplicitFlowResponse(

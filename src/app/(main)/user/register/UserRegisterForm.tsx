@@ -30,6 +30,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
 
   return (
     <StyledForm {...props} action={async formData => {
+      if (clientContext.state != "authenticated") throw new Error("not authenticated")
       const icon_file = formData.get("icon") as File | undefined;
       const user_name = formData.get("user_name");
 
@@ -47,7 +48,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
         iconUuid = imgResult.success.image_uuid
       }
 
-      const postUserResult = await clientContext.client.execBody(
+      const postUserResult = await clientContext.client.authBody(
         Api.app.post_user_api_user_post,
         {user_name: user_name, user_icon_uuid: iconUuid}
       )
