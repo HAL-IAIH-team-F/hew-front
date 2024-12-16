@@ -13,19 +13,18 @@ export async function signIn(clientContext: ClientContextState) {
   const y = window.innerHeight / 2;
   const url = new AuthenticationImplicitFlowUrl(new Nonce(window), "login", "popup")
   const win = open(url.url(), 'Login', `width=500,height=600, left=${x},top=${y}`);
-  // const win = open('/auth/login', 'Login', `width=500,height=600, left=${x},top=${y}`);
   if (win == null) throw new Error("Failed to open window")
-
-  window.addEventListener("message", (evt) => {
-    console.debug(evt.data)
+  const listener = (evt: MessageEvent) => {
     if (evt.origin !== location.origin) return;
     handleCallbackEvent(evt, data => {
       win.postMessage(data, location.origin)
     }, clientContext.oidcContext, url.nonce, clientContext.setIdToken, () => {
       console.debug("finish")
       win.close()
+      window.removeEventListener("message", listener)
     })
-  })
+  }
+  window.addEventListener("message", listener, false)
 
 }
 
