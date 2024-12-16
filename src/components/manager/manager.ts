@@ -1,18 +1,3 @@
-import useProduct from "~/api/useProducts";
-import { ProductRes } from "~/products/ProductRes";
-
-// useProduct ロジックをクラス外部で定義
-function fetchProductData(productId: string): ProductRes | null {
-    const { products, error } = useProduct({ productId: productId, limit: 1 });
-    
-    if (error) {
-        console.error("Error fetching product data:", error);
-        return null;
-    }
-
-    return products && products.length > 0 ? products[0] : null;
-}
-
 export class Manager {
     private _sessionId: number;
     private _bbnum: number;
@@ -23,7 +8,6 @@ export class Manager {
     private _riseSpeed: number;
     private _animstate: string;
     private _productId: string;
-    private _productData: ProductRes;// 単一の ProductRes を保持
     constructor(
         sessionId: number = 1,
         bbnum: number = 21,
@@ -34,16 +18,6 @@ export class Manager {
         riseSpeed: number = 1,
         animstate: string = "init",
         productId: string = "none",
-        productData: ProductRes = {
-            product_description: "",
-            product_id: "",
-            product_thumbnail_uuid: "",
-            product_price: 0,
-            product_title: "",
-            purchase_date: "",
-            product_contents_uuid: "",
-            creator_ids: [],
-        } // 初期値として空の ProductRes を設定
     ) {
         this._sessionId = sessionId;
         this._bbnum = bbnum;
@@ -54,7 +28,6 @@ export class Manager {
         this._riseSpeed = riseSpeed;
         this._animstate = animstate;
         this._productId = productId;
-        this._productData = productData;
         this.update = {
             sessionId: (value: number) => {
                 this._sessionId = value;
@@ -114,16 +87,5 @@ export class Manager {
 
     public outputLog(): void {
         console.log(this.value);
-    }
-
-    public getProductData(productId: string): void {
-        const productData = fetchProductData(productId);
-        if (productData) {
-            console.log("Product data fetched:", productData);
-            this._productData = productData; // インスタンスに保存
-        } else {
-            console.error("Failed to fetch product data for ID:", productId);
-            
-        }
     }
 }

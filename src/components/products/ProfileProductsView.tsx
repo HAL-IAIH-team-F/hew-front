@@ -14,7 +14,7 @@ export default function ProductPage({ manager }: ProductPageProps) {
     const { products, error } = useProduct();
     
     const handleProductClick = (product: ProductRes) => {
-       manager.getProductData(product.product_id)
+       
     };
 
     return (
