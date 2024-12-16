@@ -7,6 +7,7 @@ export namespace Env {
   }
   export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL as string;
   export const imgBaseUrl = process.env.NEXT_PUBLIC_IMG_BASE_URL as string;
+  export const debug = process.env.NEXT_PUBLIC_DEBUG == "true";
 }
 
 function str(s: string | undefined): string {

@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
-import { FaTimes } from "react-icons/fa";
-import { gsap } from "gsap";
-import ProductListingForm from "@/product/listing/ProductListingForm";
-import { IoWaterOutline } from "react-icons/io5";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {FaTimes} from "react-icons/fa";
+import {gsap} from "gsap";
+import ProductListingForm from "@/(main)/product/listing/ProductListingForm";
+import {IoWaterOutline} from "react-icons/io5";
 
 // ボタンのスタイル
 const useButtonStyles = (isHovered: boolean) => {

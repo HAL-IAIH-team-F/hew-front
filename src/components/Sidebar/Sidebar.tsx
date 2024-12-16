@@ -5,7 +5,7 @@ import Image from "../../util/Image";
 import {MdOutlineBubbleChart} from "react-icons/md";
 import PageWindow from './PageWindow';
 import {iconContainerStyle, styles} from './Styles';
-import {useUserData} from '~/api/useUserData';
+import {useUserData} from '~/api/context/useUserData';
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);

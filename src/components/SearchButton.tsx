@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
-import { CSSProperties } from "react";
-import { FaSearch, FaTimes } from "react-icons/fa";
-import SearchPage from "@/search/search";
-import { gsap } from "gsap";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {FaSearch, FaTimes} from "react-icons/fa";
+import SearchPage from "@/(main)/search/search";
+import {gsap} from "gsap";
 
 // ボタンのスタイル
 const useButtonStyles = (isHovered: boolean) => {

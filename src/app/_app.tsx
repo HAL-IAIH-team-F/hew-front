@@ -1,24 +1,20 @@
-import {SessionProvider} from "next-auth/react";
-import {Session} from "next-auth";
 import {FC} from "react";
 
 export default function App(
   {
     Component,
-    pageProps: {session, ...pageProps},
+    pageProps: {...pageProps},
     ...props
   }: AppProps,
 ) {
 
 
   return (
-    <SessionProvider session={session}>
-      <Component {...pageProps}/>
-    </SessionProvider>
+    <Component {...pageProps}/>
   )
 }
 
 export interface AppProps {
   Component: FC
-  pageProps: { session: Session }
+  pageProps: {}
 }
