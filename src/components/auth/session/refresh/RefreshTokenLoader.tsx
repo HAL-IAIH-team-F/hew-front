@@ -1,11 +1,11 @@
-import {AuthenticatedIdTokenState, IdTokenState} from "~/auth/keycloak/idtoken/IdTokenState";
+import {AuthIdTokenState, IdTokenState} from "~/auth/keycloak/idtoken/IdTokenState";
 import {useEffect, useRef} from "react";
 import {add, isAfter, parseISO} from "date-fns";
 import {Token} from "~/auth/nextauth/Token";
 import {TokenBundle, TokenBundleUtil} from "~/auth/nextauth/TokenBundle";
 import {Result, Results} from "../../../../util/err/result";
 import {ErrorIds} from "../../../../util/err/errorIds";
-import {apiClient} from "~/api/context/wrapper";
+import {Api} from "~/api/context/Api";
 import {LoginSession} from "~/auth/session/refresh/LoginSession";
 
 
@@ -24,7 +24,7 @@ export default function RefreshTokenLoader(
   useEffect(() => {
     if (idToken.state == "loading") return;
     if (idToken.state == "unauthenticated") {
-      return update({state: "unauthenticated"})
+      return update({state: "unauthenticated", idToken: idToken})
     }
 
     const next = loginSession.state == "authenticated" && loginSession.token.access
@@ -37,7 +37,7 @@ export default function RefreshTokenLoader(
         idToken,
         tokens => {
           refreshing.current = false;
-          update({state: "authenticated", token: tokens})
+          update({state: "authenticated", token: tokens, idToken: idToken})
         },
         reload, loginSession,
       ).then(value => {
@@ -57,7 +57,7 @@ export default function RefreshTokenLoader(
 }
 namespace ApiRefresh {
   export async function refreshToken(
-    idToken: AuthenticatedIdTokenState,
+    idToken: AuthIdTokenState,
     update: (tokens: TokenBundle) => void,
     reload: () => void,
     session: LoginSession,
@@ -83,7 +83,7 @@ namespace ApiRefresh {
     token: Token,
     update: (tokens: TokenBundle) => void,
   ): Promise<Result<undefined>> {
-    return await apiClient.gtr_api_token_get({
+    return await Api.app.gtr_api_token_get({
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -97,7 +97,7 @@ namespace ApiRefresh {
 }
 namespace KeycloakRefresh {
   export async function refreshByKeycloak(
-    idTokenState: AuthenticatedIdTokenState,
+    idTokenState: AuthIdTokenState,
     update: (tokens: TokenBundle) => void,
     reload: () => void,
   ): Promise<Result<undefined>> {
@@ -105,7 +105,7 @@ namespace KeycloakRefresh {
     if (token == undefined) return Results.createSuccessResult(undefined)
 
 
-    return await apiClient.post_token_api_token_post({keycloak_token: token}).then(value => {
+    return await Api.app.post_token_api_token_post({keycloak_token: token}).then(value => {
       update(createTokenBundle(value))
       return Results.createSuccessResult(undefined)
     }).catch(reason => {
@@ -114,7 +114,7 @@ namespace KeycloakRefresh {
   }
 
   function keycloakAccessToken(
-    idTokenState: AuthenticatedIdTokenState,
+    idTokenState: AuthIdTokenState,
     reload: () => void,
   ): string | undefined {
     const token = idTokenState.accessToken

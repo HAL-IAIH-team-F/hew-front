@@ -2,11 +2,11 @@
 
 import {FC, useEffect, useState} from "react";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
-import {apiClient} from "~/api/context/wrapper";
 import {NotificationRes} from "@/(main)/user/notification/NotificationRes";
 import Notification from "@/(main)/user/notification/Notification";
 import {ErrorData} from "../../../../util/err/err";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
+import {Api} from "~/api/context/Api";
 
 const NotificationPage: FC = () => {
   const clientContext = useClientContextState()
@@ -15,7 +15,7 @@ const NotificationPage: FC = () => {
 
   useEffect(() => {
     if (clientContext.state != "authenticated") return
-    clientContext.context.exec(apiClient.gns_api_notification_get).then(value => {
+    clientContext.client.auth(Api.app.gns_api_notification_get).then(value => {
       if (value.error) {
         setErr(value.error)
         return

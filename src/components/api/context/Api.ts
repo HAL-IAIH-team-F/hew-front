@@ -1,14 +1,15 @@
-import {createApiClient} from "~/api/client";
-import {createApiClient as createImgApiClient} from "~/api/imgClient";
+
 import {Results} from "../../../util/err/result";
 import {ErrorIds} from "../../../util/err/errorIds";
 import {Env} from "~/env";
+import {createApiClient} from "~/api/client";
+import {createApiClient as createImgApi} from "~/api/imgClient";
 import createSuccessResult = Results.createSuccessResult;
 
-export const imgApiClient = createImgApiClient(Env.imgBaseUrl, {});
-
-
-export const apiClient = createApiClient(Env.baseUrl, {});
+export namespace Api {
+  export const app = createApiClient(Env.baseUrl, {});
+  export const img = createImgApi(Env.imgBaseUrl, {});
+}
 
 export class Img {
   constructor(
@@ -19,7 +20,7 @@ export class Img {
   }
 
   static async create(uuid: string, token: string | null) {
-    const preference = await imgApiClient.img_preference_preference__image_uuid__get({params: {image_uuid: uuid}})
+    const preference = await Api.img.img_preference_preference__image_uuid__get({params: {image_uuid: uuid}})
       .then(value => Results.createSuccessResult(value))
       .catch(reason => {
         return Results.errResultByReason(reason, ErrorIds.ApiError)

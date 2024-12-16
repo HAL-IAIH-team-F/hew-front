@@ -1,6 +1,6 @@
 "use client";
 import {ChangeEvent, useState} from "react";
-import {apiClient} from "~/api/context/wrapper";
+import {Api} from "~/api/context/Api";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {useRouter} from 'next/navigation';
 import {StyledForm} from "../../../../util/form/StyledForm";
@@ -39,7 +39,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
       }
       let iconUuid: string | null = null
       if (icon_file) {
-        const imgResult = await clientContext.context.uploadImg(icon_file)
+        const imgResult = await clientContext.client.uploadImg(icon_file)
         if (imgResult.error) {
           formData.append("icon", imgResult.error.error_id + ": " + imgResult.error.message);
           return
@@ -47,8 +47,8 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
         iconUuid = imgResult.success.image_uuid
       }
 
-      const postUserResult = await clientContext.context.execBody(
-        apiClient.post_user_api_user_post,
+      const postUserResult = await clientContext.client.execBody(
+        Api.app.post_user_api_user_post,
         {user_name: user_name, user_icon_uuid: iconUuid}
       )
       if (postUserResult.error) {

@@ -9,10 +9,10 @@ import * as React from "react";
 import {useEffect, useRef, useState} from "react";
 import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
-import {apiClient, Img} from "~/api/context/wrapper";
 import {ErrorIds} from "../util/err/errorIds";
 import Image from "../util/Image";
 import Link from "next/link";
+import {Api, Img} from "~/api/context/Api";
 
 export function StyledNavigation() {
   const [isDragging, setIsDragging] = useState(false);
@@ -69,7 +69,7 @@ export function StyledNavigation() {
       setUser(undefined)
       return
     }
-    context.context.exec(apiClient.get_user_api_user_self_get, {})
+    context.client.auth(Api.app.get_user_api_user_self_get, {})
       .then(value => {
         if (!value.success) {
           setUser(undefined)

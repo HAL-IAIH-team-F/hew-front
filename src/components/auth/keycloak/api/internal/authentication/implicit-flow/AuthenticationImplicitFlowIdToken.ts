@@ -3,6 +3,7 @@ import {OidcContext} from "../../OidcContext";
 import {
   AbstractAuthenticateIdAccessFlowToken
 } from "~/auth/keycloak/api/internal/authentication/implicit-flow/AbstractAuthenticateIdAccessFlowToken";
+import {Cast} from "../../../../../../../util/assert/Cast";
 import validateJwt = OidcInternal.validateJwt;
 import checkSigningAlgorithm = OidcInternal.checkSigningAlgorithm;
 import getClockSkew = OidcInternal.getClockSkew;
@@ -15,6 +16,16 @@ import assertClient = OidcInternal.assertClient;
 import jwtClaimNames = OidcInternal.jwtClaimNames;
 
 export class AuthenticationImplicitFlowIdToken extends AbstractAuthenticateIdAccessFlowToken {
+  readonly userId: string
+
+  constructor(
+    claims: OidcInternal.JWTPayload,
+    token: string,
+    expireDate: Date,
+  ) {
+    super(claims, token, expireDate);
+    this.userId = Cast.str(claims.sub);
+  }
 
   /**
    * Returns ID Token claims validated during {@link processRefreshTokenResponse} or

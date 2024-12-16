@@ -1,10 +1,9 @@
 import {CollaboData} from "@/(main)/user/notification/NotificationRes";
-import {apiClient} from "~/api/context/wrapper";
-import {useSession} from "next-auth/react";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {useState} from "react";
 import {ErrorData} from "../../../../util/err/err";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
+import {Api} from "~/api/context/Api";
 
 export default function CollaboNotification(
   {
@@ -14,8 +13,7 @@ export default function CollaboNotification(
   },
 ) {
   const [err, setErr] = useState<ErrorData>()
-  const session = useSession()
-  const clientContext = useClientContextState(session)
+  const clientContext = useClientContextState()
   const [disabled, setDisabled] = useState(false)
 
   return (
@@ -26,7 +24,8 @@ export default function CollaboNotification(
       <button onClick={() => {
         setErr(undefined)
         setDisabled(true)
-        clientContext.execBody(apiClient.pca_api_colab_approve_post, {collabo_id: collabo.collabo_id})
+        if (clientContext.state != "authenticated") throw new Error("not authenticated")
+        clientContext.client.authBody(Api.app.pca_api_colab_approve_post, {collabo_id: collabo.collabo_id})
           .then(value => {
             setDisabled(false)
             if (!value.error) return

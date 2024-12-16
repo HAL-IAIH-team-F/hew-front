@@ -1,10 +1,12 @@
 "use client"
 import {createContext, ReactNode, useContext, useMemo, useState} from "react";
 import SessionPersister from "~/auth/session/SessionPersister";
-import {LoginSession} from "~/auth/session/refresh/LoginSession";
-import {ClientContext} from "~/api/context/ClientContext";
+import {AuthSession, LoginSession, UnAuthSession} from "~/auth/session/refresh/LoginSession";
+import {Client} from "~/api/client/Client";
 import {IdTokenState} from "~/auth/keycloak/idtoken/IdTokenState";
 import {OidcContext} from "~/auth/keycloak/api/internal/OidcContext";
+import {UnAuthClient} from "~/api/client/UnAuthClient";
+import {AuthClient} from "~/api/client/AuthClient";
 
 export interface ClientContextProviderProps {
   children: ReactNode;
@@ -12,7 +14,8 @@ export interface ClientContextProviderProps {
 
 const Context = createContext<ClientContextState>({
   state: "loading",
-  context: new ClientContext({state: "loading"}, {state: "loading"}),
+  client: new Client(),
+  loginSession: {state: "loading", idToken: {state: "loading"}},
 });
 
 export function ClientContextProvider(
@@ -20,29 +23,28 @@ export function ClientContextProvider(
     children,
   }: ClientContextProviderProps
 ) {
-  const [loginSession, setLoginSession] = useState<LoginSession>({state: "loading"})
   const [idToken, setIdToken] = useState<IdTokenState>({state: "loading"})
+  const [loginSession, setLoginSession] = useState<LoginSession>({state: "loading", idToken: idToken})
 
   const ClientContextState = useMemo<ClientContextState>(() => {
-    if (idToken.state == "loading") return {
-      state: "loading",
-      context: new ClientContext(loginSession, idToken),
-    }
     if (loginSession.state == "loading") return {
       state: "loading",
-      context: new ClientContext(loginSession, idToken),
+      client: new Client(),
+      loginSession: loginSession,
     }
     if (loginSession.state == "unauthenticated") return {
       state: "unauthenticated",
-      context: new ClientContext(loginSession, idToken),
-      oidcContext: idToken.oidcContext,
+      client: new UnAuthClient(),
+      oidcContext: loginSession.idToken.oidcContext,
       setIdToken: setIdToken,
+      loginSession: loginSession,
     }
     return {
       state: "authenticated",
-      context: new ClientContext(loginSession, idToken),
-      oidcContext: idToken.oidcContext,
+      client: new AuthClient(loginSession),
+      oidcContext: loginSession.idToken.oidcContext,
       setIdToken: setIdToken,
+      loginSession: loginSession,
     };
   }, [loginSession]);
   return <>
@@ -61,15 +63,18 @@ export function useClientContextState() {
 
 export type ClientContextState = {
   state: "loading",
-  context: ClientContext,
+  client: Client,
+  loginSession: LoginSession,
 } | {
   state: "authenticated",
-  context: ClientContext,
+  client: AuthClient,
   oidcContext: OidcContext,
   setIdToken: (idToken: IdTokenState) => void,
+  loginSession: AuthSession,
 } | {
   state: "unauthenticated",
-  context: ClientContext,
+  client: UnAuthClient,
   oidcContext: OidcContext,
   setIdToken: (idToken: IdTokenState) => void,
+  loginSession: UnAuthSession,
 }

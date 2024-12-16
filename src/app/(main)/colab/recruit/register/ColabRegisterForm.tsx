@@ -1,9 +1,9 @@
 "use client"
-import {apiClient} from "~/api/context/wrapper";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {StyledForm} from "../../../../../util/form/StyledForm";
 import {StyledInput} from "../../../../../util/form/StyledInput";
 import {StyledButton} from "../../../../../util/form/StyledButton";
+import {Api} from "~/api/context/Api";
 
 export default function ColabRegisterForm(
   {
@@ -18,9 +18,9 @@ export default function ColabRegisterForm(
       const description = formData.getStr("description", "説明を入力してください");
 
       if (!title || !description) return
-
-      const result = await clientContext.context.execBody(
-        apiClient.pr_api_recruit_post,
+      if (clientContext.state != "authenticated") throw new Error("no login")
+      const result = await clientContext.client.authBody(
+        Api.app.pr_api_recruit_post,
         {
           title: title,
           description: description

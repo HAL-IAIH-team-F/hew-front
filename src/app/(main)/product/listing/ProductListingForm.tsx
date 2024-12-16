@@ -3,16 +3,16 @@
 import ItemBackground from "~/ItemBackground";
 import ThumbnailUpload from "../listing/ThumbnailUpload";
 import ImageUpload from "../listing/ImageUpload";
-import {apiClient} from "~/api/context/wrapper";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {useRouter} from "next/navigation";
 import {StyledInput} from "../../../../util/form/StyledInput";
 import {StyledTextarea} from "../../../../util/form/StyledTextarea";
-
 import {StyledButton} from "../../../../util/form/StyledButton";
+
 import {FormError, StyledForm} from "../../../../util/form/StyledForm";
 import {StyledFormData} from "../../../../util/form/StyledFormData";
 import FlexBox from "../../../../util/FlexBox";
+import {Api} from "~/api/context/Api";
 
 export default function ProductListingForm() {
   const clientContext = useClientContextState();
@@ -48,18 +48,18 @@ export default function ProductListingForm() {
         const collaboPartner = formData.get("collabo_partner") as string;
         const thumbnail = formData.get("thumbnail") as File | null;
         const productImages = formData.getAll("product_images") as File[];
-        if (clientContext.context.session.state != "authenticated") {
+        if (clientContext.state != "authenticated") {
           formData.append("submit", "no login")
           return
         }
-        const userId = clientContext.context.session.token.access;
+        const userId = clientContext.loginSession.idToken.idToken.userId;
         if (!userId) {
           return {submit: "ユーザーIDが見つかりません。"};
         }
 
         let productThumbnailUuid = "";
         if (thumbnail) {
-          const thumbnailResult = await clientContext.context.uploadImg(thumbnail);
+          const thumbnailResult = await clientContext.client.uploadImg(thumbnail);
           if (thumbnailResult.error) {
             return {
               thumbnail: `${thumbnailResult.error.error_id}: ${thumbnailResult.error.message}`,
@@ -70,7 +70,7 @@ export default function ProductListingForm() {
 
         let productContentsUuid = "";
         if (productImages.length > 0) {
-          const firstImageResult = await clientContext.context.uploadImg(productImages[0]);
+          const firstImageResult = await clientContext.client.uploadImg(productImages[0]);
           if (firstImageResult.error) {
             return {
               product_images: `${firstImageResult.error.error_id}: ${firstImageResult.error.message}`,
@@ -93,8 +93,8 @@ export default function ProductListingForm() {
           purchase_date: purchaseDate,
         };
 
-        const postProductResult = await clientContext.context.execBody(
-          apiClient.pp_api_product_post,
+        const postProductResult = await clientContext.client.authBody(
+          Api.app.pp_api_product_post,
           requestPayload
         );
 

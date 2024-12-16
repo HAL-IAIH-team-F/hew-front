@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {apiClient, Img} from './wrapper';
+import {Api, Img} from './Api';
 import {ErrorIds} from '../../../util/err/errorIds';
 import {useClientContextState} from './ClientContextProvider';
 
@@ -9,7 +9,7 @@ export const useUserData = () => {
 
   useEffect(() => {
     if (context.state == "authenticated") {
-      context.context.exec(apiClient.get_user_api_user_self_get, {}).then((value) => {
+      context.client.auth(Api.app.get_user_api_user_self_get, {}).then((value) => {
         if (!value.success) {
           setUser(undefined);
           if (ErrorIds.USER_NOT_FOUND.equals(value.error?.error_id)) return;

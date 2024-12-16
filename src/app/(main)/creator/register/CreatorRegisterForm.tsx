@@ -1,21 +1,19 @@
 "use client";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
-import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
-import {apiClient} from "~/api/context/wrapper";
 import {StyledFormData} from "../../../../util/form/StyledFormData";
 import {FormError, StyledForm} from "../../../../util/form/StyledForm";
 import {StyledInput} from "../../../../util/form/StyledInput";
 
 import {StyledButton} from "../../../../util/form/StyledButton";
 import FlexBox from "../../../../util/FlexBox";
+import {Api} from "~/api/context/Api";
 
 export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps) {
   const router = useRouter();
 
   // セッションとクライアントコンテキストの取得
-  const session = useSession();
-  const clientContext = useClientContextState(session);
+  const clientContext = useClientContextState();
 
   // 入力チェックの関数
   const validateForm = (formData: StyledFormData) => {
@@ -41,18 +39,18 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
         if (Object.keys(formErrors).length > 0) {
           return formErrors;
         }
+        if (clientContext.state != "authenticated") {
+          formData.append("submit", "no login")
+          return
+        }
 
         // `user_id` を含むデータベースへの保存
         const contactAddress = formData.get("contact_address") as string;
         const transferTarget = formData.get("transfer_target") as string;
-        const userId = session.data?.user?.id;  // ユーザーIDを取得
+        const userId = clientContext.loginSession.idToken.idToken.userId;  // ユーザーIDを取得
 
-        if (!userId) {
-          return {submit: "ユーザーIDが見つかりません。"};
-        }
-
-        const postCreatorResult = await clientContext.execBody(
-          apiClient.pc_api_creator_post,  // エンドポイント名を修正
+        const postCreatorResult = await clientContext.client.authBody(
+          Api.app.pc_api_creator_post,  // エンドポイント名を修正
           {user_id: userId, contact_address: contactAddress, transfer_target: transferTarget}
         );
 

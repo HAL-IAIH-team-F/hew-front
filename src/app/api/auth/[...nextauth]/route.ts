@@ -1,4 +1,4 @@
-import {handlers} from "~/auth/nextauth/auth";
-
-
-export const {GET, POST} = handlers
+// import {handlers} from "~/auth/nextauth/auth";
+//
+//
+// export const {GET, POST} = handlers
