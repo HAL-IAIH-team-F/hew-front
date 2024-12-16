@@ -5,10 +5,11 @@ import {Mesh, PerspectiveCamera, Scene, WebGLRenderer} from "three";
 import Effects from "@/timeline/effects/camera/Effects";
 import {generateGomi} from "@/timeline/effects/gomi/gomi";
 import {createBubbles, onClickBubble} from "@/timeline/bubble/bubbles";
-import {Manager} from "@/timeline/manager/manager";
+import {Manager} from "~/manager/manager";
 import {EffectComposer} from "three-stdlib";
 
 export default function useTimelineAnimation(
+  manager: Manager,
   mountRef: RefObject<HTMLDivElement | null>
 ) {
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -21,7 +22,6 @@ export default function useTimelineAnimation(
   const targetCameraRotation = useRef({x: 0, y: 0});
   const rotationStrength = 0.05;
   const scene = useMemo(() => new THREE.Scene(), []);
-  const manager = useMemo(() => new Manager(), []);
   const effectsRef = useRef<Effects | null>(null);
 
   useEffect(() => {

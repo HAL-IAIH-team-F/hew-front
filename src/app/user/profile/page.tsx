@@ -3,14 +3,19 @@ import React from "react";
 import AccountCard from "./accountCard";
 import {styles} from "~/Sidebar/Styles";
 import {SignInOutButton} from "~/auth/SignInOutButton";
+import { Manager } from "~/manager/manager";
 
-const Page: React.FC = () => {
+interface ProfileProps {
+  manager: Manager; // Manager 型を明確に定義
+}
+const Page: React.FC<ProfileProps> = ({ manager }) => {
+  
   return (
     <div
       style={{
         display: "flex",
         height: "100vh",
-        background: "whi", // 未来的な青のグラデーション
+        background: "rgba(30, 60, 114, 0.6)", // 未来的な青のグラデーション
         fontFamily: "'Roboto', 'Arial', sans-serif",
         color: "#fff", // テキストの色を白に
         overflow: "hidden",
@@ -18,10 +23,9 @@ const Page: React.FC = () => {
         backdropFilter: 'blur(12px)', // 背景ブラー効果
       }}
     >
-      {/* Sidebar */}
       <div
         style={{
-          width: "250px",
+          minWidth: "180px",
           background: "rgba(30, 60, 114, 0.9)", // 半透明な青の背景
           display: "flex",
           flexDirection: "column",
@@ -102,11 +106,11 @@ const Page: React.FC = () => {
           height: "100%",
           justifyContent: "center",
           alignItems: "center",
-          padding: "20px",
+          margin: "10px",
         }}
       >
-        <div style={styles.inAppPageWindowinAppWindowStyle}>
-          <AccountCard/>
+        <div style={styles.inAppPageWindowStyle}>
+          <AccountCard manager={manager}/>
         </div>
       </div>
     </div>

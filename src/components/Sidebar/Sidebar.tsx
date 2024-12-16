@@ -6,12 +6,17 @@ import {MdOutlineBubbleChart} from "react-icons/md";
 import PageWindow from './PageWindow';
 import {iconContainerStyle, styles} from './Styles';
 import {useUserData} from '~/api/useUserData';
+import { Manager } from '~/manager/manager';
+import ProductWindows from '~/products/RightProductWindows';
 
-const Sidebar: React.FC = () => {
+type SidebarProps = {
+  manager: Manager; // 適切な型をここに記述
+};
+const Sidebar: React.FC<SidebarProps> = ({ manager }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
   const [value, setValue] = useState<string>('undefined');
-
+  const [ProductisOpen, ProductsetIsOpen] = useState(true);
   const {user} = useUserData();
   const toggleSidebar = () => setIsOpen(!isOpen);
   const changePageWindow = (newValue: string | undefined) => setValue(newValue ?? 'undefined');
@@ -68,7 +73,26 @@ const Sidebar: React.FC = () => {
 
   return (
     <div>
+      <button
+        style={{
+          margin: '10px',
+          padding: '10px',
+          backgroundColor: ProductisOpen ? '#66ff66' : '#ff6666', // オンなら緑、オフなら赤
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          position: "absolute",
+          top: 0,
+          left: 0,
+        }}
+        onClick={() => ProductsetIsOpen(!ProductisOpen)} // 現在の状態をトグル
+      >
+        {ProductisOpen ? 'Close Product Window' : 'Open Product Window'} {/* ボタンのテキストを状態に応じて変更 */}
+      </button>
+      
       <div style={isOpen ? styles.sidebar : styles.collapsedSidebar}>
+
         <button onClick={toggleSidebar} style={styles.toggleButton}>
           <FaChevronRight
             style={{
@@ -79,7 +103,6 @@ const Sidebar: React.FC = () => {
           />
         </button>
 
-        {/* アイコンボタン */}
         {['Search', 'Notification', 'Message', 'Calendar', 'Account', "ProductListing"].map((item) => (
           <button
             key={item}
@@ -92,7 +115,8 @@ const Sidebar: React.FC = () => {
           </button>
         ))}
       </div>
-      <PageWindow isOpen={isOpen} isVisible={isVisible} value={value}/>
+      <PageWindow isOpen={isOpen} ProductisOpen={ProductisOpen} isVisible={isVisible} value={value} manager={manager}/>
+      <ProductWindows ProductisOpen={ProductisOpen} manager={manager} />
     </div>
   );
 };

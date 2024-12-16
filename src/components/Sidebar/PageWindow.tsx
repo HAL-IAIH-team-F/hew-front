@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {inAppPageStyle, pageWindowStyle} from './Styles';
 import SearchPage from '@/search/search';
-import AccontPage from '@/user/profile/page';
+import AccountPage from '@/user/profile/page';
 import NotificationPage from '@/user/notification/page';
 import MessagePage from '@/user/message/page';
 import ProductListingForm from '@/product/listing/ProductListingForm';
+import { Manager } from '~/manager/manager';
 
-
-const PageWindow: React.FC<{ isOpen: boolean; isVisible: boolean; value: string }> = ({isOpen, isVisible, value}) => {
+const PageWindow: React.FC<{ isOpen: boolean; ProductisOpen:boolean; isVisible: boolean; value: string, manager:Manager }> = ({isOpen, ProductisOpen, isVisible, value, manager}) => {
   const [isAnimating, setIsAnimating] = useState(isVisible);
-
   useEffect(() => {
     if (isVisible) {
       setIsAnimating(true);
@@ -20,14 +19,16 @@ const PageWindow: React.FC<{ isOpen: boolean; isVisible: boolean; value: string 
   }, [isVisible]);
 
   return (
-    <div style={pageWindowStyle(isOpen, isAnimating)}>
-      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(value)}</div>
+    <div style={pageWindowStyle(isOpen, ProductisOpen, isAnimating)}>
+      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(value,manager)}</div>
     </div>
   );
 };
 
-const renderPageContent = (initialTab: string) => {
+const renderPageContent = (initialTab: string, manager: Manager) => {
+  
   const [activeTab, setActiveTab] = useState(initialTab);
+  
   useEffect(() => {
     setActiveTab(initialTab)
   }, [initialTab]);
@@ -47,7 +48,7 @@ const renderPageContent = (initialTab: string) => {
         カレンダーページw
       </div>
       <div style={{display: activeTab === "Account" ? "block" : "none"}}>
-        <AccontPage/>
+        <AccountPage manager={manager}/>
       </div>
       <div style={{display: activeTab === "ProductListing" ? "block" : "none"}}>
         <ProductListingForm/>

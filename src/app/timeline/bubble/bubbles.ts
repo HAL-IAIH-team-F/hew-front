@@ -2,7 +2,7 @@
 import * as THREE from "three";
 import {getRandomPosition, getRandomPositionWithExclusion, moveBubblesToPosition} from "./position";
 import {gsap} from "gsap";
-import {Manager} from "../manager/manager"
+import {Manager} from "../../../components/manager/manager"
 import {showProduct} from "../product/product";
 import {createGradientBackground} from "../background/background"
 import Effects from "../effects/camera/Effects"
