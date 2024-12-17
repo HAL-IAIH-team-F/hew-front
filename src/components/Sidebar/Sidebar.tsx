@@ -5,9 +5,9 @@ import Image from "../../util/Image";
 import {MdOutlineBubbleChart} from "react-icons/md";
 import PageWindow from './PageWindow';
 import {iconContainerStyle, styles} from './Styles';
-import {useUserData} from '~/api/useUserData';
 import { Manager } from '~/manager/manager';
 import ProductWindows from '~/products/RightProductWindows';
+import {useUserData} from '~/api/context/useUserData';
 
 type SidebarProps = {
   manager: Manager; // 適切な型をここに記述
@@ -90,7 +90,7 @@ const Sidebar: React.FC<SidebarProps> = ({ manager }) => {
       >
         {ProductisOpen ? 'Close Product Window' : 'Open Product Window'} {/* ボタンのテキストを状態に応じて変更 */}
       </button>
-      
+
       <div style={isOpen ? styles.sidebar : styles.collapsedSidebar}>
 
         <button onClick={toggleSidebar} style={styles.toggleButton}>

@@ -2,20 +2,20 @@ import {util} from "../util";
 import {Err, ErrorData} from "./err";
 import {ErrId} from "./errorIds";
 
-export type ApiResult<T> = SuccessResult<T> | ErrResult
+export type Result<T> = SuccessResult<T> | ErrResult
 
 export interface SuccessResult<T> {
-  value: T;
+  success: T;
   error?: undefined;
 }
 
 export interface ErrResult {
-  value?: undefined;
+  success?: undefined;
   error: ErrorData;
 }
 
 export namespace Results {
-  export function errResultByErrIdReason(errorId: ErrId, reason: any): ErrResult {
+  function errResultByErrIdReason(errorId: ErrId, reason: any): ErrResult {
     return errResultByErrorData(errorId.createData(util.createErrorMessage(reason)));
   }
 
@@ -32,6 +32,6 @@ export namespace Results {
   }
 
   export function createSuccessResult<T>(value: T): SuccessResult<T> {
-    return {value: value};
+    return {success: value};
   }
 }

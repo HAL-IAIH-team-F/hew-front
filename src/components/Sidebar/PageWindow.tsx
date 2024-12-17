@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {inAppPageStyle, pageWindowStyle} from './Styles';
-import SearchPage from '@/search/search';
-import AccountPage from '@/user/profile/page';
-import NotificationPage from '@/user/notification/page';
-import MessagePage from '@/user/message/page';
-import ProductListingForm from '@/product/listing/ProductListingForm';
+
+import AccountPage from '@/(main)/user/profile/page';
+import NotificationPage from '@/(main)/user/notification/page';
+import MessagePage from '@/(main)/user/message/page';
+import ProductListingForm from '@/(main)/product/listing/ProductListingForm';
 import { Manager } from '~/manager/manager';
+import SearchPage from '@/(main)/search/search';
 
 const PageWindow: React.FC<{ isOpen: boolean; ProductisOpen:boolean; isVisible: boolean; value: string, manager:Manager }> = ({isOpen, ProductisOpen, isVisible, value, manager}) => {
   const [isAnimating, setIsAnimating] = useState(isVisible);
@@ -26,9 +27,9 @@ const PageWindow: React.FC<{ isOpen: boolean; ProductisOpen:boolean; isVisible: 
 };
 
 const renderPageContent = (initialTab: string, manager: Manager) => {
-  
+
   const [activeTab, setActiveTab] = useState(initialTab);
-  
+
   useEffect(() => {
     setActiveTab(initialTab)
   }, [initialTab]);
