@@ -6,17 +6,20 @@ import {MdOutlineBubbleChart} from "react-icons/md";
 import PageWindow from './PageWindow';
 import {iconContainerStyle, styles} from './Styles';
 import { Manager } from '~/manager/manager';
+import { Productmanager } from '~/manager/ProductManager';
 import ProductWindows from '~/products/RightProductWindows';
 import {useUserData} from '~/api/context/useUserData';
 
+
 type SidebarProps = {
-  manager: Manager; // 適切な型をここに記述
+  manager: Manager;
+  productManager: Productmanager
 };
-const Sidebar: React.FC<SidebarProps> = ({ manager }) => {
+const Sidebar: React.FC<SidebarProps> = ({ manager,productManager }) => {
+ 
   const [isOpen, setIsOpen] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
   const [value, setValue] = useState<string>('undefined');
-  const [ProductisOpen, ProductsetIsOpen] = useState(true);
   const {user} = useUserData();
   const toggleSidebar = () => setIsOpen(!isOpen);
   const changePageWindow = (newValue: string | undefined) => setValue(newValue ?? 'undefined');
@@ -73,24 +76,6 @@ const Sidebar: React.FC<SidebarProps> = ({ manager }) => {
 
   return (
     <div>
-      <button
-        style={{
-          margin: '10px',
-          padding: '10px',
-          backgroundColor: ProductisOpen ? '#66ff66' : '#ff6666', // オンなら緑、オフなら赤
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          position: "absolute",
-          top: 0,
-          left: 0,
-        }}
-        onClick={() => ProductsetIsOpen(!ProductisOpen)} // 現在の状態をトグル
-      >
-        {ProductisOpen ? 'Close Product Window' : 'Open Product Window'} {/* ボタンのテキストを状態に応じて変更 */}
-      </button>
-
       <div style={isOpen ? styles.sidebar : styles.collapsedSidebar}>
 
         <button onClick={toggleSidebar} style={styles.toggleButton}>
@@ -115,8 +100,12 @@ const Sidebar: React.FC<SidebarProps> = ({ manager }) => {
           </button>
         ))}
       </div>
-      <PageWindow isOpen={isOpen} ProductisOpen={ProductisOpen} isVisible={isVisible} value={value} manager={manager}/>
-      <ProductWindows ProductisOpen={ProductisOpen} manager={manager} />
+      
+      <PageWindow isOpen={isOpen} isVisible={isVisible} value={value} manager={manager} productManager={productManager}/>
+      <ProductWindows
+        manager={manager}
+        productManager= {productManager}
+      />
     </div>
   );
 };

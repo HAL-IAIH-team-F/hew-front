@@ -5,28 +5,28 @@ import { CSSProperties } from "react";
 import useProduct from "~/api/useProducts";
 import { Manager } from "~/manager/manager";
 import { ProductWindowStyle } from "~/Sidebar/Styles";
+import { Productmanager } from "~/manager/ProductManager";
 
 interface ProductWindowsProps {
-  ProductisOpen: boolean;
-  manager: Manager; // Manager 型が定義されていることを前提としています
+  manager: Manager;
+  productManager: Productmanager
 }
 
-export default function ProductWindows({ ProductisOpen, manager }: ProductWindowsProps) {
-  const [productId, setProductId] = useState(manager.value.productId); // 初期値を設定
+export default function ProductWindows({ manager, productManager }: ProductWindowsProps) {
+  const [productId, setProductId] = useState(manager.value.productId); 
   const { products, error } = useProduct({ productId: productId });
 
-  // manager.value.productId の変更を監視して状態を更新
   useEffect(() => {
     setProductId(manager.value.productId);
     console.log("Product ID updated:", manager.value.productId);
-  }, [manager.value]); // JSON.stringify を削除
+  }, [manager.value]); 
 
   if (error) {
-    return <div>Error: {error.message}</div>; // エラーメッセージを表示
+    return <div>Error: {error.message}</div>; 
   }
 
   return (
-    <div style={ProductWindowStyle(ProductisOpen)}>
+    <div style={ProductWindowStyle(productManager.value.isWindowOpen)}>
       {products.length > 0 ? (
         <ul>
           {products.map((product) => (

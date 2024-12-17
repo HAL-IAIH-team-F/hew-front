@@ -5,17 +5,46 @@ import { CSSProperties } from "react";
 import useProduct from "~/api/useProducts";
 import { Manager } from "~/manager/manager";
 import { ProductRes } from "./ProductRes";
+import { Productmanager } from "~/manager/ProductManager";
 
 interface ProductPageProps {
-    manager: Manager; // Manager 型を明確に定義
-  }
-  
-export default function ProductPage({ manager }: ProductPageProps) {
-    const { products, error } = useProduct();
+    manager: Manager;
+    productManager: Productmanager
+}
+
+export default function ProfileProductsView({ manager, productManager }: ProductPageProps) {
+    // 商品データの取得
+    const { products, error } = useProduct(); 
+    const [selectProduct, setSelectProduct] = useState<ProductRes[]>([]);
+    const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+
+    // 選択された商品IDをもとに追加データを取得
+    const { products: updatedProducts } = useProduct({ productId: selectedProductId || "" });
+
+    useEffect(() => {
+        if (updatedProducts && selectedProductId) {
+            setSelectProduct(updatedProducts); // まずはselectProductを更新
+        }
+    }, [updatedProducts, selectedProductId]);
     
+    useEffect(() => {
+        if (selectProduct.length > 0) {
+            // selectProduct 配列から最初の商品の product_id を取得
+            const productId = selectProduct[0].product_id;
+    
+            if (productId) {
+                productManager.update.productId(productId); // productIdはstring型
+            }
+        }
+    }, [selectProduct]);
+
+    // 商品がクリックされた時の処理
     const handleProductClick = (product: ProductRes) => {
-       
-    };
+            setSelectedProductId(product.product_id); // 商品IDを状態として設定
+            productManager.update.isWindowOpen(true);
+        };
+        
+    
 
     return (
         <div style={styles.container}>

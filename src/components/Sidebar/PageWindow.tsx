@@ -7,9 +7,11 @@ import MessagePage from '@/(main)/user/message/page';
 import ProductListingForm from '@/(main)/product/listing/ProductListingForm';
 import { Manager } from '~/manager/manager';
 import SearchPage from '@/(main)/search/search';
+import { Productmanager } from '~/manager/ProductManager';
 
-const PageWindow: React.FC<{ isOpen: boolean; ProductisOpen:boolean; isVisible: boolean; value: string, manager:Manager }> = ({isOpen, ProductisOpen, isVisible, value, manager}) => {
+const PageWindow: React.FC<{ isOpen: boolean; isVisible: boolean; value: string, manager:Manager,productManager: Productmanager }> = ({isOpen, isVisible, value, manager, productManager}) => {
   const [isAnimating, setIsAnimating] = useState(isVisible);
+
   useEffect(() => {
     if (isVisible) {
       setIsAnimating(true);
@@ -20,16 +22,16 @@ const PageWindow: React.FC<{ isOpen: boolean; ProductisOpen:boolean; isVisible: 
   }, [isVisible]);
 
   return (
-    <div style={pageWindowStyle(isOpen, ProductisOpen, isAnimating)}>
-      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(value,manager)}</div>
+    <div style={pageWindowStyle(isOpen, productManager.value.isWindowOpen, isAnimating)}>
+      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(value, manager, productManager)}</div>
     </div>
   );
 };
 
-const renderPageContent = (initialTab: string, manager: Manager) => {
+const renderPageContent = (initialTab: string, manager: Manager, productManager: Productmanager) => {
 
   const [activeTab, setActiveTab] = useState(initialTab);
-
+  
   useEffect(() => {
     setActiveTab(initialTab)
   }, [initialTab]);
@@ -49,7 +51,7 @@ const renderPageContent = (initialTab: string, manager: Manager) => {
         カレンダーページw
       </div>
       <div style={{display: activeTab === "Account" ? "block" : "none"}}>
-        <AccountPage manager={manager}/>
+        <AccountPage manager={manager} productManager={productManager}/>
       </div>
       <div style={{display: activeTab === "ProductListing" ? "block" : "none"}}>
         <ProductListingForm/>
