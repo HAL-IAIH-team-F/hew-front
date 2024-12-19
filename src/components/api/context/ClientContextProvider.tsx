@@ -27,6 +27,7 @@ export function ClientContextProvider(
   const [loginSession, setLoginSession] = useState<LoginSession>({state: "loading", idToken: idToken})
 
   const ClientContextState = useMemo<ClientContextState>(() => {
+    console.debug("ClientContextState", loginSession)
     if (loginSession.state == "loading") return {
       state: "loading",
       client: new Client(),
