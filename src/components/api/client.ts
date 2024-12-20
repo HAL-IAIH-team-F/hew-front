@@ -42,16 +42,13 @@ const MessageRes = z
 const ChatMessagesRes = z
   .object({ chat_id: z.string().uuid(), messages: z.array(MessageRes) })
   .passthrough();
-const PostCollaboApproveBody = z
-  .object({ collabo_id: z.string().uuid() })
-  .passthrough();
 const PostColabRequestBody = z
   .object({ recruit_id: z.string().uuid() })
   .passthrough();
 const PostCollaboBody = z
   .object({
     collabo_id: z.string().uuid(),
-    approves: z.array(z.string().uuid()),
+    creators: z.array(z.string().uuid()),
   })
   .passthrough();
 const PostCreatorBody = z
@@ -195,7 +192,6 @@ export const schemas = {
   ChatMessageRes,
   MessageRes,
   ChatMessagesRes,
-  PostCollaboApproveBody,
   PostColabRequestBody,
   PostCollaboBody,
   PostCreatorBody,
@@ -321,27 +317,6 @@ const endpoints = makeApi([
         name: "body",
         type: "Body",
         schema: PostCollaboBody,
-      },
-    ],
-    response: z.unknown(),
-    errors: [
-      {
-        status: 422,
-        description: `Validation Error`,
-        schema: HTTPValidationError,
-      },
-    ],
-  },
-  {
-    method: "post",
-    path: "/api/colab/approve",
-    alias: "pca_api_colab_approve_post",
-    requestFormat: "json",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: z.object({ collabo_id: z.string().uuid() }).passthrough(),
       },
     ],
     response: z.unknown(),
