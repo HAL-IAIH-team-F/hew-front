@@ -1,4 +1,3 @@
-import {AuthIdTokenState, IdTokenState} from "~/auth/keycloak/idtoken/IdTokenState";
 import {useEffect, useRef} from "react";
 import {add, isAfter, parseISO} from "date-fns";
 import {Token} from "~/auth/nextauth/Token";
@@ -7,6 +6,7 @@ import {Result, Results} from "../../../../util/err/result";
 import {ErrorIds} from "../../../../util/err/errorIds";
 import {Api} from "~/api/context/Api";
 import {LoginSession} from "~/auth/session/refresh/LoginSession";
+import {AuthIdTokenState, IdTokenState} from "~/auth/idtoken/IdTokenState";
 
 
 export default function RefreshTokenLoader(
@@ -22,6 +22,7 @@ export default function RefreshTokenLoader(
   const refreshing = useRef(false);
 
   useEffect(() => {
+
     if (idToken.state == "loading") return;
     if (idToken.state == "unauthenticated") {
       return update({state: "unauthenticated", idToken: idToken})
@@ -29,7 +30,7 @@ export default function RefreshTokenLoader(
 
     const next = loginSession.state == "authenticated" && loginSession.token.access
       ? add(new Date(loginSession.token.access.expire), {minutes: -1}).getTime() - Date.now() : 0
-
+    console.debug("next", next, new Date(Date.now() + next))
     const timeout = setTimeout(() => {
       if (refreshing.current) return
       refreshing.current = true;

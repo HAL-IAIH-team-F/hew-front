@@ -1,4 +1,4 @@
-import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
+
 import {Env} from "~/env";
 import {OidcInternal} from "~/auth/keycloak/api/internal/OidcInternal";
 import {
@@ -12,6 +12,7 @@ import None = OidcInternal.None;
 import allowInsecureRequests = OidcInternal.allowInsecureRequests;
 import discoveryRequest = OidcInternal.discoveryRequest;
 import processDiscoveryResponse = OidcInternal.processDiscoveryResponse;
+import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
 
 export class OidcContext {
   readonly clientAuth = None()

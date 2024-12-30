@@ -18,12 +18,4 @@ export namespace Err {
     if (!res) return undefined
     return res.data
   }
-
-  export function errDataIfAxiosErr(reason: any) {
-    const data = reasonIfAxiosErr(reason)
-    if (!data) return undefined
-    if (!data.error_id) return undefined
-    if (!data.message) return undefined
-    return Err.createErrorData(data)
-  }
 }

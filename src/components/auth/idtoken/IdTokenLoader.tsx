@@ -1,11 +1,11 @@
 import {useEffect, useRef, useState} from "react";
-import useOidcContext from "~/auth/keycloak/hook/useOidcContext";
-import useCallbackMessage from "~/auth/keycloak/hook/useCallbackMessage";
-import {IdTokenState} from "~/auth/keycloak/idtoken/IdTokenState";
 import {
   AuthenticationImplicitFlowUrl
 } from "~/auth/keycloak/api/internal/authentication/implicit-flow/AuthenticationImplicitFlowUrl";
 import {Nonce} from "~/auth/keycloak/api/internal/Nonce";
+import {IdTokenState} from "~/auth/idtoken/IdTokenState";
+import useOidcContext from "~/auth/idtoken/hook/useOidcContext";
+import useCallbackMessage from "~/auth/idtoken/hook/useCallbackMessage";
 
 export default function IdTokenLoader(
   {

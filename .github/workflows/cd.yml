@@ -2,6 +2,7 @@ on:
   push:
 jobs:
   test:
+    if: github.ref != 'refs/heads/develop'
     uses: ./.github/workflows/test.yml
   cd:
     runs-on: ubuntu-latest

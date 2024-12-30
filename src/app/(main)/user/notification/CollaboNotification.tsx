@@ -3,7 +3,6 @@ import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {useState} from "react";
 import {ErrorData} from "../../../../util/err/err";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
-import {Api} from "~/api/context/Api";
 
 export default function CollaboNotification(
   {
@@ -25,12 +24,12 @@ export default function CollaboNotification(
         setErr(undefined)
         setDisabled(true)
         if (clientContext.state != "authenticated") throw new Error("not authenticated")
-        clientContext.client.authBody(Api.app.pca_api_colab_approve_post, {collabo_id: collabo.collabo_id})
-          .then(value => {
-            setDisabled(false)
-            if (!value.error) return
-            setErr(value.error)
-          })
+        // clientContext.client.authBody(Api.app.pca_api_colab_approve_post, {collabo_id: collabo.collabo_id})
+        //   .then(value => {
+        //     setDisabled(false)
+        //     if (!value.error) return
+        //     setErr(value.error)
+        //   })
       }}
               className={"border-2 border-gray-300 p-1 hover:bg-gray-200"}
               disabled={disabled}

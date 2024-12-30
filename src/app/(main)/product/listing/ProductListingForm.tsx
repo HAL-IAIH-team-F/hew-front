@@ -9,7 +9,7 @@ import {StyledInput} from "../../../../util/form/StyledInput";
 import {StyledTextarea} from "../../../../util/form/StyledTextarea";
 import {StyledButton} from "../../../../util/form/StyledButton";
 
-import {FormError, StyledForm} from "../../../../util/form/StyledForm";
+import {StyledForm} from "../../../../util/form/StyledForm";
 import {StyledFormData} from "../../../../util/form/StyledFormData";
 import FlexBox from "../../../../util/FlexBox";
 import {Api} from "~/api/context/Api";
@@ -17,7 +17,6 @@ import {Api} from "~/api/context/Api";
 export default function ProductListingForm() {
   const clientContext = useClientContextState();
   const router = useRouter();
-
   const validateForm = (formData: StyledFormData): FormError => {
     const errors: FormError = {};
     const productName = formData.get("product_name") as string | null;

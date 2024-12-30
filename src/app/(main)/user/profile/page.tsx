@@ -12,7 +12,6 @@ interface ProfileProps {
   manager: Manager; // Manager 型を明確に定義
 }
 const Page: React.FC<ProfileProps> = ({ manager }) => {
-
   return (
     <div
       style={{

@@ -1,11 +1,11 @@
 "use client"
 
-import handleCallbackEvent from "@/auth/callback/[mode]/handleCallbackEvent";
 import {
   AuthenticationImplicitFlowUrl
 } from "~/auth/keycloak/api/internal/authentication/implicit-flow/AuthenticationImplicitFlowUrl";
-import {Nonce} from "../keycloak/api/internal/Nonce";
 import {ClientContextState} from "~/api/context/ClientContextProvider";
+import {IdTokenUtl} from "~/auth/idtoken/IdTokenUtl";
+import {Nonce} from "~/auth/keycloak/api/internal/Nonce";
 
 export async function signIn(clientContext: ClientContextState) {
   if (clientContext.state == "loading") throw new Error("Loading")
@@ -14,24 +14,14 @@ export async function signIn(clientContext: ClientContextState) {
   const url = new AuthenticationImplicitFlowUrl(new Nonce(window), "login", "popup")
   const win = open(url.url(), 'Login', `width=500,height=600, left=${x},top=${y}`);
   if (win == null) throw new Error("Failed to open window")
-  const listener = (evt: MessageEvent) => {
-    if (evt.origin !== location.origin) return;
-    handleCallbackEvent(evt, data => {
-      win.postMessage(data, location.origin)
-    }, clientContext.oidcContext, url.nonce, clientContext.setIdToken, () => {
-      console.debug("finish")
-      win.close()
-      window.removeEventListener("message", listener)
-    })
-  }
-  window.addEventListener("message", listener, false)
-
+  IdTokenUtl.receiveMessage(win, clientContext, url, () => {
+    win.close()
+  })
 }
 
 export async function signOut(clientContext: ClientContextState) {
   "use client"
-  // const redirectUrl = new URL(path, location.href)
-  // await signOutAtServer(redirectUrl.toString())
   if (clientContext.state == "loading") throw new Error("Loading")
-  clientContext.setIdToken({state: "unauthenticated", oidcContext: clientContext.oidcContext})
+  if (clientContext.state == "unauthenticated") throw new Error("Unauthenticated")
+  clientContext.signOut()
 }
