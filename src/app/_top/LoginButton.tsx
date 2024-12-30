@@ -1,7 +1,7 @@
 // LoginButton.tsx
 import React from 'react';
-import {signIn} from "~/auth/nextauth/clientAuth";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {signIn} from "~/auth/clientAuth";
 
 const LoginButton = () => {
   const clientContext = useClientContextState();

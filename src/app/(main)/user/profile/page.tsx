@@ -6,6 +6,7 @@ import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
 import Link from "next/link";
 import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
 
+
 const Page: React.FC = () => {
   return (
     <div

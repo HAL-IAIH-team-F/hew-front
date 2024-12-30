@@ -51,16 +51,15 @@ const PostCollaboBody = z
     creators: z.array(z.string().uuid()),
   })
   .passthrough();
-const PostCreatorBody = z
-  .object({ contact_address: z.string(), transfer_target: z.string() })
-  .passthrough();
 const CreatorResponse = z
   .object({
     creator_id: z.string().uuid(),
     user_id: z.string().uuid(),
     contact_address: z.string(),
-    transfer_target: z.string(),
   })
+  .passthrough();
+const PostCreatorBody = z
+  .object({ contact_address: z.string(), transfer_target: z.string() })
   .passthrough();
 const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
 const NotificationType = z.enum(["colab", "colab_approve"]);
@@ -194,8 +193,8 @@ export const schemas = {
   ChatMessagesRes,
   PostColabRequestBody,
   PostCollaboBody,
-  PostCreatorBody,
   CreatorResponse,
+  PostCreatorBody,
   UserFollow,
   NotificationType,
   CollaboNotificationData,
@@ -348,6 +347,13 @@ const endpoints = makeApi([
         schema: HTTPValidationError,
       },
     ],
+  },
+  {
+    method: "get",
+    path: "/api/creator",
+    alias: "gcs_api_creator_get",
+    requestFormat: "json",
+    response: z.array(CreatorResponse),
   },
   {
     method: "post",

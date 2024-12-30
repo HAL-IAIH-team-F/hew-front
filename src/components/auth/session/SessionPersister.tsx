@@ -1,18 +1,21 @@
-import OpWatcher from "~/auth/keycloak/OpFrame/OpWatcher";
-import IdTokenLoader from "~/auth/keycloak/idtoken/IdTokenLoader";
+
 import {useState} from "react";
 import RefreshTokenLoader from "~/auth/session/refresh/RefreshTokenLoader";
-import {IdTokenState} from "~/auth/keycloak/idtoken/IdTokenState";
+
 import {LoginSession} from "~/auth/session/refresh/LoginSession";
+import OpWatcher from "~/auth/OpFrame/OpWatcher";
+import { IdTokenState } from "../idtoken/IdTokenState";
+import IdTokenLoader from "~/auth/idtoken/IdTokenLoader";
 
 export default function SessionPersister(
   {
-    update, loginSession, setIdToken, idToken,
+    update, loginSession, setIdToken, idToken,logoutRequest,
   }: {
     update: (loginSessionUpdate: LoginSession) => void,
     setIdToken: (tokenState: IdTokenState) => void,
     loginSession: LoginSession,
     idToken: IdTokenState,
+    logoutRequest: boolean,
   },
 ) {
   const [flag, setFlag] = useState(false)
@@ -21,6 +24,7 @@ export default function SessionPersister(
     <>
       <OpWatcher
         reload={() => setFlag(prevState => !prevState)} loginSession={loginSession} idToken={idToken}
+        logoutRequest={logoutRequest}
       />
       <IdTokenLoader reload={flag} update={setIdToken}/>
       <RefreshTokenLoader

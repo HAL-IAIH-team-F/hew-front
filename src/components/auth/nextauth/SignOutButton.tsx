@@ -1,8 +1,8 @@
 "use client"
 import {HTMLAttributes, useState} from "react";
 import {ErrorMessage} from "../../../util/err/ErrorMessage";
-import {signOut} from "~/auth/nextauth/clientAuth";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {signOut} from "~/auth/clientAuth";
 
 
 export function SignOutButton(

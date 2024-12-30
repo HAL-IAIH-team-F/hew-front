@@ -1,6 +1,6 @@
 import {TokenBundle} from "~/auth/nextauth/TokenBundle";
-import {AuthIdTokenState, IdTokenState, UnAuthIdTokenState} from "~/auth/keycloak/idtoken/IdTokenState";
 import {LoadingState, State} from "~/auth/State";
+import {AuthIdTokenState, IdTokenState, UnAuthIdTokenState} from "~/auth/idtoken/IdTokenState";
 
 export type LoginSession = LoadingSession | UnAuthSession | AuthSession
 

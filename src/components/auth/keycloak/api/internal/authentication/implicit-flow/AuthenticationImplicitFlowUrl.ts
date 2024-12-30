@@ -1,5 +1,6 @@
-import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
+
 import {Nonce} from "~/auth/keycloak/api/internal/Nonce";
+import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
 
 export class AuthenticationImplicitFlowUrl {
 
