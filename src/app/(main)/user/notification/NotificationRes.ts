@@ -1,6 +1,6 @@
 export interface NotificationRes {
   notification_id: string;
-  data: CollaboData
+  data: CollaboData | any
 }
 
 interface Data {

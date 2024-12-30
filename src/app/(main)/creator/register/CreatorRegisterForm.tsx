@@ -2,7 +2,7 @@
 import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {useRouter} from "next/navigation";
 import {StyledFormData} from "../../../../util/form/StyledFormData";
-import {FormError, StyledForm} from "../../../../util/form/StyledForm";
+import {StyledForm} from "../../../../util/form/StyledForm";
 import {StyledInput} from "../../../../util/form/StyledInput";
 
 import {StyledButton} from "../../../../util/form/StyledButton";
@@ -17,17 +17,16 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
 
   // 入力チェックの関数
   const validateForm = (formData: StyledFormData) => {
-    const newErrors: FormError = {};
-    const contactAddress = formData.get("contact_address") as string;
-    const transferTarget = formData.get("transfer_target") as string;
+    const contactAddress = formData.getStr("contact_address");
+    const transferTarget = formData.getStr("transfer_target");
 
     if (!contactAddress) {
-      newErrors.contact_address = "連絡先を入力してください"; // エラーメッセージ（フロントエンドで設定可）
+      formData.append("contact_address", "連絡先を入力してください");
     }
     if (!transferTarget) {
-      newErrors.transfer_target = "振込先を入力してください"; // エラーメッセージ（フロントエンドで設定可）
+      formData.append("transfer_target", "振込先を入力してください");
     }
-    return newErrors;
+    return;
   };
 
   return (
@@ -35,9 +34,9 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
       {...props}
       action={async formData => {
         // 入力チェック
-        const formErrors = validateForm(formData);
-        if (Object.keys(formErrors).length > 0) {
-          return formErrors;
+        validateForm(formData);
+        if (formData.formError) {
+          return;
         }
         if (clientContext.state != "authenticated") {
           formData.append("submit", "no login")
@@ -57,12 +56,13 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
         // エラーハンドリング
         if (postCreatorResult.error) {
           const errorInfo = postCreatorResult.error;
-          return {submit: `${errorInfo.error_id}: ${errorInfo.message}`};
+          formData.append("submit", `{${errorInfo.error_id}: ${errorInfo.message}}`);
+          return;
         }
 
         // 成功した場合のリダイレクト
         router.push("/timeline");
-        return undefined;
+        return;
       }}
     >
       <div>
