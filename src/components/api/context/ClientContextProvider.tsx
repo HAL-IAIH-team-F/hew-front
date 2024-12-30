@@ -1,7 +1,7 @@
 "use client"
 import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from "react";
 import SessionPersister from "~/auth/session/SessionPersister";
-import {AuthSession, LoginSession, UnAuthSession} from "~/auth/session/refresh/LoginSession";
+import {AuthSession, LoginSession, UnAuthSession} from "~/auth/refresh/LoginSession";
 import {Client} from "~/api/client/Client";
 import {OidcContext} from "~/auth/keycloak/api/internal/OidcContext";
 import {UnAuthClient} from "~/api/client/UnAuthClient";

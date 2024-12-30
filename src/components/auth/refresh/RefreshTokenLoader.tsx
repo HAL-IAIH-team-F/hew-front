@@ -2,10 +2,10 @@ import {useEffect, useRef} from "react";
 import {add, isAfter, parseISO} from "date-fns";
 import {Token} from "~/auth/nextauth/Token";
 import {TokenBundle, TokenBundleUtil} from "~/auth/nextauth/TokenBundle";
-import {Result, Results} from "../../../../util/err/result";
-import {ErrorIds} from "../../../../util/err/errorIds";
+import {Result, Results} from "../../../util/err/result";
+import {ErrorIds} from "../../../util/err/errorIds";
 import {Api} from "~/api/context/Api";
-import {LoginSession} from "~/auth/session/refresh/LoginSession";
+import {LoginSession} from "~/auth/refresh/LoginSession";
 import {AuthIdTokenState, IdTokenState} from "~/auth/idtoken/IdTokenState";
 
 
