@@ -1,16 +1,19 @@
-import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
 import {useEffect, useRef} from "react";
-import useMessageEvent from "~/auth/keycloak/hook/useMessageEvent";
+
 import {LoginSession} from "~/auth/session/refresh/LoginSession";
-import {IdTokenState} from "~/auth/keycloak/idtoken/IdTokenState";
+
+import useMessageEvent from "~/auth/idtoken/hook/useMessageEvent";
+import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
+import {IdTokenState} from "~/auth/idtoken/IdTokenState";
 
 export default function OpWatcher(
   {
-    reload, loginSession, idToken,
+    reload, loginSession, idToken, logoutRequest,
   }: {
     reload: () => void,
     loginSession: LoginSession,
-    idToken: IdTokenState
+    idToken: IdTokenState,
+    logoutRequest: boolean,
   },
 ) {
   const ref = useRef<HTMLIFrameElement | null>(null);
@@ -24,7 +27,7 @@ export default function OpWatcher(
     const win = element.contentWindow
     const interval = setInterval(() => {
       win?.postMessage(`${KeycloakConfig.clientId} ${session_state}`, {targetOrigin: new URL(KeycloakConfig.baseUrl).origin})
-    }, 3 * 1000)
+    }, logoutRequest ? 800 : 3 * 1000)
 
     return () => {
       clearInterval(interval)

@@ -1,6 +1,7 @@
 "use client"
-import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
+
 import {OidcContext} from "~/auth/keycloak/api/internal/OidcContext";
+import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
 
 export namespace Oidc {
   export async function context() {

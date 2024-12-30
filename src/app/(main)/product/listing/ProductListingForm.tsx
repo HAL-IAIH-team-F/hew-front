@@ -9,7 +9,7 @@ import {StyledInput} from "../../../../util/form/StyledInput";
 import {StyledTextarea} from "../../../../util/form/StyledTextarea";
 import {StyledButton} from "../../../../util/form/StyledButton";
 
-import {FormError, StyledForm} from "../../../../util/form/StyledForm";
+import {StyledForm} from "../../../../util/form/StyledForm";
 import {StyledFormData} from "../../../../util/form/StyledFormData";
 import FlexBox from "../../../../util/FlexBox";
 import {Api} from "~/api/context/Api";
@@ -18,52 +18,34 @@ export default function ProductListingForm() {
   const clientContext = useClientContextState();
   const router = useRouter();
 
-  const validateForm = (formData: StyledFormData): FormError => {
-    const errors: FormError = {};
-    const productName = formData.get("product_name") as string | null;
-    const price = Number(formData.get("price"));
-
-    if (!productName) {
-      errors.product_name = "商品名を入力してください";
-    }
-    if (isNaN(price) || price <= 0) {
-      errors.price = "有効な価格を入力してください";
-    }
-
-    return errors;
-  };
-
   return (
     <StyledForm
       action={async (formData: StyledFormData) => {
-        const errors = validateForm(formData);
-        if (Object.keys(errors).length > 0) {
-          return errors;
-        }
 
-        const price = Number(formData.get("price"));
-        const productTitle = formData.get("product_name") as string;
-        const productDescription = formData.get("description") as string;
-        const category = formData.get("category") as string;
-        const collaboPartner = formData.get("collabo_partner") as string;
-        const thumbnail = formData.get("thumbnail") as File | null;
-        const productImages = formData.getAll("product_images") as File[];
+        const price = Number(formData.getStr("price"));
+        const productTitle = formData.getStr("product_name");
+        const productDescription = formData.getStr("description");
+        const category = formData.getStr("category");
+        const collaboPartner = formData.getStr("collabo_partner");
+        const thumbnail = formData.getFile("thumbnail");
+        const productImages = formData.getFileList("product_images");
         if (clientContext.state != "authenticated") {
           formData.append("submit", "no login")
           return
         }
         const userId = clientContext.loginSession.idToken.idToken.userId;
         if (!userId) {
-          return {submit: "ユーザーIDが見つかりません。"};
+          formData.append("submit", "ユーザーIDが見つかりません。")
+          return
         }
+        if (!productImages || !productTitle || !productDescription) return
 
         let productThumbnailUuid = "";
         if (thumbnail) {
           const thumbnailResult = await clientContext.client.uploadImg(thumbnail);
           if (thumbnailResult.error) {
-            return {
-              thumbnail: `${thumbnailResult.error.error_id}: ${thumbnailResult.error.message}`,
-            };
+            formData.append("thumbnail", `{${thumbnailResult.error.error_id}: ${thumbnailResult.error.message}}`);
+            return
           }
           productThumbnailUuid = thumbnailResult.success.image_uuid;
         }
@@ -72,9 +54,8 @@ export default function ProductListingForm() {
         if (productImages.length > 0) {
           const firstImageResult = await clientContext.client.uploadImg(productImages[0]);
           if (firstImageResult.error) {
-            return {
-              product_images: `${firstImageResult.error.error_id}: ${firstImageResult.error.message}`,
-            };
+            formData.append("product_images", `{${firstImageResult.error.error_id}: ${firstImageResult.error.message}}`);
+            return;
           }
           productContentsUuid = firstImageResult.success.image_uuid;
         }
@@ -99,9 +80,8 @@ export default function ProductListingForm() {
         );
 
         if (postProductResult.error) {
-          return {
-            submit: `エラー: ${postProductResult.error.message}`,
-          };
+          formData.append("submit", `{Error: ${postProductResult.error.message}}`);
+          return;
         }
 
         // 成功した場合に timeline にリダイレクト
@@ -118,7 +98,7 @@ export default function ProductListingForm() {
           <div className="flex flex-col space-y-4">
             <StyledInput name="product_name" type="text" label="商品名 (40文字まで)"/>
             <ItemBackground>
-              <label className="block text-sm font-medium text-xl">
+              <label className="block font-medium text-xl">
                 商品画像を追加 (最大8枚)
               </label>
               <ImageUpload label="+" name="product_images" maxImages={8}/>

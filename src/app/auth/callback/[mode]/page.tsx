@@ -1,7 +1,8 @@
 "use client"
 import Link from "next/link";
 import {useEffect, useRef, useState} from "react";
-import useMessageEvent from "~/auth/keycloak/hook/useMessageEvent";
+import useMessageEvent from "~/auth/idtoken/hook/useMessageEvent";
+
 
 export default function Page(
   {params}: { params: { mode: string } }
@@ -15,7 +16,7 @@ export default function Page(
 
     const param = new URLSearchParams(location.hash.slice(1))
     setResult(param)
-    console.debug("callback")
+
     target(params).postMessage({
       type: "callback_ready",
     }, location.origin)
@@ -24,7 +25,6 @@ export default function Page(
     if (result == undefined) return
     if (evt.origin != location.origin) return
     if (evt.data.type != "callback_request") return
-    console.debug("message received", params.mode)
     target(params).postMessage({
       type: "callback_result",
       param: result.toString()

@@ -42,22 +42,25 @@ const MessageRes = z
 const ChatMessagesRes = z
   .object({ chat_id: z.string().uuid(), messages: z.array(MessageRes) })
   .passthrough();
-const PostCollaboApproveBody = z
-  .object({ collabo_id: z.string().uuid() })
-  .passthrough();
 const PostColabRequestBody = z
   .object({ recruit_id: z.string().uuid() })
   .passthrough();
-const PostCreatorBody = z
-  .object({ contact_address: z.string(), transfer_target: z.string() })
+const PostCollaboBody = z
+  .object({
+    title: z.string(),
+    description: z.string(),
+    creators: z.array(z.string().uuid()),
+  })
   .passthrough();
 const CreatorResponse = z
   .object({
     creator_id: z.string().uuid(),
     user_id: z.string().uuid(),
     contact_address: z.string(),
-    transfer_target: z.string(),
   })
+  .passthrough();
+const PostCreatorBody = z
+  .object({ contact_address: z.string(), transfer_target: z.string() })
   .passthrough();
 const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
 const NotificationType = z.enum(["colab", "colab_approve"]);
@@ -189,10 +192,10 @@ export const schemas = {
   ChatMessageRes,
   MessageRes,
   ChatMessagesRes,
-  PostCollaboApproveBody,
   PostColabRequestBody,
-  PostCreatorBody,
+  PostCollaboBody,
   CreatorResponse,
+  PostCreatorBody,
   UserFollow,
   NotificationType,
   CollaboNotificationData,
@@ -306,14 +309,14 @@ const endpoints = makeApi([
   },
   {
     method: "post",
-    path: "/api/colab/approve",
-    alias: "pca_api_colab_approve_post",
+    path: "/api/colab",
+    alias: "pc_api_colab_post",
     requestFormat: "json",
     parameters: [
       {
         name: "body",
         type: "Body",
-        schema: z.object({ collabo_id: z.string().uuid() }).passthrough(),
+        schema: PostCollaboBody,
       },
     ],
     response: z.unknown(),
@@ -345,6 +348,13 @@ const endpoints = makeApi([
         schema: HTTPValidationError,
       },
     ],
+  },
+  {
+    method: "get",
+    path: "/api/creator",
+    alias: "gcs_api_creator_get",
+    requestFormat: "json",
+    response: z.array(CreatorResponse),
   },
   {
     method: "post",

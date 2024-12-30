@@ -24,7 +24,7 @@ export default function Page(
   return <div>
     <ErrorMessage error={err}/>
     {recruits && recruits.map(recruit =>
-      <Recruit recruit={recruit}/>
+      <Recruit recruit={recruit} key={recruit.recruit_id}/>
     )}
   </div>
 }
