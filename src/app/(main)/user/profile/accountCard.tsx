@@ -5,13 +5,11 @@ import { Manager } from "~/manager/manager";
 import ProfileProductsView from "~/products/ProfileProductsView";
 import {useUserData} from "~/api/context/useUserData";
 import Backcanvas from "@/(main)/user/profile/backcanvas";
-import { Productmanager } from '~/manager/ProductManager';
 
 interface AccountCardProps {
   manager: Manager; // Manager 型を明確に定義
-  productManager: Productmanager
 }
-const AccountCard: React.FC<AccountCardProps> = ({ manager, productManager}) => {
+const AccountCard: React.FC<AccountCardProps> = ({ manager }) => {
   
   const { user } = useUserData();
   const [activeTab, setActiveTab] = useState<string>("商品");
@@ -86,7 +84,7 @@ const AccountCard: React.FC<AccountCardProps> = ({ manager, productManager}) => 
             overflowY: "auto",
           }}
         >
-          {activeTab === "商品" && <ProfileProductsView manager={manager} productManager={productManager}/>}
+          {activeTab === "商品" && <ProfileProductsView manager={manager}/>}
           {activeTab === "コラボ" && <div>コラボ</div>}
           {activeTab === "Media" && <div>Displaying media...</div>}
           {activeTab === "Likes" && <div>Displaying likes...</div>}

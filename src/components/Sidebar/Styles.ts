@@ -196,7 +196,7 @@ export const pageWindowStyle = (
     left 0.3s ease`,
   zIndex: 999,
   display: "flex",
-  minWidth: ProductisOpen ? '550px' : '0', // 最小幅を指定
+  minWidth: ProductisOpen ? '550px' : '0',
 });
 
 export const inAppPageStyle = (isAnimating: boolean): CSSProperties => ({
@@ -226,14 +226,14 @@ export const ProductWindowStyle = (ProductisOpen: boolean): CSSProperties => ({
   transformOrigin: 'right center', // 右支点を指定
   transform: ProductisOpen
     ? 'translateX(0%) translateY(-50%) scale(1)'
-    : 'translateX(100%) translateY(-50%) scale(0.95)', // 閉じた状態では少し縮小
+    : 'translateX(100%) translateY(-50%) scale(0.15)', // 閉じた状態では少し縮小
   borderRadius: '28px',
   opacity: ProductisOpen ? 1 : 0,
   transition: `
     opacity 0.3s ease-in-out,
     width 0.3s ease,
     height 0.3s ease,
-    transform 0.3s cubic-bezier(0.22, 0.41, 0.36, 1)`, // transformにカスタムイージングを追加
+    transform 0.3s`, // transformにカスタムイージングを追加
   zIndex: 999,
   minWidth: ProductisOpen ? '550px' : '0', // 最小幅を指定
   maxWidth: ProductisOpen ? '750px' : '0', // 最小幅を指定

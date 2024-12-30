@@ -6,15 +6,16 @@ import Timeline from "./timeline";
 import Sidebar from "~/Sidebar/Sidebar"
 import { useMemo } from "react";
 import {Manager} from "~/manager/manager";
-import { Productmanager } from '~/manager/ProductManager';
+import { ProductProvider } from "~/products/ContextProvider";
+import RightProductWindows from "~/products/RightProductWindows";
 
 export default function Page({}: {}) {
   const manager = useMemo(() => new Manager(), []);
-  const productManager = useMemo(() => new Productmanager(), []);
   return (
-    <Main>
+    <ProductProvider>
       <Timeline manager={manager}/>
-      <Sidebar manager={manager} productManager={productManager}/>
-    </Main>
+      <Sidebar manager={manager}/>
+      <RightProductWindows/>
+    </ProductProvider>
   );
 }

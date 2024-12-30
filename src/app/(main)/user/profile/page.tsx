@@ -6,14 +6,12 @@ import {styles} from "~/Sidebar/Styles";
 import { Manager } from "~/manager/manager";
 import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
 import Link from "next/link";
-import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
-import { Productmanager } from "~/manager/ProductManager";
+import { KeycloakConfig } from "~/auth/keycloak/KeycloakConfig"
 
 interface ProfileProps {
   manager: Manager; // Manager 型を明確に定義
-  productManager: Productmanager
 }
-const Page: React.FC<ProfileProps> = ({ manager,productManager }) => {
+const Page: React.FC<ProfileProps> = ({ manager }) => {
 
   return (
     <div
@@ -130,7 +128,7 @@ const Page: React.FC<ProfileProps> = ({ manager,productManager }) => {
         }}
       >
         <div style={styles.inAppPageWindowStyle}>
-          <AccountCard manager={manager} productManager={productManager}/>
+          <AccountCard manager={manager}/>
         </div>
       </div>
     </div>

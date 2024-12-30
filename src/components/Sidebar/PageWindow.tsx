@@ -7,11 +7,27 @@ import MessagePage from '@/(main)/user/message/page';
 import ProductListingForm from '@/(main)/product/listing/ProductListingForm';
 import { Manager } from '~/manager/manager';
 import SearchPage from '@/(main)/search/search';
-import { Productmanager } from '~/manager/ProductManager';
+import { useProductContext } from '~/products/ContextProvider';
 
-const PageWindow: React.FC<{ isOpen: boolean; isVisible: boolean; value: string, manager:Manager,productManager: Productmanager }> = ({isOpen, isVisible, value, manager, productManager}) => {
-  const [isAnimating, setIsAnimating] = useState(isVisible);
+const PageWindow: React.FC<{ manager:Manager }> = ({manager}) => {
+    const {
+      isWindowOpen,
+      isProductOpen,
+      setisProductOpen,
+      setIsVisible,
+      isVisible,
+      productId,
+      setProductId,
+      toggleWindow,
+      isSidebarOpen,
+      setIsSidebarOpen,
+      isPagevalue,
+      setPageValue,
+      isAnimating,
+      setIsAnimating,
+  } = useProductContext();
 
+  
   useEffect(() => {
     if (isVisible) {
       setIsAnimating(true);
@@ -22,19 +38,21 @@ const PageWindow: React.FC<{ isOpen: boolean; isVisible: boolean; value: string,
   }, [isVisible]);
 
   return (
-    <div style={pageWindowStyle(isOpen, productManager.value.isWindowOpen, isAnimating)}>
-      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(value, manager, productManager)}</div>
+    <div style={pageWindowStyle(isSidebarOpen, isProductOpen, isAnimating)}>
+      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(manager)}</div>
     </div>
   );
 };
 
-const renderPageContent = (initialTab: string, manager: Manager, productManager: Productmanager) => {
-
-  const [activeTab, setActiveTab] = useState(initialTab);
+const renderPageContent = (manager: Manager ) => {
+  const {
+    isPagevalue,
+  } = useProductContext();
+  const [activeTab, setActiveTab] = useState(isPagevalue);
   
   useEffect(() => {
-    setActiveTab(initialTab)
-  }, [initialTab]);
+    setActiveTab(isPagevalue)
+  }, [isPagevalue]);
 
   return (
     <>
@@ -51,7 +69,7 @@ const renderPageContent = (initialTab: string, manager: Manager, productManager:
         カレンダーページw
       </div>
       <div style={{display: activeTab === "Account" ? "block" : "none"}}>
-        <AccountPage manager={manager} productManager={productManager}/>
+        <AccountPage manager={manager}/>
       </div>
       <div style={{display: activeTab === "ProductListing" ? "block" : "none"}}>
         <ProductListingForm/>

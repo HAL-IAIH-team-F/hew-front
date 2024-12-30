@@ -8,6 +8,7 @@ import {generateGomi} from "@/(main)/timeline/effects/gomi/gomi";
 import {createBubbles, onClickBubble} from "@/(main)/timeline/bubble/bubbles";
 
 import {EffectComposer} from "three-stdlib";
+import useProduct from "~/api/useProducts";
 
 export default function useTimelineAnimation(
   manager: Manager,
@@ -24,7 +25,8 @@ export default function useTimelineAnimation(
   const rotationStrength = 0.05;
   const scene = useMemo(() => new THREE.Scene(), []);
   const effectsRef = useRef<Effects | null>(null);
-
+  const { products, error } = useProduct();
+    
   useEffect(() => {
     if (sceneRef.current) return
     if (!mountRef.current) return;
@@ -48,6 +50,7 @@ export default function useTimelineAnimation(
     composerRef.current = composer;
 
     generateGomi(scene, glowingGomiRef.current, 300, manager.value.riseSpeed, manager);
+    console.log(products)
     bubblesRef.current = createBubbles(scene, manager.value.bbnum, manager.value.sessionId, [], camera);
 
     if (manager.value.sessionId == 1) {
