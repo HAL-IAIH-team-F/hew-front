@@ -1,15 +1,14 @@
-import {useState} from "react";
+import {Dispatch, SetStateAction, useState} from "react";
 import CreatorSelectorModal from "@/(main)/colab/register/CreatorSelectorModal";
 import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
 
 export default function CreatorsSelector(
   {
-    recruit,
+    creators, setCreators,
   }: {
-    recruit?: string
+    creators: CreatorRes[], setCreators: Dispatch<SetStateAction<CreatorRes[]>>,
   },
 ) {
-  const [creators, setCreators] = useState<CreatorRes[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (

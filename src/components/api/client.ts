@@ -47,7 +47,8 @@ const PostColabRequestBody = z
   .passthrough();
 const PostCollaboBody = z
   .object({
-    collabo_id: z.string().uuid(),
+    title: z.string(),
+    description: z.string(),
     creators: z.array(z.string().uuid()),
   })
   .passthrough();

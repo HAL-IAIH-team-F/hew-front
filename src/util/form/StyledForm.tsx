@@ -44,7 +44,7 @@ export function StyledForm(
 }
 
 export interface FormProps {
-  action?: (formData: StyledFormData) => Promise<FormError | undefined>
+  action?: (formData: StyledFormData) => Promise<void>
   children?: ReactNode
   className?: string
 }

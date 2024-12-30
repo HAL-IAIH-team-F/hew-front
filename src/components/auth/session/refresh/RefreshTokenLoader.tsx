@@ -1,4 +1,3 @@
-
 import {useEffect, useRef} from "react";
 import {add, isAfter, parseISO} from "date-fns";
 import {Token} from "~/auth/nextauth/Token";
@@ -31,7 +30,7 @@ export default function RefreshTokenLoader(
 
     const next = loginSession.state == "authenticated" && loginSession.token.access
       ? add(new Date(loginSession.token.access.expire), {minutes: -1}).getTime() - Date.now() : 0
-
+    console.debug("next", next, new Date(Date.now() + next))
     const timeout = setTimeout(() => {
       if (refreshing.current) return
       refreshing.current = true;

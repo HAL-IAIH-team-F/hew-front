@@ -29,6 +29,6 @@ export default function LogoutFrame(
   }, [idToken, frameRef]);
 
   return (
-    <iframe ref={frameRef} src={url}/>
+    <iframe ref={frameRef} src={url} className={"hidden"}/>
   )
 }
