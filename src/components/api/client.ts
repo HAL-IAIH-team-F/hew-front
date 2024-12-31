@@ -63,25 +63,28 @@ const PostCreatorBody = z
   .object({ contact_address: z.string(), transfer_target: z.string() })
   .passthrough();
 const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
-const NotificationType = z.enum(["colab", "colab_approve"]);
-const CollaboNotificationData = z
+const NotificationType = z.enum(["colab_request", "colab"]);
+const ColabRequestNotificationData = z
   .object({
     notification_type: NotificationType,
-    collabo_id: z.string().uuid(),
-    sender_creator_id: z.string().uuid(),
+    colab_request_id: z.string().uuid(),
+    from_creator_id: z.string().uuid(),
   })
   .passthrough();
-const CollaboApproveNotificationData = z
+const ColabNotificationData = z
   .object({
     notification_type: NotificationType,
     collabo_id: z.string().uuid(),
-    approve_id: z.string().uuid(),
+    owner_id: z.string().uuid(),
+    title: z.string(),
+    description: z.string(),
+    creator_ids: z.array(z.string().uuid()),
   })
   .passthrough();
 const NotificationRes = z
   .object({
     notification_id: z.string().uuid(),
-    data: z.union([CollaboNotificationData, CollaboApproveNotificationData]),
+    data: z.union([ColabRequestNotificationData, ColabNotificationData]),
   })
   .passthrough();
 const CartRes = z
@@ -198,8 +201,8 @@ export const schemas = {
   PostCreatorBody,
   UserFollow,
   NotificationType,
-  CollaboNotificationData,
-  CollaboApproveNotificationData,
+  ColabRequestNotificationData,
+  ColabNotificationData,
   NotificationRes,
   CartRes,
   PostProductBody,

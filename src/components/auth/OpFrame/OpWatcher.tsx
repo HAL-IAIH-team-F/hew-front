@@ -1,6 +1,6 @@
 import {useEffect, useRef} from "react";
 
-import {LoginSession} from "~/auth/session/refresh/LoginSession";
+import {LoginSession} from "~/auth/refresh/LoginSession";
 
 import useMessageEvent from "~/auth/idtoken/hook/useMessageEvent";
 import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";

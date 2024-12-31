@@ -3,7 +3,7 @@ import {Result, Results} from "../../../util/err/result";
 import {ErrorIds} from "../../../util/err/errorIds";
 import {Api} from "~/api/context/Api";
 import {LoadedClient} from "~/api/client/LoadedClient";
-import {AuthSession} from "~/auth/session/refresh/LoginSession";
+import {AuthSession} from "~/auth/refresh/LoginSession";
 
 export class AuthClient extends LoadedClient {
 

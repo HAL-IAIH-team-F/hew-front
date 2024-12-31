@@ -1,8 +1,8 @@
 
 import {useState} from "react";
-import RefreshTokenLoader from "~/auth/session/refresh/RefreshTokenLoader";
+import RefreshTokenLoader from "~/auth/refresh/RefreshTokenLoader";
 
-import {LoginSession} from "~/auth/session/refresh/LoginSession";
+import {LoginSession} from "~/auth/refresh/LoginSession";
 import OpWatcher from "~/auth/OpFrame/OpWatcher";
 import { IdTokenState } from "../idtoken/IdTokenState";
 import IdTokenLoader from "~/auth/idtoken/IdTokenLoader";
