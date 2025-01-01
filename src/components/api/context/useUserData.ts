@@ -13,7 +13,7 @@ export const useUserData = () => {
         if (!value.success) {
           setUser(undefined);
           if (ErrorIds.USER_NOT_FOUND.equals(value.error?.error_id)) return;
-          console.error(value.error);
+          console.error("get self error", value.error);
           return;
         }
         if (value.success.user_icon) {

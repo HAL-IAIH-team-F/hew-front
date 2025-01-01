@@ -18,7 +18,7 @@ export default function handleCallbackEvent(
     case "callback_result":
       if (oidc) validateCallbackResult(evt.data.param, oidc, nonce, update)
         .then(value => {
-          if (value.error) return console.error(value.error)
+          if (value.error) return console.error("callback result error", value.error)
         })
       onFinish()
       break
@@ -36,7 +36,7 @@ async function validateCallbackResult(
     return Results.createSuccessResult(undefined)
   }
   if (error) {
-    console.error(error)
+    console.error("callback error", error)
     return Results.errResultByReason(error, ErrorIds.UnknownError);
   }
   const response = await context.authenticationImplicitFlowResponse(params, nonce)

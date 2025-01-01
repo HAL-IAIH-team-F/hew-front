@@ -1,7 +1,13 @@
-import {ColabData, ColabRequestData, NotificationRes} from "@/(main)/user/notification/NotificationRes";
+import {
+  ColabApproveData,
+  ColabData,
+  ColabRequestData,
+  NotificationRes
+} from "@/(main)/user/notification/NotificationRes";
 import {ReactNode} from "react";
 import ColabRequestNotification from "@/(main)/user/notification/ColabRequestNotification";
 import ColabNotification from "@/(main)/user/notification/ColabNotification";
+import ColabApproveNotification from "@/(main)/user/notification/ColabApproveNotification";
 
 export default function Notification(
   {
@@ -15,6 +21,9 @@ export default function Notification(
   switch (notification.data.notification_type) {
     case "colab_request":
       node = <ColabRequestNotification request={notification.data as ColabRequestData}/>
+      break
+    case "colab_approve":
+      node = <ColabApproveNotification request={notification.data as ColabApproveData}/>
       break
     case "colab":
       node = <ColabNotification colab={notification.data as ColabData}/>
