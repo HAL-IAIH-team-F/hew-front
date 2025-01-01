@@ -22,6 +22,7 @@ export default function RefreshTokenLoader(
   const refreshing = useRef(false);
 
   useEffect(() => {
+    console.debug("refresh", idToken, loginSession)
 
     if (idToken.state == "loading") return;
     if (idToken.state == "unauthenticated") {
@@ -32,18 +33,20 @@ export default function RefreshTokenLoader(
       ? add(new Date(loginSession.token.access.expire), {minutes: -1}).getTime() - Date.now() : 0
     console.debug("next", next, new Date(Date.now() + next))
     const timeout = setTimeout(() => {
+      console.debug("refresh timeout", refreshing.current)
       if (refreshing.current) return
       refreshing.current = true;
       ApiRefresh.refreshToken(
         idToken,
         tokens => {
-          refreshing.current = false;
           update({state: "authenticated", token: tokens, idToken: idToken})
         },
         reload, loginSession,
       ).then(value => {
-        if (value.success) return
-        console.error(value.error)
+        refreshing.current = false;
+        if (!value.error) return
+        console.error("refresh token error", value.error)
+        update({state: "unauthenticated", idToken: idToken})
       })
     }, next)
     return () => {
@@ -63,21 +66,25 @@ namespace ApiRefresh {
     reload: () => void,
     session: LoginSession,
   ): Promise<Result<undefined>> {
+    console.debug("refreshToken", idToken, session)
     if (session.state == "loading") return await KeycloakRefresh.refreshByKeycloak(idToken, update, reload)
     if (session.state == "unauthenticated") return await KeycloakRefresh.refreshByKeycloak(idToken, update, reload)
 
     const refresh = session.token.refresh
 
+    console.debug("refreshToken refresh", refresh)
     if (!refresh) return await KeycloakRefresh.refreshByKeycloak(idToken, update, reload)
 
+    console.debug("refreshToken isExpire", isExpire(refresh.expire))
     if (isExpire(refresh.expire)) return KeycloakRefresh.refreshByKeycloak(idToken, update, reload)
 
     return refreshByRefreshToken(refresh, update)
   }
 
   function isExpire(expireNum: number) {
+    console.debug("isExpire", expireNum, new Date(expireNum))
     const expire = add(new Date(expireNum), {minutes: -1})
-    return isAfter(expire, Date.now())
+    return !isAfter(expire, Date.now())
   }
 
   async function refreshByRefreshToken(

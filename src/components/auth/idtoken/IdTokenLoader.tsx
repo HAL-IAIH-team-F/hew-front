@@ -20,12 +20,13 @@ export default function IdTokenLoader(
   const [nonce, setNonce] = useState<Nonce>()
   useEffect(() => {
     setUrl(prevState => {
+      console.debug("idTokenLoader")
       if (prevState != undefined) return prevState;
       const nonce = new Nonce(window)
       setNonce(nonce)
 
       setTimeout(() => setUrl(undefined), 1000 * 30)
-      return new AuthenticationImplicitFlowUrl(nonce, "none","iframe").url().toString()
+      return new AuthenticationImplicitFlowUrl(nonce, "none", "iframe").url().toString()
     })
   }, [reload]);
   useCallbackMessage(oidc, nonce, ref.current, update, () => {

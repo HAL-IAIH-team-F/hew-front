@@ -52,6 +52,9 @@ const PostCollaboBody = z
     creators: z.array(z.string().uuid()),
   })
   .passthrough();
+const PostColabApproveBody = z
+  .object({ colab_id: z.string().uuid() })
+  .passthrough();
 const CreatorResponse = z
   .object({
     creator_id: z.string().uuid(),
@@ -63,14 +66,7 @@ const PostCreatorBody = z
   .object({ contact_address: z.string(), transfer_target: z.string() })
   .passthrough();
 const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
-const NotificationType = z.enum(["colab_request", "colab"]);
-const ColabRequestNotificationData = z
-  .object({
-    notification_type: NotificationType,
-    colab_request_id: z.string().uuid(),
-    from_creator_id: z.string().uuid(),
-  })
-  .passthrough();
+const NotificationType = z.enum(["colab_request", "colab_approve", "colab"]);
 const ColabNotificationData = z
   .object({
     notification_type: NotificationType,
@@ -81,11 +77,28 @@ const ColabNotificationData = z
     creator_ids: z.array(z.string().uuid()),
   })
   .passthrough();
-const NotificationRes = z
+const ColabRequestNotificationData = z
   .object({
-    notification_id: z.string().uuid(),
-    data: z.union([ColabRequestNotificationData, ColabNotificationData]),
+    notification_type: NotificationType,
+    colab_request_id: z.string().uuid(),
+    from_creator_id: z.string().uuid(),
   })
+  .passthrough();
+const ColabApproveNotificationData = z
+  .object({
+    notification_type: NotificationType,
+    collabo_id: z.string().uuid(),
+    collabo_approve_id: z.string().uuid(),
+    colab_creator_id: z.string(),
+  })
+  .passthrough();
+const NotificationData = z.union([
+  ColabNotificationData,
+  ColabRequestNotificationData,
+  ColabApproveNotificationData,
+]);
+const NotificationRes = z
+  .object({ notification_id: z.string().uuid(), data: NotificationData })
   .passthrough();
 const CartRes = z
   .object({
@@ -197,12 +210,15 @@ export const schemas = {
   ChatMessagesRes,
   PostColabRequestBody,
   PostCollaboBody,
+  PostColabApproveBody,
   CreatorResponse,
   PostCreatorBody,
   UserFollow,
   NotificationType,
-  ColabRequestNotificationData,
   ColabNotificationData,
+  ColabRequestNotificationData,
+  ColabApproveNotificationData,
+  NotificationData,
   NotificationRes,
   CartRes,
   PostProductBody,
@@ -320,6 +336,27 @@ const endpoints = makeApi([
         name: "body",
         type: "Body",
         schema: PostCollaboBody,
+      },
+    ],
+    response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/api/colab/approve",
+    alias: "pca_api_colab_approve_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: z.object({ colab_id: z.string().uuid() }).passthrough(),
       },
     ],
     response: z.unknown(),
