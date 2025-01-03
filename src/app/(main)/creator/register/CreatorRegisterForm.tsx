@@ -2,10 +2,10 @@
 import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {useRouter} from "next/navigation";
 import {StyledFormData} from "../../../../util/form/StyledFormData";
-import {StyledForm} from "../../../../util/form/StyledForm";
-import {StyledInput} from "../../../../util/form/StyledInput";
+import {StyledForm} from "../../../../util/form/element/StyledForm";
+import {StyledInput} from "../../../../util/form/element/StyledInput";
 
-import {StyledButton} from "../../../../util/form/StyledButton";
+import {StyledButton} from "../../../../util/form/element/StyledButton";
 import FlexBox from "../../../../util/FlexBox";
 import {Api} from "~/api/context/Api";
 
@@ -49,8 +49,8 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
         const userId = clientContext.loginSession.idToken.idToken.userId;  // ユーザーIDを取得
 
         const postCreatorResult = await clientContext.client.authBody(
-          Api.app.pc_api_creator_post,  // エンドポイント名を修正
-          {user_id: userId, contact_address: contactAddress, transfer_target: transferTarget}
+          Api.app.pc_api_creator_post, {},
+          {user_id: userId, contact_address: contactAddress, transfer_target: transferTarget},{}
         );
 
         // エラーハンドリング

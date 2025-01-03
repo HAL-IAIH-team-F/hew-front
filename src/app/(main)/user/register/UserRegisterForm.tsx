@@ -3,9 +3,9 @@ import {ChangeEvent, useState} from "react";
 import {Api} from "~/api/context/Api";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {useRouter} from 'next/navigation';
-import {StyledForm} from "../../../../util/form/StyledForm";
-import {StyledInput} from "../../../../util/form/StyledInput";
-import {StyledButton} from "../../../../util/form/StyledButton";
+import {StyledForm} from "../../../../util/form/element/StyledForm";
+import {StyledInput} from "../../../../util/form/element/StyledInput";
+import {StyledButton} from "../../../../util/form/element/StyledButton";
 
 export default function UserRegisterForm({...props}: UserRegisterFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -49,8 +49,8 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
       }
 
       const postUserResult = await clientContext.client.authBody(
-        Api.app.post_user_api_user_post,
-        {user_name: user_name, user_icon_uuid: iconUuid}
+        Api.app.post_user_api_user_post,{},
+        {user_name: user_name, user_icon_uuid: iconUuid},{}
       )
       if (postUserResult.error) {
         formData.append("icon", postUserResult.error.error_id + ": " + postUserResult.error.message);

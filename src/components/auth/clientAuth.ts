@@ -14,9 +14,9 @@ export async function signIn(clientContext: ClientContextState) {
   const url = new AuthenticationImplicitFlowUrl(new Nonce(window), "login", "popup")
   const win = open(url.url(), 'Login', `width=500,height=600, left=${x},top=${y}`);
   if (win == null) throw new Error("Failed to open window")
-  IdTokenUtl.receiveMessage(win, clientContext, url, () => {
+  IdTokenUtl.receiveMessage(win, url, () => {
     win.close()
-  })
+  }, clientContext.oidcContext, clientContext.setIdToken)
 }
 
 export async function signOut(clientContext: ClientContextState) {

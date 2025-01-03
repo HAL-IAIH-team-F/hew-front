@@ -69,7 +69,7 @@ export function StyledNavigation() {
       setUser(undefined)
       return
     }
-    context.client.auth(Api.app.get_user_api_user_self_get, {})
+    context.client.auth(Api.app.get_user_api_user_self_get, {},{})
       .then(value => {
         if (!value.success) {
           setUser(undefined)

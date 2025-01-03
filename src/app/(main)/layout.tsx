@@ -14,7 +14,7 @@ export default function Layout(
     <>
       <ClientContextProvider>
         {/*<TokenReloader/>*/}
-        <StyledNavigation/>
+        {/*<StyledNavigation/>*/}
         {/*<BackgroundObject/>*/}
         {children}
       </ClientContextProvider>

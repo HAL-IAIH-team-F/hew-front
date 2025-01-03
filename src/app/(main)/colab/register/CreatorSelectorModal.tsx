@@ -20,7 +20,9 @@ export default function CreatorSelectorModal(
   const [err, setErr] = useState<ErrorData>()
   useEffect(() => {
     if (clientContext.state == "loading") return
-    clientContext.client.unAuthOrAuth(Api.app.gcs_api_creator_get).then(value => {
+    clientContext.client.unAuthOrAuth(
+      Api.app.gcs_api_creator_get, {}, {}
+    ).then(value => {
       if (value.error) return setErr(value.error)
 
       setCreators(value.success)
@@ -37,7 +39,7 @@ export default function CreatorSelectorModal(
           <ModalHeader onCloseRequest={onCloseRequest}/>
           <ErrorMessage error={err}/>
           {creators.map(creator => <CreatorSelectorItem
-            key={creator.creator_id} creator={creator} oneSelect={()=>oneSelect(creator)}
+            key={creator.creator_id} creator={creator} oneSelect={() => oneSelect(creator)}
           />)}
         </div>
       </div>

@@ -5,11 +5,11 @@ import ThumbnailUpload from "../listing/ThumbnailUpload";
 import ImageUpload from "../listing/ImageUpload";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {useRouter} from "next/navigation";
-import {StyledInput} from "../../../../util/form/StyledInput";
-import {StyledTextarea} from "../../../../util/form/StyledTextarea";
-import {StyledButton} from "../../../../util/form/StyledButton";
+import {StyledInput} from "../../../../util/form/element/StyledInput";
+import {StyledTextarea} from "../../../../util/form/element/StyledTextarea";
+import {StyledButton} from "../../../../util/form/element/StyledButton";
 
-import {StyledForm} from "../../../../util/form/StyledForm";
+import {StyledForm} from "../../../../util/form/element/StyledForm";
 import {StyledFormData} from "../../../../util/form/StyledFormData";
 import FlexBox from "../../../../util/FlexBox";
 import {Api} from "~/api/context/Api";
@@ -75,8 +75,8 @@ export default function ProductListingForm() {
         };
 
         const postProductResult = await clientContext.client.authBody(
-          Api.app.pp_api_product_post,
-          requestPayload
+          Api.app.pp_api_product_post,{},
+          requestPayload,{}
         );
 
         if (postProductResult.error) {

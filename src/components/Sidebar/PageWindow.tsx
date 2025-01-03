@@ -3,7 +3,7 @@ import {inAppPageStyle, pageWindowStyle} from './Styles';
 import SearchPage from '@/(main)/search/search';
 import AccontPage from '@/(main)/user/profile/page';
 import NotificationPage from '@/(main)/user/notification/page';
-import MessagePage from '@/(main)/user/message/page';
+import ChatModal from '@/(main)/user/message/ChatModal';
 import ProductListingForm from '@/(main)/product/listing/ProductListingForm';
 
 
@@ -37,11 +37,11 @@ const renderPageContent = (initialTab: string) => {
       <div style={{display: activeTab === "Search" ? "block" : "none"}}>
         <SearchPage/>
       </div>
-      <div style={{display: activeTab === "Notification" ? "block" : "none"}}>
+      <div style={{display: activeTab === "Notification" ? "block" : "none"}} className={"h-full"}>
         <NotificationPage/>
       </div>
       <div style={{display: activeTab === "Message" ? "block" : "none"}}>
-        <MessagePage/>
+        <ChatModal/>
       </div>
       <div style={{display: activeTab === "Calendar" ? "block" : "none"}}>
         カレンダーページw

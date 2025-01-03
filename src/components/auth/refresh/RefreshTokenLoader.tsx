@@ -53,7 +53,7 @@ export default function RefreshTokenLoader(
     return () => {
       clearTimeout(timeout)
     }
-  }, [idToken, loginSession.state]);
+  }, [idToken, loginSession.state == "authenticated" && loginSession.token]);
 
   return (
     <div>

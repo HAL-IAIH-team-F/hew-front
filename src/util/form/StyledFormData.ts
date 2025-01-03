@@ -1,4 +1,4 @@
-import {FormError} from "./StyledForm";
+import {FormError} from "./element/StyledForm";
 
 export class StyledFormData {
   formError: FormError | undefined = undefined

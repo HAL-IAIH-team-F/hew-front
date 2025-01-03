@@ -1,7 +1,7 @@
 import {DetailedHTMLProps, HTMLAttributes} from "react";
 import FlexBox from "../../../../../util/FlexBox";
 import {LabeledText} from "../../../../../util/label/LabeledText";
-import {StyledButton} from "../../../../../util/form/StyledButton";
+import {StyledButton} from "../../../../../util/form/element/StyledButton";
 
 export default function ProductDetailSentence(
   {
