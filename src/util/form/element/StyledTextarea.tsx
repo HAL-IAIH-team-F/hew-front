@@ -6,11 +6,9 @@
 // ============================
 
 "use client"
-import {DetailedHTMLProps, TextareaHTMLAttributes, useContext, useRef, useState, useEffect} from "react";
-import {FormState} from "./StyledForm";
-import {ErrorMessage} from "../err/ErrorMessage";
+import {DetailedHTMLProps, TextareaHTMLAttributes, useEffect, useRef, useState} from "react";
 import ItemBackground from "~/ItemBackground";
-import {sx} from "../util";
+import {sx} from "../../util";
 
 export function StyledTextarea(
   {
@@ -20,12 +18,11 @@ export function StyledTextarea(
     ...props
   }: TextareaProps
 ) {
-  const formState = useContext(FormState.Context);
   const [value, setValue] = useState('');
   const [height, setHeight] = useState(0);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const invisibleTextAreaRef = useRef<HTMLTextAreaElement>(null);
-  
+
 
   useEffect(() => {
     if (invisibleTextAreaRef.current) {
@@ -44,18 +41,19 @@ export function StyledTextarea(
         ref={textAreaRef}
         value={value}
         onChange={(evt) => handleChangeValue(evt.target.value)}
-        style={{ height: height ? `${height}px` : 'auto' }}
+        style={{height: height ? `${height}px` : 'auto'}}
         name={name}
         className={sx("block w-full border-2 overflow-hidden resize-none border-borderDef rounded-lg px-3 py-1 text-lg")}
-        placeholder ={ props.maxLength ? `最大${props.maxLength}文字まで入力できます`:undefined}
+        placeholder={props.maxLength ? `最大${props.maxLength}文字まで入力できます` : undefined}
         {...props}
       />
       <textarea
         ref={invisibleTextAreaRef}
         value={value}
-        onChange={() => {}}
-        tabIndex={-1} 
-        style={{ position: 'fixed', top: -999, visibility: 'hidden' }} 
+        onChange={() => {
+        }}
+        tabIndex={-1}
+        style={{position: 'fixed', top: -999, visibility: 'hidden'}}
         className={sx("block w-full border-2 overflow-hidden resize-none border-borderDef rounded-lg px-3 py-1 text-lg")}
       />
     </ItemBackground>

@@ -1,4 +1,5 @@
-import {FormError} from "./StyledForm";
+import {FormError} from "./element/StyledForm";
+import {ErrorData} from "../err/err";
 
 export class StyledFormData {
   formError: FormError | undefined = undefined
@@ -6,6 +7,10 @@ export class StyledFormData {
   constructor(
     private readonly formData: FormData
   ) {
+  }
+
+  appendErrorData(key: string, value: ErrorData) {
+    this.append(key, `{${value.error_id}: ${value.message}}`)
   }
 
   append(key: string, value: string) {
@@ -69,7 +74,7 @@ export class StyledFormData {
     return value
   }
 
-  validate(...args: (string | undefined)[])  {
+  validate(...args: (string | undefined)[]) {
     for (const key in args) {
       if (!key) return false
     }

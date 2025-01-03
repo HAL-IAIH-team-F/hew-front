@@ -1,19 +1,21 @@
 import handleCallbackEvent from "@/auth/callback/[mode]/handleCallbackEvent";
-import {LoadedClientContext} from "~/api/context/ClientContextProvider";
 import {
   AuthenticationImplicitFlowUrl
 } from "~/auth/keycloak/api/internal/authentication/implicit-flow/AuthenticationImplicitFlowUrl";
+import {OidcContext} from "~/auth/keycloak/api/internal/OidcContext";
+import {IdTokenState} from "~/auth/idtoken/IdTokenState";
 
 export namespace IdTokenUtl {
   export function receiveMessage(
-    target: Window, clientContext: LoadedClientContext, url: AuthenticationImplicitFlowUrl,
-    onFinish: () => void
+    target: Window, url: AuthenticationImplicitFlowUrl,
+    onFinish: () => void,
+    oidcContext: OidcContext, setIdToken: (idToken: IdTokenState) => void
   ) {
     const listener = (evt: MessageEvent) => {
       if (evt.origin !== location.origin) return;
       handleCallbackEvent(evt, data => {
         target.postMessage(data, location.origin)
-      }, clientContext.oidcContext, url.nonce, clientContext.setIdToken, () => {
+      }, oidcContext, url.nonce, setIdToken, () => {
         onFinish()
         window.removeEventListener("message", listener)
       })

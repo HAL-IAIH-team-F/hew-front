@@ -27,7 +27,7 @@ export default function ColabNotification(
         onClick={() => {
           if (clientContext.state != "authenticated") throw new Error("not authenticated")
           clientContext.client.authBody(
-            Api.app.pca_api_colab_approve_post, {colab_id: colab.collabo_id}
+            Api.app.pca_api_colab_approve_post, {}, {colab_id: colab.collabo_id}, {}
           ).then(value => {
             if (value.error) return console.error(value.error)
           })

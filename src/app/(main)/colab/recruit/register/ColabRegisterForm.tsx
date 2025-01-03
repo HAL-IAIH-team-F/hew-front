@@ -1,8 +1,8 @@
 "use client"
 import {useClientContextState} from "~/api/context/ClientContextProvider";
-import {StyledForm} from "../../../../../util/form/StyledForm";
-import {StyledInput} from "../../../../../util/form/StyledInput";
-import {StyledButton} from "../../../../../util/form/StyledButton";
+import {StyledForm} from "../../../../../util/form/element/StyledForm";
+import {StyledInput} from "../../../../../util/form/element/StyledInput";
+import {StyledButton} from "../../../../../util/form/element/StyledButton";
 import {Api} from "~/api/context/Api";
 
 export default function ColabRegisterForm(
@@ -20,11 +20,11 @@ export default function ColabRegisterForm(
       if (!title || !description) return
       if (clientContext.state != "authenticated") throw new Error("no login")
       const result = await clientContext.client.authBody(
-        Api.app.pr_api_recruit_post,
+        Api.app.pr_api_recruit_post,{},
         {
           title: title,
           description: description
-        }
+        },{}
       )
       if (result.error) {
         formData.append("submit", result.error.error_id + ": " + result.error.message)

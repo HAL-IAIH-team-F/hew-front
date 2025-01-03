@@ -15,7 +15,7 @@ const NotificationPage: FC = () => {
 
   useEffect(() => {
     if (clientContext.state != "authenticated") return
-    clientContext.client.auth(Api.app.gns_api_notification_get).then(value => {
+    clientContext.client.auth(Api.app.gns_api_notification_get, {}, {}).then(value => {
       if (value.error) {
         setErr(value.error)
         return
@@ -24,7 +24,7 @@ const NotificationPage: FC = () => {
     })
   }, [clientContext.state]);
   return (
-    <div>
+    <div className={"overflow-y-scroll h-full"}>
       {notifications && notifications.map(value =>
         <Notification key={value.notification_id} notification={value}/>
       )}

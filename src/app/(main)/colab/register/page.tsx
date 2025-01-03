@@ -1,9 +1,9 @@
 "use client"
-import {StyledForm} from "../../../../util/form/StyledForm";
-import {StyledInput} from "../../../../util/form/StyledInput";
+import {StyledForm} from "../../../../util/form/element/StyledForm";
+import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {useRouter} from "next/navigation";
 import CreatorsSelector from "@/(main)/colab/register/CreatorsSelector";
-import {StyledButton} from "../../../../util/form/StyledButton";
+import {StyledButton} from "../../../../util/form/element/StyledButton";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 import {useState} from "react";
@@ -23,9 +23,10 @@ export default function Page(
 
     if (!title || !description) return
 
-    const result = await clientContext.client.authBody(Api.app.pc_api_colab_post, {
+    const result = await clientContext.client.authBody(Api.app.pc_api_colab_post,
+      {},{
       creators: creators.map(value => value.creator_id), title: title, description: description
-    })
+    },{})
     if (!result.error) return router.push("/timeline")
     formData.append("submit", `{${result.error.error_id}: ${result.error.message}}`)
   }}>

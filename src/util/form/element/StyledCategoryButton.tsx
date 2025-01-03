@@ -5,7 +5,7 @@
 // Description: カテゴリーボタンの関数コンポーネント
 // ============================
 import React from "react";
-import { sx } from "../util";
+import { sx } from "../../util";
 
 export interface CategoryButtonProps {
   label: string;
