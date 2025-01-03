@@ -19,9 +19,9 @@ export default function OpWatcher(
   const ref = useRef<HTMLIFrameElement | null>(null);
 
   useEffect(() => {
+    console.debug("op watcher")
     const element = ref.current
     if (!element) return;
-    if (loginSession.state != "authenticated") return;
     if (idToken.state != "authenticated") return;
     const session_state = idToken.sessionState
     const win = element.contentWindow

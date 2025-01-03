@@ -4,7 +4,7 @@ import {
 } from "~/auth/keycloak/api/internal/authentication/implicit-flow/AuthenticationImplicitFlowUrl";
 import {Nonce} from "~/auth/keycloak/api/internal/Nonce";
 import {IdTokenState} from "~/auth/idtoken/IdTokenState";
-import useOidcContext from "~/auth/idtoken/hook/useOidcContext";
+import useOidcContext from "~/auth/keycloak/api/useOidcContext";
 import useCallbackMessage from "~/auth/idtoken/hook/useCallbackMessage";
 
 export default function IdTokenLoader(
@@ -19,8 +19,9 @@ export default function IdTokenLoader(
   const oidc = useOidcContext()
   const [nonce, setNonce] = useState<Nonce>()
   useEffect(() => {
+    if (oidc == undefined) return
     setUrl(prevState => {
-      console.debug("idTokenLoader")
+      console.debug("idTokenLoader", prevState)
       if (prevState != undefined) return prevState;
       const nonce = new Nonce(window)
       setNonce(nonce)
@@ -28,8 +29,9 @@ export default function IdTokenLoader(
       setTimeout(() => setUrl(undefined), 1000 * 30)
       return new AuthenticationImplicitFlowUrl(nonce, "none", "iframe").url().toString()
     })
-  }, [reload]);
+  }, [reload, oidc]);
   useCallbackMessage(oidc, nonce, ref.current, update, () => {
+    console.debug("idTokenLoader finish")
     setUrl(undefined)
   })
   return (
