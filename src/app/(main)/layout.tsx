@@ -1,4 +1,3 @@
-import {StyledNavigation} from "~/Navigation";
 import {ReactNode} from "react";
 import {ClientContextProvider} from "~/api/context/ClientContextProvider";
 

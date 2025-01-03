@@ -12,6 +12,7 @@ export default function Page(
 
   useEffect(() => {
     // if (executed.current) return;
+    console.debug("callback page")
     executed.current = true;
 
     const param = new URLSearchParams(location.hash.slice(1))

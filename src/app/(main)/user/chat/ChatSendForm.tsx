@@ -17,13 +17,17 @@ export default function ChatSendForm(
   return (
     <StyledForm disabled={clientContext.state != "authenticated"} action={async formData => {
       if (clientContext.state != "authenticated") throw new Error("not authenticated")
-      clientContext.client.authBody(Api.app.pcm_api_chat__chat_id__message_post,
+      const msg = formData.getStr("msg")
+      if (!msg) return
+
+      const result = await clientContext.client.authBody(Api.app.pcm_api_chat__chat_id__message_post,
         {},
         {
-          message: "", images: []
+          message: msg, images: []
         },
-        {chat_id: ""},
+        {chat_id: chat.chat_id},
       )
+      if (result.error) return formData.appendErrorData("submit", result.error)
     }}>
       <StyledInput name={"msg"}/>
       <StyledButton>send</StyledButton>
