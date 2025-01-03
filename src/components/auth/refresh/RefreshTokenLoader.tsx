@@ -39,6 +39,7 @@ export default function RefreshTokenLoader(
       ApiRefresh.refreshToken(
         idToken,
         tokens => {
+          console.debug("refreshToken success", tokens)
           update({state: "authenticated", token: tokens, idToken: idToken})
         },
         reload, loginSession,
@@ -91,11 +92,13 @@ namespace ApiRefresh {
     token: Token,
     update: (tokens: TokenBundle) => void,
   ): Promise<Result<undefined>> {
+    console.debug("refreshByRefreshToken", token)
     return await Api.app.gtr_api_token_get({
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token.token}`
       }
     }).then(value => {
+      console.debug("refreshByRefreshToken then", value)
       update(createTokenBundle(value))
       return Results.createSuccessResult(undefined)
     }).catch(reason => {
@@ -109,11 +112,13 @@ namespace KeycloakRefresh {
     update: (tokens: TokenBundle) => void,
     reload: () => void,
   ): Promise<Result<undefined>> {
+    console.debug("refreshByKeycloak", idTokenState)
     const token = keycloakAccessToken(idTokenState, reload)
+    console.debug("refreshByKeycloak token")
     if (token == undefined) return Results.createSuccessResult(undefined)
 
-
     return await Api.app.post_token_api_token_post({keycloak_token: token}).then(value => {
+      console.debug("refreshByKeycloak result")
       update(createTokenBundle(value))
       return Results.createSuccessResult(undefined)
     }).catch(reason => {
@@ -125,9 +130,11 @@ namespace KeycloakRefresh {
     idTokenState: AuthIdTokenState,
     reload: () => void,
   ): string | undefined {
+    console.debug("keycloakAccessToken", idTokenState)
     const token = idTokenState.accessToken
     if (Date.now() < add(token.expireDate, {minutes: -1}).getTime())
       return token.token
+    console.debug("request reload")
     reload()
     return undefined
   }
