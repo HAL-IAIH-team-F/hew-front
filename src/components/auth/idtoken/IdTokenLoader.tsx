@@ -26,11 +26,11 @@ export default function IdTokenLoader(
     if (url != undefined) return;
     const nonce = new Nonce(window)
     const authenticationImplicitFlowUrl = new AuthenticationImplicitFlowUrl(nonce, "none", "iframe")
+    setUrl(authenticationImplicitFlowUrl.url().toString())
     IdTokenUtl.receiveMessage(ref.current.contentWindow, authenticationImplicitFlowUrl, () => {
       console.debug("idTokenLoader finish")
       setUrl(undefined)
     }, oidc, update)
-    setUrl(authenticationImplicitFlowUrl.url().toString())
   }, [reload, oidc, ref.current]);
 
   return (

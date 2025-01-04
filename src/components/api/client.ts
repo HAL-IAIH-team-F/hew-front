@@ -89,7 +89,7 @@ const ColabApproveNotificationData = z
     notification_type: NotificationType,
     collabo_id: z.string().uuid(),
     collabo_approve_id: z.string().uuid(),
-    colab_creator_id: z.string(),
+    colab_creator_id: z.string().uuid(),
   })
   .passthrough();
 const NotificationData = z.union([
@@ -119,27 +119,10 @@ const PostProductBody = z
     purchase_date: z.string().datetime({ offset: true }),
     product_thumbnail_uuid: z.string().uuid(),
     product_contents_uuid: z.string().uuid(),
+    collaborator_ids: z.array(z.string().uuid()),
   })
   .passthrough();
 const ProductRes = z
-  .object({
-    product_id: z.string().uuid(),
-    product_price: z.number().int(),
-    product_title: z.string(),
-    product_description: z.string(),
-    listing_date: z.string().datetime({ offset: true }),
-    product_thumbnail_uuid: z.string().uuid(),
-    product_contents_uuid: z.string().uuid(),
-    creator_id: z.string().uuid(),
-  })
-  .passthrough();
-const name = z.union([z.array(z.string()), z.null()]).optional();
-const start_datetime = z.union([z.string(), z.null()]).optional();
-const following = z.union([z.boolean(), z.null()]).optional();
-const limit = z.union([z.number(), z.null()]).optional().default(20);
-const OrderDirection = z.enum(["asc", "desc"]);
-const time_order = OrderDirection.optional();
-const GetProductsResponse = z
   .object({
     product_description: z.string(),
     product_id: z.string().uuid(),
@@ -151,6 +134,12 @@ const GetProductsResponse = z
     creator_ids: z.array(z.string().uuid()),
   })
   .passthrough();
+const name = z.union([z.array(z.string()), z.null()]).optional();
+const start_datetime = z.union([z.string(), z.null()]).optional();
+const following = z.union([z.boolean(), z.null()]).optional();
+const limit = z.union([z.number(), z.null()]).optional().default(20);
+const OrderDirection = z.enum(["asc", "desc"]);
+const time_order = OrderDirection.optional();
 const RecruitRes = z
   .object({
     recruit_id: z.string().uuid(),
@@ -229,7 +218,6 @@ export const schemas = {
   limit,
   OrderDirection,
   time_order,
-  GetProductsResponse,
   RecruitRes,
   PostRecruitBody,
   TokenInfo,
@@ -507,7 +495,7 @@ const endpoints = makeApi([
         schema: z.array(z.string()).optional(),
       },
     ],
-    response: z.array(GetProductsResponse),
+    response: z.array(ProductRes),
     errors: [
       {
         status: 422,

@@ -49,7 +49,7 @@ const renderPageContent = (initialTab: string) => {
       <div style={{display: activeTab === "Account" ? "block" : "none"}}>
         <AccontPage/>
       </div>
-      <div style={{display: activeTab === "ProductListing" ? "block" : "none"}}>
+      <div style={{display: activeTab === "ProductListing" ? "block" : "none"}} className={"h-full"}>
         <ProductListingForm/>
       </div>
     </>

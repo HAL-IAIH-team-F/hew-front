@@ -6,7 +6,7 @@ export default function CreatorsSelector(
   {
     creators, setCreators,
   }: {
-    creators: CreatorRes[], setCreators: Dispatch<SetStateAction<CreatorRes[]>>,
+    creators: CreatorRes[], setCreators: Dispatch<SetStateAction<CreatorRes[]>>
   },
 ) {
   const [isModalOpen, setIsModalOpen] = useState(false)

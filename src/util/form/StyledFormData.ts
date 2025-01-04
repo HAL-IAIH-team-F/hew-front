@@ -56,16 +56,18 @@ export class StyledFormData {
     return undefined
   }
 
-  getFileList(key: string, message: string = `${key}を入力してください`): FileList | undefined {
+  getFileList(key: string, message: string = `${key}を入力してください`): File[] | undefined {
     const value = this.getFileOrFileList(key);
     if (value == undefined) return undefined
-    if (value instanceof FileList) return value
+    if (value instanceof FileList) return [...value]
+    if (value instanceof File) return [value]
     this.append(key, message)
     return undefined
   }
 
   getFileOrFileList(key: string, message: string = `${key}を入力してください`): File | FileList | undefined {
     const value = this.formData.get(key);
+    console.debug(value)
     if (typeof value !== 'object' || !value) {
       if (!this.formError) this.formError = {}
       this.formError[key] = message;
