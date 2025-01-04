@@ -23,6 +23,7 @@ export default function Page(
     }, location.origin)
   }, []);
   useMessageEvent(evt => {
+    console.debug("callback page receive message", evt)
     if (result == undefined) return
     if (evt.origin != location.origin) return
     if (evt.data.type != "callback_request") return
