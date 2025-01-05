@@ -513,6 +513,27 @@ const endpoints = makeApi([
   },
   {
     method: "get",
+    path: "/api/product/:product_id",
+    alias: "gp_api_product__product_id__get",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "product_id",
+        type: "Path",
+        schema: z.string().uuid(),
+      },
+    ],
+    response: ProductRes,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
     path: "/api/recruit",
     alias: "grs_api_recruit_get",
     requestFormat: "json",
