@@ -1,10 +1,13 @@
 "use client"
 import "./style.css"
 import SearchPage from "./search";
+import {FC} from "react";
 
-const Page: React.FC = () => {
+const Page: FC = () => {
   return (
-    <SearchPage/>
+    <>
+      <SearchPage/>
+    </>
   );
 };
 
