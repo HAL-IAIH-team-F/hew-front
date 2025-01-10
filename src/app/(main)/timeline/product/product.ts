@@ -1,6 +1,6 @@
 "use client";
 import * as THREE from "three";
-import {Manager} from "../manager/manager";
+import {Manager} from "~/manager/manager";
 import {gsap} from "gsap";
 import Effects from "../effects/camera/Effects";
 

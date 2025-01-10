@@ -1,20 +1,41 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {FaBell, FaCalendarAlt, FaChevronRight, FaSearch, FaSpinner} from 'react-icons/fa';
 import {FaRegMessage} from 'react-icons/fa6';
 import Image from "../../util/Image";
 import {MdOutlineBubbleChart} from "react-icons/md";
 import PageWindow from './PageWindow';
 import {iconContainerStyle, styles} from './Styles';
+import { Manager } from '~/manager/manager';
+import ProductWindows from '~/products/RightProductWindows';
 import {useUserData} from '~/api/context/useUserData';
+import { useProductContext } from '~/products/ContextProvider';
 
-const Sidebar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [isVisible, setIsVisible] = useState(false);
-  const [value, setValue] = useState<string>('undefined');
 
+type SidebarProps = {
+  manager: Manager;
+};
+const Sidebar: React.FC<SidebarProps> = ({ manager }) => {
+ 
+  const {
+    isWindowOpen,
+    isProductOpen,
+    setisProductOpen,
+    setIsVisible,
+    isVisible,
+    productId,
+    setProductId,
+    toggleWindow,
+    isSidebarOpen,
+    setIsSidebarOpen,
+    isPagevalue,
+    setPageValue,
+  } = useProductContext();
+
+  
+  
   const {user} = useUserData();
-  const toggleSidebar = () => setIsOpen(!isOpen);
-  const changePageWindow = (newValue: string | undefined) => setValue(newValue ?? 'undefined');
+  const changePageWindow = (newValue: string | undefined) => setPageValue(newValue ?? 'undefined');
+
 
   function checkPageValue(newValue: string | undefined) {
     if (isSamePage(newValue)) {
@@ -31,11 +52,11 @@ const Sidebar: React.FC = () => {
   }
 
   function isSamePage(newValue: string | undefined): boolean {
-    return value === newValue;
+    return isPagevalue === newValue;
   }
 
   function isUndefinedPage(): boolean {
-    return value === "undefined";
+    return isPagevalue === "undefined";
   }
 
   function handleSamePage() {
@@ -68,22 +89,22 @@ const Sidebar: React.FC = () => {
 
   return (
     <div>
-      <div style={isOpen ? styles.sidebar : styles.collapsedSidebar}>
-        <button onClick={toggleSidebar} style={styles.toggleButton}>
+      <div style={isSidebarOpen ? styles.sidebar : styles.collapsedSidebar}>
+
+        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={styles.toggleButton}>
           <FaChevronRight
             style={{
-              transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+              transform: isSidebarOpen ? 'rotate(180deg)' : 'rotate(0deg)',
               transition: 'transform 0.3s ease',
               fontSize: '18px',
             }}
           />
         </button>
 
-        {/* アイコンボタン */}
         {['Search', 'Notification', 'Message', 'Calendar', 'Account', "ProductListing"].map((item) => (
           <button
             key={item}
-            style={iconContainerStyle(isOpen)}
+            style={iconContainerStyle(isSidebarOpen)}
             onClick={() => {
               checkPageValue(item);
             }}
@@ -92,7 +113,8 @@ const Sidebar: React.FC = () => {
           </button>
         ))}
       </div>
-      <PageWindow isOpen={isOpen} isVisible={isVisible} value={value}/>
+      
+      <PageWindow  manager={manager}/>
     </div>
   );
 };

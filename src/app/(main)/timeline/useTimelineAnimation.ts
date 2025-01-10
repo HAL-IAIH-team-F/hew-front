@@ -2,13 +2,16 @@ import {MutableRefObject, RefObject, useEffect, useMemo, useRef} from "react";
 import {createGradientBackground} from "@/(main)/timeline/background/background";
 import * as THREE from "three";
 import {Mesh, PerspectiveCamera, Scene, WebGLRenderer} from "three";
+import {Manager} from "~/manager/manager";
 import Effects from "@/(main)/timeline/effects/camera/Effects";
 import {generateGomi} from "@/(main)/timeline/effects/gomi/gomi";
 import {createBubbles, onClickBubble} from "@/(main)/timeline/bubble/bubbles";
-import {Manager} from "@/(main)/timeline/manager/manager";
+
 import {EffectComposer} from "three-stdlib";
+import useProduct from "~/api/useProducts";
 
 export default function useTimelineAnimation(
+  manager: Manager,
   mountRef: RefObject<HTMLDivElement | null>
 ) {
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -21,9 +24,9 @@ export default function useTimelineAnimation(
   const targetCameraRotation = useRef({x: 0, y: 0});
   const rotationStrength = 0.05;
   const scene = useMemo(() => new THREE.Scene(), []);
-  const manager = useMemo(() => new Manager(), []);
   const effectsRef = useRef<Effects | null>(null);
-
+  const { products, error } = useProduct();
+    
   useEffect(() => {
     if (sceneRef.current) return
     if (!mountRef.current) return;
@@ -47,6 +50,7 @@ export default function useTimelineAnimation(
     composerRef.current = composer;
 
     generateGomi(scene, glowingGomiRef.current, 300, manager.value.riseSpeed, manager);
+    console.log(products)
     bubblesRef.current = createBubbles(scene, manager.value.bbnum, manager.value.sessionId, [], camera);
 
     if (manager.value.sessionId == 1) {

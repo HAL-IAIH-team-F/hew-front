@@ -2,10 +2,11 @@
 import * as THREE from "three";
 import {getRandomPosition, getRandomPositionWithExclusion, moveBubblesToPosition} from "./position";
 import {gsap} from "gsap";
-import {Manager} from "../manager/manager"
+
 import {showProduct} from "../product/product";
 import {createGradientBackground} from "../background/background"
 import Effects from "../effects/camera/Effects"
+import {Manager} from "~/manager/manager";
 
 const vertexShader = `
   uniform float time;

@@ -41,6 +41,6 @@ export class OidcContext {
   ): Promise<Result<AuthenticationImplicitFlowResponse>> {
     return AuthenticationImplicitFlowResponse.instance(this, this.as, this.client, params, nonce)
       .then(value => Results.createSuccessResult(value))
-      .catch(reason => Results.errResultByReason(reason, ErrorIds.UnknownError))
+      .catch(reason => Results.errResultByReason(reason, ErrorIds.AuthImplicitFlowResError))
   }
 }

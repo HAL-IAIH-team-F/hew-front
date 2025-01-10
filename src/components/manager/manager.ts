@@ -7,15 +7,17 @@ export class Manager {
     private _lastFrameTimeLow: number;
     private _riseSpeed: number;
     private _animstate: string;
+    private _productId: string;
     constructor(
-        sessionId: number = 1, 
-        bbnum: number = 21, 
+        sessionId: number = 1,
+        bbnum: number = 21,
         fpshigh: number = 60,
         fpslow: number = 0,
         lastFrameTimeHigh: number = 0,
         lastFrameTimeLow: number = 0,
         riseSpeed: number = 1,
-        animstate: string = "init"
+        animstate: string = "init",
+        productId: string = "none",
     ) {
         this._sessionId = sessionId;
         this._bbnum = bbnum;
@@ -25,6 +27,7 @@ export class Manager {
         this._lastFrameTimeLow = lastFrameTimeLow;
         this._riseSpeed = riseSpeed;
         this._animstate = animstate;
+        this._productId = productId;
         this.update = {
             sessionId: (value: number) => {
                 this._sessionId = value;
@@ -49,11 +52,14 @@ export class Manager {
             },
             animstate: (value: string) => {
                 this._animstate = value;
-            }
+            },
+            productId: (value: string) => {
+                this._productId = value;
+            },
         };
     }
+
     get value() {
-        
         return {
             sessionId: this._sessionId,
             bbnum: this._bbnum,
@@ -63,9 +69,10 @@ export class Manager {
             lastFrameTimeLow: this._lastFrameTimeLow,
             riseSpeed: this._riseSpeed,
             animstate: this._animstate,
+            productId: this._productId,
         };
-        
     }
+
     public update: {
         sessionId: (value: number) => void;
         bbnum: (value: number) => void;
@@ -75,21 +82,10 @@ export class Manager {
         lastFrameTimeLow: (value: number) => void;
         riseSpeed: (value: number) => void;
         animstate: (value: string) => void;
+        productId: (value: string) => void;
     };
+
     public outputLog(): void {
         console.log(this.value);
     }
-    
 }
-
-// // 初期化の例（引数なしでもデフォルト値が設定される）
-// const manager = new Manager(); 
-// manager.update.animstate("paused"); // animstate を "paused" に更新
-// // 値の取得
-// console.log(manager.value.sessionId); // 1（デフォルト値）
-// console.log(manager.value.animstate); // 1（デフォルト値）
-// // 値の更新
-// manager.update.sessionId(2); // sessionId を 2 に更新
-
-// // 更新後の値を確認
-// console.log(manager.value.sessionId); // 2

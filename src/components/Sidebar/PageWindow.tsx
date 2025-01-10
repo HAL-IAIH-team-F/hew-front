@@ -1,15 +1,33 @@
 import React, {useEffect, useState} from 'react';
 import {inAppPageStyle, pageWindowStyle} from './Styles';
-import SearchPage from '@/(main)/search/search';
-import AccontPage from '@/(main)/user/profile/page';
+
+import AccountPage from '@/(main)/user/profile/ProfilePage';
 import NotificationPage from '@/(main)/user/notification/page';
 import ChatModal from '@/(main)/user/chat/ChatModal';
 import ProductListingForm from '@/(main)/product/listing/ProductListingForm';
+import { Manager } from '~/manager/manager';
+import SearchPage from '@/(main)/search/search';
+import { useProductContext } from '~/products/ContextProvider';
 
+const PageWindow: React.FC<{ manager:Manager }> = ({manager}) => {
+    const {
+      isWindowOpen,
+      isProductOpen,
+      setisProductOpen,
+      setIsVisible,
+      isVisible,
+      productId,
+      setProductId,
+      toggleWindow,
+      isSidebarOpen,
+      setIsSidebarOpen,
+      isPagevalue,
+      setPageValue,
+      isAnimating,
+      setIsAnimating,
+  } = useProductContext();
 
-const PageWindow: React.FC<{ isOpen: boolean; isVisible: boolean; value: string }> = ({isOpen, isVisible, value}) => {
-  const [isAnimating, setIsAnimating] = useState(isVisible);
-
+  
   useEffect(() => {
     if (isVisible) {
       setIsAnimating(true);
@@ -20,17 +38,21 @@ const PageWindow: React.FC<{ isOpen: boolean; isVisible: boolean; value: string 
   }, [isVisible]);
 
   return (
-    <div style={pageWindowStyle(isOpen, isAnimating)}>
-      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(value)}</div>
+    <div style={pageWindowStyle(isSidebarOpen, isProductOpen, isAnimating)}>
+      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(manager)}</div>
     </div>
   );
 };
 
-const renderPageContent = (initialTab: string) => {
-  const [activeTab, setActiveTab] = useState(initialTab);
+const renderPageContent = (manager: Manager ) => {
+  const {
+    isPagevalue,
+  } = useProductContext();
+  const [activeTab, setActiveTab] = useState(isPagevalue);
+  
   useEffect(() => {
-    setActiveTab(initialTab)
-  }, [initialTab]);
+    setActiveTab(isPagevalue)
+  }, [isPagevalue]);
 
   return (
     <>
@@ -47,7 +69,7 @@ const renderPageContent = (initialTab: string) => {
         カレンダーページw
       </div>
       <div style={{display: activeTab === "Account" ? "block" : "none"}}>
-        <AccontPage/>
+        <AccountPage manager={manager}/>
       </div>
       <div style={{display: activeTab === "ProductListing" ? "block" : "none"}} className={"h-full"}>
         <ProductListingForm/>

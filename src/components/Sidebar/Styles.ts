@@ -105,16 +105,33 @@ export const styles: { [key: string]: CSSProperties } = {
     top: '23px',
     left: '70px',
   },
-  // ↓ ｗ
-  inAppPageWindowinAppWindowStyle:{
+  inAppPageWindowStyle: {
     backgroundColor: 'rgba(142, 142, 147, 0.35)',
-    backdropFilter: 'blur(12px)',
     boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.3)',
     border: '1px solid rgba(128, 128, 128, 0.2)',
-    width: "calc(100% - 300px)", // 左右5pxずつの余白を考慮
-    height: "calc(100% - 170px)", // 左右5pxずつの余白を考慮
-    position: 'fixed',
+    width: "99%", // 全体幅の80%に制限
+    height: "calc(100% - 133px)", // 全体幅の80%に制限
+    position: 'relative', // fixedからrelativeに変更
     borderRadius: '28px',
+    zIndex: 1,
+    padding: "2px",
+    margin: "0 auto", // 自動中央揃え
+    boxSizing: "border-box",
+    transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
+  },
+  ProductWindowStyle:{
+    backgroundColor: 'rgba(255, 0, 0, 1)',
+    backdropFilter: 'blur(12px)',
+    border: '1px solid rgba(128, 128, 128, 0.9)',
+    width: 'calc(40% - 300px)',
+    height: '90%',
+    position: 'fixed',
+    left: 'calc(100% - 300px)',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    borderRadius: '28px',
+    opacity: 1 ,
+    transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
     zIndex: 999,
   }
 
@@ -142,39 +159,82 @@ export const iconContainerStyle = (isOpen: boolean): CSSProperties => ({
   border: `${2}px solid rgba(255, 255, 255, 0.2)`,
 });
 
-export const pageWindowStyle = (isOpen: boolean, isAnimating: boolean): CSSProperties => ({
+export const pageWindowStyle = (
+  isOpen: boolean,
+  ProductisOpen: boolean,
+  isAnimating: boolean
+): CSSProperties => ({
   backgroundColor: 'rgba(142, 142, 147, 0.35)',
   backdropFilter: 'blur(12px)',
-  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.3)',
-  border: '1px solid rgba(128, 128, 128, 0.2)',
-  width: isOpen ? 'calc(90% - 110px )' : '90%',
+  border: '1px solid rgba(128, 128, 128, 0.9)',
+  width: isOpen
+    ? ProductisOpen
+      ? 'calc(90% - 600px)' // ProductisOpen が true の場合の幅
+      : 'calc(90% - 110px)' // ProductisOpen が false の場合の幅
+    : ProductisOpen
+    ? 'calc(90% - 500px)' // isOpen が false かつ ProductisOpen が true の場合の幅
+    : '92%', // isOpen が false かつ ProductisOpen が false の場合の幅
   height: '90%',
   position: 'fixed',
-  left: isOpen ? 'calc(50% + 55px)' : '50%',
+  left: isOpen
+    ? ProductisOpen
+      ? 'calc(50% - 220px)' // ProductisOpen が true の場合の位置
+      : 'calc(50% + 25px)' // ProductisOpen が false の場合の位置
+    : ProductisOpen
+    ? 'calc(50% - 270px)' // isOpen が false かつ ProductisOpen が true の場合の位置
+    : '50%', // isOpen が false かつ ProductisOpen が false の場合の位置
   top: '50%',
-  transform: 'translate(-50%, -50%)',
+  transform: isAnimating
+    ? 'translateX(-50%) translateY(-50%)'
+    : 'translateX(-100%) translateY(-50%)', 
   borderRadius: '28px',
   opacity: isAnimating ? 1 : 0,
-  transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
+  transition: `
+    opacity 0.3s ease-in-out, 
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+    width 0.3s ease, 
+    left 0.3s ease`,
   zIndex: 999,
+  display: "flex",
+  minWidth: ProductisOpen ? '550px' : '0',
 });
 
 export const inAppPageStyle = (isAnimating: boolean): CSSProperties => ({
   position: 'fixed',
   top: '50%',
   left: '50%',
-  transform: 'translate(-50%, -50%)',
+  transform: isAnimating ? 'translate(-50%, -50%) scale(1) ' : 'translate(-50%, -50%)',
   width: 'calc(100% - 13px)',
   height: 'calc(100% - 13px)',
   overflow: 'hidden',
   borderRadius: '30px',
   opacity: isAnimating ? 1 : 0,
-  transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
-  border: 'none', // 実際のボーダーは非表示
-  boxShadow: `
-    0 0 15px 5px rgba(255, 255, 255, 0.4),
-    inset 0 0 10px 3px rgba(255, 255, 255, 0.4) 
-  `,
+  transition: 'opacity 0.2s ease, transform 0.3s ease, width 0.3s ease, left 0.3s ease',
 });
 
-
+export const ProductWindowStyle = (ProductisOpen: boolean): CSSProperties => ({
+  backgroundColor: 'rgba(142, 142, 147, 0.35)',
+  backdropFilter: 'blur(12px)',
+  border: '1px solid rgba(128, 128, 128, 0.9)',
+  width: ProductisOpen ? 'calc(27%)' : '0',
+  height: ProductisOpen ? '90%' : '0',
+  display: "flex",
+  position: 'fixed',
+  right: '0',
+  marginRight: "25px",
+  top: '50%',
+  transformOrigin: 'right center', // 右支点を指定
+  transform: ProductisOpen
+    ? 'translateX(0%) translateY(-50%) scale(1)'
+    : 'translateX(100%) translateY(-50%) scale(0.15)', // 閉じた状態では少し縮小
+  borderRadius: '28px',
+  opacity: ProductisOpen ? 1 : 0,
+  transition: `
+    opacity 0.3s ease-in-out,
+    width 0.3s ease,
+    height 0.3s ease,
+    transform 0.3s`, // transformにカスタムイージングを追加
+  zIndex: 999,
+  minWidth: ProductisOpen ? '550px' : '0', // 最小幅を指定
+  maxWidth: ProductisOpen ? '750px' : '0', // 最小幅を指定
+});

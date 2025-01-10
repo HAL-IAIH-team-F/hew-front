@@ -4,7 +4,7 @@ import {EffectComposer, RenderPass, ShaderPass} from 'three-stdlib';
 import {BlurShader} from './BlurShader';
 import gsap from 'gsap';
 import {initmoveBubblesToPosition} from '@/(main)/timeline/bubble/position';
-import {Manager} from '@/(main)/timeline/manager/manager';
+import {Manager} from "~/manager/manager";
 
 
 class Effects {

@@ -173,7 +173,7 @@ export class AuthenticationImplicitFlowResponse {
       this.context,
       expireDate,
     ).then(value => Results.createSuccessResult(value))
-      .catch(reason => Results.errResultByReason(reason, ErrorIds.UnknownError));
+      .catch(reason => Results.errResultByReason(reason, ErrorIds.AuthImplicitFlowIdError));
   }
 
   async accessToken(): Promise<Result<AuthenticationImplicitFlowAccessToken>> {
@@ -181,6 +181,6 @@ export class AuthenticationImplicitFlowResponse {
       this.accessToken_,
       this.context,
     ).then(value => Results.createSuccessResult(value))
-      .catch(reason => Results.errResultByReason(reason, ErrorIds.UnknownError));
+      .catch(reason => Results.errResultByReason(reason, ErrorIds.AuthImplicitFlowAccessError));
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 import * as THREE from "three";
 import {gsap} from "gsap";
-import {Manager} from "../manager/manager";
+import {Manager} from "~/manager/manager";
 
 
 export const getRandomPositionWithExclusion = (minX: number,maxX: number,minY: number,maxY: number,bubbles: THREE.Mesh[],exclusionRadius: number,scale: number,sessionId:number) => {

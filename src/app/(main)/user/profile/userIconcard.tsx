@@ -38,7 +38,6 @@ export const UserIconCard: React.FC<{ user: User | undefined }> = ({ user }) => 
     alignItems: "center",
     overflow: "hidden",
     background: "linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 150, 0.2))",
-    backdropFilter: "blur(20px)",
     border: `${1 * scale}px solid rgba(255, 255, 255, 0.3)`,
     borderRadius: `35px`,
     animation: "float 6s ease-in-out infinite",
