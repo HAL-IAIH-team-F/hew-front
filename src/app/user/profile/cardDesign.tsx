@@ -10,13 +10,12 @@ interface User {
   bio?: string; // ユーザーの自己紹介
 }
 
-const ProfileCard: React.FC<{ user: User | undefined }> = ({user}) => {
-
+const ProfileCard: React.FC<{ user: User | undefined }> = ({ user }) => {
   const iconStyle: React.CSSProperties = {
-    backgroundImage: user?.icon ? `url(${user.icon.strUrl()})` : "./icon.png",
+    backgroundImage: user?.icon ? `url(${user.icon.strUrl()})` : "url('./icon.png')",
     backgroundSize: "cover",
     backgroundPosition: "center",
-    borderRadius: `25px`,
+    borderRadius: `10px`,
     height: "100%",
     width: "100%",
     transition: "transform 0.3s ease, box-shadow 0.3s ease",
@@ -25,15 +24,19 @@ const ProfileCard: React.FC<{ user: User | undefined }> = ({user}) => {
 
   return (
     <div style={styles.card}>
-      <div style={styles.header}>
-        <h2 style={styles.name}>{user?.name || "Guest"}</h2>
-        <p style={styles.id}>@{user?.id || "unknown"}</p>
-      </div>
+      {/* アイコン部分 */}
       <div style={styles.iconContainer}>
         <div style={iconStyle}></div>
       </div>
-      <div style={styles.footer}>
-        <p style={styles.bio}>{user?.bio || "No bio available"}</p>
+      {/* ユーザー情報部分 */}
+      <div style={styles.infoContainer}>
+        <div style={styles.header}>
+          <h2 style={styles.name}>{user?.name || "Guest"}</h2>
+          <p style={styles.id}>@{user?.id || "unknown"}</p>
+        </div>
+        <div style={styles.footer}>
+          <p style={styles.bio}>{user?.bio || "No bio available"}</p>
+        </div>
       </div>
     </div>
   );
@@ -42,63 +45,55 @@ const ProfileCard: React.FC<{ user: User | undefined }> = ({user}) => {
 // スタイルをオブジェクトで定義
 const styles: { [key: string]: React.CSSProperties } = {
   card: {
-    display: "flex",
-    flexDirection: "column",
+    display: "flex", // 横並び
     alignItems: "center",
-    justifyContent: "space-between",
     backgroundColor: "#f9f9f9",
     borderRadius: "15px",
     border: "5px solid #ccc",
     boxShadow: "0 8px 12px rgba(0, 0, 0, 0.2)",
-    padding: "20px",
-    maxWidth: "1000px",
-    margin: "20px auto",
+    padding: "40px", // 倍に拡大
+    maxWidth: "1200px", // 元が600pxなので2倍
+    margin: "40px auto", // 上下左右の余白も調整
     position: "relative",
     backgroundImage: "linear-gradient(to bottom right, #f5f7fa, #c3cfe2)",
     fontFamily: "Arial, sans-serif",
-    textAlign: "center",
-  },
-  header: {
-    backgroundColor: "#eee",
-    borderRadius: "10px",
-    padding: "10px 15px",
-    marginBottom: "10px",
-    width: "90%",
-    textAlign: "center",
+    textAlign: "left",
   },
   iconContainer: {
-    width: "120px",
-    height: "120px",
-    borderRadius: "50%",
+    width: "200px", // 倍に拡大
+    height: "200px", // 倍に拡大
+    borderRadius: "10px",
     overflow: "hidden",
-    border: "3px solid #aaa",
+    border: "5px solid #aaa", // 境界線も太く
     backgroundColor: "#fff",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-    margin: "15px 0",
+    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", // シャドウも調整
+    marginRight: "40px", // アイコンとテキストの間の余白
   },
-  footer: {
-    backgroundColor: "#eee",
-    borderRadius: "10px",
-    padding: "10px 15px",
-    marginTop: "10px",
-    width: "90%",
+  infoContainer: {
+    flex: 1, // アイコンの横にテキストを広げる
+  },
+  header: {
+    marginBottom: "20px", // 元の倍
   },
   name: {
-    fontSize: "1.2rem",
+    fontSize: "3rem", // 元が1.5remなので2倍
     fontWeight: "bold",
     margin: "0",
     color: "#333",
   },
   id: {
-    fontSize: "0.9rem",
+    fontSize: "1.8rem", // 元が0.9remなので2倍
     color: "#777",
-    margin: "5px 0",
+    margin: "10px 0", // 元の倍
+  },
+  footer: {
+    marginTop: "20px", // 元の倍
   },
   bio: {
-    fontSize: "0.9rem",
+    fontSize: "1.8rem", // 元が0.9remなので2倍
     color: "#555",
   },
 };

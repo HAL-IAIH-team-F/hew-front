@@ -17,7 +17,7 @@ const RotatingCard: React.FC<{ user: User | undefined }> = ({user}) => {
 
   useFrame(() => {
     if (cardRef.current) {
-      cardRef.current.rotation.y += 0.006;
+      cardRef.current.rotation.y += 0.0;
     }
   });
 
