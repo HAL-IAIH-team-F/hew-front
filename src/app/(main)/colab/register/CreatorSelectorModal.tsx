@@ -20,7 +20,9 @@ export default function CreatorSelectorModal(
   const [err, setErr] = useState<ErrorData>()
   useEffect(() => {
     if (clientContext.state == "loading") return
-    clientContext.client.unAuthOrAuth(Api.app.gcs_api_creator_get).then(value => {
+    clientContext.client.unAuthOrAuth(
+      Api.app.gcs_api_creator_get, {}, {}
+    ).then(value => {
       if (value.error) return setErr(value.error)
 
       setCreators(value.success)
@@ -32,12 +34,12 @@ export default function CreatorSelectorModal(
       <div className={"fixed flex top-0 left-0 w-full h-full bg-[#0003] justify-center items-center"}
            onClick={onCloseRequest}>
         <div
-          className={"w-96 h-56 bg-white opacity-100"} onClick={(e) => e.stopPropagation()}
+          className={"w-[500px] h-96 bg-white opacity-100 overflow-y-scroll"} onClick={(e) => e.stopPropagation()}
         >
           <ModalHeader onCloseRequest={onCloseRequest}/>
           <ErrorMessage error={err}/>
           {creators.map(creator => <CreatorSelectorItem
-            key={creator.creator_id} creator={creator} oneSelect={()=>oneSelect(creator)}
+            key={creator.creator_id} creator={creator} oneSelect={() => oneSelect(creator)}
           />)}
         </div>
       </div>

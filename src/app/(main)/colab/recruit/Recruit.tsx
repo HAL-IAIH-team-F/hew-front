@@ -24,7 +24,7 @@ export default function Recruit(
       <button onClick={() => {
         setErr(undefined)
         if (clientContext.state != "authenticated") throw new Error("not authenticated")
-        clientContext.client.authBody(Api.app.pcr_api_colab_request_post, {recruit_id: recruit.recruit_id})
+        clientContext.client.authBody(Api.app.pcr_api_colab_request_post,{}, {recruit_id: recruit.recruit_id},{})
           .then(value => {
             if (!value.error) return
             setErr(value.error)

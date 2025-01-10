@@ -8,7 +8,10 @@ export default function useOidcContext() {
   useEffect(() => {
     if (flag.current) return;
     flag.current = true;
-    Oidc.context().then(setContext).catch(console.error)
+    Oidc.context().then(value => {
+      console.debug("oidc context", value)
+      setContext(value)
+    }).catch(reason => console.error("oidc context load err", reason))
   }, []);
   return context
 }

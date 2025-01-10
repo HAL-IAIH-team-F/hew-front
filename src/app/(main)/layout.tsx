@@ -1,4 +1,3 @@
-import {StyledNavigation} from "~/Navigation";
 import {ReactNode} from "react";
 import {ClientContextProvider} from "~/api/context/ClientContextProvider";
 
@@ -14,7 +13,7 @@ export default function Layout(
     <>
       <ClientContextProvider>
         {/*<TokenReloader/>*/}
-        <StyledNavigation/>
+        {/*<StyledNavigation/>*/}
         {/*<BackgroundObject/>*/}
         {children}
       </ClientContextProvider>

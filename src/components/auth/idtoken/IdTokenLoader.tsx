@@ -4,8 +4,8 @@ import {
 } from "~/auth/keycloak/api/internal/authentication/implicit-flow/AuthenticationImplicitFlowUrl";
 import {Nonce} from "~/auth/keycloak/api/internal/Nonce";
 import {IdTokenState} from "~/auth/idtoken/IdTokenState";
-import useOidcContext from "~/auth/idtoken/hook/useOidcContext";
-import useCallbackMessage from "~/auth/idtoken/hook/useCallbackMessage";
+import useOidcContext from "~/auth/keycloak/api/useOidcContext";
+import {IdTokenUtl} from "~/auth/idtoken/IdTokenUtl";
 
 export default function IdTokenLoader(
   {
@@ -17,20 +17,22 @@ export default function IdTokenLoader(
   const ref = useRef<HTMLIFrameElement | null>(null);
   const [url, setUrl] = useState<string>()
   const oidc = useOidcContext()
-  const [nonce, setNonce] = useState<Nonce>()
-  useEffect(() => {
-    setUrl(prevState => {
-      if (prevState != undefined) return prevState;
-      const nonce = new Nonce(window)
-      setNonce(nonce)
 
-      setTimeout(() => setUrl(undefined), 1000 * 30)
-      return new AuthenticationImplicitFlowUrl(nonce, "none","iframe").url().toString()
-    })
-  }, [reload]);
-  useCallbackMessage(oidc, nonce, ref.current, update, () => {
-    setUrl(undefined)
-  })
+  useEffect(() => {
+    console.debug("idTokenLoader start", oidc, ref, url)
+    if (oidc == undefined) return
+    if (ref.current == undefined) return
+    if (ref.current.contentWindow == undefined) return;
+    if (url != undefined) return;
+    const nonce = new Nonce(window)
+    const authenticationImplicitFlowUrl = new AuthenticationImplicitFlowUrl(nonce, "none", "iframe")
+    setUrl(authenticationImplicitFlowUrl.url().toString())
+    IdTokenUtl.receiveMessage(ref.current.contentWindow, authenticationImplicitFlowUrl, () => {
+      console.debug("idTokenLoader finish")
+      setUrl(undefined)
+    }, oidc, update)
+  }, [reload, oidc, ref.current]);
+
   return (
     <>
       <iframe

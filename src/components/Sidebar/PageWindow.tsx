@@ -3,7 +3,7 @@ import {inAppPageStyle, pageWindowStyle} from './Styles';
 
 import AccountPage from '@/(main)/user/profile/page';
 import NotificationPage from '@/(main)/user/notification/page';
-import MessagePage from '@/(main)/user/message/page';
+import ChatModal from '@/(main)/user/chat/ChatModal';
 import ProductListingForm from '@/(main)/product/listing/ProductListingForm';
 import { Manager } from '~/manager/manager';
 import SearchPage from '@/(main)/search/search';
@@ -59,11 +59,11 @@ const renderPageContent = (manager: Manager ) => {
       <div style={{display: activeTab === "Search" ? "block" : "none"}}>
         <SearchPage/>
       </div>
-      <div style={{display: activeTab === "Notification" ? "block" : "none"}}>
+      <div style={{display: activeTab === "Notification" ? "block" : "none"}} className={"h-full"}>
         <NotificationPage/>
       </div>
-      <div style={{display: activeTab === "Message" ? "block" : "none"}}>
-        <MessagePage/>
+      <div style={{display: activeTab === "Message" ? "block" : "none"}} className={"h-full"}>
+        <ChatModal/>
       </div>
       <div style={{display: activeTab === "Calendar" ? "block" : "none"}}>
         カレンダーページw
@@ -71,7 +71,7 @@ const renderPageContent = (manager: Manager ) => {
       <div style={{display: activeTab === "Account" ? "block" : "none"}}>
         <AccountPage manager={manager}/>
       </div>
-      <div style={{display: activeTab === "ProductListing" ? "block" : "none"}}>
+      <div style={{display: activeTab === "ProductListing" ? "block" : "none"}} className={"h-full"}>
         <ProductListingForm/>
       </div>
     </>

@@ -1,13 +1,24 @@
-import {Client} from "~/api/client/Client";
-import {AxiosRequestConfig} from "axios";
+import {
+  ApiBody,
+  BodiedFunc,
+  BodiedParams,
+  BodiedParamsLessOpt,
+  BodyLessFunc,
+  BodyLessParams,
+  BodyLessParamsLessOpt,
+  Client,
+  Res
+} from "~/api/client/Client";
 import {Result} from "../../../util/err/result";
 
 export abstract class LoadedClient extends Client {
 
-  abstract unAuthOrAuthBody<B, R>(func: (body: B, opt: AxiosRequestConfig) => Promise<R>, body: B, opt?: AxiosRequestConfig): Promise<Result<R>>
+  abstract unAuthOrAuthBody<F extends BodiedFunc>(
+    func: F, opt: BodiedParamsLessOpt<F>, body: ApiBody<F>, params: BodiedParams<F>
+  ): Promise<Result<Res<F>>>
 
-  async unAuthOrAuth<R>(func: (opt: AxiosRequestConfig) => Promise<R>, opt?: AxiosRequestConfig): Promise<Result<R>> {
-    return this.unAuthOrAuthBody((_, opt1) => func(opt1), null, opt)
-  }
+  abstract unAuthOrAuth<F extends BodyLessFunc>(
+    func: F, opt: BodyLessParamsLessOpt<F>, params: BodyLessParams<F>
+  ): Promise<Result<Res<F>>>
 
 }

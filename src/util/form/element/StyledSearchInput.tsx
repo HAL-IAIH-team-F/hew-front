@@ -6,7 +6,7 @@
 // ============================
 
 import React from "react";
-import { sx } from "../util";
+import { sx } from "../../util";
 
 export interface SearchInputProps {
   name: string;

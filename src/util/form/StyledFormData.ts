@@ -1,4 +1,5 @@
-import {FormError} from "./StyledForm";
+import {FormError} from "./element/StyledForm";
+import {ErrorData} from "../err/err";
 
 export class StyledFormData {
   formError: FormError | undefined = undefined
@@ -6,6 +7,10 @@ export class StyledFormData {
   constructor(
     private readonly formData: FormData
   ) {
+  }
+
+  appendErrorData(key: string, value: ErrorData) {
+    this.append(key, `{${value.error_id}: ${value.message}}`)
   }
 
   append(key: string, value: string) {
@@ -51,16 +56,18 @@ export class StyledFormData {
     return undefined
   }
 
-  getFileList(key: string, message: string = `${key}を入力してください`): FileList | undefined {
+  getFileList(key: string, message: string = `${key}を入力してください`): File[] | undefined {
     const value = this.getFileOrFileList(key);
     if (value == undefined) return undefined
-    if (value instanceof FileList) return value
+    if (value instanceof FileList) return [...value]
+    if (value instanceof File) return [value]
     this.append(key, message)
     return undefined
   }
 
   getFileOrFileList(key: string, message: string = `${key}を入力してください`): File | FileList | undefined {
     const value = this.formData.get(key);
+    console.debug(value)
     if (typeof value !== 'object' || !value) {
       if (!this.formError) this.formError = {}
       this.formError[key] = message;
@@ -69,7 +76,7 @@ export class StyledFormData {
     return value
   }
 
-  validate(...args: (string | undefined)[])  {
+  validate(...args: (string | undefined)[]) {
     for (const key in args) {
       if (!key) return false
     }

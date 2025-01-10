@@ -12,6 +12,7 @@ export default function Page(
 
   useEffect(() => {
     // if (executed.current) return;
+    console.debug("callback page")
     executed.current = true;
 
     const param = new URLSearchParams(location.hash.slice(1))
@@ -22,6 +23,7 @@ export default function Page(
     }, location.origin)
   }, []);
   useMessageEvent(evt => {
+    console.debug("callback page receive message", evt)
     if (result == undefined) return
     if (evt.origin != location.origin) return
     if (evt.data.type != "callback_request") return

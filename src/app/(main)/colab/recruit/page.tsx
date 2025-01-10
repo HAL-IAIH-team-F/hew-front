@@ -15,7 +15,7 @@ export default function Page(
   const client = useClientContextState()
 
   useEffect(() => {
-    client.client.unAuth(Api.app.grs_api_recruit_get, {}).then(value => {
+    client.client.unAuth(Api.app.grs_api_recruit_get,{}, {}).then(value => {
       if (value.error) return setErr(value.error)
       setRecruits(value.success)
     })

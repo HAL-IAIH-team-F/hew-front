@@ -16,9 +16,10 @@ export default function handleCallbackEvent(
       postMessage({type: "callback_request"})
       break
     case "callback_result":
+      console.debug("callback result", evt.data.param)
       if (oidc) validateCallbackResult(evt.data.param, oidc, nonce, update)
         .then(value => {
-          if (value.error) return console.error(value.error)
+          if (value.error) return console.error("callback result error", value.error)
         })
       onFinish()
       break
@@ -31,13 +32,14 @@ async function validateCallbackResult(
 ): Promise<Result<AuthenticationImplicitFlowIdToken | undefined>> {
   const params = new URLSearchParams(param)
   const error = params.get("error")
+  console.debug("validateCallbackResult error", error)
   if (error == "login_required") {
     update({state: "unauthenticated", oidcContext: context})
     return Results.createSuccessResult(undefined)
   }
   if (error) {
-    console.error(error)
-    return Results.errResultByReason(error, ErrorIds.CallbackError);
+    console.error("callback error", error)
+    return Results.errResultByReason(error, ErrorIds.UnknownError);
   }
   const response = await context.authenticationImplicitFlowResponse(params, nonce)
   if (response.error) return response

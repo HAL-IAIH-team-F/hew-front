@@ -52,6 +52,9 @@ const PostCollaboBody = z
     creators: z.array(z.string().uuid()),
   })
   .passthrough();
+const PostColabApproveBody = z
+  .object({ colab_id: z.string().uuid() })
+  .passthrough();
 const CreatorResponse = z
   .object({
     creator_id: z.string().uuid(),
@@ -63,26 +66,39 @@ const PostCreatorBody = z
   .object({ contact_address: z.string(), transfer_target: z.string() })
   .passthrough();
 const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
-const NotificationType = z.enum(["colab", "colab_approve"]);
-const CollaboNotificationData = z
+const NotificationType = z.enum(["colab_request", "colab_approve", "colab"]);
+const ColabNotificationData = z
   .object({
     notification_type: NotificationType,
     collabo_id: z.string().uuid(),
-    sender_creator_id: z.string().uuid(),
+    owner_id: z.string().uuid(),
+    title: z.string(),
+    description: z.string(),
+    creator_ids: z.array(z.string().uuid()),
   })
   .passthrough();
-const CollaboApproveNotificationData = z
+const ColabRequestNotificationData = z
+  .object({
+    notification_type: NotificationType,
+    colab_request_id: z.string().uuid(),
+    from_creator_id: z.string().uuid(),
+  })
+  .passthrough();
+const ColabApproveNotificationData = z
   .object({
     notification_type: NotificationType,
     collabo_id: z.string().uuid(),
-    approve_id: z.string().uuid(),
+    collabo_approve_id: z.string().uuid(),
+    colab_creator_id: z.string().uuid(),
   })
   .passthrough();
+const NotificationData = z.union([
+  ColabNotificationData,
+  ColabRequestNotificationData,
+  ColabApproveNotificationData,
+]);
 const NotificationRes = z
-  .object({
-    notification_id: z.string().uuid(),
-    data: z.union([CollaboNotificationData, CollaboApproveNotificationData]),
-  })
+  .object({ notification_id: z.string().uuid(), data: NotificationData })
   .passthrough();
 const CartRes = z
   .object({
@@ -103,27 +119,10 @@ const PostProductBody = z
     purchase_date: z.string().datetime({ offset: true }),
     product_thumbnail_uuid: z.string().uuid(),
     product_contents_uuid: z.string().uuid(),
+    collaborator_ids: z.array(z.string().uuid()),
   })
   .passthrough();
 const ProductRes = z
-  .object({
-    product_id: z.string().uuid(),
-    product_price: z.number().int(),
-    product_title: z.string(),
-    product_description: z.string(),
-    listing_date: z.string().datetime({ offset: true }),
-    product_thumbnail_uuid: z.string().uuid(),
-    product_contents_uuid: z.string().uuid(),
-    creator_id: z.string().uuid(),
-  })
-  .passthrough();
-const name = z.union([z.array(z.string()), z.null()]).optional();
-const start_datetime = z.union([z.string(), z.null()]).optional();
-const following = z.union([z.boolean(), z.null()]).optional();
-const limit = z.union([z.number(), z.null()]).optional().default(20);
-const OrderDirection = z.enum(["asc", "desc"]);
-const time_order = OrderDirection.optional();
-const GetProductsResponse = z
   .object({
     product_description: z.string(),
     product_id: z.string().uuid(),
@@ -135,6 +134,12 @@ const GetProductsResponse = z
     creator_ids: z.array(z.string().uuid()),
   })
   .passthrough();
+const name = z.union([z.array(z.string()), z.null()]).optional();
+const start_datetime = z.union([z.string(), z.null()]).optional();
+const following = z.union([z.boolean(), z.null()]).optional();
+const limit = z.union([z.number(), z.null()]).optional().default(20);
+const OrderDirection = z.enum(["asc", "desc"]);
+const time_order = OrderDirection.optional();
 const RecruitRes = z
   .object({
     recruit_id: z.string().uuid(),
@@ -194,12 +199,15 @@ export const schemas = {
   ChatMessagesRes,
   PostColabRequestBody,
   PostCollaboBody,
+  PostColabApproveBody,
   CreatorResponse,
   PostCreatorBody,
   UserFollow,
   NotificationType,
-  CollaboNotificationData,
-  CollaboApproveNotificationData,
+  ColabNotificationData,
+  ColabRequestNotificationData,
+  ColabApproveNotificationData,
+  NotificationData,
   NotificationRes,
   CartRes,
   PostProductBody,
@@ -210,7 +218,6 @@ export const schemas = {
   limit,
   OrderDirection,
   time_order,
-  GetProductsResponse,
   RecruitRes,
   PostRecruitBody,
   TokenInfo,
@@ -317,6 +324,27 @@ const endpoints = makeApi([
         name: "body",
         type: "Body",
         schema: PostCollaboBody,
+      },
+    ],
+    response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/api/colab/approve",
+    alias: "pca_api_colab_approve_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: z.object({ colab_id: z.string().uuid() }).passthrough(),
       },
     ],
     response: z.unknown(),
@@ -467,7 +495,7 @@ const endpoints = makeApi([
         schema: z.array(z.string()).optional(),
       },
     ],
-    response: z.array(GetProductsResponse),
+    response: z.array(ProductRes),
     errors: [
       {
         status: 422,
@@ -482,6 +510,27 @@ const endpoints = makeApi([
     alias: "read_product_cart_api_product_cart_get",
     requestFormat: "json",
     response: z.array(CartRes),
+  },
+  {
+    method: "get",
+    path: "/api/product/:product_id",
+    alias: "gp_api_product__product_id__get",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "product_id",
+        type: "Path",
+        schema: z.string().uuid(),
+      },
+    ],
+    response: ProductRes,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
   },
   {
     method: "get",
