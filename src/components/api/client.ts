@@ -102,14 +102,16 @@ const NotificationRes = z
   .passthrough();
 const CartRes = z
   .object({
-    product_id: z.string().uuid(),
-    product_price: z.number().int(),
-    product_title: z.string(),
-    product_description: z.string(),
-    purchase_date: z.string().datetime({ offset: true }),
-    product_contents_uuid: z.string().uuid(),
-    product_thumbnail_uuid: z.string().uuid(),
+    cart_id: z.string().uuid(),
+    user_id: z.string().uuid(),
+    product_ids: z.array(z.string().uuid()),
   })
+  .passthrough();
+const hew_back__cart__post_cart__PostCartBody = z
+  .object({ products: z.array(z.string().uuid()) })
+  .passthrough();
+const hew_back__cart__patch_cart__PostCartBody = z
+  .object({ new_products: z.array(z.string().uuid()) })
   .passthrough();
 const PostProductBody = z
   .object({
@@ -210,6 +212,8 @@ export const schemas = {
   NotificationData,
   NotificationRes,
   CartRes,
+  hew_back__cart__post_cart__PostCartBody,
+  hew_back__cart__patch_cart__PostCartBody,
   PostProductBody,
   ProductRes,
   name,
@@ -232,6 +236,55 @@ export const schemas = {
 };
 
 const endpoints = makeApi([
+  {
+    method: "get",
+    path: "/api/cart",
+    alias: "gc_api_cart_get",
+    requestFormat: "json",
+    response: z.union([CartRes, z.object({}).partial().passthrough()]),
+  },
+  {
+    method: "post",
+    path: "/api/cart",
+    alias: "pc_api_cart_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: hew_back__cart__post_cart__PostCartBody,
+      },
+    ],
+    response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "patch",
+    path: "/api/cart",
+    alias: "pac_api_cart_patch",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: hew_back__cart__patch_cart__PostCartBody,
+      },
+    ],
+    response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
   {
     method: "put",
     path: "/api/cart_buy",
@@ -503,13 +556,6 @@ const endpoints = makeApi([
         schema: HTTPValidationError,
       },
     ],
-  },
-  {
-    method: "get",
-    path: "/api/product_cart",
-    alias: "read_product_cart_api_product_cart_get",
-    requestFormat: "json",
-    response: z.array(CartRes),
   },
   {
     method: "get",

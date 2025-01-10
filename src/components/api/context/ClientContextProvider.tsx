@@ -5,7 +5,7 @@ import {AuthSession, LoginSession, UnAuthSession} from "~/auth/refresh/LoginSess
 import {Client} from "~/api/client/Client";
 import {OidcContext} from "~/auth/keycloak/api/internal/OidcContext";
 import {UnAuthClient} from "~/api/client/UnAuthClient";
-import {AuthClient} from "~/api/client/AuthClient";
+import {AuthClient} from "~/api/client/auth/AuthClient";
 import {AuthIdTokenState, IdTokenState} from "~/auth/idtoken/IdTokenState";
 import LogoutFrame from "~/auth/logout/LogoutFrame";
 
