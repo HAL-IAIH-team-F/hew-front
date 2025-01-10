@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@react-three/drei": "^9.120.5",
+    "@react-three/drei": "^9.120.6",
     "@react-three/fiber": "^8.17.12",
     "@react-three/postprocessing": "^2.16.6",
     "@zodios/core": "^10.9.6",
