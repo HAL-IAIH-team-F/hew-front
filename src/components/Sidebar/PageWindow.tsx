@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {inAppPageStyle, pageWindowStyle} from './Styles';
 
-import AccountPage from '@/(main)/user/profile/page';
+import AccountPage from '@/(main)/user/profile/ProfilePage';
 import NotificationPage from '@/(main)/user/notification/page';
 import ChatModal from '@/(main)/user/chat/ChatModal';
 import ProductListingForm from '@/(main)/product/listing/ProductListingForm';

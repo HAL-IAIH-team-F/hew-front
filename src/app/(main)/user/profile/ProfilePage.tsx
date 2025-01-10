@@ -11,7 +11,7 @@ import { KeycloakConfig } from "~/auth/keycloak/KeycloakConfig"
 interface ProfileProps {
   manager: Manager; // Manager 型を明確に定義
 }
-const Page: React.FC<ProfileProps> = ({ manager }) => {
+const ProfilePage: React.FC<ProfileProps> = ({ manager }) => {
   return (
     <div
       style={{
@@ -136,4 +136,4 @@ const Page: React.FC<ProfileProps> = ({ manager }) => {
   );
 };
 
-export default Page;
+export default ProfilePage;

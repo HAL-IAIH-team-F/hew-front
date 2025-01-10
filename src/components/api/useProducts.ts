@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { ErrorData } from "../../util/err/err";
-import { ProductRes } from "~/products/ProductRes";
-import { useClientContextState } from "~/api/context/ClientContextProvider";
-import { Api } from "~/api/context/Api";
+import {useEffect, useState} from "react";
+import {ErrorData} from "../../util/err/err";
+import {ProductRes} from "~/products/ProductRes";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {Api} from "~/api/context/Api";
 
 interface UseProductOptions {
   productId?: string;
@@ -18,11 +18,10 @@ export default function useProduct(options: UseProductOptions = {}) {
   useEffect(() => {
     if (client.state === "loading") return;
 
-    const { productId, limit, uuid } = options;
-    const params: Record<string, any> = {};
-    if (limit) params.limit = limit;
-
-    client.client.unAuthOrAuth(Api.app.gps_api_product_get, params).then((value) => {
+    const {productId, limit, uuid} = options;
+    client.client.unAuthOrAuth(Api.app.gps_api_product_get, {
+      limit: limit
+    }, {}).then((value) => {
       if (value.error) {
         setError(value.error);
         setProducts([]); // エラー時に既存データをクリア
@@ -41,5 +40,5 @@ export default function useProduct(options: UseProductOptions = {}) {
     });
   }, [options.productId, client.state]); // productId を依存関係に追加
 
-  return { products, error };
+  return {products, error};
 }
