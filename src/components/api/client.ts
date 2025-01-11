@@ -124,8 +124,11 @@ const PostProductBody = z
     collaborator_ids: z.array(z.string().uuid()),
   })
   .passthrough();
+const TokenInfo = z
+  .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
+  .passthrough();
 const PurchaseInfo = z
-  .object({ content_uuid: z.string().uuid() })
+  .object({ content_uuid: z.string().uuid(), token: TokenInfo })
   .passthrough();
 const ProductRes = z
   .object({
@@ -155,9 +158,6 @@ const RecruitRes = z
   .passthrough();
 const PostRecruitBody = z
   .object({ title: z.string(), description: z.string() })
-  .passthrough();
-const TokenInfo = z
-  .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
   .passthrough();
 const TokenRes = z
   .object({ access: TokenInfo, refresh: TokenInfo })
@@ -218,6 +218,7 @@ export const schemas = {
   hew_back__cart__post_cart__PostCartBody,
   hew_back__cart__patch_cart__PostCartBody,
   PostProductBody,
+  TokenInfo,
   PurchaseInfo,
   ProductRes,
   name,
@@ -228,7 +229,6 @@ export const schemas = {
   time_order,
   RecruitRes,
   PostRecruitBody,
-  TokenInfo,
   TokenRes,
   PostTokenBody,
   TokenInfoOld,
@@ -656,13 +656,6 @@ const endpoints = makeApi([
         schema: HTTPValidationError,
       },
     ],
-  },
-  {
-    method: "get",
-    path: "/api/token/fi;e/access",
-    alias: "gettfa_api_token_fi_e_access_get",
-    requestFormat: "json",
-    response: ImgTokenRes,
   },
   {
     method: "get",

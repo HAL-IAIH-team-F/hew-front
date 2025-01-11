@@ -5,6 +5,12 @@ export interface ProductRes {
   product_price: number
   product_title: string
   purchase_date: string
-  product_contents_uuid: string
   creator_ids: string[]
+  purchase_info?: {
+    content_uuid: string
+    token: {
+      token: string,
+      expire: string
+    }
+  }  | undefined | null
 }
