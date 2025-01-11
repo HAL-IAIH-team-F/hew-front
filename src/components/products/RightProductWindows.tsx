@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useProductContext } from './ContextProvider';
+import { useCartContext } from "../cart/CartContext"
 import { ProductWindowStyle } from '~/Sidebar/Styles';
 import useProduct from '~/api/useProducts';
-import { ProductRes } from './ProductRes';
 import ProductThumbnail from '~/api/useImgData';
-import { MdHeight } from 'react-icons/md';
+import { ProductRes } from './ProductRes';
 
 const RightProductWindows: React.FC = () => {
   const { productId, isProductOpen } = useProductContext();
+  const { addToCart } = useCartContext();
   const [currentProducts, setCurrentProducts] = useState<ProductRes[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -18,7 +19,7 @@ const RightProductWindows: React.FC = () => {
       setCurrentProducts([]);
       setErrorMessage('');
     }
-  }, [productId]); 
+  }, [productId]);
 
   useEffect(() => {
     if (error) {
@@ -29,6 +30,16 @@ const RightProductWindows: React.FC = () => {
       setErrorMessage('');
     }
   }, [products, error]);
+
+  const handleAddToCart = (product: ProductRes) => {
+    addToCart({
+      product_id: product.product_id,
+      product_title: product.product_title,
+      product_price: product.product_price,
+      product_thumbnail_uuid: product.product_thumbnail_uuid,
+    });
+    alert(`${product.product_title} をカートに追加しました。`);
+  };
 
   return (
     <div style={styles.container(isProductOpen)}>
@@ -43,6 +54,12 @@ const RightProductWindows: React.FC = () => {
                 <p style={styles.productDescription}>{product.product_description}</p>
                 <p style={styles.productPrice}>¥{product.product_price.toLocaleString()}</p>
                 <p style={styles.purchaseDate}>購入日: {product.purchase_date}</p>
+                <button
+                  style={styles.addToCartButton}
+                  onClick={() => handleAddToCart(product)}
+                >
+                  カートに追加
+                </button>
               </div>
             </div>
           ))}
@@ -58,21 +75,9 @@ const styles = {
   container: (isProductOpen: boolean): React.CSSProperties => ({
     ...ProductWindowStyle(isProductOpen),
   }),
-  banner: {
-    width: '100%',
-    height: '15%',
-    backgroundColor: '#ff5722',
-    color: '#fff',
-    fontSize: '2rem',
-    fontWeight: 'bold',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center' as React.CSSProperties['textAlign'], // 型の明示
-  },
   errorMessage: {
     color: 'red',
-    textAlign: 'center' as React.CSSProperties['textAlign'], // 型の明示
+    textAlign: 'center' as React.CSSProperties['textAlign'],
     marginBottom: '1rem',
   },
   product: {
@@ -113,8 +118,17 @@ const styles = {
     fontSize: '0.8rem',
     color: '#888',
   },
+  addToCartButton: {
+    marginTop: '0.5rem',
+    padding: '0.5rem 1rem',
+    backgroundColor: '#ff5722',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
   noProductsMessage: {
-    textAlign: 'center' as React.CSSProperties['textAlign'], // 型の明示
+    textAlign: 'center' as React.CSSProperties['textAlign'],
     color: '#555',
     fontSize: '1rem',
   },
