@@ -124,16 +124,19 @@ const PostProductBody = z
     collaborator_ids: z.array(z.string().uuid()),
   })
   .passthrough();
+const PurchaseInfo = z
+  .object({ content_uuid: z.string().uuid() })
+  .passthrough();
 const ProductRes = z
   .object({
-    product_description: z.string(),
     product_id: z.string().uuid(),
-    product_thumbnail_uuid: z.string().uuid(),
     product_price: z.number().int(),
     product_title: z.string(),
+    product_thumbnail_uuid: z.string().uuid(),
+    product_description: z.string(),
     purchase_date: z.string().datetime({ offset: true }),
-    product_contents_uuid: z.string().uuid(),
     creator_ids: z.array(z.string().uuid()),
+    purchase_info: z.union([PurchaseInfo, z.null()]).optional(),
   })
   .passthrough();
 const name = z.union([z.array(z.string()), z.null()]).optional();
@@ -215,6 +218,7 @@ export const schemas = {
   hew_back__cart__post_cart__PostCartBody,
   hew_back__cart__patch_cart__PostCartBody,
   PostProductBody,
+  PurchaseInfo,
   ProductRes,
   name,
   start_datetime,
@@ -655,8 +659,15 @@ const endpoints = makeApi([
   },
   {
     method: "get",
-    path: "/api/token/image",
-    alias: "image_token_api_token_image_get",
+    path: "/api/token/fi;e/access",
+    alias: "gettfa_api_token_fi_e_access_get",
+    requestFormat: "json",
+    response: ImgTokenRes,
+  },
+  {
+    method: "get",
+    path: "/api/token/file/upload",
+    alias: "gettfu_api_token_file_upload_get",
     requestFormat: "json",
     response: ImgTokenRes,
   },
