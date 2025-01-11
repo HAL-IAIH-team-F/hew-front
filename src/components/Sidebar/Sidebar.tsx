@@ -5,17 +5,17 @@ import Image from "../../util/Image";
 import {MdOutlineBubbleChart} from "react-icons/md";
 import PageWindow from './PageWindow';
 import {iconContainerStyle, styles} from './Styles';
-import { Manager } from '~/manager/manager';
+import {Manager} from '~/manager/manager';
 import ProductWindows from '~/products/RightProductWindows';
 import {useUserData} from '~/api/context/useUserData';
-import { useProductContext } from '~/products/ContextProvider';
+import {useProductContext} from '~/products/ContextProvider';
 
 
 type SidebarProps = {
   manager: Manager;
 };
-const Sidebar: React.FC<SidebarProps> = ({ manager }) => {
- 
+const Sidebar: React.FC<SidebarProps> = ({manager}) => {
+
   const {
     isWindowOpen,
     isProductOpen,
@@ -31,8 +31,7 @@ const Sidebar: React.FC<SidebarProps> = ({ manager }) => {
     setPageValue,
   } = useProductContext();
 
-  
-  
+
   const {user} = useUserData();
   const changePageWindow = (newValue: string | undefined) => setPageValue(newValue ?? 'undefined');
 
@@ -113,8 +112,8 @@ const Sidebar: React.FC<SidebarProps> = ({ manager }) => {
           </button>
         ))}
       </div>
-      
-      <PageWindow  manager={manager}/>
+
+      <PageWindow manager={manager}/>
     </div>
   );
 };
