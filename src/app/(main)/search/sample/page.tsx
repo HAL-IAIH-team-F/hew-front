@@ -34,7 +34,6 @@ const router = useRouter()
       <p>product_price: {value.product_price}</p>
       <p>product_title: {value.product_title}</p>
       <p>purchase_date: {value.purchase_date}</p>
-      <p>product_contents_uuid: {value.product_contents_uuid}</p>
       <p>creator_ids: {value.creator_ids}</p>
     </div>)}
     <ErrorMessage error={err}/>
