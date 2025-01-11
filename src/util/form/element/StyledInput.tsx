@@ -15,14 +15,25 @@ export function StyledInput(
 ) {
   const formState = useFormState()
   return (
-    <ItemBackground type={"label"} className={sx("p-3 block my-6", className)}>
-      <p className={sx("px-4 mb-4 block text-xl")}>{label || name}</p>
-      <input
-        {...props}
-        name={name} className={sx("block w-full border-2 border-borderDef rounded-lg px-3 py-1 text-lg")}
-      />
-      <ErrorMessage error={name && formState.err && formState.err[name]}/>
-    </ItemBackground>
+      <div className="flex justify-center items-center">
+        <ItemBackground
+            type={"label"}
+            className={sx("p-3 block  w-7/12"
+            )}
+        >
+          <p className={sx("px-4 mb-4 block text-xl text-[#4E5861]")}>
+              {label || name}
+          </p>
+          <input
+            {...props}
+            name={name}
+            className={sx(
+                "block w-full rounded-lg px-3 py-1"
+            )}
+          />
+          <ErrorMessage error={name && formState.err && formState.err[name]}/>
+        </ItemBackground>
+      </div>
   );
 }
 

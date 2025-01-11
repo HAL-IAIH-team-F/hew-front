@@ -2,7 +2,7 @@ import {ClassAttributes, createElement, HTMLAttributes, ReactHTML} from "react";
 import {sx} from "../util/util";
 
 export namespace ItemBackgrounds {
-  export const itemBackgroundClassName = "bg-crystal border-white border-2 py-4 px-6"
+  export const itemBackgroundClassName = "border-white py-4 px-6"
 }
 export default function ItemBackground<P extends HTMLAttributes<T>, T extends HTMLElement>(
   {

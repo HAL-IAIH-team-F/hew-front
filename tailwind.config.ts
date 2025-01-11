@@ -10,8 +10,8 @@ const config: Config = {
         white: "#F8F8F8",
         blue: "#327AD9",
         lightBlue: "#52D9CB",
-        crystal: "#E9FFF87F",
-        backcolor: "#F5FEFF",
+        crystal: "rgb(0,0,0)",
+        backcolor: "#05253F",
         borderDef: "#B4B4B4",
         lightGray: "#747989"
       },
