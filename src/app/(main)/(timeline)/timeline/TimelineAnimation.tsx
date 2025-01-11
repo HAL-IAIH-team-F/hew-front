@@ -1,6 +1,6 @@
 import {RefObject} from "react";
 import {Manager} from "~/manager/manager";
-import useTimelineAnimation from "@/(main)/timeline/useTimelineAnimation";
+import useTimelineAnimation from "@/(main)/(timeline)/timeline/useTimelineAnimation";
 
 export default function TimelineAnimation(
   {

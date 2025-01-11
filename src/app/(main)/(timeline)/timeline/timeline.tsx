@@ -1,7 +1,7 @@
 "use client";
 import {useRef} from "react";
 import {Manager} from "~/manager/manager";
-import TimelineAnimation from "@/(main)/timeline/TimelineAnimation";
+import TimelineAnimation from "@/(main)/(timeline)/timeline/TimelineAnimation";
 
 type TimelineProps = {
   manager: Manager

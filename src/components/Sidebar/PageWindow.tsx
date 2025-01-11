@@ -1,3 +1,4 @@
+"use client"
 import React, {useEffect, useState} from 'react';
 import {inAppPageStyle, pageWindowStyle} from './Styles';
 
@@ -5,29 +6,29 @@ import AccountPage from '@/(main)/user/profile/ProfilePage';
 import NotificationPage from '@/(main)/user/notification/page';
 import ChatModal from '@/(main)/user/chat/ChatModal';
 import ProductListingForm from '@/(main)/product/listing/ProductListingForm';
-import { Manager } from '~/manager/manager';
+import {Manager} from '~/manager/manager';
 import SearchPage from '@/(main)/search/search';
-import { useProductContext } from '~/products/ContextProvider';
+import {useProductContext} from '~/products/ContextProvider';
 
-const PageWindow: React.FC<{ manager:Manager }> = ({manager}) => {
-    const {
-      isWindowOpen,
-      isProductOpen,
-      setisProductOpen,
-      setIsVisible,
-      isVisible,
-      productId,
-      setProductId,
-      toggleWindow,
-      isSidebarOpen,
-      setIsSidebarOpen,
-      isPagevalue,
-      setPageValue,
-      isAnimating,
-      setIsAnimating,
+const PageWindow: React.FC<{ manager: Manager }> = ({manager}) => {
+  const {
+    isWindowOpen,
+    isProductOpen,
+    setisProductOpen,
+    setIsVisible,
+    isVisible,
+    productId,
+    setProductId,
+    toggleWindow,
+    isSidebarOpen,
+    setIsSidebarOpen,
+    isPagevalue,
+    setPageValue,
+    isAnimating,
+    setIsAnimating,
   } = useProductContext();
 
-  
+
   useEffect(() => {
     if (isVisible) {
       setIsAnimating(true);
@@ -44,12 +45,12 @@ const PageWindow: React.FC<{ manager:Manager }> = ({manager}) => {
   );
 };
 
-const renderPageContent = (manager: Manager ) => {
+const renderPageContent = (manager: Manager) => {
   const {
     isPagevalue,
   } = useProductContext();
   const [activeTab, setActiveTab] = useState(isPagevalue);
-  
+
   useEffect(() => {
     setActiveTab(isPagevalue)
   }, [isPagevalue]);

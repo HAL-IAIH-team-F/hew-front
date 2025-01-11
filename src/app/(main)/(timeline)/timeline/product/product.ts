@@ -2,7 +2,7 @@
 import * as THREE from "three";
 import {Manager} from "~/manager/manager";
 import {gsap} from "gsap";
-import Effects from "../effects/camera/Effects";
+import Effects from "@/(main)/(timeline)/timeline/effects/camera/Effects";
 
 export const showProduct = (
     clickedBubble: THREE.Mesh,

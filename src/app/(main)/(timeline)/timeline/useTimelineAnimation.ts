@@ -1,11 +1,11 @@
 import {MutableRefObject, RefObject, useEffect, useMemo, useRef} from "react";
-import {createGradientBackground} from "@/(main)/timeline/background/background";
+import {createGradientBackground} from "@/(main)/(timeline)/timeline/background/background";
 import * as THREE from "three";
 import {Mesh, PerspectiveCamera, Scene, WebGLRenderer} from "three";
 import {Manager} from "~/manager/manager";
-import Effects from "@/(main)/timeline/effects/camera/Effects";
-import {generateGomi} from "@/(main)/timeline/effects/gomi/gomi";
-import {createBubbles, onClickBubble} from "@/(main)/timeline/bubble/bubbles";
+import Effects from "@/(main)/(timeline)/timeline/effects/camera/Effects";
+import {generateGomi} from "@/(main)/(timeline)/timeline/effects/gomi/gomi";
+import {createBubbles, onClickBubble} from "@/(main)/(timeline)/timeline/bubble/bubbles";
 
 import {EffectComposer} from "three-stdlib";
 import useProduct from "~/api/useProducts";

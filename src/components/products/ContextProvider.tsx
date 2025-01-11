@@ -1,3 +1,4 @@
+"use client"
 import React, { createContext, useState, useContext } from 'react';
 
 // Contextの型定義
