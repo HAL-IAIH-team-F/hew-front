@@ -8,6 +8,7 @@ import ProductListingForm from '@/(main)/product/listing/ProductListingForm';
 import { Manager } from '~/manager/manager';
 import SearchPage from '@/(main)/search/search';
 import { useProductContext } from '~/products/ContextProvider';
+import CartPage from '@/(main)/cart/page';
 
 const PageWindow: React.FC<{ manager:Manager }> = ({manager}) => {
     const {
@@ -73,6 +74,9 @@ const renderPageContent = (manager: Manager ) => {
       </div>
       <div style={{display: activeTab === "ProductListing" ? "block" : "none"}} className={"h-full"}>
         <ProductListingForm/>
+      </div>
+      <div style={{display: activeTab === "Cart" ? "block" : "none"}} className={"h-full"}>
+        {activeTab === "Cart" && <CartPage/>}
       </div>
     </>
   );

@@ -1,25 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useProductContext } from './ContextProvider';
-import { useCartContext } from "../cart/CartContext"
 import { ProductWindowStyle } from '~/Sidebar/Styles';
 import useProduct from '~/api/useProducts';
-import ProductThumbnail from '~/api/useImgData';
 import { ProductRes } from './ProductRes';
+import ProductThumbnail from '~/api/useImgData';
+import { MdHeight } from 'react-icons/md';
+import { ClientContextState, useClientContextState } from '~/api/context/ClientContextProvider';
+import { ErrorData } from '../../util/err/err';
+import { Api } from '~/api/context/Api';
 
 const RightProductWindows: React.FC = () => {
   const { productId, isProductOpen } = useProductContext();
-  const { addToCart } = useCartContext();
   const [currentProducts, setCurrentProducts] = useState<ProductRes[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const { products, error } = useProduct({ productId: productId });
+  
+  const clientState = useClientContextState()
+  const [err, setErr] = useState<ErrorData>()
 
   useEffect(() => {
     if (productId) {
       setCurrentProducts([]);
       setErrorMessage('');
     }
-  }, [productId]);
+  }, [productId]); 
 
   useEffect(() => {
     if (error) {
@@ -30,16 +35,6 @@ const RightProductWindows: React.FC = () => {
       setErrorMessage('');
     }
   }, [products, error]);
-
-  const handleAddToCart = (product: ProductRes) => {
-    addToCart({
-      product_id: product.product_id,
-      product_title: product.product_title,
-      product_price: product.product_price,
-      product_thumbnail_uuid: product.product_thumbnail_uuid,
-    });
-    alert(`${product.product_title} をカートに追加しました。`);
-  };
 
   return (
     <div style={styles.container(isProductOpen)}>
@@ -54,13 +49,17 @@ const RightProductWindows: React.FC = () => {
                 <p style={styles.productDescription}>{product.product_description}</p>
                 <p style={styles.productPrice}>¥{product.product_price.toLocaleString()}</p>
                 <p style={styles.purchaseDate}>購入日: {product.purchase_date}</p>
-                <button
-                  style={styles.addToCartButton}
-                  onClick={() => handleAddToCart(product)}
-                >
-                  カートに追加
-                </button>
               </div>
+              <button
+                className={"border-2  enabled:hover:bg-gray-300 enabled:bg-gray-200"}
+                disabled={clientState.state != "authenticated"}
+                onClick={() => {
+                  addCart(clientState, setErr, productId).catch(reason => {
+                    console.error(reason)
+                  })
+                }}
+              >カートに入れる
+              </button>
             </div>
           ))}
         </div>
@@ -71,13 +70,47 @@ const RightProductWindows: React.FC = () => {
   );
 };
 
+async function addCart(
+  clientState: ClientContextState, setErr: Dispatch<SetStateAction<ErrorData | undefined>>,
+  product_id: string
+) {
+  if (clientState.state != "authenticated") return
+  setErr(undefined)
+  const cartResult = await clientState.client.auth(Api.app.gc_api_cart_get, {}, {})
+  if (cartResult.error) return setErr(cartResult.error)
+  // noinspection SuspiciousTypeOfGuard
+  if (typeof cartResult.success == "string") {
+    const postResult = await clientState.client.authBody(Api.app.pc_api_cart_post, {}, {
+      products: [product_id]
+    }, {})
+    if (postResult.error) return setErr(postResult.error)
+  } else {
+    const patchResult = await clientState.client.authBody(Api.app.pac_api_cart_patch, {}, {
+      new_products: [product_id]
+    }, {})
+    if (patchResult.error) return setErr(patchResult.error)
+  }
+}
+
 const styles = {
   container: (isProductOpen: boolean): React.CSSProperties => ({
     ...ProductWindowStyle(isProductOpen),
   }),
+  banner: {
+    width: '100%',
+    height: '15%',
+    backgroundColor: '#ff5722',
+    color: '#fff',
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center' as React.CSSProperties['textAlign'], // 型の明示
+  },
   errorMessage: {
     color: 'red',
-    textAlign: 'center' as React.CSSProperties['textAlign'],
+    textAlign: 'center' as React.CSSProperties['textAlign'], // 型の明示
     marginBottom: '1rem',
   },
   product: {
@@ -118,17 +151,8 @@ const styles = {
     fontSize: '0.8rem',
     color: '#888',
   },
-  addToCartButton: {
-    marginTop: '0.5rem',
-    padding: '0.5rem 1rem',
-    backgroundColor: '#ff5722',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  },
   noProductsMessage: {
-    textAlign: 'center' as React.CSSProperties['textAlign'],
+    textAlign: 'center' as React.CSSProperties['textAlign'], // 型の明示
     color: '#555',
     fontSize: '1rem',
   },

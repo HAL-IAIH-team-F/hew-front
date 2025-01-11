@@ -9,7 +9,7 @@ import {Manager} from '~/manager/manager';
 import ProductWindows from '~/products/RightProductWindows';
 import {useUserData} from '~/api/context/useUserData';
 import {useProductContext} from '~/products/ContextProvider';
-
+import { IoCartOutline } from "react-icons/io5";
 
 type SidebarProps = {
   manager: Manager;
@@ -100,7 +100,7 @@ const Sidebar: React.FC<SidebarProps> = ({manager}) => {
           />
         </button>
 
-        {['Search', 'Notification', 'Message', 'Calendar', 'Account', "ProductListing"].map((item) => (
+        {['Search', 'Notification', 'Message', 'Calendar', 'Account', "ProductListing","Cart"].map((item) => (
           <button
             key={item}
             style={iconContainerStyle(isSidebarOpen)}
@@ -142,7 +142,9 @@ const renderIcon = (item: string, user: any) => {
       ) : (
         <FaSpinner style={styles.spinner}/>
       );
-
+    case "Cart":
+      return <IoCartOutline style={styles.icon}/>;
+      
     default:
       return null;
   }
