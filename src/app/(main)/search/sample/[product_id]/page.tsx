@@ -69,15 +69,16 @@ async function addCart(
   setErr(undefined)
   const cartResult = await clientState.client.auth(Api.app.gc_api_cart_get, {}, {})
   if (cartResult.error) return setErr(cartResult.error)
-  if (cartResult.success.product_id == undefined) {
-    const patchResult = await clientState.client.authBody(Api.app.pac_api_cart_patch, {}, {
-      new_products: [product_id]
-    }, {})
-    if (patchResult.error) return setErr(patchResult.error)
-  } else {
+  // noinspection SuspiciousTypeOfGuard
+  if (typeof cartResult.success == "string") {
     const postResult = await clientState.client.authBody(Api.app.pc_api_cart_post, {}, {
       products: [product_id]
     }, {})
     if (postResult.error) return setErr(postResult.error)
+  } else {
+    const patchResult = await clientState.client.authBody(Api.app.pac_api_cart_patch, {}, {
+      new_products: [product_id]
+    }, {})
+    if (patchResult.error) return setErr(patchResult.error)
   }
 }

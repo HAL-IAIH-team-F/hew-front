@@ -241,7 +241,7 @@ const endpoints = makeApi([
     path: "/api/cart",
     alias: "gc_api_cart_get",
     requestFormat: "json",
-    response: z.union([CartRes, z.object({}).partial().passthrough()]),
+    response: z.union([CartRes, z.string()]),
   },
   {
     method: "post",
