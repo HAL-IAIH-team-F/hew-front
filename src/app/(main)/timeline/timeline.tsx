@@ -1,12 +1,13 @@
 "use client";
-import {useRef} from "react";
+import {FC, useRef} from "react";
 import {Manager} from "~/manager/manager";
-import TimelineAnimation from "@/(main)/(timeline)/timeline/TimelineAnimation";
+import TimelineAnimation from "./TimelineAnimation";
+
 
 type TimelineProps = {
   manager: Manager
 };
-const Timeline: React.FC<TimelineProps> = ({ manager }) => {
+const Timeline: FC<TimelineProps> = ({manager}) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   return (<div ref={mountRef} style={{width: '100vw', height: '100vh'}}>

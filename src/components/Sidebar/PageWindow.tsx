@@ -1,5 +1,5 @@
 "use client"
-import React, {useEffect, useState} from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import {inAppPageStyle, pageWindowStyle} from './Styles';
 
 import AccountPage from '@/(main)/user/profile/ProfilePage';
@@ -10,7 +10,11 @@ import {Manager} from '~/manager/manager';
 import SearchPage from '@/(main)/search/search';
 import {useProductContext} from '~/products/ContextProvider';
 
-const PageWindow: React.FC<{ manager: Manager }> = ({manager}) => {
+const PageWindow: React.FC<{
+  manager: Manager, children?: ReactNode
+}> = (
+  {manager, children}
+) => {
   const {
     isWindowOpen,
     isProductOpen,
@@ -40,12 +44,12 @@ const PageWindow: React.FC<{ manager: Manager }> = ({manager}) => {
 
   return (
     <div style={pageWindowStyle(isSidebarOpen, isProductOpen, isAnimating)}>
-      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(manager)}</div>
+      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(manager, children)}</div>
     </div>
   );
 };
 
-const renderPageContent = (manager: Manager) => {
+const renderPageContent = (manager: Manager, children: ReactNode) => {
   const {
     isPagevalue,
   } = useProductContext();
@@ -74,6 +78,9 @@ const renderPageContent = (manager: Manager) => {
       </div>
       <div style={{display: activeTab === "ProductListing" ? "block" : "none"}} className={"h-full"}>
         <ProductListingForm/>
+      </div>
+      <div style={{display: activeTab === "ProductListing" ? "block" : "none"}} className={"h-full"}>
+        {children}
       </div>
     </>
   );

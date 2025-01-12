@@ -1,6 +1,7 @@
 import {RefObject} from "react";
 import {Manager} from "~/manager/manager";
-import useTimelineAnimation from "@/(main)/(timeline)/timeline/useTimelineAnimation";
+import useTimelineAnimation from "@/(main)/timeline/useTimelineAnimation";
+
 
 export default function TimelineAnimation(
   {
@@ -8,7 +9,7 @@ export default function TimelineAnimation(
     mountRef,
   }: TimelineAnimationProps,
 ) {// Effectsの参照を追加
-  useTimelineAnimation(manager,mountRef)
+  useTimelineAnimation(manager, mountRef)
   return (
     <></>
   )

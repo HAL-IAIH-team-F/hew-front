@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {ReactNode} from 'react';
 import {FaBell, FaCalendarAlt, FaChevronRight, FaSearch, FaSpinner} from 'react-icons/fa';
 import {FaRegMessage} from 'react-icons/fa6';
 import Image from "../../util/Image";
@@ -6,15 +6,15 @@ import {MdOutlineBubbleChart} from "react-icons/md";
 import PageWindow from './PageWindow';
 import {iconContainerStyle, styles} from './Styles';
 import {Manager} from '~/manager/manager';
-import ProductWindows from '~/products/RightProductWindows';
 import {useUserData} from '~/api/context/useUserData';
 import {useProductContext} from '~/products/ContextProvider';
 
 
 type SidebarProps = {
   manager: Manager;
+  children?: ReactNode;
 };
-const Sidebar: React.FC<SidebarProps> = ({manager}) => {
+const Sidebar: React.FC<SidebarProps> = ({manager, children}) => {
 
   const {
     isWindowOpen,
@@ -113,7 +113,9 @@ const Sidebar: React.FC<SidebarProps> = ({manager}) => {
         ))}
       </div>
 
-      <PageWindow manager={manager}/>
+      <PageWindow manager={manager}>
+        {children}
+      </PageWindow>
     </div>
   );
 };

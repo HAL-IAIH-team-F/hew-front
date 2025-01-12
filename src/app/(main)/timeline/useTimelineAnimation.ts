@@ -1,14 +1,15 @@
 import {MutableRefObject, RefObject, useEffect, useMemo, useRef} from "react";
-import {createGradientBackground} from "@/(main)/(timeline)/timeline/background/background";
+
 import * as THREE from "three";
 import {Mesh, PerspectiveCamera, Scene, WebGLRenderer} from "three";
 import {Manager} from "~/manager/manager";
-import Effects from "@/(main)/(timeline)/timeline/effects/camera/Effects";
-import {generateGomi} from "@/(main)/(timeline)/timeline/effects/gomi/gomi";
-import {createBubbles, onClickBubble} from "@/(main)/(timeline)/timeline/bubble/bubbles";
+import Effects from "@/(main)/timeline/effects/camera/Effects";
+import {generateGomi} from "@/(main)/timeline/effects/gomi/gomi";
 
 import {EffectComposer} from "three-stdlib";
 import useProduct from "~/api/useProducts";
+import {createGradientBackground} from "@/(main)/timeline/background/background";
+import {createBubbles, onClickBubble} from "@/(main)/timeline/bubble/bubbles";
 
 export default function useTimelineAnimation(
   manager: Manager,
@@ -25,8 +26,8 @@ export default function useTimelineAnimation(
   const rotationStrength = 0.05;
   const scene = useMemo(() => new THREE.Scene(), []);
   const effectsRef = useRef<Effects | null>(null);
-  const { products, error } = useProduct();
-    
+  const {products, error} = useProduct();
+
   useEffect(() => {
     if (sceneRef.current) return
     if (!mountRef.current) return;

@@ -3,9 +3,9 @@ import * as THREE from "three";
 import {getRandomPosition, getRandomPositionWithExclusion, moveBubblesToPosition} from "./position";
 import {gsap} from "gsap";
 
-import {showProduct} from "@/(main)/(timeline)/timeline/product/product";
-import {createGradientBackground} from "@/(main)/(timeline)/timeline/background/background"
-import Effects from "@/(main)/(timeline)/timeline/effects/camera/Effects"
+import {showProduct} from "@/(main)/timeline/product/product";
+import {createGradientBackground} from "@/(main)/timeline/background/background"
+import Effects from "@/(main)/timeline/effects/camera/Effects"
 import {Manager} from "~/manager/manager";
 
 const vertexShader = `
