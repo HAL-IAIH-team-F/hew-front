@@ -8,6 +8,7 @@ import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../util/form/element/StyledButton";
 import FlexBox from "../../../../util/FlexBox";
 import {Api} from "~/api/context/Api";
+import {TIMELINE_PATH} from "@/(main)/(timeline)/timeline";
 
 export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps) {
   const router = useRouter();
@@ -61,7 +62,7 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
         }
 
         // 成功した場合のリダイレクト
-        router.push("/timeline");
+        router.push(TIMELINE_PATH);
         return;
       }}
     >

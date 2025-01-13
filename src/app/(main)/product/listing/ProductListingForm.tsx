@@ -17,6 +17,7 @@ import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-
 import CreatorsSelector from "@/(main)/colab/register/CreatorsSelector";
 import {useState} from "react";
 import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
+import {TIMELINE_PATH} from "@/(main)/(timeline)/timeline";
 
 async function action(
   formData: StyledFormData, clientContext: ClientContextState, router: AppRouterInstance, creators: CreatorRes[]
@@ -76,7 +77,7 @@ async function action(
 
   // 成功した場合に timeline にリダイレクト
   console.log("Successfully posted product. Redirecting to /timeline...");
-  router.push("/timeline");
+  router.push(TIMELINE_PATH);
   return undefined;
 }
 
