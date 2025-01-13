@@ -1,20 +1,21 @@
-import React, {useContext, useState} from 'react';
+import React, {ReactNode} from 'react';
 import {FaBell, FaCalendarAlt, FaChevronRight, FaSearch, FaSpinner} from 'react-icons/fa';
 import {FaRegMessage} from 'react-icons/fa6';
 import Image from "../../util/Image";
 import {MdOutlineBubbleChart} from "react-icons/md";
 import PageWindow from './PageWindow';
 import {iconContainerStyle, styles} from './Styles';
-import {Manager} from '~/manager/manager';
-import ProductWindows from '~/products/RightProductWindows';
 import {useUserData} from '~/api/context/useUserData';
 import {useProductContext} from '~/products/ContextProvider';
+import Link from "next/link";
+import {usePathname, useRouter} from "next/navigation";
+import {TIMELINE_PATH} from "@/(main)/timeline/timeline";
 
 
 type SidebarProps = {
-  manager: Manager;
+  children?: ReactNode;
 };
-const Sidebar: React.FC<SidebarProps> = ({manager}) => {
+const Sidebar: React.FC<SidebarProps> = ({children}) => {
 
   const {
     isWindowOpen,
@@ -34,9 +35,10 @@ const Sidebar: React.FC<SidebarProps> = ({manager}) => {
 
   const {user} = useUserData();
   const changePageWindow = (newValue: string | undefined) => setPageValue(newValue ?? 'undefined');
+  const pathname = usePathname()
 
 
-  function checkPageValue(newValue: string | undefined) {
+  function checkPageValue(newValue: string | undefined, pathname: string) {
     if (isSamePage(newValue)) {
       handleSamePage();
       return;
@@ -86,6 +88,8 @@ const Sidebar: React.FC<SidebarProps> = ({manager}) => {
     });
   }
 
+  const router = useRouter()
+
   return (
     <div>
       <div style={isSidebarOpen ? styles.sidebar : styles.collapsedSidebar}>
@@ -101,19 +105,28 @@ const Sidebar: React.FC<SidebarProps> = ({manager}) => {
         </button>
 
         {['Search', 'Notification', 'Message', 'Calendar', 'Account', "ProductListing"].map((item) => (
-          <button
+          <Link
             key={item}
             style={iconContainerStyle(isSidebarOpen)}
-            onClick={() => {
-              checkPageValue(item);
+            onClick={(event) => {
+              if (pathname == TIMELINE_PATH) return
+              if (`${TIMELINE_PATH}/${item.toLowerCase()}` == pathname) return
+              event.preventDefault()
+              router.push(`${TIMELINE_PATH}`)
+              setTimeout(() => {
+                router.push(`${TIMELINE_PATH}/${item.toLowerCase()}`)
+              }, 300);
             }}
+            href={`${TIMELINE_PATH}/${item.toLowerCase()}` == pathname ? TIMELINE_PATH : `${TIMELINE_PATH}/${item.toLowerCase()}`}
           >
             {renderIcon(item, user)}
-          </button>
+          </Link>
         ))}
       </div>
 
-      <PageWindow manager={manager}/>
+      <PageWindow>
+        {children}
+      </PageWindow>
     </div>
   );
 };

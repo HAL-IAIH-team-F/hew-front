@@ -2,14 +2,12 @@ import {CSSProperties} from "react";
 import {ErrorMessage} from "../../util/err/ErrorMessage";
 import ProductThumbnail from "~/api/useImgData";
 import useProduct from "~/api/useProducts";
-import {Manager} from "~/manager/manager";
 import {useProductContext} from "./ContextProvider";
 
 interface ProductPageProps {
-  manager: Manager;
 }
 
-export default function ProfileProductsView({manager}: ProductPageProps) {
+export default function ProfileProductsView({}: ProductPageProps) {
   // 商品データの取得
   const {
     isWindowOpen,

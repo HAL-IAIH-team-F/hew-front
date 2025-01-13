@@ -1,3 +1,4 @@
+"use client"
 import {useEffect, useState} from 'react';
 import {Api, Img} from './Api';
 import {ErrorIds} from '../../../util/err/errorIds';

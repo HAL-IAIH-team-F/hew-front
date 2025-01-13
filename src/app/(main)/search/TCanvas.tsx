@@ -1,3 +1,4 @@
+"use client"
 import React, {FC, Suspense, useEffect, useState} from 'react';
 import {PerspectiveCamera} from '@react-three/drei';
 import {Canvas} from '@react-three/fiber';

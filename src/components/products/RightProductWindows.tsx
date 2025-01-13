@@ -1,3 +1,4 @@
+"use client"
 import React, {useEffect, useState} from 'react';
 import {useProductContext} from './ContextProvider';
 import {ProductWindowStyle} from '~/Sidebar/Styles';
