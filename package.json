@@ -25,7 +25,7 @@
     "simplex-noise": "^4.0.3",
     "three": "^0.172.0",
     "three-mesh-bvh": "^0.8.3",
-    "three-stdlib": "^2.35.3"
+    "three-stdlib": "^2.35.7"
   },
   "devDependencies": {
     "@types/node": "^22",
