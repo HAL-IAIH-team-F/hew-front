@@ -1,34 +1,38 @@
 import "./overlay.css";
+import { useEffect, useState } from "react";
 
 const Overlay = () => {
-    const depth = 500
+    const [isTransparent, setTransparent] = useState(false);
+
+    useEffect(() => {
+        // コンポーネントがマウントされたら0.3秒後に透明化
+        const timer = setTimeout(() => {
+            setTransparent(true);
+        }, 300);
+
+        return () => clearTimeout(timer); // クリーンアップ
+    }, []);
+
     return (
-        <div className="overlay">
-            <div className="depthContainer">
-                <div className="depthMeter">
-                    <div className="depthBar" style={{ height: `${depth / 10}%` }}></div>
-                </div>
-                <div className="depthText">{`Depth: ${depth}m`}</div>
-            </div>
-            <div className="cornerLine lineTop"></div>
-            <div className="cornerLine lineBottom"></div>
-            <div className="cornerLine lineLeft"></div>
-            <div className="cornerLine lineRight"></div>
-
-            <div className="cornerDetails topLeft"></div>
-            <div className="cornerDetails topRight"></div>
-            <div className="cornerDetails bottomLeft"></div>
-            <div className="cornerDetails bottomRight"></div>
-
-            <div className="grid"></div>
-
-            <div className="infoText">
-                XXXXXXXXXXXX XXXXXX<br/>
-                XXXXXXXX <br/>
-                XXXXX XXXXXXXX
-            </div>
+        <div className={`overlay ${isTransparent ? "transparent" : ""}`}
+            style={{
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                width: '100vw',
+                height: '100vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontFamily: 'UDEVGothic, sans-serif',
+                backgroundColor: "#00334d",
+                background: 'linear-gradient(145deg, rgba(7, 7, 14, 0.1), rgba(0,0,40,0.95))',
+                boxShadow: 'inset 0px 0px 50px rgba(0,0,0, 0.4)',
+        }}>
+            
         </div>
     );
-}
+};
 
 export default Overlay;

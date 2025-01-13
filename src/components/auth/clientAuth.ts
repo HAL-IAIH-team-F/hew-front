@@ -23,5 +23,6 @@ export async function signOut(clientContext: ClientContextState) {
   "use client"
   if (clientContext.state == "loading") throw new Error("Loading")
   if (clientContext.state == "unauthenticated") throw new Error("Unauthenticated")
+   
   clientContext.signOut()
 }
