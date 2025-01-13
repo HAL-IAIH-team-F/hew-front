@@ -3,7 +3,7 @@ import {PerspectiveCamera, Vector2} from 'three';
 import {EffectComposer, RenderPass, ShaderPass} from 'three-stdlib';
 import {BlurShader} from './BlurShader';
 import gsap from 'gsap';
-import {initmoveBubblesToPosition} from '@/(main)/timeline/bubble/position';
+import {initmoveBubblesToPosition} from '@/(main)/(timeline)/bubble/position';
 import {Manager} from "~/manager/manager";
 
 

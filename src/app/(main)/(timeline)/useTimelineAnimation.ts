@@ -3,14 +3,14 @@ import {MutableRefObject, RefObject, useEffect, useMemo, useRef} from "react";
 import * as THREE from "three";
 import {Mesh, PerspectiveCamera, Scene, WebGLRenderer} from "three";
 import {Manager} from "~/manager/manager";
-import Effects from "@/(main)/timeline/effects/camera/Effects";
-import {generateGomi} from "@/(main)/timeline/effects/gomi/gomi";
+import Effects from "@/(main)/(timeline)/effects/camera/Effects";
+import {generateGomi} from "@/(main)/(timeline)/effects/gomi/gomi";
 
 import {EffectComposer} from "three-stdlib";
 import useProduct from "~/api/useProducts";
-import {createGradientBackground} from "@/(main)/timeline/background/background";
-import {createBubbles, onClickBubble} from "@/(main)/timeline/bubble/bubbles";
-import {useSidebarManagerState} from "@/(main)/timeline/SidebarManaager";
+import {createGradientBackground} from "@/(main)/(timeline)/background/background";
+import {createBubbles, onClickBubble} from "@/(main)/(timeline)/bubble/bubbles";
+import {useSidebarManagerState} from "@/(main)/(timeline)/SidebarManaager";
 
 export default function useTimelineAnimation(
   mountRef: RefObject<HTMLDivElement | null>
@@ -27,6 +27,7 @@ export default function useTimelineAnimation(
   const scene = useMemo(() => new THREE.Scene(), []);
   const effectsRef = useRef<Effects | null>(null);
   const {products, error} = useProduct();
+  if (error) console.error(error)
   const managerState = useSidebarManagerState()
 
   useEffect(() => {

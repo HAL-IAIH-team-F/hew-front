@@ -9,7 +9,7 @@ import {useUserData} from '~/api/context/useUserData';
 import {useProductContext} from '~/products/ContextProvider';
 import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
-import {TIMELINE_PATH} from "@/(main)/timeline/timeline";
+import {joinToTimelinePath, TIMELINE_PATH} from "@/(main)/(timeline)/timeline";
 
 
 type SidebarProps = {
@@ -18,69 +18,14 @@ type SidebarProps = {
 const Sidebar: React.FC<SidebarProps> = ({children}) => {
 
   const {
-    setIsVisible,
-    isVisible,
     isSidebarOpen,
     setIsSidebarOpen,
-    isPagevalue,
-    setPageValue,
   } = useProductContext();
 
 
   const {user} = useUserData();
-  const changePageWindow = (newValue: string | undefined) => setPageValue(newValue ?? 'undefined');
   const pathname = usePathname()
 
-
-  function checkPageValue(newValue: string | undefined, pathname: string) {
-    if (isSamePage(newValue)) {
-      handleSamePage();
-      return;
-    }
-
-    if (isUndefinedPage()) {
-      handleUndefinedPage(newValue);
-      return;
-    }
-
-    handleDifferentPage(newValue);
-  }
-
-  function isSamePage(newValue: string | undefined): boolean {
-    return isPagevalue === newValue;
-  }
-
-  function isUndefinedPage(): boolean {
-    return isPagevalue === "undefined";
-  }
-
-  function handleSamePage() {
-    togglePageWindow();
-  }
-
-  function handleUndefinedPage(newValue: string | undefined) {
-    changePageWindow(newValue);
-    togglePageWindow();
-  }
-
-  async function handleDifferentPage(newValue: string | undefined) {
-    await togglePageWindow();
-    changePageWindow("undefined");
-
-    if (newValue) {
-      setTimeout(() => {
-        changePageWindow(newValue);
-        setIsVisible(true);
-      }, 300);
-    }
-  }
-
-  function togglePageWindow(): Promise<void> {
-    return new Promise((resolve) => {
-      setIsVisible(!isVisible);
-      setTimeout(resolve, 300);
-    });
-  }
 
   const router = useRouter()
 
@@ -104,14 +49,14 @@ const Sidebar: React.FC<SidebarProps> = ({children}) => {
             style={iconContainerStyle(isSidebarOpen)}
             onClick={(event) => {
               if (pathname == TIMELINE_PATH) return
-              if (`${TIMELINE_PATH}/${item.toLowerCase()}` == pathname) return
+              if (joinToTimelinePath(item.toLowerCase()) == pathname) return
               event.preventDefault()
               router.push(`${TIMELINE_PATH}`)
               setTimeout(() => {
-                router.push(`${TIMELINE_PATH}/${item.toLowerCase()}`)
+                router.push(joinToTimelinePath(item.toLowerCase()))
               }, 300);
             }}
-            href={`${TIMELINE_PATH}/${item.toLowerCase()}` == pathname ? TIMELINE_PATH : `${TIMELINE_PATH}/${item.toLowerCase()}`}
+            href={joinToTimelinePath(item.toLowerCase()) == pathname ? TIMELINE_PATH : joinToTimelinePath(item.toLowerCase())}
           >
             {renderIcon(item, user)}
           </Link>
