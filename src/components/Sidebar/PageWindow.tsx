@@ -28,7 +28,6 @@ const PageWindow: React.FC<{
     setIsSidebarOpen,
     isPagevalue,
     setPageValue,
-    isAnimating,
     setIsAnimating,
   } = useProductContext();
 
@@ -41,10 +40,13 @@ const PageWindow: React.FC<{
       return () => clearTimeout(timer);
     }
   }, [isVisible]);
-
   return (
-    <div style={pageWindowStyle(isSidebarOpen, isProductOpen, isAnimating)}>
-      <div style={inAppPageStyle(isAnimating)}>{renderPageContent(manager, children)}</div>
+    <div style={pageWindowStyle(isSidebarOpen, isProductOpen, children != undefined)}>
+      <div style={inAppPageStyle(children != undefined)}>
+        <div style={{display: "block"}} className={"h-full"}>
+          {children}
+        </div>
+      </div>
     </div>
   );
 };

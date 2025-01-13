@@ -8,6 +8,8 @@ import {iconContainerStyle, styles} from './Styles';
 import {Manager} from '~/manager/manager';
 import {useUserData} from '~/api/context/useUserData';
 import {useProductContext} from '~/products/ContextProvider';
+import Link from "next/link";
+import {usePathname} from "next/navigation";
 
 
 type SidebarProps = {
@@ -34,6 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({manager, children}) => {
 
   const {user} = useUserData();
   const changePageWindow = (newValue: string | undefined) => setPageValue(newValue ?? 'undefined');
+  const pathname = usePathname()
 
 
   function checkPageValue(newValue: string | undefined) {
@@ -101,15 +104,16 @@ const Sidebar: React.FC<SidebarProps> = ({manager, children}) => {
         </button>
 
         {['Search', 'Notification', 'Message', 'Calendar', 'Account', "ProductListing"].map((item) => (
-          <button
+          <Link
             key={item}
             style={iconContainerStyle(isSidebarOpen)}
             onClick={() => {
               checkPageValue(item);
             }}
+            href={`/timeline/${item.toLowerCase()}` == pathname ? "/timeline" : `/timeline/${item.toLowerCase()}`}
           >
             {renderIcon(item, user)}
-          </button>
+          </Link>
         ))}
       </div>
 
