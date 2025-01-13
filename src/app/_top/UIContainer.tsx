@@ -1,10 +1,11 @@
 // UIContainer.tsx
 'use client';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import gsap from 'gsap';
 import Title from './Title';
 import LoginButton from './LoginButton';
 import RegisterButton from './RegisterButton';
+import { useClientContextState } from '~/api/context/ClientContextProvider';
 
 type UIContainerProps = {
     onButtonClick: boolean;
@@ -14,9 +15,17 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
     const [isMobile, setIsMobile] = useState(false);
     const UIContainerRef = useRef<HTMLDivElement>(null);
     const isInitialRender = useRef(true); 
+    const clientContext = useClientContextState();
+    const [isAuthenticated, setIsloading] = useState(false); // 認証状態を管理
+
     const handleResize = () => {
         setIsMobile(window.innerWidth <= 768); 
     };
+    
+    useEffect(() => {
+        if (clientContext.state !== "loading") return 
+        setIsloading(true);
+      },[clientContext.state]);
 
     useEffect(() => {
         handleResize(); 
@@ -94,8 +103,21 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
                         gap: "10px"
                     }}
                 >
-                    <LoginButton />
-                    <RegisterButton />
+                    {isAuthenticated === true ? (
+                        <div className="loading-spinner" style={{
+                            width: '30px',
+                            height: '30px',
+                            border: '4px solid rgba(255, 255, 255, 0.3)',
+                            borderTop: '4px solid #ffffff',
+                            borderRadius: '50%',
+                            animation: 'spin 1s linear infinite'
+                        }} />
+                    ) : (
+                        <>
+                            <LoginButton />
+                            <RegisterButton />
+                        </>
+                    )}
                 </div>
             </div>
         </div>

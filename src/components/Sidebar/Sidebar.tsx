@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {FaBell, FaCalendarAlt, FaChevronRight, FaSearch, FaSpinner} from 'react-icons/fa';
+import {FaBell, FaChevronRight, FaSearch, FaSpinner} from 'react-icons/fa';
 import {FaRegMessage} from 'react-icons/fa6';
 import Image from "../../util/Image";
 import {MdOutlineBubbleChart} from "react-icons/md";
@@ -18,14 +18,8 @@ type SidebarProps = {
 const Sidebar: React.FC<SidebarProps> = ({children}) => {
 
   const {
-    isWindowOpen,
-    isProductOpen,
-    setisProductOpen,
     setIsVisible,
     isVisible,
-    productId,
-    setProductId,
-    toggleWindow,
     isSidebarOpen,
     setIsSidebarOpen,
     isPagevalue,
@@ -104,7 +98,7 @@ const Sidebar: React.FC<SidebarProps> = ({children}) => {
           />
         </button>
 
-        {['Search', 'Notification', 'Message', 'Calendar', 'Account', "ProductListing"].map((item) => (
+        {['Search', 'Notification', 'Message', 'Account', "ProductListing"].map((item) => (
           <Link
             key={item}
             style={iconContainerStyle(isSidebarOpen)}
@@ -139,8 +133,6 @@ const renderIcon = (item: string, user: any) => {
       return <FaBell style={styles.icon}/>;
     case 'Message':
       return <FaRegMessage style={styles.icon}/>;
-    case 'Calendar':
-      return <FaCalendarAlt style={styles.icon}/>;
     case 'ProductListing':
       return <MdOutlineBubbleChart style={styles.icon}/>;
     case 'Account':

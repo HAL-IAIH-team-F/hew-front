@@ -10,19 +10,10 @@ interface ProductPageProps {
 export default function ProfileProductsView({}: ProductPageProps) {
   // 商品データの取得
   const {
-    isWindowOpen,
     isProductOpen,
-    setisProductOpen,
-    setIsVisible,
-    isVisible,
     productId,
     setProductId,
-    toggleWindow,
     toggleProductWindow,
-    isSidebarOpen,
-    setIsSidebarOpen,
-    isPagevalue,
-    setPageValue,
   } = useProductContext();
 
   const {products, error} = useProduct();
