@@ -2,6 +2,7 @@
 import React, {ReactNode, useEffect} from 'react';
 import {inAppPageStyle, pageWindowStyle} from './Styles';
 import {useProductContext} from '~/products/ContextProvider';
+import {usePathname} from "next/navigation";
 
 const PageWindow: React.FC<{
   children?: ReactNode
@@ -23,6 +24,7 @@ const PageWindow: React.FC<{
     setPageValue,
     setIsAnimating,
   } = useProductContext();
+  const pathname = usePathname()
 
 
   useEffect(() => {

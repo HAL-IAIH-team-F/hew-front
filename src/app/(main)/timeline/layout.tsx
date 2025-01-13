@@ -3,9 +3,9 @@ import {ReactNode} from "react";
 import {ProductProvider} from "~/products/ContextProvider";
 import Sidebar from "~/Sidebar/Sidebar";
 import RightProductWindows from "~/products/RightProductWindows";
-import Timeline from "@/(main)/timeline/timeline";
 import {usePathname} from "next/navigation";
 import {SidebarManagerProvider} from "@/(main)/timeline/SidebarManaager";
+import {Timeline} from "@/(main)/timeline/timeline";
 
 export default function Layout(
   {

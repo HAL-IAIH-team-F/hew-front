@@ -4,7 +4,7 @@ import TimelineAnimation from "./TimelineAnimation";
 
 
 type TimelineProps = {};
-const Timeline: FC<TimelineProps> = ({}) => {
+export const Timeline: FC<TimelineProps> = ({}) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   return (<div ref={mountRef} style={{width: '100vw', height: '100vh'}}>
@@ -12,6 +12,6 @@ const Timeline: FC<TimelineProps> = ({}) => {
   </div>)
 
 };
-export default Timeline;
 
 
+export const TIMELINE_PATH = "/timeline"

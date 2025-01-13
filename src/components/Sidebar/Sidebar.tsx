@@ -8,7 +8,8 @@ import {iconContainerStyle, styles} from './Styles';
 import {useUserData} from '~/api/context/useUserData';
 import {useProductContext} from '~/products/ContextProvider';
 import Link from "next/link";
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
+import {TIMELINE_PATH} from "@/(main)/timeline/timeline";
 
 
 type SidebarProps = {
@@ -37,7 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({children}) => {
   const pathname = usePathname()
 
 
-  function checkPageValue(newValue: string | undefined) {
+  function checkPageValue(newValue: string | undefined, pathname: string) {
     if (isSamePage(newValue)) {
       handleSamePage();
       return;
@@ -87,6 +88,8 @@ const Sidebar: React.FC<SidebarProps> = ({children}) => {
     });
   }
 
+  const router = useRouter()
+
   return (
     <div>
       <div style={isSidebarOpen ? styles.sidebar : styles.collapsedSidebar}>
@@ -105,17 +108,23 @@ const Sidebar: React.FC<SidebarProps> = ({children}) => {
           <Link
             key={item}
             style={iconContainerStyle(isSidebarOpen)}
-            onClick={() => {
-              checkPageValue(item);
+            onClick={(event) => {
+              if (pathname == TIMELINE_PATH) return
+              if (`${TIMELINE_PATH}/${item.toLowerCase()}` == pathname) return
+              event.preventDefault()
+              router.push(`${TIMELINE_PATH}`)
+              setTimeout(() => {
+                router.push(`${TIMELINE_PATH}/${item.toLowerCase()}`)
+              }, 300);
             }}
-            href={`/timeline/${item.toLowerCase()}` == pathname ? "/timeline" : `/timeline/${item.toLowerCase()}`}
+            href={`${TIMELINE_PATH}/${item.toLowerCase()}` == pathname ? TIMELINE_PATH : `${TIMELINE_PATH}/${item.toLowerCase()}`}
           >
             {renderIcon(item, user)}
           </Link>
         ))}
       </div>
 
-      <PageWindow >
+      <PageWindow>
         {children}
       </PageWindow>
     </div>
