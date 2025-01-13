@@ -1,17 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Manager } from "~/manager/manager";
+import {FC, useState} from "react";
 import ProfileProductsView from "~/products/ProfileProductsView";
 import {useUserData} from "~/api/context/useUserData";
 import Backcanvas from "@/(main)/user/profile/backcanvas";
 
 interface AccountCardProps {
-  manager: Manager; // Manager 型を明確に定義
 }
-const AccountCard: React.FC<AccountCardProps> = ({ manager }) => {
-  
-  const { user } = useUserData();
+
+const AccountCard: FC<AccountCardProps> = ({}) => {
+
+  const {user} = useUserData();
   const [activeTab, setActiveTab] = useState<string>("商品");
 
   const tabs = ["商品", "コラボ", "Media", "Likes"];
@@ -41,7 +40,7 @@ const AccountCard: React.FC<AccountCardProps> = ({ manager }) => {
           flexDirection: "column",
         }}
       >
-        <Backcanvas user={user} />
+        <Backcanvas user={user}/>
 
         {/* Tabs */}
         <div
@@ -84,7 +83,7 @@ const AccountCard: React.FC<AccountCardProps> = ({ manager }) => {
             overflowY: "auto",
           }}
         >
-          {activeTab === "商品" && <ProfileProductsView manager={manager}/>}
+          {activeTab === "商品" && <ProfileProductsView />}
           {activeTab === "コラボ" && <div>コラボ</div>}
           {activeTab === "Media" && <div>Displaying media...</div>}
           {activeTab === "Likes" && <div>Displaying likes...</div>}

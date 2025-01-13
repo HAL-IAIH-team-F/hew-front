@@ -5,7 +5,6 @@ import Image from "../../util/Image";
 import {MdOutlineBubbleChart} from "react-icons/md";
 import PageWindow from './PageWindow';
 import {iconContainerStyle, styles} from './Styles';
-import {Manager} from '~/manager/manager';
 import {useUserData} from '~/api/context/useUserData';
 import {useProductContext} from '~/products/ContextProvider';
 import Link from "next/link";
@@ -13,10 +12,9 @@ import {usePathname} from "next/navigation";
 
 
 type SidebarProps = {
-  manager: Manager;
   children?: ReactNode;
 };
-const Sidebar: React.FC<SidebarProps> = ({manager, children}) => {
+const Sidebar: React.FC<SidebarProps> = ({children}) => {
 
   const {
     isWindowOpen,
@@ -117,7 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({manager, children}) => {
         ))}
       </div>
 
-      <PageWindow manager={manager}>
+      <PageWindow >
         {children}
       </PageWindow>
     </div>

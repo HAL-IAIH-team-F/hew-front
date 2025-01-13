@@ -10,9 +10,9 @@ import {EffectComposer} from "three-stdlib";
 import useProduct from "~/api/useProducts";
 import {createGradientBackground} from "@/(main)/timeline/background/background";
 import {createBubbles, onClickBubble} from "@/(main)/timeline/bubble/bubbles";
+import {useSidebarManagerState} from "@/(main)/timeline/SidebarManaager";
 
 export default function useTimelineAnimation(
-  manager: Manager,
   mountRef: RefObject<HTMLDivElement | null>
 ) {
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -27,12 +27,14 @@ export default function useTimelineAnimation(
   const scene = useMemo(() => new THREE.Scene(), []);
   const effectsRef = useRef<Effects | null>(null);
   const {products, error} = useProduct();
+  const managerState = useSidebarManagerState()
 
   useEffect(() => {
     if (sceneRef.current) return
     if (!mountRef.current) return;
+    if (managerState.state != "loaded") return;
 
-    createGradientBackground(scene, manager.value.sessionId);
+    createGradientBackground(scene, managerState.manager.value.sessionId);
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -50,24 +52,25 @@ export default function useTimelineAnimation(
     const {composer} = effects;
     composerRef.current = composer;
 
-    generateGomi(scene, glowingGomiRef.current, 300, manager.value.riseSpeed, manager);
+    generateGomi(scene, glowingGomiRef.current, 300, managerState.manager.value.riseSpeed, managerState.manager);
     console.log(products)
-    bubblesRef.current = createBubbles(scene, manager.value.bbnum, manager.value.sessionId, [], camera);
+    bubblesRef.current = createBubbles(scene, managerState.manager.value.bbnum, managerState.manager.value.sessionId, [], camera);
 
-    if (manager.value.sessionId == 1) {
-      effects.startAnimesion(bubblesRef.current, manager)
+    if (managerState.manager.value.sessionId == 1) {
+      effects.startAnimesion(bubblesRef.current, managerState.manager)
     }
 
-    animateHighFPS(0, manager, cameraRef, targetCameraRotation, rotationStrength, composerRef, sceneRef);
+    animateHighFPS(0, managerState.manager, cameraRef, targetCameraRotation, rotationStrength, composerRef, sceneRef);
 
-  }, []);
+  }, [managerState.state]);
 
   useEffect(() => {
+    if (managerState.state != "loaded") return;
     const handleMouseMove = (event: MouseEvent) =>
       onMouseMove(mousePosition, event, targetCameraRotation);
 
     const handleClick = (event: MouseEvent) =>
-      onClick(sceneRef, cameraRef, bubblesRef, manager, rendererRef, effectsRef, event);
+      onClick(sceneRef, cameraRef, bubblesRef, managerState.manager, rendererRef, effectsRef, event);
     const handleResize = () => onResize(cameraRef, rendererRef, composerRef)
 
     window.addEventListener('resize', handleResize);
@@ -79,7 +82,7 @@ export default function useTimelineAnimation(
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('click', handleClick);
     };
-  }, []);
+  }, [managerState.state]);
 
 }
 
