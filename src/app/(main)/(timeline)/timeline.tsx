@@ -13,14 +13,3 @@ export const Timeline: FC<TimelineProps> = ({}) => {
 
 };
 
-
-export const TIMELINE_PATH = "/"
-
-export function joinToTimelinePath(path: string) {
-  let result
-  if (TIMELINE_PATH.endsWith("/")) result = TIMELINE_PATH.slice(0, -1)
-  else result = TIMELINE_PATH
-  if (path.startsWith("/")) result += path
-  else result += "/" + path
-  return result
-}

@@ -9,7 +9,8 @@ import {useUserData} from '~/api/context/useUserData';
 import {useProductContext} from '~/products/ContextProvider';
 import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
-import {joinToTimelinePath, TIMELINE_PATH} from "@/(main)/(timeline)/timeline";
+import {Routes} from "@/Routes";
+
 
 
 type SidebarProps = {
@@ -48,15 +49,15 @@ const Sidebar: React.FC<SidebarProps> = ({children}) => {
             key={item}
             style={iconContainerStyle(isSidebarOpen)}
             onClick={(event) => {
-              if (pathname == TIMELINE_PATH) return
-              if (joinToTimelinePath(item.toLowerCase()) == pathname) return
+              if (pathname == Routes.timeline) return
+              if (Routes.joinToTimelinePath(item.toLowerCase()) == pathname) return
               event.preventDefault()
-              router.push(`${TIMELINE_PATH}`)
+              router.push(Routes.timeline)
               setTimeout(() => {
-                router.push(joinToTimelinePath(item.toLowerCase()))
+                router.push(Routes.joinToTimelinePath(item.toLowerCase()))
               }, 300);
             }}
-            href={joinToTimelinePath(item.toLowerCase()) == pathname ? TIMELINE_PATH : joinToTimelinePath(item.toLowerCase())}
+            href={Routes.joinToTimelinePath(item.toLowerCase()) == pathname ? Routes.timeline : Routes.joinToTimelinePath(item.toLowerCase())}
           >
             {renderIcon(item, user)}
           </Link>

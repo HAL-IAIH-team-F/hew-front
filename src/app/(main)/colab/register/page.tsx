@@ -8,7 +8,8 @@ import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 import {useState} from "react";
 import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
-import {TIMELINE_PATH} from "@/(main)/(timeline)/timeline";
+import {Routes} from "@/Routes";
+
 
 export default function Page(
   {}: {}
@@ -28,7 +29,7 @@ export default function Page(
       {},{
       creators: creators.map(value => value.creator_id), title: title, description: description
     },{})
-    if (!result.error) return router.push(TIMELINE_PATH)
+    if (!result.error) return router.push(Routes.timeline)
     formData.append("submit", `{${result.error.error_id}: ${result.error.message}}`)
   }}>
     <StyledInput name={"title"}/>

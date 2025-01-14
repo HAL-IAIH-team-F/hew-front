@@ -6,7 +6,7 @@ import {EffectComposer, RenderPass, UnrealBloomPass, Water} from "three-stdlib";
 import gsap from "gsap";
 import { useClientContextState } from "~/api/context/ClientContextProvider";
 import { useRouter } from "next/navigation";
-import {TIMELINE_PATH} from "@/(main)/(timeline)/timeline";
+import {Routes} from "@/Routes";
 type SeaSceneProps = {
   onButtonClick: boolean;
 };
@@ -31,7 +31,7 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
   const router = useRouter()
 
   const handleComplete = () => {
-    router.push(TIMELINE_PATH);
+    router.push(Routes.timeline);
   };
 
   useEffect(() => {

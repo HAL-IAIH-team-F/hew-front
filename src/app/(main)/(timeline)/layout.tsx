@@ -5,8 +5,9 @@ import Sidebar from "~/Sidebar/Sidebar";
 import RightProductWindows from "~/products/RightProductWindows";
 import {usePathname} from "next/navigation";
 import {SidebarManagerProvider} from "@/(main)/(timeline)/SidebarManaager";
-import {Timeline, TIMELINE_PATH} from "@/(main)/(timeline)/timeline";
+import {Timeline} from "@/(main)/(timeline)/timeline";
 import Overlay from "@/(main)/(timeline)/effects/overlay/overlay";
+import {Routes} from "@/Routes";
 
 export default function Layout(
   {
@@ -22,7 +23,7 @@ export default function Layout(
         <SidebarManagerProvider>
           <Timeline/>
           <Sidebar>
-            {pathname == TIMELINE_PATH ? undefined : children}
+            {pathname == Routes.timeline ? undefined : children}
           </Sidebar>
           <Overlay/>
           <RightProductWindows/>

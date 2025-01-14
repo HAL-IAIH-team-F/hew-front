@@ -6,7 +6,8 @@ import {useRouter} from 'next/navigation';
 import {StyledForm} from "../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../util/form/element/StyledButton";
-import {TIMELINE_PATH} from "@/(main)/(timeline)/timeline";
+import {Routes} from "@/Routes";
+
 
 export default function UserRegisterForm({...props}: UserRegisterFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -57,7 +58,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
         formData.append("icon", postUserResult.error.error_id + ": " + postUserResult.error.message);
         return
       }
-      router.push(TIMELINE_PATH);
+      router.push(Routes.timeline);
       return undefined
 
     }}>
