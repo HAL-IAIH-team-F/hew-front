@@ -13,5 +13,3 @@ export const Timeline: FC<TimelineProps> = ({}) => {
 
 };
 
-
-export const TIMELINE_PATH = "/timeline"

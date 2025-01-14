@@ -5,8 +5,8 @@ import {useFrame, useThree} from "@react-three/fiber";
 import {EffectComposer, RenderPass, UnrealBloomPass, Water} from "three-stdlib";
 import gsap from "gsap";
 import { useClientContextState } from "~/api/context/ClientContextProvider";
-import { useRouter } from "next/navigation"; 
-import { createGradientBackground } from "@/(main)/timeline/background/background";
+import { useRouter } from "next/navigation";
+import {Routes} from "@/Routes";
 type SeaSceneProps = {
   onButtonClick: boolean;
 };
@@ -31,7 +31,7 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
   const router = useRouter()
 
   const handleComplete = () => {
-    router.push("/timeline");
+    router.push(Routes.timeline);
   };
 
   useEffect(() => {

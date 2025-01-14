@@ -1,5 +1,5 @@
 import {RefObject} from "react";
-import useTimelineAnimation from "@/(main)/timeline/useTimelineAnimation";
+import useTimelineAnimation from "@/(main)/(timeline)/useTimelineAnimation";
 
 
 export default function TimelineAnimation(
