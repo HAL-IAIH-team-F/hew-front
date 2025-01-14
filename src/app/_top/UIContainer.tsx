@@ -1,11 +1,12 @@
 // UIContainer.tsx
 'use client';
-import React, { useEffect, useState, useRef, useContext } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import gsap from 'gsap';
 import Title from './Title';
 import LoginButton from './LoginButton';
 import RegisterButton from './RegisterButton';
 import { useClientContextState } from '~/api/context/ClientContextProvider';
+import { FaCheckCircle } from 'react-icons/fa'; // React Icons のチェックマーク
 
 type UIContainerProps = {
     onButtonClick: boolean;
@@ -16,16 +17,26 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
     const UIContainerRef = useRef<HTMLDivElement>(null);
     const isInitialRender = useRef(true); 
     const clientContext = useClientContextState();
-    const [isAuthenticated, setIsloading] = useState(false); // 認証状態を管理
+    const [isloading, setIsloading] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const checkMarkRef = useRef<HTMLDivElement>(null); // チェックマークの参照
 
     const handleResize = () => {
         setIsMobile(window.innerWidth <= 768); 
     };
     
     useEffect(() => {
-        if (clientContext.state !== "loading") return 
-        setIsloading(true);
-      },[clientContext.state]);
+        if (clientContext.state === "authenticated") {
+            setIsloading(false);
+            setIsAuthenticated(true);
+        } 
+        if (clientContext.state !== "loading") {
+            setIsloading(false);
+        } 
+        else {
+            setIsloading(true);
+        }
+    }, [clientContext.state]);
 
     useEffect(() => {
         handleResize(); 
@@ -41,20 +52,17 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
               isInitialRender.current = false;
             }, 0);
             return;
-          }
+        }
       
-        if (UIContainerRef.current) 
-        { 
-            if(onButtonClick)
-            {
+        if (UIContainerRef.current) { 
+            if (onButtonClick) {
                 gsap.to(UIContainerRef.current, {
                     y: -40,
                     opacity: 0,
                     duration: 2.4, 
                     ease: "expo.inOut",
                 });
-                
-            }else{
+            } else {
                 gsap.to(UIContainerRef.current, {
                     y: 0,
                     duration: 2, 
@@ -70,6 +78,16 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
             }
         }
     }, [onButtonClick]); 
+
+    useEffect(() => {
+        if (isAuthenticated && checkMarkRef.current) {
+            gsap.fromTo(
+                checkMarkRef.current,
+                { scale: 0, opacity: 0 },
+                { scale: 1, opacity: 1, duration: 1, ease: "expo.out" }
+            );
+        }
+    }, [isAuthenticated]);
 
     return (
         <div ref={UIContainerRef} className="UI" style={{
@@ -103,7 +121,7 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
                         gap: "10px"
                     }}
                 >
-                    {isAuthenticated === true ? (
+                    {isloading ? (
                         <div className="loading-spinner" style={{
                             width: '30px',
                             height: '30px',
@@ -112,6 +130,23 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
                             borderRadius: '50%',
                             animation: 'spin 1s linear infinite'
                         }} />
+                    ) : isAuthenticated ? (
+                        <div
+                            ref={checkMarkRef}
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                opacity: 0, // 初期状態で非表示
+                            }}
+                        >
+                            <FaCheckCircle 
+                                style={{
+                                    color: '#4caf50',
+                                    fontSize: '30px',
+                                }}
+                            />
+                        </div>
                     ) : (
                         <>
                             <LoginButton />
