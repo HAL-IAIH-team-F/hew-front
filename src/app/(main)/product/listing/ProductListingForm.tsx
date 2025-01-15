@@ -3,7 +3,7 @@
 import ItemBackground from "~/ItemBackground";
 import ThumbnailUpload from "../listing/ThumbnailUpload";
 import ImageUpload from "../listing/ImageUpload";
-import {ClientContextState, useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {useRouter} from "next/navigation";
 import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {StyledTextarea} from "../../../../util/form/element/StyledTextarea";
@@ -18,10 +18,11 @@ import CreatorsSelector from "@/(main)/colab/register/CreatorsSelector";
 import {useState} from "react";
 import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
 import {Routes} from "@/Routes";
+import {ClientState} from "~/api/context/ClientState";
 
 
 async function action(
-  formData: StyledFormData, clientContext: ClientContextState, router: AppRouterInstance, creators: CreatorRes[]
+  formData: StyledFormData, clientContext: ClientState, router: AppRouterInstance, creators: CreatorRes[]
 ) {
 
   const price = Number(formData.getStr("price"));
@@ -29,7 +30,7 @@ async function action(
   const productDescription = formData.getStr("description");
   const thumbnail = formData.getFile("thumbnail");
   const productImages = formData.getFileList("product_images");
-  if (clientContext.state != "authenticated") {
+  if (clientContext.state != "registered") {
     formData.append("submit", "no login")
     return
   }
@@ -83,7 +84,7 @@ async function action(
 }
 
 export default function ProductListingForm() {
-  const clientContext = useClientContextState();
+  const clientContext = useClientState();
   const router = useRouter();
   const [creators, setCreators] = useState<CreatorRes[]>([])
 

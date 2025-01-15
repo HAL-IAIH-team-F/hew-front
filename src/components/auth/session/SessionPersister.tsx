@@ -1,21 +1,21 @@
-
-import {useState} from "react";
+import {Dispatch, SetStateAction, useState} from "react";
 import RefreshTokenLoader from "~/auth/refresh/RefreshTokenLoader";
-
-import {LoginSession} from "~/auth/refresh/LoginSession";
 import OpWatcher from "~/auth/OpFrame/OpWatcher";
-import { IdTokenState } from "../idtoken/IdTokenState";
+import {AuthIdTokenState, IdTokenState} from "../idtoken/IdTokenState";
 import IdTokenLoader from "~/auth/idtoken/IdTokenLoader";
+import {ClientState} from "~/api/context/ClientState";
+
 
 export default function SessionPersister(
   {
-    update, loginSession, setIdToken, idToken,logoutRequest,
+    update, clientState, setIdToken, idToken, logoutRequest, setLogoutRequestIdToken,
   }: {
-    update: (loginSessionUpdate: LoginSession) => void,
+    update: (loginSessionUpdate: ClientState) => void,
     setIdToken: (tokenState: IdTokenState) => void,
-    loginSession: LoginSession,
+    clientState: ClientState,
     idToken: IdTokenState,
     logoutRequest: boolean,
+    setLogoutRequestIdToken: Dispatch<SetStateAction<AuthIdTokenState | undefined>>
   },
 ) {
   const [flag, setFlag] = useState(false)
@@ -23,13 +23,13 @@ export default function SessionPersister(
   return (
     <>
       <OpWatcher
-        reload={() => setFlag(prevState => !prevState)} loginSession={loginSession} idToken={idToken}
+        reload={() => setFlag(prevState => !prevState)} clientState={clientState} idToken={idToken}
         logoutRequest={logoutRequest}
       />
       <IdTokenLoader reload={flag} update={setIdToken}/>
       <RefreshTokenLoader
         update={update} idToken={idToken} reload={() => setFlag(prevState => !prevState)}
-        loginSession={loginSession}
+        clientState={clientState} setIdToken={setIdToken} setLogoutRequestIdToken={setLogoutRequestIdToken}
       />
       {/*<button className={"ml-32 block"} onClick={() => setFlag(prevState => !prevState)}>test</button>*/}
     </>

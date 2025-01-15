@@ -1,12 +1,12 @@
 import {Token} from "~/auth/nextauth/Token";
 
 export interface TokenBundle {
-  access: Token | undefined
-  refresh: Token | undefined
+  access: Token
+  refresh: Token
 }
 
 export namespace TokenBundleUtil {
-  export function create(access: Token | undefined, refresh: Token | undefined): TokenBundle {
+  export function create(access: Token, refresh: Token): TokenBundle {
     return {access, refresh}
   }
 }

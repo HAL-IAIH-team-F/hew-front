@@ -3,11 +3,12 @@
 import {
   AuthenticationImplicitFlowUrl
 } from "~/auth/keycloak/api/internal/authentication/implicit-flow/AuthenticationImplicitFlowUrl";
-import {ClientContextState} from "~/api/context/ClientContextProvider";
+
 import {IdTokenUtl} from "~/auth/idtoken/IdTokenUtl";
 import {Nonce} from "~/auth/keycloak/api/internal/Nonce";
+import {ClientState} from "~/api/context/ClientState";
 
-export async function signIn(clientContext: ClientContextState, onClose: (() => void) | undefined = undefined) {
+export async function signIn(clientContext: ClientState, onClose: (() => void) | undefined = undefined) {
   if (clientContext.state == "loading") throw new Error("Loading")
   const x = window.innerWidth / 2;
   const y = window.innerHeight / 2;
@@ -21,7 +22,7 @@ export async function signIn(clientContext: ClientContextState, onClose: (() => 
   }, clientContext.oidcContext, clientContext.setIdToken)
 }
 
-export async function signOut(clientContext: ClientContextState) {
+export async function signOut(clientContext: ClientState) {
   "use client"
   if (clientContext.state == "loading") throw new Error("Loading")
   if (clientContext.state == "unauthenticated") throw new Error("Unauthenticated")

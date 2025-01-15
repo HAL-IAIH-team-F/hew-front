@@ -1,36 +1,44 @@
-import {useEffect, useRef} from "react";
+import {Dispatch, SetStateAction, useEffect, useRef} from "react";
 import {add, isAfter, parseISO} from "date-fns";
 import {Token} from "~/auth/nextauth/Token";
 import {TokenBundle, TokenBundleUtil} from "~/auth/nextauth/TokenBundle";
 import {Result, Results} from "../../../util/err/result";
 import {ErrorIds} from "../../../util/err/errorIds";
 import {Api} from "~/api/context/Api";
-import {LoginSession} from "~/auth/refresh/LoginSession";
 import {AuthIdTokenState, IdTokenState} from "~/auth/idtoken/IdTokenState";
+
+import {UnAuthClient} from "~/api/client/UnAuthClient";
+import {ClientState, newUnAuthClientState, newUnregisteredClientState} from "~/api/context/ClientState";
 
 
 export default function RefreshTokenLoader(
   {
-    update, idToken, reload, loginSession,
+    update, idToken, reload, clientState, setIdToken, setLogoutRequestIdToken,
   }: {
-    update: (loginSessionUpdate: LoginSession) => void,
+    update: (loginSessionUpdate: ClientState) => void,
     idToken: IdTokenState,
     reload: () => void,
-    loginSession: LoginSession,
+    clientState: ClientState,
+    setIdToken: (tokenState: IdTokenState) => void,
+    setLogoutRequestIdToken: Dispatch<SetStateAction<AuthIdTokenState | undefined>>,
   },
 ) {
   const refreshing = useRef(false);
 
   useEffect(() => {
-    console.debug("refresh", idToken, loginSession)
+    console.debug("refresh", idToken, clientState)
 
     if (idToken.state == "loading") return;
     if (idToken.state == "unauthenticated") {
-      return update({state: "unauthenticated", idToken: idToken})
+      return update({
+        state: "unauthenticated", idToken: idToken, client: new UnAuthClient(),
+        oidcContext: idToken.oidcContext,
+        setIdToken: setIdToken,
+      })
     }
 
-    const next = loginSession.state == "authenticated" && loginSession.token.access
-      ? add(new Date(loginSession.token.access.expire), {minutes: -1}).getTime() - Date.now() : 0
+    const next = clientState.state == "registered" && clientState.token.access
+      ? add(new Date(clientState.token.access.expire), {minutes: -1}).getTime() - Date.now() : 0
     console.debug("next", next, new Date(Date.now() + next))
     const timeout = setTimeout(() => {
       console.debug("refresh timeout", refreshing.current)
@@ -40,20 +48,32 @@ export default function RefreshTokenLoader(
         idToken,
         tokens => {
           console.debug("refreshToken success", tokens)
-          update({state: "authenticated", token: tokens, idToken: idToken})
+          update(
+            newUnregisteredClientState(idToken.oidcContext, setIdToken, () => {
+              setLogoutRequestIdToken(idToken)
+            }, tokens, idToken)
+            //   {
+            //   state: "unregistered", token: tokens, idToken: idToken,
+            //   client: new AuthClient(tokens.access.token),
+            //   oidcContext,
+            //   setIdToken,
+            //   signOut,
+            //   token,
+            // }
+          )
         },
-        reload, loginSession,
+        reload, clientState,
       ).then(value => {
         refreshing.current = false;
         if (!value.error) return
         console.error("refresh token error", value.error)
-        update({state: "unauthenticated", idToken: idToken})
+        update(newUnAuthClientState(idToken.oidcContext, setIdToken, idToken))
       })
     }, next)
     return () => {
       clearTimeout(timeout)
     }
-  }, [idToken, loginSession.state == "authenticated" && loginSession.token]);
+  }, [idToken, clientState.state == "registered" && clientState.token]);
 
   return (
     <div>
@@ -65,7 +85,7 @@ namespace ApiRefresh {
     idToken: AuthIdTokenState,
     update: (tokens: TokenBundle) => void,
     reload: () => void,
-    session: LoginSession,
+    session: ClientState,
   ): Promise<Result<undefined>> {
     console.debug("refreshToken", idToken, session)
     if (session.state == "loading") return await KeycloakRefresh.refreshByKeycloak(idToken, update, reload)

@@ -1,5 +1,5 @@
 "use client"
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {useEffect, useState} from "react";
 import {Api} from "~/api/context/Api";
 import {ErrorData} from "../../../util/err/err";
@@ -10,11 +10,11 @@ import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
 export default function Page(
   {}: {}
 ) {
-  const clientState = useClientContextState()
+  const clientState = useClientState()
   const [err, setErr] = useState<ErrorData | string>()
   const [cart, setCart] = useState<CartRes>()
   useEffect(() => {
-    if (clientState.state != "authenticated") return
+    if (clientState.state != "registered") return
     clientState.client.auth(Api.app.gc_api_cart_get, {}, {}).then(value => {
       if (value.error) return setErr(value.error)
       // noinspection SuspiciousTypeOfGuard
@@ -32,7 +32,7 @@ export default function Page(
     <button
       className={"border-2 hover:bg-gray-300"} disabled={cart == undefined}
       onClick={() => {
-        if (clientState.state != "authenticated") throw new Error("not authenticated")
+        if (clientState.state != "registered") throw new Error("not authenticated")
         clientState.client.authBody(
           Api.app.cart_buy_api_cart_buy_put, {}, undefined, {}
         ).then(value => {

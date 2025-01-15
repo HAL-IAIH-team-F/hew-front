@@ -1,11 +1,12 @@
 "use client"
-import {ClientContextState, useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {ProductRes} from "@/(main)/search/sample/ProductRes";
 import {ErrorData} from "../../../../../util/err/err";
 import {Api} from "~/api/context/Api";
 import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
 import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
+import {ClientState} from "~/api/context/ClientState";
 
 export default function Page(
   {
@@ -18,7 +19,7 @@ export default function Page(
     }
   }
 ) {
-  const clientState = useClientContextState()
+  const clientState = useClientState()
   const [product, setProduct] = useState<ProductRes>()
   const [err, setErr] = useState<ErrorData>()
 
@@ -49,7 +50,7 @@ export default function Page(
     <SignInOutButton className={"border-2"}/>
     <button
       className={"border-2  enabled:hover:bg-gray-300 enabled:bg-gray-200"}
-      disabled={clientState.state != "authenticated"}
+      disabled={clientState.state != "registered"}
       onClick={() => {
         addCart(clientState, setErr, product_id).catch(reason => {
           console.error(reason)
@@ -61,10 +62,10 @@ export default function Page(
 }
 
 async function addCart(
-  clientState: ClientContextState, setErr: Dispatch<SetStateAction<ErrorData | undefined>>,
+  clientState: ClientState, setErr: Dispatch<SetStateAction<ErrorData | undefined>>,
   product_id: string
 ) {
-  if (clientState.state != "authenticated") return
+  if (clientState.state != "registered") return
   setErr(undefined)
   const cartResult = await clientState.client.auth(Api.app.gc_api_cart_get, {}, {})
   if (cartResult.error) return setErr(cartResult.error)

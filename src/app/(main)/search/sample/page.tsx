@@ -1,5 +1,5 @@
 "use client"
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {useEffect, useState} from "react";
 import {Api} from "~/api/context/Api";
 import {ProductRes} from "@/(main)/search/sample/ProductRes";
@@ -10,7 +10,7 @@ import {useRouter} from "next/navigation";
 export default function Page(
   {}: {}
 ) {
-  const clientState = useClientContextState()
+  const clientState = useClientState()
   const [products, setProducts] = useState<ProductRes[]>([])
   const [err, setErr] = useState<ErrorData>()
 

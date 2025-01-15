@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {ErrorData} from "../../util/err/err";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 import {ProductRes} from "@/(main)/search/sample/ProductRes";
 
@@ -13,12 +13,12 @@ interface UseProductOptions {
 export default function useProduct(options: UseProductOptions = {}) {
   const [products, setProducts] = useState<ProductRes[]>([]);
   const [error, setError] = useState<ErrorData>();
-  const client = useClientContextState();
+  const client = useClientState();
 
   useEffect(() => {
     if (client.state === "loading") return;
 
-    const {productId, limit, uuid} = options;
+    const {productId, limit} = options;
     client.client.unAuthOrAuth(Api.app.gps_api_product_get, {
       limit: limit
     }, {}).then((value) => {

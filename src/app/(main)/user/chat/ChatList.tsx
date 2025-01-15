@@ -1,5 +1,5 @@
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {useEffect, useState} from "react";
 import {ChatRes} from "@/(main)/user/chat/ChatRes";
 import {ErrorData} from "../../../../util/err/err";
@@ -12,11 +12,11 @@ export default function ChatList(
     onSelect: (chat: ChatRes) => void,
   },
 ) {
-  const clientState = useClientContextState()
+  const clientState = useClientState()
   const [chats, setChats] = useState<ChatRes[]>([])
   const [err, setErr] = useState<ErrorData>()
   useEffect(() => {
-    if (clientState.state != "authenticated") return
+    if (clientState.state != "registered") return
     clientState.client.auth(Api.app.gcs_api_chat_get, {},{}).then(value => {
       if (value.error) return setErr(value.error)
       setChats(value.success)
