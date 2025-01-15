@@ -1,9 +1,7 @@
-import type {Config} from "tailwindcss";
+import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
@@ -13,12 +11,21 @@ const config: Config = {
         crystal: "rgb(0,0,0)",
         backcolor: "#05253F",
         borderDef: "#B4B4B4",
-        lightGray: "#747989"
+        lightGray: "#747989",
+      },
+      keyframes: {
+        wave: {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
+      },
+      animation: {
+        wave: "wave 10s ease infinite",
       },
       backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "ocean-wave":
+            "linear-gradient(90deg, #52D9CB, #327AD9, #05253F, #327AD9, #52D9CB)",
       },
     },
   },

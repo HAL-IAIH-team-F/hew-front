@@ -15,7 +15,7 @@ export function StyledInput(
 ) {
   const formState = useFormState()
   return (
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center ">
         <ItemBackground
             type={"label"}
             className={sx("p-3 block  w-7/12"
