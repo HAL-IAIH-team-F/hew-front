@@ -42,7 +42,6 @@ export default function Page(
         <p>product_price: {product.product_price}</p>
         <p>product_title: {product.product_title}</p>
         <p>purchase_date: {product.purchase_date}</p>
-        <p>product_contents_uuid: {product.product_contents_uuid}</p>
         <p>creator_ids: {product.creator_ids}</p>
       </div>
     }

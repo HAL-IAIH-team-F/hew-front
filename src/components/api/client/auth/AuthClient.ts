@@ -50,7 +50,7 @@ export class AuthClient extends LoadedClient {
   }
 
   async uploadImg(file: File) {
-    const token = await this.auth(Api.app.image_token_api_token_image_get, {}, {})
+    const token = await this.auth(Api.app.gettfu_api_token_file_upload_get, {}, {})
     if (token.error) return token
 
     return await Api.img.upload_image_upload__post(

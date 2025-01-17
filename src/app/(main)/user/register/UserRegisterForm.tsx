@@ -6,6 +6,8 @@ import {useRouter} from 'next/navigation';
 import {StyledForm} from "../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../util/form/element/StyledButton";
+import {Routes} from "@/Routes";
+
 
 export default function UserRegisterForm({...props}: UserRegisterFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -49,14 +51,14 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
       }
 
       const postUserResult = await clientContext.client.authBody(
-        Api.app.post_user_api_user_post,{},
-        {user_name: user_name, user_icon_uuid: iconUuid},{}
+        Api.app.post_user_api_user_post, {},
+        {user_name: user_name, user_icon_uuid: iconUuid}, {}
       )
       if (postUserResult.error) {
         formData.append("icon", postUserResult.error.error_id + ": " + postUserResult.error.message);
         return
       }
-      router.push('/timeline');
+      router.push(Routes.timeline);
       return undefined
 
     }}>

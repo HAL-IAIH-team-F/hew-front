@@ -1,14 +1,12 @@
 "use client"
 import Link from "next/link";
-import {useEffect, useRef, useState} from "react";
-import useMessageEvent from "~/auth/idtoken/hook/useMessageEvent";
+import {useEffect, useRef} from "react";
 
 
 export default function Page(
   {params}: { params: { mode: string } }
 ) {
   const executed = useRef(false)
-  const [result, setResult] = useState<URLSearchParams>()
 
   useEffect(() => {
     // if (executed.current) return;
@@ -16,23 +14,15 @@ export default function Page(
     executed.current = true;
 
     const param = new URLSearchParams(location.hash.slice(1))
-    setResult(param)
 
-    target(params).postMessage({
-      type: "callback_ready",
-    }, location.origin)
+    const interval = setInterval(() => {
+      target(params).postMessage({
+        type: "callback_result",
+        param: param.toString()
+      }, location.origin)
+    }, 1000)
+    return () => clearInterval(interval)
   }, []);
-  useMessageEvent(evt => {
-    console.debug("callback page receive message", evt)
-    if (result == undefined) return
-    if (evt.origin != location.origin) return
-    if (evt.data.type != "callback_request") return
-    target(params).postMessage({
-      type: "callback_result",
-      param: result.toString()
-    }, location.origin)
-  }, [result])
-
   return <div>
     empty page <Link href="/timeline" className={"underline"}>timeline</Link>
   </div>

@@ -12,9 +12,6 @@ export default function handleCallbackEvent(
     type: "callback_request";
   }) => void, oidc: OidcContext | undefined, nonce: Nonce, update: (token: IdTokenState) => void, onFinish: () => void) {
   switch (evt.data.type) {
-    case "callback_ready":
-      postMessage({type: "callback_request"})
-      break
     case "callback_result":
       console.debug("callback result", evt.data.param)
       if (oidc) validateCallbackResult(evt.data.param, oidc, nonce, update)
