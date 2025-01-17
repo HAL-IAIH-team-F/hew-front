@@ -4,7 +4,9 @@ import * as THREE from "three";
 import {useFrame, useThree} from "@react-three/fiber";
 import {EffectComposer, RenderPass, UnrealBloomPass, Water} from "three-stdlib";
 import gsap from "gsap";
-
+import { useClientContextState } from "~/api/context/ClientContextProvider";
+import { useRouter } from "next/navigation";
+import {Routes} from "@/Routes";
 type SeaSceneProps = {
   onButtonClick: boolean;
 };
@@ -25,6 +27,12 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
   const waterRef = useRef<THREE.Mesh>();
   const isInitialRender = useRef(true);
   const [FilmPass, setFilmPass] = useState<{ constructor: any }>()
+  const clientContext = useClientContextState();
+  const router = useRouter()
+
+  const handleComplete = () => {
+    router.push(Routes.timeline);
+  };
 
   useEffect(() => {
     import("three-stdlib").then(value => {
@@ -98,6 +106,54 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
       (waterRef.current.material as any).uniforms["time"].value += 1.0 / 60.0;
     }
   });
+
+  useEffect(() => {
+   
+    if (clientContext.state !== "authenticated") return;
+
+    console.log("login");
+
+    const tl = gsap.timeline();
+    const targetPosition = new THREE.Vector3(
+      camera.position.x,
+      camera.position.y - 1200,
+      camera.position.z
+    );
+    
+    const lookAtTarget = new THREE.Vector3(-500, 323, -4); // 初期のlookAtターゲット位置
+
+    // カメラの移動アニメーション
+    tl.to(camera.position, {
+      y: camera.position.y - 150, // カメラのY軸方向の移動
+      duration: 4.5,
+      ease: "expo.in",
+      onUpdate: () => {
+        // アニメーション中のカメラの向きを更新
+        camera.lookAt(lookAtTarget);
+        if (camera.position.y < 0) {
+          scene.background = new THREE.Color(0x00334d);
+          tl.progress(1).kill();
+
+        }
+      },
+      onComplete: () => {
+        handleComplete();
+      },
+    })
+      // lookAtターゲットの位置アニメーション
+      .to(
+        lookAtTarget,
+        {
+          y: targetPosition.y - 1200, // 徐々にターゲットをカメラの下方に移動
+          duration: 3.5,
+          ease: "expo.in",
+          onUpdate: () => {
+            camera.lookAt(lookAtTarget); // lookAtターゲットを更新
+          },
+        },
+        "<" // "<" で移動と同時に開始
+      )
+}, [clientContext.state]);
 
   useEffect(() => {
 

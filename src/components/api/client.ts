@@ -102,14 +102,16 @@ const NotificationRes = z
   .passthrough();
 const CartRes = z
   .object({
-    product_id: z.string().uuid(),
-    product_price: z.number().int(),
-    product_title: z.string(),
-    product_description: z.string(),
-    purchase_date: z.string().datetime({ offset: true }),
-    product_contents_uuid: z.string().uuid(),
-    product_thumbnail_uuid: z.string().uuid(),
+    cart_id: z.string().uuid(),
+    user_id: z.string().uuid(),
+    product_ids: z.array(z.string().uuid()),
   })
+  .passthrough();
+const hew_back__cart__post_cart__PostCartBody = z
+  .object({ products: z.array(z.string().uuid()) })
+  .passthrough();
+const hew_back__cart__patch_cart__PostCartBody = z
+  .object({ new_products: z.array(z.string().uuid()) })
   .passthrough();
 const PostProductBody = z
   .object({
@@ -122,16 +124,22 @@ const PostProductBody = z
     collaborator_ids: z.array(z.string().uuid()),
   })
   .passthrough();
+const TokenInfo = z
+  .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
+  .passthrough();
+const PurchaseInfo = z
+  .object({ content_uuid: z.string().uuid(), token: TokenInfo })
+  .passthrough();
 const ProductRes = z
   .object({
-    product_description: z.string(),
     product_id: z.string().uuid(),
-    product_thumbnail_uuid: z.string().uuid(),
     product_price: z.number().int(),
     product_title: z.string(),
+    product_thumbnail_uuid: z.string().uuid(),
+    product_description: z.string(),
     purchase_date: z.string().datetime({ offset: true }),
-    product_contents_uuid: z.string().uuid(),
     creator_ids: z.array(z.string().uuid()),
+    purchase_info: z.union([PurchaseInfo, z.null()]).optional(),
   })
   .passthrough();
 const name = z.union([z.array(z.string()), z.null()]).optional();
@@ -150,9 +158,6 @@ const RecruitRes = z
   .passthrough();
 const PostRecruitBody = z
   .object({ title: z.string(), description: z.string() })
-  .passthrough();
-const TokenInfo = z
-  .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
   .passthrough();
 const TokenRes = z
   .object({ access: TokenInfo, refresh: TokenInfo })
@@ -210,7 +215,11 @@ export const schemas = {
   NotificationData,
   NotificationRes,
   CartRes,
+  hew_back__cart__post_cart__PostCartBody,
+  hew_back__cart__patch_cart__PostCartBody,
   PostProductBody,
+  TokenInfo,
+  PurchaseInfo,
   ProductRes,
   name,
   start_datetime,
@@ -220,7 +229,6 @@ export const schemas = {
   time_order,
   RecruitRes,
   PostRecruitBody,
-  TokenInfo,
   TokenRes,
   PostTokenBody,
   TokenInfoOld,
@@ -232,6 +240,55 @@ export const schemas = {
 };
 
 const endpoints = makeApi([
+  {
+    method: "get",
+    path: "/api/cart",
+    alias: "gc_api_cart_get",
+    requestFormat: "json",
+    response: z.union([CartRes, z.string()]),
+  },
+  {
+    method: "post",
+    path: "/api/cart",
+    alias: "pc_api_cart_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: hew_back__cart__post_cart__PostCartBody,
+      },
+    ],
+    response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "patch",
+    path: "/api/cart",
+    alias: "pac_api_cart_patch",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: hew_back__cart__patch_cart__PostCartBody,
+      },
+    ],
+    response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
   {
     method: "put",
     path: "/api/cart_buy",
@@ -506,13 +563,6 @@ const endpoints = makeApi([
   },
   {
     method: "get",
-    path: "/api/product_cart",
-    alias: "read_product_cart_api_product_cart_get",
-    requestFormat: "json",
-    response: z.array(CartRes),
-  },
-  {
-    method: "get",
     path: "/api/product/:product_id",
     alias: "gp_api_product__product_id__get",
     requestFormat: "json",
@@ -609,8 +659,8 @@ const endpoints = makeApi([
   },
   {
     method: "get",
-    path: "/api/token/image",
-    alias: "image_token_api_token_image_get",
+    path: "/api/token/file/upload",
+    alias: "gettfu_api_token_file_upload_get",
     requestFormat: "json",
     response: ImgTokenRes,
   },

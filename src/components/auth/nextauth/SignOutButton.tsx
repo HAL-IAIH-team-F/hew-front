@@ -1,5 +1,5 @@
 "use client"
-import {HTMLAttributes, useState} from "react";
+import {ReactNode, useState} from "react";
 import {ErrorMessage} from "../../../util/err/ErrorMessage";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {signOut} from "~/auth/clientAuth";
@@ -30,5 +30,7 @@ export function SignOutButton(
   )
 }
 
-export interface LogoutButtonProps extends HTMLAttributes <HTMLButtonElement> {
+export interface LogoutButtonProps {
+  children?: ReactNode
+  className?: string
 }

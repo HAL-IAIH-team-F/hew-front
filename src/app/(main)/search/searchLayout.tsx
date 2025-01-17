@@ -1,3 +1,4 @@
+"use client"
 // components/Layout.tsx
 import React, {useEffect, useState} from "react";
 import {FaSearch} from "react-icons/fa";

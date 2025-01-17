@@ -3,7 +3,7 @@ import {PerspectiveCamera, Vector2} from 'three';
 import {EffectComposer, RenderPass, ShaderPass} from 'three-stdlib';
 import {BlurShader} from './BlurShader';
 import gsap from 'gsap';
-import {initmoveBubblesToPosition} from '@/(main)/timeline/bubble/position';
+import {initmoveBubblesToPosition} from '@/(main)/(timeline)/bubble/position';
 import {Manager} from "~/manager/manager";
 
 
@@ -36,7 +36,9 @@ class Effects {
 
   startAnimesion(bubbles: THREE.Mesh[], manager: Manager) {
     const tl = gsap.timeline();
+    
     initmoveBubblesToPosition(bubbles, manager.value.sessionId, "idle", manager);
+    
     tl.to(this.horizontalBlurPass.material.uniforms['direction'].value, {
       x: 0.5,
       duration: 0.5,
@@ -55,6 +57,8 @@ class Effects {
       onUpdate: () => this.camera.updateProjectionMatrix()
     }, "<");
 
+    
+
 
     tl.to(this.horizontalBlurPass.material.uniforms['direction'].value, {
       x: 0,
@@ -72,6 +76,8 @@ class Effects {
       ease: 'power2.out',
       onUpdate: () => this.camera.updateProjectionMatrix()
     }, "<");
+
+
   }
 
   clickBubbleAnimesion() {

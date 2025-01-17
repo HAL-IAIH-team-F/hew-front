@@ -1,5 +1,5 @@
 "use client"
-import {HTMLAttributes, useState} from "react";
+import {ReactNode, useState} from "react";
 import {ErrorMessage} from "../../../util/err/ErrorMessage";
 import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {signIn} from "~/auth/clientAuth";
@@ -8,6 +8,7 @@ import {signIn} from "~/auth/clientAuth";
 export function SignInButton(
   {
     children,
+    onClose,
     ...props
   }: LoginButtonProps,
 ) {
@@ -21,7 +22,7 @@ export function SignInButton(
         {...props}
         onClick={() => {
           setErr(undefined)
-          signIn(clientContext).catch(reason => {
+          signIn(clientContext, onClose).catch(reason => {
             setErr(`ログインに失敗しました: {${reason.toString()}}`)
           })
         }}>
@@ -31,5 +32,7 @@ export function SignInButton(
   )
 }
 
-export interface LoginButtonProps extends HTMLAttributes<HTMLButtonElement> {
+export interface LoginButtonProps {
+  onClose?: () => void
+  children?: ReactNode
 }
