@@ -9,11 +9,13 @@ export function StyledInput(
   {
     name,
     label,
+    as="input", // デフォルトはinput
     className,
     ...props
   }: TextInputProps
 ) {
   const formState = useFormState()
+  const Component = as === "textarea" ? "textarea" : "input";
   return (
       <div className="flex justify-center items-center ">
         <ItemBackground
@@ -24,7 +26,7 @@ export function StyledInput(
           <p className={sx("px-4 mb-4 block text-xl text-[#4E5861]")}>
               {label || name}
           </p>
-          <input
+          <Component
             {...props}
             name={name}
             className={sx(
@@ -37,7 +39,12 @@ export function StyledInput(
   );
 }
 
-export interface TextInputProps extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+export interface TextInputProps
+    extends DetailedHTMLProps<
+        InputHTMLAttributes<HTMLInputElement> & TextareaHTMLAttributes<HTMLTextAreaElement>,
+        HTMLInputElement | HTMLTextAreaElement
+    > {
   name: string
   label?: string
+　as?: "input" | "textarea";
 }

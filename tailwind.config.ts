@@ -25,7 +25,7 @@ const config: Config = {
       },
       backgroundImage: {
         "ocean-wave":
-            "linear-gradient(90deg, #52D9CB, #327AD9, #05253F, #327AD9, #52D9CB)",
+            "linear-gradient(90deg, #0C4C81, #0B4372, #08385F, #042948, #05253F)",
       },
     },
   },
