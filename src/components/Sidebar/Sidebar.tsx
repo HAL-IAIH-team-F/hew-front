@@ -10,6 +10,7 @@ import {useProductContext} from '~/products/ContextProvider';
 import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
 import {Routes} from "@/Routes";
+import { IoCartOutline } from "react-icons/io5";
 
 
 
@@ -44,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({children}) => {
           />
         </button>
 
-        {['Search', 'Notification', 'Message', 'Account', "ProductListing"].map((item) => (
+        {['Search', 'Notification', 'Message', 'Account', "ProductListing","Cart"].map((item) => (
           <Link
             key={item}
             style={iconContainerStyle(isSidebarOpen)}
@@ -93,6 +94,8 @@ const renderIcon = (item: string, user: any) => {
       ) : (
         <FaSpinner style={styles.spinner}/>
       );
+    case "Cart":
+      return <IoCartOutline style={styles.icon}/>;
 
     default:
       return null;

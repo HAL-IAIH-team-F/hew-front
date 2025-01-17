@@ -1,15 +1,13 @@
 "use client";
-import { useClientContextState } from "~/api/context/ClientContextProvider";
-import { useEffect, useState } from "react";
-import { Api } from "~/api/context/Api";
-import { ErrorData } from "../../../util/err/err";
-import { CartRes } from "@/(main)/cart/CartRes";
-import { ErrorMessage } from "../../../util/err/ErrorMessage";
-import { SignInOutButton } from "~/auth/nextauth/SignInOutButton";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {CSSProperties, useEffect, useState} from "react";
+import {Api} from "~/api/context/Api";
+import {ErrorData} from "../../../../util/err/err";
+import {CartRes} from "@/(main)/(timeline)/cart/CartRes";
+import {ErrorMessage} from "../../../../util/err/ErrorMessage";
+import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
 import ProductThumbnail from "~/api/useImgData";
 import useProduct from "~/api/useProducts";
-import { CSSProperties } from "react";
-import Sidebar from "~/Sidebar/Sidebar";
 
 const styles: Record<string, CSSProperties> = {
   productList: {
@@ -90,10 +88,10 @@ const styles: Record<string, CSSProperties> = {
     borderRadius: "6px",
   },
   thumbnailImage: {
-      width: "100%", // 親要素の幅に合わせる
-      height: "100%", // 親要素の高さに合わせる
-      objectFit: "cover", // 画像が要素を覆うようにリサイズ
-      objectPosition: "center", // 画像を中央に配置
+    width: "100%", // 親要素の幅に合わせる
+    height: "100%", // 親要素の高さに合わせる
+    objectFit: "cover", // 画像が要素を覆うようにリサイズ
+    objectPosition: "center", // 画像を中央に配置
   },
 };
 
@@ -106,20 +104,21 @@ export default function CartPage({}: {}) {
     if (clientState.state != "authenticated") return;
     clientState.client.auth(Api.app.gc_api_cart_get, {}, {}).then((value) => {
       if (value.error) return setErr(value.error);
+      // noinspection SuspiciousTypeOfGuard
       if (typeof value.success == "string") return setErr("no cart");
       setCart(value.success);
     });
-  }, [clientState.state ]);
+  }, [clientState.state]);
 
   return (
     <div>
       {cart?.product_ids.map((value) => (
         <p key={value}>
-          {<ProductList productId={value} />}
+          {<ProductList productId={value}/>}
         </p>
       ))}
-      <ErrorMessage error={err} />
-      <SignInOutButton />
+      <ErrorMessage error={err}/>
+      <SignInOutButton/>
       <button
         className="border-2 hover:bg-gray-300"
         disabled={!cart}
@@ -143,8 +142,8 @@ interface ProductListProps {
   productId?: string;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ productId }) => {
-  const { products, error } = useProduct({ productId });
+const ProductList: React.FC<ProductListProps> = ({productId}) => {
+  const {products, error} = useProduct({productId});
 
   if (error) {
     return <div style={styles.error}>Error: {error.message}</div>;
@@ -160,15 +159,15 @@ const ProductList: React.FC<ProductListProps> = ({ productId }) => {
         {products.map((product) => (
           <li key={product.product_id} style={styles.productCard}>
             <div style={styles.thumbnailWrapper}>
-              <div  style={styles.thumbnailImage} >
-                <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid} />
+              <div style={styles.thumbnailImage}>
+                <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>
               </div>
             </div>
             <div style={styles.productDetails}>
               <h2 style={styles.productTitle}>{product.product_title}</h2>
               <p style={styles.productPrice}>{product.product_price}円</p>
             </div>
-            
+
           </li>
         ))}
       </ul>

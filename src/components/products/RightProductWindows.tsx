@@ -1,21 +1,21 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useProductContext } from './ContextProvider';
-import { ProductWindowStyle } from '~/Sidebar/Styles';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {useProductContext} from './ContextProvider';
+import {ProductWindowStyle} from '~/Sidebar/Styles';
 import useProduct from '~/api/useProducts';
-import { ProductRes } from './ProductRes';
+
 import ProductThumbnail from '~/api/useImgData';
-import { MdHeight } from 'react-icons/md';
-import { ClientContextState, useClientContextState } from '~/api/context/ClientContextProvider';
-import { ErrorData } from '../../util/err/err';
-import { Api } from '~/api/context/Api';
+import {ClientContextState, useClientContextState} from '~/api/context/ClientContextProvider';
+import {ErrorData} from '../../util/err/err';
+import {Api} from '~/api/context/Api';
+import {ProductRes} from "@/(main)/search/sample/ProductRes";
 
 const RightProductWindows: React.FC = () => {
-  const { productId, isProductOpen } = useProductContext();
+  const {productId, isProductOpen} = useProductContext();
   const [currentProducts, setCurrentProducts] = useState<ProductRes[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const { products, error } = useProduct({ productId: productId });
-  
+  const {products, error} = useProduct({productId: productId});
+
   const clientState = useClientContextState()
   const [err, setErr] = useState<ErrorData>()
 
@@ -24,7 +24,7 @@ const RightProductWindows: React.FC = () => {
       setCurrentProducts([]);
       setErrorMessage('');
     }
-  }, [productId]); 
+  }, [productId]);
 
   useEffect(() => {
     if (error) {
@@ -43,7 +43,7 @@ const RightProductWindows: React.FC = () => {
         <div style={styles.product}>
           {currentProducts.map((product) => (
             <div key={product.product_id} style={styles.productCard}>
-              <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid} />
+              <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>
               <div style={styles.productDetails}>
                 <h3 style={styles.productTitle}>{product.product_title}</h3>
                 <p style={styles.productDescription}>{product.product_description}</p>
