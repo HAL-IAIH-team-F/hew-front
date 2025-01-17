@@ -6,16 +6,42 @@ import {Result, Results} from "../../../util/err/result";
 import {ErrorIds} from "../../../util/err/errorIds";
 import {Api} from "~/api/context/Api";
 import {AuthIdTokenState, IdTokenState} from "~/auth/idtoken/IdTokenState";
+import {
+  ClientState,
+  newRegisteredClientState,
+  newUnAuthClientState,
+  newUnregisteredClientState
+} from "~/api/context/ClientState";
+import {AuthClient} from "~/api/client/auth/AuthClient";
 
-import {UnAuthClient} from "~/api/client/UnAuthClient";
-import {ClientState, newUnAuthClientState, newUnregisteredClientState} from "~/api/context/ClientState";
-
+async function handleRefresh(
+  setClientState: (clientState: ClientState) => void,
+  idToken: AuthIdTokenState, setIdToken: (tokenState: IdTokenState) => void,
+  setLogoutRequestIdToken: Dispatch<SetStateAction<AuthIdTokenState | undefined>>,
+  tokens: TokenBundle
+) {
+  const result = await new AuthClient(tokens.access.token).auth(Api.app.get_user_api_user_self_get, {}, {})
+  if (result.error) {
+    if (!ErrorIds.USER_NOT_FOUND.equals(result.error?.error_id)) console.error("get self error", result.error)
+    setClientState(
+      newUnregisteredClientState(idToken.oidcContext, setIdToken, () => {
+        setLogoutRequestIdToken(idToken)
+      }, tokens, idToken)
+    )
+    return;
+  }
+  setClientState(
+    newRegisteredClientState(idToken.oidcContext, setIdToken, () => {
+      setLogoutRequestIdToken(idToken)
+    }, tokens, idToken, result.success)
+  )
+}
 
 export default function RefreshTokenLoader(
   {
-    update, idToken, reload, clientState, setIdToken, setLogoutRequestIdToken,
+    setClientState, idToken, reload, clientState, setIdToken, setLogoutRequestIdToken,
   }: {
-    update: (loginSessionUpdate: ClientState) => void,
+    setClientState: (clientState: ClientState) => void,
     idToken: IdTokenState,
     reload: () => void,
     clientState: ClientState,
@@ -30,11 +56,7 @@ export default function RefreshTokenLoader(
 
     if (idToken.state == "loading") return;
     if (idToken.state == "unauthenticated") {
-      return update({
-        state: "unauthenticated", idToken: idToken, client: new UnAuthClient(),
-        oidcContext: idToken.oidcContext,
-        setIdToken: setIdToken,
-      })
+      return setClientState(newUnAuthClientState(idToken.oidcContext, setIdToken, idToken))
     }
 
     const next = clientState.state == "registered" && clientState.token.access
@@ -48,26 +70,14 @@ export default function RefreshTokenLoader(
         idToken,
         tokens => {
           console.debug("refreshToken success", tokens)
-          update(
-            newUnregisteredClientState(idToken.oidcContext, setIdToken, () => {
-              setLogoutRequestIdToken(idToken)
-            }, tokens, idToken)
-            //   {
-            //   state: "unregistered", token: tokens, idToken: idToken,
-            //   client: new AuthClient(tokens.access.token),
-            //   oidcContext,
-            //   setIdToken,
-            //   signOut,
-            //   token,
-            // }
-          )
+          handleRefresh(setClientState, idToken, setIdToken, setLogoutRequestIdToken, tokens)
         },
         reload, clientState,
       ).then(value => {
         refreshing.current = false;
         if (!value.error) return
         console.error("refresh token error", value.error)
-        update(newUnAuthClientState(idToken.oidcContext, setIdToken, idToken))
+        setClientState(newUnAuthClientState(idToken.oidcContext, setIdToken, idToken))
       })
     }, next)
     return () => {

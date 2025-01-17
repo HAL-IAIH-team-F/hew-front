@@ -28,7 +28,7 @@ export default function SessionPersister(
       />
       <IdTokenLoader reload={flag} update={setIdToken}/>
       <RefreshTokenLoader
-        update={update} idToken={idToken} reload={() => setFlag(prevState => !prevState)}
+        setClientState={update} idToken={idToken} reload={() => setFlag(prevState => !prevState)}
         clientState={clientState} setIdToken={setIdToken} setLogoutRequestIdToken={setLogoutRequestIdToken}
       />
       {/*<button className={"ml-32 block"} onClick={() => setFlag(prevState => !prevState)}>test</button>*/}
