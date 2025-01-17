@@ -14,7 +14,7 @@
     "@react-three/postprocessing": "^2.16.6",
     "@zodios/core": "^10.9.6",
     "date-fns": "^4.1.0",
-    "gsap": "^3.12.5",
+    "gsap": "^3.12.7",
     "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",
     "leva": "^0.9.35",
