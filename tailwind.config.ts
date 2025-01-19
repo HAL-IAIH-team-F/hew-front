@@ -13,34 +13,6 @@ const config: Config = {
         borderDef: "#B4B4B4",
         lightGray: "#747989",
       },
-      keyframes: {
-        // wave: {
-        //   "0%": { backgroundPosition: "0% 50%" },
-        //   "50%": { backgroundPosition: "100% 50%" },
-        //   "100%": { backgroundPosition: "0% 50%" },
-        // },
-        rise: {
-          "0%": {
-            transform: "translateY(100%)",
-            opacity: "0",
-          },
-          "50%": {
-            opacity: "1",
-          },
-          "100%": {
-            transform: "translateY(-100%)",
-            opacity: "0",
-          },
-        },
-      },
-      animation: {
-        wave: "wave 10s ease infinite",
-        rise: "rise 5s ease-in-out infinite",
-      },
-      // backgroundImage: {
-      //   "ocean-wave":
-      //       "linear-gradient(90deg, #0C4C81, #0B4372, #08385F, #042948, #05253F)",
-      // },
     },
   },
   plugins: [],
