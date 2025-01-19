@@ -1,5 +1,5 @@
 "use client"
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {StyledForm} from "../../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../../util/form/element/StyledButton";
@@ -10,7 +10,7 @@ export default function ColabRegisterForm(
     ...props
   }: ColabRegisterFormProps,
 ) {
-  const clientContext = useClientContextState()
+  const clientContext = useClientState()
 
   return (
     <StyledForm {...props} action={async formData => {
@@ -18,7 +18,7 @@ export default function ColabRegisterForm(
       const description = formData.getStr("description", "説明を入力してください");
 
       if (!title || !description) return
-      if (clientContext.state != "authenticated") throw new Error("no login")
+      if (clientContext.state != "registered") throw new Error("no login")
       const result = await clientContext.client.authBody(
         Api.app.pr_api_recruit_post,{},
         {

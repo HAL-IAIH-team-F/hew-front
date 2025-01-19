@@ -1,11 +1,10 @@
 import {ApiBody, BodiedFunc, BodiedParams, BodiedParamsLessOpt, Res} from "~/api/client/Client";
 import {Result, Results} from "../../../../util/err/result";
 import {ErrorIds} from "../../../../util/err/errorIds";
-import {AuthSession} from "~/auth/refresh/LoginSession";
 
 export class BodiedAuthClient {
   constructor(
-    protected readonly session: AuthSession,
+    protected readonly token: string,
   ) {
   }
 
@@ -18,7 +17,7 @@ export class BodiedAuthClient {
     }
 
     if (!opt.headers.Authorization) {
-      const token = this.session.token.access?.token
+      const token = this.token
       if (!token) return Results.errResultByReason("token is undefined", ErrorIds.UnknownError)
       opt.headers.Authorization = `Bearer ${token}`
     }

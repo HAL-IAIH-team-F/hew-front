@@ -1,10 +1,10 @@
 // LoginButton.tsx
 import React from 'react';
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {signIn} from "~/auth/clientAuth";
 
 const LoginButton = () => {
-  const clientContext = useClientContextState();
+  const clientContext = useClientState();
   return (
     <button style={{
       padding: '2px 0px',

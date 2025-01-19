@@ -1,5 +1,5 @@
 import {RecruitRes} from "./RecruitRes"
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {useState} from "react";
 import {Api} from "~/api/context/Api";
 import {ErrorData} from "../../../../util/err/err";
@@ -12,7 +12,7 @@ export default function Recruit(
     recruit: RecruitRes
   },
 ) {
-  const clientContext = useClientContextState()
+  const clientContext = useClientState()
   const [err, setErr] = useState<ErrorData>()
 
   return (
@@ -23,7 +23,7 @@ export default function Recruit(
       <p>creator: {recruit.creator_id}</p>
       <button onClick={() => {
         setErr(undefined)
-        if (clientContext.state != "authenticated") throw new Error("not authenticated")
+        if (clientContext.state != "registered") throw new Error("not authenticated")
         clientContext.client.authBody(Api.app.pcr_api_colab_request_post,{}, {recruit_id: recruit.recruit_id},{})
           .then(value => {
             if (!value.error) return

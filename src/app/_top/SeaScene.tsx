@@ -4,7 +4,7 @@ import * as THREE from "three";
 import {useFrame, useThree} from "@react-three/fiber";
 import {EffectComposer, RenderPass, UnrealBloomPass, Water} from "three-stdlib";
 import gsap from "gsap";
-import { useClientContextState } from "~/api/context/ClientContextProvider";
+import { useClientState } from "~/api/context/ClientContextProvider";
 import { useRouter } from "next/navigation";
 import {Routes} from "@/Routes";
 type SeaSceneProps = {
@@ -27,7 +27,7 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
   const waterRef = useRef<THREE.Mesh>();
   const isInitialRender = useRef(true);
   const [FilmPass, setFilmPass] = useState<{ constructor: any }>()
-  const clientContext = useClientContextState();
+  const clientContext = useClientState();
   const router = useRouter()
 
   const handleComplete = () => {
@@ -109,7 +109,7 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
 
   useEffect(() => {
    
-    if (clientContext.state !== "authenticated") return;
+    if (clientContext.state !== "registered") return;
 
     console.log("login");
 

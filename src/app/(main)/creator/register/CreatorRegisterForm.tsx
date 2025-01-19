@@ -1,5 +1,5 @@
 "use client";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {useRouter} from "next/navigation";
 import {StyledFormData} from "../../../../util/form/StyledFormData";
 import {StyledForm} from "../../../../util/form/element/StyledForm";
@@ -15,7 +15,7 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
   const router = useRouter();
 
   // セッションとクライアントコンテキストの取得
-  const clientContext = useClientContextState();
+  const clientContext = useClientState();
 
   // 入力チェックの関数
   const validateForm = (formData: StyledFormData) => {
@@ -40,7 +40,7 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
         if (formData.formError) {
           return;
         }
-        if (clientContext.state != "authenticated") {
+        if (clientContext.state != "registered") {
           formData.append("submit", "no login")
           return
         }
@@ -48,7 +48,7 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
         // `user_id` を含むデータベースへの保存
         const contactAddress = formData.get("contact_address") as string;
         const transferTarget = formData.get("transfer_target") as string;
-        const userId = clientContext.loginSession.idToken.idToken.userId;  // ユーザーIDを取得
+        const userId = clientContext.idToken.idToken.userId;  // ユーザーIDを取得
 
         const postCreatorResult = await clientContext.client.authBody(
           Api.app.pc_api_creator_post, {},
