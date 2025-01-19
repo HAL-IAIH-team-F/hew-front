@@ -4,10 +4,11 @@ import {ProductWindowStyle} from '~/Sidebar/Styles';
 import useProduct from '~/api/useProducts';
 
 import ProductThumbnail from '~/api/useImgData';
-import {ClientContextState, useClientContextState} from '~/api/context/ClientContextProvider';
 import {ErrorData} from '../../util/err/err';
 import {Api} from '~/api/context/Api';
 import {ProductRes} from "@/(main)/search/sample/ProductRes";
+import {useClientState} from "~/api/context/ClientContextProvider";
+import {ClientState} from "~/api/context/ClientState";
 
 const RightProductWindows: React.FC = () => {
   const {productId, isProductOpen} = useProductContext();
@@ -16,7 +17,7 @@ const RightProductWindows: React.FC = () => {
 
   const {products, error} = useProduct({productId: productId});
 
-  const clientState = useClientContextState()
+  const clientState = useClientState()
   const [err, setErr] = useState<ErrorData>()
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const RightProductWindows: React.FC = () => {
               </div>
               <button
                 className={"border-2  enabled:hover:bg-gray-300 enabled:bg-gray-200"}
-                disabled={clientState.state != "authenticated"}
+                disabled={clientState.state != "registered"}
                 onClick={() => {
                   addCart(clientState, setErr, productId).catch(reason => {
                     console.error(reason)
@@ -71,10 +72,10 @@ const RightProductWindows: React.FC = () => {
 };
 
 async function addCart(
-  clientState: ClientContextState, setErr: Dispatch<SetStateAction<ErrorData | undefined>>,
+  clientState: ClientState, setErr: Dispatch<SetStateAction<ErrorData | undefined>>,
   product_id: string
 ) {
-  if (clientState.state != "authenticated") return
+  if (clientState.state != "registered") return
   setErr(undefined)
   const cartResult = await clientState.client.auth(Api.app.gc_api_cart_get, {}, {})
   if (cartResult.error) return setErr(cartResult.error)

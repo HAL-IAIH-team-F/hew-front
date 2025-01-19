@@ -1,5 +1,4 @@
 "use client";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
 import {CSSProperties, useEffect, useState} from "react";
 import {Api} from "~/api/context/Api";
 import {ErrorData} from "../../../../util/err/err";
@@ -8,6 +7,7 @@ import {ErrorMessage} from "../../../../util/err/ErrorMessage";
 import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
 import ProductThumbnail from "~/api/useImgData";
 import useProduct from "~/api/useProducts";
+import {useClientState} from "~/api/context/ClientContextProvider";
 
 const styles: Record<string, CSSProperties> = {
   productList: {
@@ -96,12 +96,12 @@ const styles: Record<string, CSSProperties> = {
 };
 
 export default function CartPage({}: {}) {
-  const clientState = useClientContextState();
+  const clientState = useClientState();
   const [err, setErr] = useState<ErrorData | string>();
   const [cart, setCart] = useState<CartRes>();
 
   useEffect(() => {
-    if (clientState.state != "authenticated") return;
+    if (clientState.state != "registered") return;
     clientState.client.auth(Api.app.gc_api_cart_get, {}, {}).then((value) => {
       if (value.error) return setErr(value.error);
       // noinspection SuspiciousTypeOfGuard
@@ -123,7 +123,7 @@ export default function CartPage({}: {}) {
         className="border-2 hover:bg-gray-300"
         disabled={!cart}
         onClick={() => {
-          if (clientState.state !== "authenticated") throw new Error("not authenticated");
+          if (clientState.state !== "registered") throw new Error("not authenticated");
           clientState.client
             .authBody(Api.app.cart_buy_api_cart_buy_put, {}, undefined, {})
             .then((value) => {
