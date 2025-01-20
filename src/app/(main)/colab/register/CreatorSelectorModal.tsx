@@ -1,6 +1,6 @@
 import ModalHeader from "@/(main)/colab/register/ModalHeader";
 import {useEffect, useState} from "react";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 import {ErrorData} from "../../../../util/err/err";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
@@ -16,7 +16,7 @@ export default function CreatorSelectorModal(
   },
 ) {
   const [creators, setCreators] = useState<CreatorRes[]>([])
-  const clientContext = useClientContextState()
+  const clientContext = useClientState()
   const [err, setErr] = useState<ErrorData>()
   useEffect(() => {
     if (clientContext.state == "loading") return

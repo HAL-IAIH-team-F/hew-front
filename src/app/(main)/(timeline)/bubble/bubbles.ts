@@ -3,9 +3,9 @@ import * as THREE from "three";
 import {getRandomPosition, getRandomPositionWithExclusion, moveBubblesToPosition} from "./position";
 import {gsap} from "gsap";
 
-import {showProduct} from "@/(main)/timeline/product/product";
-import {createGradientBackground} from "@/(main)/timeline/background/background"
-import Effects from "@/(main)/timeline/effects/camera/Effects"
+import {showProduct} from "@/(main)/(timeline)/product/product";
+import {createGradientBackground} from "@/(main)/(timeline)/background/background"
+import Effects from "@/(main)/(timeline)/effects/camera/Effects"
 import {Manager} from "~/manager/manager";
 
 const vertexShader = `
@@ -54,61 +54,6 @@ const vertexShader = `
   }
 `;
 
-const fragmentShaderold = `
-  uniform sampler2D map;
-  varying vec2 vUv;
-  uniform float time;
-  void main() {
-    vec4 originalColor = texture2D(map, vUv);
-    vec4 color = originalColor;
-    float dist = length(vUv - 0.5); // 中心からの距離
-
-    // 泡のエッジを透明にするためのアルファ調整
-    float edgeAlpha = smoothstep(0.45, 0.5, dist);
-    
-    // 泡の内部に動きのある歪みを追加
-    vec2 distortion = vec2(
-      sin(time + dist * 15.0) * 0.01, 
-      cos(time + dist * 15.0) * 0.01
-    );
-    vec2 uvDistorted = vUv + distortion;
-
-    // 泡の表面にノイズによる微細な歪みを追加
-    float noise = sin(dot(uvDistorted * 10.0, vec2(12.9898, 78.233)) * 43758.5453);
-    uvDistorted += noise * 0.005;
-
-    vec4 distortedColor = texture2D(map, uvDistorted);
-
-    // 泡の深さ感を追加
-    float depth = 1.0 - smoothstep(0.0, 0.3, dist);
-    color.rgb *= 0.7 + 0.3 * depth;
-    
-    // 泡の内側の淡い色と透明感
-    vec3 innerColor = vec3(0.9, 0.95, 1.0);
-    float innerBlend = smoothstep(0.0, 0.1, dist);
-    color.rgb = mix(innerColor, distortedColor.rgb, innerBlend);
-
-    // 泡のエッジに輝きを追加
-    vec3 glowColor = vec3(0.8, 0.9, 1.0);
-    float glow = exp(-pow((dist - 0.4) * 15.0, 2.0)) * 0.8;
-    color.rgb += glowColor * glow;
-
-    // 光の屈折と反射の効果を増やす
-    float reflection = sin(dist * 16.0 + time * 4.0) * 0.06;
-    color.rgb += reflection * glowColor;
-
-    // 泡の表面にシャープなハイライトを追加
-    float highlight = smoothstep(0.48, 0.5, dist) * 0.3;
-    color.rgb += highlight * vec3(1.0, 1.0, 1.0);
-
-    // 泡の透明感を調整
-    color.a = max(originalColor.a, glow * 0.4); // 透明度を調整
-
-    if (color.a < 0.05) discard;
-
-    gl_FragColor = color;
-  }
-`;
 const fragmentShader = `
   uniform sampler2D map;
   varying vec2 vUv;
@@ -218,7 +163,9 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
     });
 
     const randomRotationSpeed = Math.random() * 0.01 + 0.01;
+    // noinspection PointlessArithmeticExpressionJS
     const randomAmplitude = Math.random() * 1 + 0.05;
+    // noinspection PointlessArithmeticExpressionJS
     const randomDuration = Math.random() * 1 + 0.5;
 
     const rotationAnimation = gsap.to(bubble.rotation, {
@@ -350,3 +297,59 @@ export const onClickBubble = (manager: Manager, event: MouseEvent, bubbles: THRE
   }
 };
 
+
+// const fragmentShaderold = `
+//   uniform sampler2D map;
+//   varying vec2 vUv;
+//   uniform float time;
+//   void main() {
+//     vec4 originalColor = texture2D(map, vUv);
+//     vec4 color = originalColor;
+//     float dist = length(vUv - 0.5); // 中心からの距離
+//
+//     // 泡のエッジを透明にするためのアルファ調整
+//     float edgeAlpha = smoothstep(0.45, 0.5, dist);
+//
+//     // 泡の内部に動きのある歪みを追加
+//     vec2 distortion = vec2(
+//       sin(time + dist * 15.0) * 0.01,
+//       cos(time + dist * 15.0) * 0.01
+//     );
+//     vec2 uvDistorted = vUv + distortion;
+//
+//     // 泡の表面にノイズによる微細な歪みを追加
+//     float noise = sin(dot(uvDistorted * 10.0, vec2(12.9898, 78.233)) * 43758.5453);
+//     uvDistorted += noise * 0.005;
+//
+//     vec4 distortedColor = texture2D(map, uvDistorted);
+//
+//     // 泡の深さ感を追加
+//     float depth = 1.0 - smoothstep(0.0, 0.3, dist);
+//     color.rgb *= 0.7 + 0.3 * depth;
+//
+//     // 泡の内側の淡い色と透明感
+//     vec3 innerColor = vec3(0.9, 0.95, 1.0);
+//     float innerBlend = smoothstep(0.0, 0.1, dist);
+//     color.rgb = mix(innerColor, distortedColor.rgb, innerBlend);
+//
+//     // 泡のエッジに輝きを追加
+//     vec3 glowColor = vec3(0.8, 0.9, 1.0);
+//     float glow = exp(-pow((dist - 0.4) * 15.0, 2.0)) * 0.8;
+//     color.rgb += glowColor * glow;
+//
+//     // 光の屈折と反射の効果を増やす
+//     float reflection = sin(dist * 16.0 + time * 4.0) * 0.06;
+//     color.rgb += reflection * glowColor;
+//
+//     // 泡の表面にシャープなハイライトを追加
+//     float highlight = smoothstep(0.48, 0.5, dist) * 0.3;
+//     color.rgb += highlight * vec3(1.0, 1.0, 1.0);
+//
+//     // 泡の透明感を調整
+//     color.a = max(originalColor.a, glow * 0.4); // 透明度を調整
+//
+//     if (color.a < 0.05) discard;
+//
+//     gl_FragColor = color;
+//   }
+// `;

@@ -5,15 +5,11 @@ import React, {createContext, useContext, useState} from 'react';
 interface ProductContextType {
   productId: string;
   isProductOpen: boolean;
-  isVisible: boolean;
   isSidebarOpen: boolean;
-  isPagevalue: string;
   toggleProductWindow: () => void;
   setProductId: (id: string) => void;
-  setIsVisible: (id: boolean) => void;
   setIsSidebarOpen: (id: boolean) => void;
-  setPageValue: (id: string) => void;
-}
+  }
 
 // 初期値
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -22,9 +18,7 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const [productId, setProductId] = useState<string>("none");
   const [isProductOpen, setisProductOpen] = useState<boolean>(false);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-  const [isPagevalue, setPageValue] = useState<string>('undefined');
 
   const toggleProductWindow = () => setisProductOpen((prev) => !prev);
 
@@ -32,15 +26,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
     <ProductContext.Provider
       value={{
         isProductOpen,
-        setIsVisible,
-        isVisible,
-        isPagevalue,
         productId,
         setProductId,
         toggleProductWindow,
         isSidebarOpen,
         setIsSidebarOpen,
-        setPageValue,
       }}
     >
       {children}

@@ -1,17 +1,17 @@
 import {useEffect, useRef} from "react";
 
-import {LoginSession} from "~/auth/refresh/LoginSession";
-
 import useMessageEvent from "~/auth/idtoken/hook/useMessageEvent";
 import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
 import {IdTokenState} from "~/auth/idtoken/IdTokenState";
+import {ClientState} from "~/api/context/ClientState";
+
 
 export default function OpWatcher(
   {
-    reload, loginSession, idToken, logoutRequest,
+    reload, clientState, idToken, logoutRequest,
   }: {
     reload: () => void,
-    loginSession: LoginSession,
+    clientState: ClientState,
     idToken: IdTokenState,
     logoutRequest: boolean,
   },
@@ -32,7 +32,7 @@ export default function OpWatcher(
     return () => {
       clearInterval(interval)
     };
-  }, [ref.current, loginSession.state, idToken]);
+  }, [ref.current, clientState.state, idToken]);
   useMessageEvent(evt => {
     if (evt.origin !== new URL(KeycloakConfig.baseUrl).origin) return
     if (evt.data == "unchanged") return

@@ -2,7 +2,7 @@
 import * as THREE from "three";
 import {Manager} from "~/manager/manager";
 import {gsap} from "gsap";
-import Effects from "@/(main)/timeline/effects/camera/Effects";
+import Effects from "@/(main)/(timeline)/effects/camera/Effects";
 
 export const showProduct = (
     clickedBubble: THREE.Mesh,
@@ -39,7 +39,7 @@ export const showProduct = (
             <button id="closeButton" style="background: none; border: none; color: #FFF; font-size: 24px; cursor: pointer;">&times;</button>
         </div>
         <p>商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明</br>商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明商品説明</p>
-        <img src="${imagePath}" style="width: 100%; border-radius: 5px; margin-top: 10px;" />
+        <img src="${imagePath}" style="width: 100%; border-radius: 5px; margin-top: 10px;" alt="商品"/>
     `;
     document.body.appendChild(htmlBox);
 

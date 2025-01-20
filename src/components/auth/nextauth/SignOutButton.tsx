@@ -1,7 +1,7 @@
 "use client"
 import {ReactNode, useState} from "react";
 import {ErrorMessage} from "../../../util/err/ErrorMessage";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {signOut} from "~/auth/clientAuth";
 
 
@@ -12,7 +12,7 @@ export function SignOutButton(
   }: LogoutButtonProps,) {
 
   const [err, setErr] = useState<string>()
-  const clientContext = useClientContextState()
+  const clientContext = useClientState()
   return (
     <>
       <ErrorMessage error={err}/>

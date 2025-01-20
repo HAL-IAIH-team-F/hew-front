@@ -1,5 +1,5 @@
 import {ChatRes} from "@/(main)/user/chat/ChatRes";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {useEffect, useState} from "react";
 import {Api} from "~/api/context/Api";
 import {ErrorData} from "../../../../util/err/err";
@@ -14,11 +14,11 @@ export default function Chat(
     chat: ChatRes,
   },
 ) {
-  const clientContext = useClientContextState()
+  const clientContext = useClientState()
   const [err, setErr] = useState<ErrorData>()
   const [msgs, setMsgs] = useState<ChatMessageRes>()
   useEffect(() => {
-    if (clientContext.state != "authenticated") return
+    if (clientContext.state != "registered") return
     clientContext.client.auth(Api.app.gcms_api_chat__chat_id__message_get, {}, {chat_id: chat.chat_id})
       .then(value => {
         if (value.error) return setErr(value.error)

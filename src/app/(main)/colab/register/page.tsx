@@ -4,20 +4,22 @@ import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {useRouter} from "next/navigation";
 import CreatorsSelector from "@/(main)/colab/register/CreatorsSelector";
 import {StyledButton} from "../../../../util/form/element/StyledButton";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 import {useState} from "react";
 import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
+import {Routes} from "@/Routes";
+
 
 export default function Page(
   {}: {}
 ) {
-  const clientContext = useClientContextState()
+  const clientContext = useClientState()
   const [creators, setCreators] = useState<CreatorRes[]>([])
   const router = useRouter()
 
   return <StyledForm action={async formData => {
-    if (clientContext.state != "authenticated") throw new Error("not authenticated")
+    if (clientContext.state != "registered") throw new Error("not authenticated")
     const title = formData.getStr("title")
     const description = formData.getStr("description")
 
@@ -27,7 +29,7 @@ export default function Page(
       {},{
       creators: creators.map(value => value.creator_id), title: title, description: description
     },{})
-    if (!result.error) return router.push("/timeline")
+    if (!result.error) return router.push(Routes.timeline)
     formData.append("submit", `{${result.error.error_id}: ${result.error.message}}`)
   }}>
     <StyledInput name={"title"}/>
