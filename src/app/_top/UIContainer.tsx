@@ -5,8 +5,9 @@ import gsap from 'gsap';
 import Title from './Title';
 import LoginButton from './LoginButton';
 import RegisterButton from './RegisterButton';
-import { useClientContextState } from '~/api/context/ClientContextProvider';
-import { FaCheckCircle } from 'react-icons/fa'; // React Icons のチェックマーク
+
+import { FaCheckCircle } from 'react-icons/fa';
+import {useClientState} from "~/api/context/ClientContextProvider"; // React Icons のチェックマーク
 
 type UIContainerProps = {
     onButtonClick: boolean;
@@ -16,7 +17,7 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
     const [isMobile, setIsMobile] = useState(false);
     const UIContainerRef = useRef<HTMLDivElement>(null);
     const isInitialRender = useRef(true); 
-    const clientContext = useClientContextState();
+    const clientContext = useClientState();
     const [isloading, setIsloading] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const checkMarkRef = useRef<HTMLDivElement>(null); // チェックマークの参照
@@ -26,7 +27,7 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
     };
     
     useEffect(() => {
-        if (clientContext.state === "authenticated") {
+        if (clientContext.state === "registered") {
             setIsloading(false);
             setIsAuthenticated(true);
         } 

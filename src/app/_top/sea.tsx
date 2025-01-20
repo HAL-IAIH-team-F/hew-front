@@ -1,34 +1,32 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import UIContainer from "./UIContainer";
-import { DescriptionButton } from "./Description";
-import { SeaScene } from "./SeaScene";
-import { useClientContextState } from "~/api/context/ClientContextProvider";
-import { useRouter } from "next/navigation"; // 修正ポイント
-import { Api, Img } from "~/api/context/Api";
-import { ErrorIds } from "../../util/err/errorIds";
+import React, {useEffect, useState} from "react";
+import {Canvas} from "@react-three/fiber";
+import {DescriptionButton} from "./Description";
+import {SeaScene} from "./SeaScene";
+import {Img} from "~/api/context/Api";
+import UIContainer from "@/_top/UIContainer";
+import {useClientState} from "~/api/context/ClientContextProvider";
 
 const Sea = () => {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false); // 認証状態を管理
-  const clientContext = useClientContextState();
+  const clientContext = useClientState();
   const [isVisible, setIsVisible] = useState(true); // フェードアウト用
   const [user, setUser] = useState<{ id: string; name: string; icon: Img | undefined }>();
 
   const handleButtonClick = () => {
-    setButtonClicked((prev) => !prev); 
+    setButtonClicked((prev) => !prev);
   };
   useEffect(() => {
-    if (clientContext.state !== "authenticated") return 
+    if (clientContext.state !== "registered") return
     setIsAuthenticated(true);
     setTimeout(() => setIsVisible(false), 2000); // フェードアウト後に非表示
-  },[clientContext.state]);
+  }, [clientContext.state]);
 
   return (
-    <div style={{ width: "100vw", height: "100vh", position: "relative",backgroundColor: "black" }}>
-      <Canvas style={{ position: "absolute", top: 0, left: 0 }}>
-        <SeaScene onButtonClick={buttonClicked}/> 
+    <div style={{width: "100vw", height: "100vh", position: "relative", backgroundColor: "black"}}>
+      <Canvas style={{position: "absolute", top: 0, left: 0}}>
+        <SeaScene onButtonClick={buttonClicked}/>
       </Canvas>
       {isVisible && (
         <div
@@ -37,8 +35,8 @@ const Sea = () => {
             ...(isAuthenticated ? styles.fadeOut : {}),
           }}
         >
-          <UIContainer onButtonClick={buttonClicked} />
-          <DescriptionButton onClick={handleButtonClick} />
+          <UIContainer onButtonClick={buttonClicked}/>
+          <DescriptionButton onClick={handleButtonClick}/>
         </div>
       )}
     </div>
