@@ -102,15 +102,17 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
             alignItems: 'center',
             color: 'rgba(255, 255, 255, 0.9)',
             fontFamily: 'UDEVGothic, sans-serif',
-            zIndex: 6
+            zIndex: 6,
         }}>
             <div style={{
                 textAlign: 'center',
                 padding: isMobile ? '20px 30px' : '30px 50px',
                 borderRadius: '8px',
+                boxSizing: "border-box", // サイズ計算にパディングを含む
                 backdropFilter: 'blur(10px)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                width: isMobile ? '90%' : 'auto',
+                width: isMobile ? '90%' : '30%',
+                height: "38%"
             }}>
                 <Title />
                 <div

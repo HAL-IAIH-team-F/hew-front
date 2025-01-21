@@ -31,7 +31,7 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
   const router = useRouter()
 
   const handleComplete = () => {
-    router.push("/timeline");
+    router.push("/");
   };
 
   useEffect(() => {
