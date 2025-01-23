@@ -1,16 +1,17 @@
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useEffect} from 'react';
 import {FaBell, FaChevronRight, FaSearch, FaSpinner} from 'react-icons/fa';
 import {FaRegMessage} from 'react-icons/fa6';
 import Image from "../../util/Image";
 import {MdOutlineBubbleChart} from "react-icons/md";
 import PageWindow from './PageWindow';
-import {iconContainerStyle, styles} from './Styles';
+import {iconContainerStyle, iconstyles, styles} from './Styles';
 import {useUserData} from '~/api/context/useUserData';
 import {useProductContext} from '~/products/ContextProvider';
 import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
 import {Routes} from "@/Routes";
 import { IoCartOutline } from "react-icons/io5";
+import { useWindowSize } from '@/_hook/useWindowSize';
 
 
 
@@ -23,19 +24,20 @@ const Sidebar: React.FC<SidebarProps> = ({children}) => {
     isSidebarOpen,
     setIsSidebarOpen,
   } = useProductContext();
+  const size = useWindowSize()
 
 
   const {user} = useUserData();
   const pathname = usePathname()
-
+  
 
   const router = useRouter()
 
   return (
     <div>
-      <div style={isSidebarOpen ? styles.sidebar : styles.collapsedSidebar}>
+      <div style={isSidebarOpen ? styles(size.width, size.height).sidebar : styles(size.width, size.height).collapsedSidebar}>
 
-        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={styles.toggleButton}>
+        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={styles(size.width, size.height).toggleButton}>
           <FaChevronRight
             style={{
               transform: isSidebarOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -75,13 +77,13 @@ const Sidebar: React.FC<SidebarProps> = ({children}) => {
 const renderIcon = (item: string, user: any) => {
   switch (item) {
     case 'Search':
-      return <FaSearch style={styles.icon}/>;
+      return <FaSearch style={iconstyles.icon}/>;
     case 'Notification':
-      return <FaBell style={styles.icon}/>;
+      return <FaBell style={iconstyles.icon}/>;
     case 'Message':
-      return <FaRegMessage style={styles.icon}/>;
+      return <FaRegMessage style={iconstyles.icon}/>;
     case 'ProductListing':
-      return <MdOutlineBubbleChart style={styles.icon}/>;
+      return <MdOutlineBubbleChart style={iconstyles.icon}/>;
     case 'Account':
       return user && user.icon ? (
         <Image
@@ -89,13 +91,13 @@ const renderIcon = (item: string, user: any) => {
           src={user.icon.strUrl()}
           width={33}
           height={33}
-          style={styles.userIcon}
+          style={iconstyles.userIcon}
         />
       ) : (
-        <FaSpinner style={styles.spinner}/>
+        <FaSpinner style={iconstyles.spinner}/>
       );
     case "Cart":
-      return <IoCartOutline style={styles.icon}/>;
+      return <IoCartOutline style={iconstyles.icon}/>;
 
     default:
       return null;

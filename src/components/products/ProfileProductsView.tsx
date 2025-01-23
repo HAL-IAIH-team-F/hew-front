@@ -3,6 +3,7 @@ import {ErrorMessage} from "../../util/err/ErrorMessage";
 import ProductThumbnail from "~/api/useImgData";
 import useProduct from "~/api/useProducts";
 import {useProductContext} from "./ContextProvider";
+import { useWindowSize } from "@/_hook/useWindowSize";
 
 interface ProductPageProps {
 }
@@ -15,7 +16,7 @@ export default function ProfileProductsView({}: ProductPageProps) {
     setProductId,
     toggleProductWindow,
   } = useProductContext();
-
+  
   const {products, error} = useProduct();
 
   const handleProductClick = (id: string) => {
