@@ -1,36 +1,66 @@
-import {useEffect, useRef} from "react";
+import {Dispatch, SetStateAction, useEffect, useRef} from "react";
 import {add, isAfter, parseISO} from "date-fns";
 import {Token} from "~/auth/nextauth/Token";
 import {TokenBundle, TokenBundleUtil} from "~/auth/nextauth/TokenBundle";
 import {Result, Results} from "../../../util/err/result";
 import {ErrorIds} from "../../../util/err/errorIds";
 import {Api} from "~/api/context/Api";
-import {LoginSession} from "~/auth/refresh/LoginSession";
 import {AuthIdTokenState, IdTokenState} from "~/auth/idtoken/IdTokenState";
+import {
+  ClientState,
+  newRegisteredClientState,
+  newUnAuthClientState,
+  newUnregisteredClientState
+} from "~/api/context/ClientState";
+import {AuthClient} from "~/api/client/auth/AuthClient";
 
+async function handleRefresh(
+  setClientState: (clientState: ClientState) => void,
+  idToken: AuthIdTokenState, setIdToken: (tokenState: IdTokenState) => void,
+  setLogoutRequestIdToken: Dispatch<SetStateAction<AuthIdTokenState | undefined>>,
+  tokens: TokenBundle
+) {
+  const result = await new AuthClient(tokens.access.token).auth(Api.app.get_user_api_user_self_get, {}, {})
+  if (result.error) {
+    if (!ErrorIds.USER_NOT_FOUND.equals(result.error?.error_id)) console.error("get self error", result.error)
+    setClientState(
+      newUnregisteredClientState(idToken.oidcContext, setIdToken, () => {
+        setLogoutRequestIdToken(idToken)
+      }, tokens, idToken)
+    )
+    return;
+  }
+  setClientState(
+    newRegisteredClientState(idToken.oidcContext, setIdToken, () => {
+      setLogoutRequestIdToken(idToken)
+    }, tokens, idToken, result.success)
+  )
+}
 
 export default function RefreshTokenLoader(
   {
-    update, idToken, reload, loginSession,
+    setClientState, idToken, reload, clientState, setIdToken, setLogoutRequestIdToken,
   }: {
-    update: (loginSessionUpdate: LoginSession) => void,
+    setClientState: (clientState: ClientState) => void,
     idToken: IdTokenState,
     reload: () => void,
-    loginSession: LoginSession,
+    clientState: ClientState,
+    setIdToken: (tokenState: IdTokenState) => void,
+    setLogoutRequestIdToken: Dispatch<SetStateAction<AuthIdTokenState | undefined>>,
   },
 ) {
   const refreshing = useRef(false);
 
   useEffect(() => {
-    console.debug("refresh", idToken, loginSession)
+    console.debug("refresh", idToken, clientState)
 
     if (idToken.state == "loading") return;
     if (idToken.state == "unauthenticated") {
-      return update({state: "unauthenticated", idToken: idToken})
+      return setClientState(newUnAuthClientState(idToken.oidcContext, setIdToken, idToken))
     }
 
-    const next = loginSession.state == "authenticated" && loginSession.token.access
-      ? add(new Date(loginSession.token.access.expire), {minutes: -1}).getTime() - Date.now() : 0
+    const next = clientState.state == "registered" && clientState.token.access
+      ? add(new Date(clientState.token.access.expire), {minutes: -1}).getTime() - Date.now() : 0
     console.debug("next", next, new Date(Date.now() + next))
     const timeout = setTimeout(() => {
       console.debug("refresh timeout", refreshing.current)
@@ -40,20 +70,20 @@ export default function RefreshTokenLoader(
         idToken,
         tokens => {
           console.debug("refreshToken success", tokens)
-          update({state: "authenticated", token: tokens, idToken: idToken})
+          handleRefresh(setClientState, idToken, setIdToken, setLogoutRequestIdToken, tokens)
         },
-        reload, loginSession,
+        reload, clientState,
       ).then(value => {
         refreshing.current = false;
         if (!value.error) return
         console.error("refresh token error", value.error)
-        update({state: "unauthenticated", idToken: idToken})
+        setClientState(newUnAuthClientState(idToken.oidcContext, setIdToken, idToken))
       })
     }, next)
     return () => {
       clearTimeout(timeout)
     }
-  }, [idToken, loginSession.state == "authenticated" && loginSession.token]);
+  }, [idToken, clientState.state == "registered" && clientState.token]);
 
   return (
     <div>
@@ -65,7 +95,7 @@ namespace ApiRefresh {
     idToken: AuthIdTokenState,
     update: (tokens: TokenBundle) => void,
     reload: () => void,
-    session: LoginSession,
+    session: ClientState,
   ): Promise<Result<undefined>> {
     console.debug("refreshToken", idToken, session)
     if (session.state == "loading") return await KeycloakRefresh.refreshByKeycloak(idToken, update, reload)

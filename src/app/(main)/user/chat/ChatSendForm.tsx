@@ -2,7 +2,7 @@ import {ChatRes} from "./ChatRes";
 import {StyledForm} from "../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../util/form/element/StyledButton";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 
 export default function ChatSendForm(
@@ -12,11 +12,11 @@ export default function ChatSendForm(
     chat: ChatRes,
   },
 ) {
-  const clientContext = useClientContextState()
+  const clientContext = useClientState()
 
   return (
-    <StyledForm disabled={clientContext.state != "authenticated"} action={async formData => {
-      if (clientContext.state != "authenticated") throw new Error("not authenticated")
+    <StyledForm disabled={clientContext.state != "registered"} action={async formData => {
+      if (clientContext.state != "registered") throw new Error("not authenticated")
       const msg = formData.getStr("msg")
       if (!msg) return
 

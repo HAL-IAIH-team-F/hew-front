@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {Img} from "~/api/context/Api";
 
 interface ProductUuid {
@@ -7,7 +7,7 @@ interface ProductUuid {
 }
 
 const ProductThumbnail = ({product_thumbnail_uuid}: ProductUuid) => {
-  const context = useClientContextState();
+  const context = useClientState();
   const [image, setImg] = useState<Img | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

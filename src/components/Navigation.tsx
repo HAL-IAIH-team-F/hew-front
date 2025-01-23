@@ -8,7 +8,7 @@
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
 import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {ErrorIds} from "../util/err/errorIds";
 import Image from "../util/Image";
 import Link from "next/link";
@@ -62,7 +62,7 @@ export function StyledNavigation() {
     alert(buttonTitle);
   };
   const [user, setUser] = useState<{ name: string, icon: Img | undefined }>()
-  const context = useClientContextState()
+  const context = useClientState()
 
   useEffect(() => {
     if (context.state == "loading") return;

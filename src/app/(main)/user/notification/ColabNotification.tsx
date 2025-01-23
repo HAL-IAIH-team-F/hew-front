@@ -1,5 +1,5 @@
 import {ColabData} from "@/(main)/user/notification/NotificationRes";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 
 export default function ColabNotification(
@@ -9,7 +9,7 @@ export default function ColabNotification(
     colab: ColabData,
   },
 ) {
-  const clientContext = useClientContextState()
+  const clientContext = useClientState()
 
   return (
     <div>
@@ -23,9 +23,9 @@ export default function ColabNotification(
       )}</div>
       <button
         className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-md"
-        disabled={clientContext.state != "authenticated"}
+        disabled={clientContext.state != "registered"}
         onClick={() => {
-          if (clientContext.state != "authenticated") throw new Error("not authenticated")
+          if (clientContext.state != "registered") throw new Error("not authenticated")
           clientContext.client.authBody(
             Api.app.pca_api_colab_approve_post, {}, {colab_id: colab.collabo_id}, {}
           ).then(value => {

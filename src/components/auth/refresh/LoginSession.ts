@@ -1,6 +1,6 @@
-import {TokenBundle} from "~/auth/nextauth/TokenBundle";
 import {LoadingState, State} from "~/auth/State";
 import {AuthIdTokenState, IdTokenState, UnAuthIdTokenState} from "~/auth/idtoken/IdTokenState";
+import {Token} from "~/auth/nextauth/Token";
 
 export type LoginSession = LoadingSession | UnAuthSession | AuthSession
 
@@ -16,6 +16,9 @@ export interface UnAuthSession extends State {
 
 export interface AuthSession extends State {
   state: "authenticated"
-  token: TokenBundle
+  token: {
+    access: Token
+    refresh: Token
+  }
   idToken: AuthIdTokenState
 }
