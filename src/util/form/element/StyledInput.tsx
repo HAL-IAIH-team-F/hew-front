@@ -21,7 +21,7 @@ export function StyledInput(
         <ItemBackground
             type={"label"}
             className={sx(
-                "block m-0 p-0 w-7/12"
+                "block m-0 p-0  width-auto",
             )}
         >
           <p className={sx("block text-xl text-[#4E5861]")}>
@@ -36,7 +36,7 @@ export function StyledInput(
             style={{
                 ...props.style, // 外部から渡されたスタイル適用
                 position: "relative",
-                outline: "none", // フォーカス時の枠線を削除
+                // outline: "none", // フォーカス時の枠線を削除
             }}
           />
           <ErrorMessage error={name && formState.err && formState.err[name]}/>
