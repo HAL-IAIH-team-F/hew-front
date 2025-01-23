@@ -1,7 +1,7 @@
 "use client"
 import {ReactNode, useState} from "react";
 import {ErrorMessage} from "../../../util/err/ErrorMessage";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {signIn} from "~/auth/clientAuth";
 
 
@@ -13,7 +13,7 @@ export function SignInButton(
   }: LoginButtonProps,
 ) {
   const [err, setErr] = useState<string>()
-  const clientContext = useClientContextState()
+  const clientContext = useClientState()
 
   return (
     <>

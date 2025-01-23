@@ -2,14 +2,14 @@
 import {useEffect, useState} from 'react';
 import {Api, Img} from './Api';
 import {ErrorIds} from '../../../util/err/errorIds';
-import {useClientContextState} from './ClientContextProvider';
+import {useClientState} from './ClientContextProvider';
 
 export const useUserData = () => {
   const [user, setUser] = useState<{ id: string; name: string; icon: Img | undefined }>();
-  const context = useClientContextState();
+  const context = useClientState();
 
   useEffect(() => {
-    if (context.state == "authenticated") {
+    if (context.state == "registered") {
       context.client.auth(
         Api.app.get_user_api_user_self_get, {}, {}
       ).then((value) => {

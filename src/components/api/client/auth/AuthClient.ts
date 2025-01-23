@@ -2,7 +2,6 @@ import {Result, Results} from "../../../../util/err/result";
 import {ErrorIds} from "../../../../util/err/errorIds";
 import {Api} from "~/api/context/Api";
 import {LoadedClient} from "~/api/client/LoadedClient";
-import {AuthSession} from "~/auth/refresh/LoginSession";
 import {
   ApiBody,
   BodiedFunc,
@@ -17,11 +16,11 @@ import {BodiedAuthClient} from "~/api/client/auth/BodiedAuthClient";
 import {BodyLessAuthClient} from "~/api/client/auth/BodyLessAuthClient";
 
 export class AuthClient extends LoadedClient {
-  private readonly bodiedClient = new BodiedAuthClient(this.session)
-  private readonly bodyLessClient = new BodyLessAuthClient(this.session)
+  private readonly bodiedClient = new BodiedAuthClient(this.token)
+  private readonly bodyLessClient = new BodyLessAuthClient(this.token)
 
   constructor(
-    protected readonly session: AuthSession,
+    protected readonly token: string,
   ) {
     super();
   }

@@ -1,10 +1,14 @@
-"use client"
-import React, {useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useProductContext} from './ContextProvider';
 import {ProductWindowStyle} from '~/Sidebar/Styles';
 import useProduct from '~/api/useProducts';
+
 import ProductThumbnail from '~/api/useImgData';
+import {ErrorData} from '../../util/err/err';
+import {Api} from '~/api/context/Api';
 import {ProductRes} from "@/(main)/search/sample/ProductRes";
+import {useClientState} from "~/api/context/ClientContextProvider";
+import {ClientState} from "~/api/context/ClientState";
 
 const RightProductWindows: React.FC = () => {
   const {productId, isProductOpen} = useProductContext();
@@ -12,6 +16,9 @@ const RightProductWindows: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const {products, error} = useProduct({productId: productId});
+
+  const clientState = useClientState()
+  const [err, setErr] = useState<ErrorData>()
 
   useEffect(() => {
     if (productId) {
@@ -44,6 +51,16 @@ const RightProductWindows: React.FC = () => {
                 <p style={styles.productPrice}>¥{product.product_price.toLocaleString()}</p>
                 <p style={styles.purchaseDate}>購入日: {product.purchase_date}</p>
               </div>
+              <button
+                className={"border-2  enabled:hover:bg-gray-300 enabled:bg-gray-200"}
+                disabled={clientState.state != "registered"}
+                onClick={() => {
+                  addCart(clientState, setErr, productId).catch(reason => {
+                    console.error(reason)
+                  })
+                }}
+              >カートに入れる
+              </button>
             </div>
           ))}
         </div>
@@ -53,6 +70,28 @@ const RightProductWindows: React.FC = () => {
     </div>
   );
 };
+
+async function addCart(
+  clientState: ClientState, setErr: Dispatch<SetStateAction<ErrorData | undefined>>,
+  product_id: string
+) {
+  if (clientState.state != "registered") return
+  setErr(undefined)
+  const cartResult = await clientState.client.auth(Api.app.gc_api_cart_get, {}, {})
+  if (cartResult.error) return setErr(cartResult.error)
+  // noinspection SuspiciousTypeOfGuard
+  if (typeof cartResult.success == "string") {
+    const postResult = await clientState.client.authBody(Api.app.pc_api_cart_post, {}, {
+      products: [product_id]
+    }, {})
+    if (postResult.error) return setErr(postResult.error)
+  } else {
+    const patchResult = await clientState.client.authBody(Api.app.pac_api_cart_patch, {}, {
+      new_products: [product_id]
+    }, {})
+    if (patchResult.error) return setErr(patchResult.error)
+  }
+}
 
 const styles = {
   container: (isProductOpen: boolean): React.CSSProperties => ({

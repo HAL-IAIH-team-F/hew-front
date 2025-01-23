@@ -1,7 +1,7 @@
 "use client";
 import {ChangeEvent, useState} from "react";
 import {Api} from "~/api/context/Api";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {useRouter} from 'next/navigation';
 import {StyledForm} from "../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../util/form/element/StyledInput";
@@ -28,11 +28,11 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
     setIsCreator(e.target.value);
   };
 
-  const clientContext = useClientContextState()
+  const clientContext = useClientState()
 
   return (
     <StyledForm {...props} action={async formData => {
-      if (clientContext.state != "authenticated") throw new Error("not authenticated")
+      if (clientContext.state != "unregistered") throw new Error("not authenticated")
       const icon_file = formData.get("icon") as File | undefined;
       const user_name = formData.get("user_name");
 

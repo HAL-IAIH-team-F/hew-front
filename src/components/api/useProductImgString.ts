@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useClientContextState } from "~/api/context/ClientContextProvider";
-import { Img } from "~/api/context/Api";
+import {useEffect, useState} from 'react';
+import {Img} from "~/api/context/Api";
 
 const useProductImgString = (product_thumbnail_uuid: string) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);

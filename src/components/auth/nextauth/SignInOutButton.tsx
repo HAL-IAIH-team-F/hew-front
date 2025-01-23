@@ -1,6 +1,6 @@
 import {SignInButton} from "~/auth/nextauth/SignInButton";
 import {SignOutButton} from "~/auth/nextauth/SignOutButton";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
+import {useClientState} from "~/api/context/ClientContextProvider";
 
 export function SignInOutButton(
   {
@@ -8,10 +8,10 @@ export function SignInOutButton(
     ...props
   }: SignInOutButtonProps,
 ) {
-  const context = useClientContextState()
+  const context = useClientState()
   return (
     <>
-      {context.state == "authenticated" ? <SignOutButton {...props}/> : <SignInButton {...props} onClose={onClose}/>}
+      {context.state == "registered" ? <SignOutButton {...props}/> : <SignInButton {...props} onClose={onClose}/>}
     </>
   )
 }
