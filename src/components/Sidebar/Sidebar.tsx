@@ -11,8 +11,8 @@ import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
 import {Routes} from "@/Routes";
 import { IoCartOutline } from "react-icons/io5";
-
-
+import { FaPray } from "react-icons/fa";
+import { IoPeople } from "react-icons/io5";
 
 type SidebarProps = {
   children?: ReactNode;
@@ -45,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({children}) => {
           />
         </button>
 
-        {['Search', 'Notification', 'Message', 'Account', "ProductListing","Cart"].map((item) => (
+        {['Search', 'Notification', 'Message', 'Account', "ProductListing","Cart", "RecruitColab", "ColabListing"].map((item) => (
           <Link
             key={item}
             style={iconContainerStyle(isSidebarOpen)}
@@ -82,6 +82,10 @@ const renderIcon = (item: string, user: any) => {
       return <FaRegMessage style={styles.icon}/>;
     case 'ProductListing':
       return <MdOutlineBubbleChart style={styles.icon}/>;
+    case 'RecruitColab':
+      return <FaPray style={styles.icon}/>;
+    case 'ColabListing':
+      return <IoPeople style={styles.icon}/>;
     case 'Account':
       return user && user.icon ? (
         <Image

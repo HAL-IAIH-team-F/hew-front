@@ -19,9 +19,10 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
     // =========================================
     // ボタンの有効/無料を判定
     const isButtonDisabled =!title.trim() || !description.trim();
-    console.log("isButtonDisabled:", isButtonDisabled);
+    // console.log("isButtonDisabled:", isButtonDisabled);
 
     const handleSubmit = async () => {
+        console.log("handleSubmit");
         if (isButtonDisabled) {
             setErrors({
                 title: title.trim() ? "": "募集タイトルを入力してください",
@@ -30,7 +31,10 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
             return;
         }
 
-        if (!clientContext || clientContext.state !== "authenticated") {
+        console.log("isButtonDisabledの値:", isButtonDisabled);
+
+
+        if (!clientContext || clientContext.state != "registered") {
             alert("ログインしてください");
             return;
         }
@@ -94,7 +98,7 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
                             <div
                                 style={{
                                     marginTop: "15px",
-                                    marginLeft: "100px"
+                                    marginLeft: "50px"
                                 }}
                             >
                                 募集
@@ -108,7 +112,7 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
                 <div style={{
                         display: "flex",
                         flexDirection: "column",
-                        padding: "25px",
+                        padding: "30px 25px 10px 25px",
                         boxSizing: "border-box",
                         borderRadius: "8px",
                         backgroundColor: "rgba(142, 142, 147, 0.35)",
@@ -173,7 +177,7 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
                                             onFocus={()=> setIsTitleFocused(true)} // フォーカス時
                                             onBlur={() => setIsTitleFocused(false)} // フォーカス解除時
                                             style={{
-                                                height: "40px",
+                                                height: "30px",
                                                 width: "100%",
                                                 borderBottom: "1px dashed #ccc",
                                                 borderRadius: "8px 8px 0 0",
@@ -196,7 +200,7 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
                                             display: "flex",
                                             justifyContent: "flex-end",
                                             alignItems: "start",
-                                            width: "60%",
+                                            width: "100%",
                                             height: "5px",
                                         }}
                                     >
@@ -312,13 +316,13 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
                                             display: "flex",
                                             justifyContent: "flex-end",
                                             alignItems: "center",
-                                            width: "60%",
+                                            width: "100%",
                                             height: "30px",
                                         }}
                                     >
                                         <p className="text-gray-500 text-sm"
                                             style={{
-                                                
+                                                color: "#000",
                                             }}
                                         >
                                             {description.length}/200
