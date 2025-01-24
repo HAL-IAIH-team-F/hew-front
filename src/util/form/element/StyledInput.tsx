@@ -1,5 +1,5 @@
 "use client"
-import {DetailedHTMLProps, InputHTMLAttributes} from "react";
+import {DetailedHTMLProps, InputHTMLAttributes, TextareaHTMLAttributes} from "react";
 import {useFormState} from "./StyledForm";
 import {ErrorMessage} from "../../err/ErrorMessage";
 import ItemBackground from "~/ItemBackground";
@@ -9,7 +9,7 @@ export function StyledInput(
   {
     name,
     label,
-    as="input", // デフォルトはinput
+    as="input", // デフォルトはinput → 明示的にtextareaを指定する場合はpropsで指定して
     className,
     ...props
   }: TextInputProps
@@ -24,18 +24,20 @@ export function StyledInput(
                 "block m-0 p-0  width-auto",
             )}
         >
-          <p className={sx("block text-xl text-[#4E5861]")}>
-              {label || name}
-          </p>
+          {/* `label`が渡されている場合のみ表示にしてるので、もし表示させたいならプロパティにlabelを */}
+          {label && (
+            <p className="block text-xl text-[#4E5861]">{label}</p>
+          )}
           <Component
             {...props}
             name={name}
             className={sx(
-                styles.inputBase
+                styles.inputBase,
+                className,
             )}
             style={{
                 ...props.style, // 外部から渡されたスタイル適用
-                position: "relative",
+                // position: "relative",
                 // outline: "none", // フォーカス時の枠線を削除
             }}
           />
@@ -52,7 +54,8 @@ export interface TextInputProps
     > {
   name: string
   label?: string
-　as?: "input" | "textarea";
+  as?: "input" | "textarea";
+  className?: string
 }
 
 const styles = {

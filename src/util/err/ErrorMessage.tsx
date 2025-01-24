@@ -15,8 +15,11 @@ export function ErrorMessage(props: ErrorMessageProps) {
   if (typeof error === "object") {
     errorStr = `${error.error_id}: {${error.message}}`
   } else errorStr = error;
-  return error &&
-    <p {...parentProps} className={className + " block"}>
-      <strong color={"error"}>{`Error: {${errorStr}}`}</strong>
-    </p>;
+
+  // return error;
+  {/* 画面に出てレイアウト崩れるから消した。古田。 */}
+  // return error &&
+    // <p {...parentProps} className={className + " block"}>
+    //   <strong color={"error"}>{`Error: {${errorStr}}`}</strong>
+    // </p>;
 }

@@ -6,7 +6,11 @@ import {StyledInput} from "../../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../../util/form/element/StyledButton";
 import {Api} from "~/api/context/Api";
 
-export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
+export default function ColabRegisterForm(
+    {
+        ...props
+    }: ColabRegisterFormProps,
+) {
     const clientContext = useClientState()
     const [title, setTitle] = useState("");
     const [showPlaceholder, setShowPlaceholder] = useState(false);
@@ -15,58 +19,62 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
     {/* フォーカス時 */}
     const [isTitleFocused, setIsTitleFocused] = useState(false);
     const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
-
-    // =========================================
     // ボタンの有効/無料を判定
     const isButtonDisabled =!title.trim() || !description.trim();
-    // console.log("isButtonDisabled:", isButtonDisabled);
+    const [successMessage, setSuccessMessage] = useState<string>("");
 
-    const handleSubmit = async () => {
-        console.log("handleSubmit");
-        if (isButtonDisabled) {
-            setErrors({
-                title: title.trim() ? "": "募集タイトルを入力してください",
-                description: description.trim() ? "": "募集要項を入力してください",
-            });
-            return;
-        }
-
-        console.log("isButtonDisabledの値:", isButtonDisabled);
-
-
-        if (!clientContext || clientContext.state != "registered") {
-            alert("ログインしてください");
-            return;
-        }
-
-        try {
-            const result = await clientContext.client.authBody(
-                Api.app.pr_api_recruit_post,
-                {},
-                { title, description },
-                {}
-            );
-
-            if (!result || result.error) {
-                const errorMessage = result?.error?.message || "予期しないエラーが発生しました。";
-                setErrors({ submit: errorMessage });
-                alert(`エラー: ${errorMessage}`);
-                return;
-            }
-
-            alert("募集投稿が成功しました！")
-            setTitle("");
-            setDescription("");
-            setErrors({});
-        } catch (error) {
-            console.log("送信中にエラーが発生しました",error);
-            setErrors({submit: "送信中にエラーが発生しました"});
-            alert("送信中にエラーが発生しました");
-        }
-    };
 
     return (
-        <StyledForm onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+        <StyledForm
+            {...props}
+            action={async formData => {
+                const title = formData.get("title")?.toString().trim() || "";
+                const description = formData.get("description")?.toString().trim() || "";
+
+                if (!title || !description) {
+                    setErrors({
+                        title: title ? "": "募集タイトルを入力してください",
+                        description: description ? "": "募集要項を入力してください",
+                    });
+                    return;
+                }
+
+                if (!clientContext || clientContext.state != "registered") {
+                    alert("ログインしてください");
+                    return;
+                }
+
+                try {
+                    const result = await clientContext.client.authBody(
+                        Api.app.pr_api_recruit_post,
+                        {},
+                        { title, description },
+                        {}
+                    );
+
+                    if (!result || result.error) {
+                        const errorMessage = result?.error?.message || "予期しないエラーが発生しました。";
+                        setErrors((preveErrors) => ({
+                            ...preveErrors,
+                            submit: errorMessage,
+                        }));
+                        alert(`エラー: ${errorMessage}`);
+                        return;
+                    }
+
+                    // 成功時の処理
+                    setSuccessMessage("募集投稿しました");
+                    setTitle("");
+                    setDescription("");
+                    setErrors({});
+                    } catch (error) {
+                        console.log("送信中にエラーが発生しました",error);
+                        setErrors({submit: "送信中にエラーが発生しました"});
+                        alert("送信中にエラーが発生しました");
+                    }
+                }}
+            >
+
             {/* h1＆募集＆ボタン */}
             <div className="w-full relative "
                 style={{
@@ -164,20 +172,20 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
                                         }}
                                     >
                                         <StyledInput
-                                            // name="title"
-                                            // label="募集タイトル"
+                                            as="input"
+                                            name="title"
                                             value={title}
-                                            onChange={(e) => {
-                                                setTitle(e.target.value)
-                                                if (errors.title) setErrors((prev) => ({...prev, title: ""}));
-                                            }}
                                             maxLength={20}
                                             placeholder="募集タイトル(必須)"
                                             className="mb-0"
                                             onFocus={()=> setIsTitleFocused(true)} // フォーカス時
                                             onBlur={() => setIsTitleFocused(false)} // フォーカス解除時
+                                            onChange={(e) => {
+                                                setTitle(e.target.value);
+                                                if (errors.title) setErrors((prev) => ({...prev, title: ""}));
+                                            }}
                                             style={{
-                                                height: "30px",
+                                                height: "40px",
                                                 width: "100%",
                                                 borderBottom: "1px dashed #ccc",
                                                 borderRadius: "8px 8px 0 0",
@@ -186,7 +194,7 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
                                                 outline: isTitleFocused ? "none" : "none",
                                                 boxShadow: isTitleFocused ? "-5px -5px rgba(255, 255, 255, 0.5)"
                                                     : "none",
-                                            }} // 入力フィールドを幅100%にする
+                                            }}
                                         />
                                     </div>
                                     {/*　終了 入力フォーム(募集タイトル) */}
@@ -271,21 +279,22 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
                                     >
                                         <StyledInput
                                             as="textarea"
-                                            // name="description"
-                                            label=""
+                                            name="description"
+                                            // label=""
                                             value={description}
                                             onChange={(e) => {
                                                 setDescription(e.target.value);
                                                 if (errors.description) setErrors((prev) => ({...prev, description: ""}));
                                             }}
-                                            onFocus={() => setShowPlaceholder(true)}
-                                            onBlur={() => setShowPlaceholder(false)}
-                                            // placeholder={showPlaceholder ? "募集要項" : ""}
+                                            onFocus={() => {
+                                                setIsDescriptionFocused(true)
+                                                setShowPlaceholder(true)}}
+                                            onBlur={() => {
+                                                setIsDescriptionFocused(false)
+                                                setShowPlaceholder(false)}}
                                             placeholder={"募集要項(必須)"}
                                             maxLength={200}
                                             className=""
-                                            onFocus={()=> setIsDescriptionFocused(true)} // フォーカス時
-                                            onBlur={() => setIsDescriptionFocused(false)} // フォーカス解除時
                                             // onMouseOver={(e) => (e.target.style.borderColor = "#328dce")}
                                             style={{
                                                 height: "250px",
@@ -355,26 +364,48 @@ export default function ColabRegisterForm({...props}: ColabRegisterFormProps,) {
 
                     <div className=""
                         style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
                         width: "100%",
                         }}
                     >
-                        <StyledButton className="disabled:opacity-50 disabled:cursor-not-allowed"
+
+                        <div
                             style={{
-                                backgroundColor: "transparent",
-                                transition: "background-color 0.1s ease ",
-                                borderRadius: "8px",
-                                padding: "15px 33px",
-                                color: "white",
+                                display: "flex",
+                                justifyContent: "flex-end",
                             }}
-                            onMouseOver={ (e) => (e.target.style.backgroundColor = "#32a1ce")}
-                            onMouseOut = {(e) => (e.target.style.backgroundColor = "transparent")}
-                            disabled={isButtonDisabled}
-                            onClick={handleSubmit}
                         >
-                            募集
-                        </StyledButton>
+                            <StyledButton className="disabled:opacity-50 disabled:cursor-not-allowed"
+                                style={{
+                                    backgroundColor: "transparent",
+                                    transition: "background-color 0.1s ease ",
+                                    borderRadius: "8px",
+                                    padding: "15px 33px",
+                                    color: "white",
+                                }}
+                                onMouseOver={ (e) => (e.target.style.backgroundColor = "#32a1ce")}
+                                onMouseOut = {(e) => (e.target.style.backgroundColor = "transparent")}
+                                disabled={isButtonDisabled}
+                                // onClick={handleSubmit}
+                            >
+                                募集
+                            </StyledButton>
+                        </div>
+                        {successMessage && (
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "flexStart", // flex-startかも
+                                }}
+                            >
+                                <p className=""
+                                    style={{
+                                        
+                                    }}
+                                >
+                                    {successMessage}
+                                </p>
+                            </div>
+                        )}
                     </div>
                     {/*{errors.submit && <p className="text-red-500 mt-2">{errors.submit}</p>}*/}
                 </div>
