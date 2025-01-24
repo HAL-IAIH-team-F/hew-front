@@ -365,12 +365,38 @@ export default function ColabRegisterForm(
                     <div className=""
                         style={{
                         width: "100%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        // alignItems: "center",
                         }}
                     >
 
+                        <div style={{
+                                marginLeft: "50px",
+                                justifyContent: "flexStart", // flex-startかも
+                                position: "relative",
+                                top: "-10px",
+                        }}>
+                            {successMessage && (
+                                <div style = {{
+                                    }}
+                                >
+                                    <p className=""
+                                        style={{
+                                            fontSize: "1.5rem",
+                                            color: "white",
+                                        }}
+                                    >
+                                        {successMessage}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                        
+                        {/* 募集ボタン */}
                         <div
                             style={{
-                                display: "flex",
+                                // display: "flex",
                                 justifyContent: "flex-end",
                             }}
                         >
@@ -390,24 +416,7 @@ export default function ColabRegisterForm(
                                 募集
                             </StyledButton>
                         </div>
-                        {successMessage && (
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "flexStart", // flex-startかも
-                                }}
-                            >
-                                <p className=""
-                                    style={{
-                                        
-                                    }}
-                                >
-                                    {successMessage}
-                                </p>
-                            </div>
-                        )}
                     </div>
-                    {/*{errors.submit && <p className="text-red-500 mt-2">{errors.submit}</p>}*/}
                 </div>
                 {/* 終了 募集フォーム＆ボタン */}
             </div>
