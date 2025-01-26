@@ -6,7 +6,7 @@ import {useRouter} from 'next/navigation';
 import {StyledForm} from "../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../util/form/element/StyledButton";
-import {Routes} from "@/Routes";
+import {Routes} from "~/route/Routes";
 
 
 export default function UserRegisterForm({...props}: UserRegisterFormProps) {

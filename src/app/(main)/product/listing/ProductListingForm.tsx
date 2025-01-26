@@ -17,7 +17,7 @@ import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-
 import CreatorsSelector from "@/(main)/colab/register/CreatorsSelector";
 import {useState} from "react";
 import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
-import {Routes} from "@/Routes";
+import {Routes} from "~/route/Routes";
 import {ClientState} from "~/api/context/ClientState";
 
 

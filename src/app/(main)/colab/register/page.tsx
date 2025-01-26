@@ -8,7 +8,7 @@ import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 import {useState} from "react";
 import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
-import {Routes} from "@/Routes";
+import {Routes} from "~/route/Routes";
 
 
 export default function Page(

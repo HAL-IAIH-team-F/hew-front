@@ -6,7 +6,7 @@ import {EffectComposer, RenderPass, UnrealBloomPass, Water} from "three-stdlib";
 import gsap from "gsap";
 import { useClientState } from "~/api/context/ClientContextProvider";
 import { useRouter } from "next/navigation";
-import {Routes} from "@/Routes";
+import {Routes} from "~/route/Routes";
 type SeaSceneProps = {
   onButtonClick: boolean;
 };

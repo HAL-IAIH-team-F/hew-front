@@ -8,7 +8,7 @@ import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../util/form/element/StyledButton";
 import FlexBox from "../../../../util/FlexBox";
 import {Api} from "~/api/context/Api";
-import {Routes} from "@/Routes";
+import {Routes} from "~/route/Routes";
 
 
 export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps) {

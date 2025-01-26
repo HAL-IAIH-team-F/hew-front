@@ -105,20 +105,6 @@ export const styles: { [key: string]: CSSProperties } = {
     top: '23px',
     left: '70px',
   },
-  inAppPageWindowStyle: {
-    backgroundColor: 'rgba(142, 142, 147, 0.35)',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.3)',
-    border: '1px solid rgba(128, 128, 128, 0.2)',
-    width: "99%", // 全体幅の80%に制限
-    height: "calc(100% - 133px)", // 全体幅の80%に制限
-    position: 'relative', // fixedからrelativeに変更
-    borderRadius: '28px',
-    zIndex: 1,
-    padding: "2px",
-    margin: "0 auto", // 自動中央揃え
-    boxSizing: "border-box",
-    transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
-  },
   ProductWindowStyle:{
     backgroundColor: 'rgba(255, 0, 0, 1)',
     backdropFilter: 'blur(12px)',
