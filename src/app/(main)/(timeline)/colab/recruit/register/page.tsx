@@ -1,4 +1,4 @@
-import ColabRegisterForm from "@/(main)/colab/recruit/register/ColabRegisterForm";
+import ColabRegisterForm from "@/(main)/(timeline)/colab/recruit/register/ColabRegisterForm";
 
 export default function Page(
   {}: {}

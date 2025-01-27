@@ -2,8 +2,8 @@ import {RecruitRes} from "./RecruitRes"
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {useState} from "react";
 import {Api} from "~/api/context/Api";
-import {ErrorData} from "../../../../util/err/err";
-import {ErrorMessage} from "../../../../util/err/ErrorMessage";
+import {ErrorData} from "../../../../../util/err/err";
+import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
 
 export default function Recruit(
   {
