@@ -1,12 +1,12 @@
 "use client"
-import {StyledForm} from "../../../../util/form/element/StyledForm";
-import {StyledInput} from "../../../../util/form/element/StyledInput";
-import CreatorsSelector from "@/(main)/colab/register/CreatorsSelector";
-import {StyledButton} from "../../../../util/form/element/StyledButton";
+import {StyledForm} from "../../../../../util/form/element/StyledForm";
+import {StyledInput} from "../../../../../util/form/element/StyledInput";
+import CreatorsSelector from "@/(main)/(timeline)/colab/register/CreatorsSelector";
+import {StyledButton} from "../../../../../util/form/element/StyledButton";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 import {useState} from "react";
-import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
+import {CreatorRes} from "@/(main)/(timeline)/colab/register/CreatorRes";
 import useRoutes from "~/route/useRoutes";
 
 

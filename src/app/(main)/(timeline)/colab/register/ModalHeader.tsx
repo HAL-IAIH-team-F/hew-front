@@ -1,4 +1,4 @@
-import CloseButton from "@/(main)/colab/register/CloseButton";
+import CloseButton from "@/(main)/(timeline)/colab/register/CloseButton";
 
 export default function ModalHeader(
   {
