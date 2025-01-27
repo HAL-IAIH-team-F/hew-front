@@ -12,8 +12,8 @@ export class RouteUrl {
     return `${this.pathname()}?${this.params().toString()}`
   }
 
-  transition(event: React.UIEvent) {
-    event.preventDefault()
+  transition(event: React.UIEvent | undefined = undefined) {
+    event?.preventDefault()
     console.debug("transition", this)
     const tempPathname = this.animationTempPathname()
     const tempParams = this.animationTempParams()

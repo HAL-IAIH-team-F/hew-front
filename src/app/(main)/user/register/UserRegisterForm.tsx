@@ -2,17 +2,15 @@
 import {ChangeEvent, useState} from "react";
 import {Api} from "~/api/context/Api";
 import {useClientState} from "~/api/context/ClientContextProvider";
-import {useRouter} from 'next/navigation';
 import {StyledForm} from "../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../util/form/element/StyledButton";
-import {Routes} from "~/route/Routes";
+import useRoutes from "~/route/useRoutes";
 
 
 export default function UserRegisterForm({...props}: UserRegisterFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState<string>("no");
-  const router = useRouter()
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -29,7 +27,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
   };
 
   const clientContext = useClientState()
-
+  const routes = useRoutes()
   return (
     <StyledForm {...props} action={async formData => {
       if (clientContext.state != "unregistered") throw new Error("not authenticated")
@@ -58,7 +56,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
         formData.append("icon", postUserResult.error.error_id + ": " + postUserResult.error.message);
         return
       }
-      router.push(Routes.timeline);
+      routes.timeline().transition()
       return undefined
 
     }}>

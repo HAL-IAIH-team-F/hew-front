@@ -1,6 +1,5 @@
 "use client";
 import {useClientState} from "~/api/context/ClientContextProvider";
-import {useRouter} from "next/navigation";
 import {StyledFormData} from "../../../../util/form/StyledFormData";
 import {StyledForm} from "../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../util/form/element/StyledInput";
@@ -8,11 +7,11 @@ import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../util/form/element/StyledButton";
 import FlexBox from "../../../../util/FlexBox";
 import {Api} from "~/api/context/Api";
-import {Routes} from "~/route/Routes";
+import useRoutes from "~/route/useRoutes";
 
 
 export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps) {
-  const router = useRouter();
+  const routes = useRoutes()
 
   // セッションとクライアントコンテキストの取得
   const clientContext = useClientState();
@@ -52,7 +51,7 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
 
         const postCreatorResult = await clientContext.client.authBody(
           Api.app.pc_api_creator_post, {},
-          {user_id: userId, contact_address: contactAddress, transfer_target: transferTarget},{}
+          {user_id: userId, contact_address: contactAddress, transfer_target: transferTarget}, {}
         );
 
         // エラーハンドリング
@@ -63,7 +62,7 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
         }
 
         // 成功した場合のリダイレクト
-        router.push(Routes.timeline);
+        routes.timeline().transition()
         return;
       }}
     >
