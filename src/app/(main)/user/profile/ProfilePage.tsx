@@ -1,15 +1,16 @@
 "use client";
 import React from "react";
 import AccountCard from "./accountCard";
-import {styles} from "~/Sidebar/Styles";
-import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
+import { styles } from "~/Sidebar/Styles";
+import { SignInOutButton } from "~/auth/nextauth/SignInOutButton";
 import Link from "next/link";
-import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig"
+import { KeycloakConfig } from "~/auth/keycloak/KeycloakConfig";
+import { useWindowSize } from "@/_hook/useWindowSize";
 
-interface ProfileProps {
-}
+interface ProfileProps {}
 
 const ProfilePage: React.FC<ProfileProps> = ({}) => {
+  const size = useWindowSize();
   return (
     <div
       style={{
@@ -19,13 +20,15 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
         fontFamily: "'Roboto', 'Arial', sans-serif",
         color: "#fff", // テキストの色を白に
         overflow: "hidden",
-        position: "relative",
-        backdropFilter: 'blur(12px)', // 背景ブラー効果
+        backdropFilter: "blur(12px)", // 背景ブラー効果
+        
       }}
     >
+      {/* Sidebar */}
       <div
         style={{
-          minWidth: "180px",
+          minWidth: "100px",
+          maxWidth: "200px",
           background: "rgba(30, 60, 114, 0.9)", // 半透明な青の背景
           display: "flex",
           flexDirection: "column",
@@ -33,9 +36,17 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
           boxShadow: "2px 0 10px rgba(0, 0, 0, 0.5)",
         }}
       >
-        <h2 style={{fontSize: "1.5rem", fontWeight: "bold", marginBottom: "20px"}}>Menu</h2>
-        <ul style={{listStyle: "none", padding: 0, margin: 0}}>
-          <li style={{marginBottom: "10px"}}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            marginBottom: "20px",
+          }}
+        >
+          Menu
+        </h2>
+        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          <li style={{ marginBottom: "10px" }}>
             <a
               href="#profile"
               style={{
@@ -50,7 +61,7 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
               Profile
             </a>
           </li>
-          <li style={{marginBottom: "10px"}}>
+          <li style={{ marginBottom: "10px" }}>
             <a
               href="#settings"
               style={{
@@ -65,7 +76,7 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
               Settings
             </a>
           </li>
-          <li style={{marginBottom: "10px"}}>
+          <li style={{ marginBottom: "10px" }}>
             <a
               href="#notifications"
               style={{
@@ -80,7 +91,7 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
               Notifications
             </a>
           </li>
-          <li style={{marginBottom: "10px"}}>
+          <li style={{ marginBottom: "10px" }}>
             <Link
               href={new URL("/realms/develop/account/", KeycloakConfig.baseUrl)}
               style={{
@@ -114,23 +125,31 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
         </ul>
       </div>
 
-      {/* Main Content */}
       <div
         style={{
-          width: "100%",
-          height: "100%",
+          width: "100%", // 親要素の幅全体を使用
+          height: "100%", // 親要素の高さ全体を使用
+          display: "flex", // フレックスレイアウト
           justifyContent: "center",
           alignItems: "center",
-          margin: "10px",
+          overflow: "hidden", // サイズを超える部分を隠す
+          
         }}
       >
-        <div style={styles.inAppPageWindowStyle}>
-          <AccountCard/>
+        <div
+          style={{
+            width: "100%", // 親要素の幅全体を使用
+            height: "100%", // 親要素の高さ全体を使用
+            maxWidth: "100%", // 最大幅制限を親要素の幅に設定
+            maxHeight: "100%", // 最大高さ制限を親要素の高さに設定
+            boxSizing: "border-box", // パディングや境界線を含めてサイズ計算
+            
+          }}
+        >
+          <AccountCard />
         </div>
       </div>
     </div>
-
-
   );
 };
 

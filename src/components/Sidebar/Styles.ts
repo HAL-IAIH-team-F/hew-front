@@ -67,15 +67,14 @@ export const styles = (width: number, height: number): Record<string, CSSPropert
 
   inAppPageWindowStyle: {
     backgroundColor: 'rgba(142, 142, 147, 0.35)',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.3)',
     border: '1px solid rgba(128, 128, 128, 0.2)',
-    position: 'relative', // fixedからrelativeに変更
+    position: "absolute", // fixedからrelativeに変更
     borderRadius: '28px',
     zIndex: 1,
     padding: "2px",
     margin: "0 auto", // 自動中央揃え
-    width: "calc(100% - 150px)", // 右端との距離を考慮して幅を調整
-    height: "calc(100% - 133px)", 
+    widows: "100%",
+    height: "100%",
     boxSizing: "border-box",
     transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
     

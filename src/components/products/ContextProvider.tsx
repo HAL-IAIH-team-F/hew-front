@@ -40,25 +40,27 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
       }else{
         return setIsPathTimeline(true)
       }
+    }else{
+      return setIsPathTimeline(true)
     }
-    return setIsPathTimeline(false) 
+    
   },[pathname])
   useEffect(() => {
-    if (isMobile && !isPathTimeline && isProductOpen) {
+    if (isMobile && isPathTimeline && isProductOpen) {
       router.push(Routes.timeline)
+      console.log("a")
     }
+    console.log(isMobile,isPathTimeline,isProductOpen)
   }, [size, isProductOpen, isSidebarOpen]);
 
   useEffect(() => {
-    if (size.width <= 1280) {
+    if (size.width <= 900) {
       setIsMobile(true)
+      console.log(size.width)
     }else{
       setIsMobile(false)
     }
   },[size])
-
-
-
 
   return (
     <ProductContext.Provider

@@ -79,7 +79,7 @@ const AccountCard: FC<AccountCardProps> = ({}) => {
             padding: "15px",
             flex: 1,
             width: "calc(100% - 15px)", // 幅を広げる
-            maxHeight: "calc(100vh - 570px)", // 高さを制限
+            maxHeight: "calc(100vh)", // 高さを制限
             overflowY: "auto",
           }}
         >
