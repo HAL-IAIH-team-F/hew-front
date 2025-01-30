@@ -19,8 +19,7 @@ export default function Layout(
         <SidebarManagerProvider>
           <Timeline/>
           <Suspense>
-            <Sidebar>
-            </Sidebar>
+            <Sidebar/>
             <MainWindow>
               {children}
             </MainWindow>

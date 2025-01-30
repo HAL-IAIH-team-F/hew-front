@@ -1,7 +1,6 @@
 "use client"
 import {useWindowSize} from '@/_hook/useWindowSize';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import useRoutes from "~/route/useRoutes";
 
 // Contextの型定義
 interface ProductContextType {
@@ -23,31 +22,9 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
   const [productId, setProductId] = useState<string>("none");
   const [isProductOpen, setisProductOpen] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-  const [isPathTimeline, setIsPathTimeline] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const toggleProductWindow = () => setisProductOpen((prev) => !prev);
   const size = useWindowSize()
-  const routes = useRoutes()
-  useEffect(() => {
-    if (!routes.timeline().isCurrent()) {
-      if (isProductOpen && isMobile) {
-        setProductId("none")
-        setisProductOpen(false)
-      } else {
-        return setIsPathTimeline(true)
-      }
-    } else {
-      return setIsPathTimeline(true)
-    }
-
-  }, [routes])
-  useEffect(() => {
-    if (isMobile && isPathTimeline && isProductOpen) {
-      routes.timeline().transition()
-      console.log("a")
-    }
-    console.log(isMobile, isPathTimeline, isProductOpen)
-  }, [size, isProductOpen, isSidebarOpen]);
 
   useEffect(() => {
     if (size.width <= MOBILE_WIDTH) {
