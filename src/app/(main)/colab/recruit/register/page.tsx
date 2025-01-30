@@ -1,5 +1,4 @@
 "use client"
-
 import ColabRegisterForm from "@/(main)/colab/recruit/register/ColabRegisterForm";
 
 

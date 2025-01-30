@@ -14,7 +14,7 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
     <div
       style={{
         display: "flex",
-        height: "100vh",
+        // height: "100vh",
         background: "rgba(30, 60, 114, 0.6)", // 未来的な青のグラデーション
         fontFamily: "'Roboto', 'Arial', sans-serif",
         color: "#fff", // テキストの色を白に

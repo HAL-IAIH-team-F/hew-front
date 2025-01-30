@@ -5,6 +5,7 @@ import {StyledForm} from "../../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../../util/form/element/StyledButton";
 import {Api} from "~/api/context/Api";
+import { z } from "zod";
 
 export default function ColabRegisterForm(
     {
@@ -23,13 +24,44 @@ export default function ColabRegisterForm(
     const isButtonDisabled =!title.trim() || !description.trim();
     const [successMessage, setSuccessMessage] = useState<string>("");
 
+    // // AuthBodyResponse の型定義
+    // type AuthBodyResponse = {
+    //     success?: {
+    //         creator_id: string; // number から string に変更
+    //         description: string;
+    //         recruit_id: string; // number から string に変更
+    //         title: string;
+    //     };
+    //     error?: {
+    //         message: string;
+    //     };
+    // };
+
+// Zod スキーマ定義
+const AuthBodyResponseSchema = z.object({
+    success: z.object({
+        creator_id: z.string(),
+        description: z.string(),
+        recruit_id: z.string(),
+        title: z.string(),
+    }).optional(),
+    error: z.object({
+        message: z.string(),
+    }).optional(),
+});
+
+// 型を Zod スキーマから生成
+type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
 
     return (
         <StyledForm
             {...props}
             action={async formData => {
+                console.log("フォーム送信開始");
                 const title = formData.get("title")?.toString().trim() || "";
                 const description = formData.get("description")?.toString().trim() || "";
+                console.log("取得したタイトル:", title);
+                console.log("取得した要項:", description);
 
                 if (!title || !description) {
                     setErrors({
@@ -45,32 +77,42 @@ export default function ColabRegisterForm(
                 }
 
                 try {
-                    const result = await clientContext.client.authBody(
-                        Api.app.pr_api_recruit_post,
-                        {},
-                        { title, description },
-                        {}
-                    );
+                    let result;
+                    try {
+                        console.log("APIエンドポイント:", Api.app.pr_api_recruit_post);
 
-                    if (!result || result.error) {
+                        const rawResult = await clientContext.client.authBody(
+                            Api.app.pr_api_recruit_post,
+                            {},
+                            { title, description },
+                            {}
+                        );
+                        result = AuthBodyResponseSchema.parse(rawResult);
+                        console.log("authBodyの結果:", result);
+                    } catch (error) {
+                        console.log("authBody 内部エラー");
+                        alert("APIリクエスト中にエラーが発生しました。");
+                        return;
+                    }
+
+
+                    if (result ) {
+                        // 成功時の処理
+                        setSuccessMessage("募集投稿しました");
+                        console.log("APIリクエストが成功しました:", result.success);
+                        setTitle("");
+                        setDescription("");
+                        setErrors({});
+                    } else if (result.error) {
                         const errorMessage = result?.error?.message || "予期しないエラーが発生しました。";
                         setErrors((preveErrors) => ({
                             ...preveErrors,
                             submit: errorMessage,
                         }));
                         alert(`エラー: ${errorMessage}`);
-                        return;
                     }
-
-                    // 成功時の処理
-                    setSuccessMessage("募集投稿しました");
-                    setTitle("");
-                    setDescription("");
-                    setErrors({});
-                    } catch (error) {
-                        console.log("送信中にエラーが発生しました",error);
-                        setErrors({submit: "送信中にエラーが発生しました"});
-                        alert("送信中にエラーが発生しました");
+                } catch (error) {
+                    console.log("くそ:", error);
                     }
                 }}
             >
@@ -182,6 +224,7 @@ export default function ColabRegisterForm(
                                             onBlur={() => setIsTitleFocused(false)} // フォーカス解除時
                                             onChange={(e) => {
                                                 setTitle(e.target.value);
+                                                if (successMessage) setSuccessMessage(""); // フォーム変更時にリセット
                                                 if (errors.title) setErrors((prev) => ({...prev, title: ""}));
                                             }}
                                             style={{
@@ -284,6 +327,7 @@ export default function ColabRegisterForm(
                                             value={description}
                                             onChange={(e) => {
                                                 setDescription(e.target.value);
+                                                if (successMessage) setSuccessMessage(""); // フォーム変更時にリセット
                                                 if (errors.description) setErrors((prev) => ({...prev, description: ""}));
                                             }}
                                             onFocus={() => {
@@ -297,7 +341,7 @@ export default function ColabRegisterForm(
                                             className=""
                                             // onMouseOver={(e) => (e.target.style.borderColor = "#328dce")}
                                             style={{
-                                                height: "250px",
+                                                height: "155px",
                                                 width: "100%",
                                                 textAlign: "left",
                                                 verticalAlign: "top",
