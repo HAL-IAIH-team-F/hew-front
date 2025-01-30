@@ -17,7 +17,7 @@ interface ProductContextType {
 
 // 初期値
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
-
+export const MOBILE_WIDTH = 900;
 // Providerコンポーネント
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const [productId, setProductId] = useState<string>("none");
@@ -50,7 +50,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
   }, [size, isProductOpen, isSidebarOpen]);
 
   useEffect(() => {
-    if (size.width <= 900) {
+    if (size.width <= MOBILE_WIDTH) {
       setIsMobile(true)
       console.log(size.width)
     } else {

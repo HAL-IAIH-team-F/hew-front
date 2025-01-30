@@ -10,7 +10,7 @@ import {EffectComposer} from "three-stdlib";
 import useProducts from "~/hooks/useProducts";
 import {createGradientBackground} from "@/(main)/(timeline)/background/background";
 import {createBubbles, onClickBubble} from "@/(main)/(timeline)/bubble/bubbles";
-import {useSidebarManagerState} from "@/(main)/(timeline)/_sidebar/SidebarManaager";
+import {useSidebarManagerState} from "@/(main)/(timeline)/_window/_sidebar/SidebarManaager";
 
 export default function useTimelineAnimation(
   mountRef: RefObject<HTMLDivElement | null>

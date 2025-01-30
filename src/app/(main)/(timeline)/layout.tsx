@@ -1,12 +1,11 @@
-"use client"
-import {ReactNode, Suspense} from "react";
+import React, {ReactNode, Suspense} from "react";
 import {ProductProvider} from "~/products/ContextProvider";
-import Sidebar from "@/(main)/(timeline)/_sidebar/Sidebar";
-import RightWindow from "@/(main)/(timeline)/_window/RightWindow";
-import {usePathname} from "next/navigation";
-import {SidebarManagerProvider} from "@/(main)/(timeline)/_sidebar/SidebarManaager";
+import {SidebarManagerProvider} from "@/(main)/(timeline)/_window/_sidebar/SidebarManaager";
 import {Timeline} from "@/(main)/(timeline)/timeline";
 import Overlay from "@/(main)/(timeline)/effects/overlay/overlay";
+import Sidebar from "@/(main)/(timeline)/_window/_sidebar/Sidebar";
+import RightWindow from "@/(main)/(timeline)/_window/_right/RightWindow";
+import MainWindow from "@/(main)/(timeline)/_window/_main/MainWindow";
 
 export default function Layout(
   {
@@ -14,7 +13,6 @@ export default function Layout(
   }: Readonly<{
     children: ReactNode;
   }>) {
-  const pathname = usePathname()
   return (
     <>
       <ProductProvider>
@@ -22,13 +20,13 @@ export default function Layout(
           <Timeline/>
           <Suspense>
             <Sidebar>
-              {pathname == "/" ? undefined : children}
             </Sidebar>
-          </Suspense>
-          <Overlay/>
-          <Suspense>
+            <MainWindow>
+              {children}
+            </MainWindow>
             <RightWindow/>
           </Suspense>
+          <Overlay/>
         </SidebarManagerProvider>
       </ProductProvider>
     </>

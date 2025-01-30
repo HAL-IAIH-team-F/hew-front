@@ -1,3 +1,4 @@
+"use client"
 import "./overlay.css";
 import { useEffect, useState } from "react";
 

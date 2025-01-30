@@ -1,33 +1,27 @@
-import React, {ReactNode} from 'react';
+"use client"
+import React from 'react';
 import {FaBell, FaChevronRight, FaSearch, FaSpinner} from 'react-icons/fa';
 import {FaRegMessage} from 'react-icons/fa6';
-import Image from "../../../../util/Image";
 import {MdOutlineBubbleChart} from "react-icons/md";
-import {iconstyles, styles} from './Styles';
 import {useUserData} from '~/api/context/useUserData';
 import {useProductContext} from '~/products/ContextProvider';
 import {IoCartOutline} from "react-icons/io5";
 import useRoutes from "~/route/useRoutes";
-import SidebarRoutesLink from "@/(main)/(timeline)/_sidebar/SidebarRoutesLink";
+import SidebarRoutesLink from "@/(main)/(timeline)/_window/_sidebar/SidebarRoutesLink";
 import {useWindowSize} from "@/_hook/useWindowSize";
-import {usePathname} from "next/navigation";
-import PageWindow from "@/(main)/(timeline)/_sidebar/PageWindow";
+import {iconstyles, styles} from "@/(main)/(timeline)/_window/_sidebar/Styles";
+import Image from "../../../../../util/Image";
 
 
-type SidebarProps = {
-  children?: ReactNode;
-};
-const Sidebar: React.FC<SidebarProps> = ({children}) => {
+type SidebarProps = {};
+const Sidebar: React.FC<SidebarProps> = ({}) => {
 
   const {
     isSidebarOpen,
     setIsSidebarOpen,
   } = useProductContext();
   const size = useWindowSize()
-
-
   const {user} = useUserData();
-  const pathname = usePathname()
   const routes = useRoutes();
 
   return (
@@ -62,10 +56,6 @@ const Sidebar: React.FC<SidebarProps> = ({children}) => {
           style={iconstyles.icon}/></SidebarRoutesLink>
         <SidebarRoutesLink routeUrl={routes.cart()}><IoCartOutline style={iconstyles.icon}/></SidebarRoutesLink>
       </div>
-
-      <PageWindow>
-        {children}
-      </PageWindow>
     </div>
   );
 };

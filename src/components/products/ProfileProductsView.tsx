@@ -1,9 +1,6 @@
-import React, {CSSProperties, Dispatch, SetStateAction, useEffect, useState} from "react";
+import React, {CSSProperties, useEffect, useState} from "react";
 import {ErrorMessage} from "../../util/err/ErrorMessage";
 import ProductThumbnail from "~/api/useImgData";
-import {ClientState} from "~/api/context/ClientState";
-import {ErrorData} from "../../util/err/err";
-import {Api} from "~/api/context/Api";
 import useCreatorData from "../../util/hook/useCreatorData";
 import Image from "../../util/Image";
 import useRoutes from "~/route/useRoutes";
@@ -18,7 +15,6 @@ export default function ProfileProductsView({}: ProductPageProps) {
   const [columns, setColumns] = useState(3); // 初期値
   const [hoveredCard, setHoveredCard] = useState<string | null>(null); // 現在ホバーされているカードIDを管理
   const openedProductId = useProductId()
-
   const routes = useRoutes()
   // 親要素の幅を監視して列数を調整
   useEffect(() => {
@@ -110,8 +106,7 @@ interface CreatorDataProps {
 }
 
 export function CreatorData({creator_id}: CreatorDataProps) {
-  const [data, setData] = useState<any>(null);
-  const [creator_data, user_data, err] = useCreatorData({creator_id});
+  const [_, user_data, __] = useCreatorData({creator_id});
 
   return (
     <div>
@@ -262,25 +257,3 @@ const styles: { [key: string]: CSSProperties } = {
     left: '30px',
   },
 };
-
-async function addCart(
-  clientState: ClientState, setErr: Dispatch<SetStateAction<ErrorData | undefined>>,
-  product_id: string
-) {
-  if (clientState.state != "registered") return
-  setErr(undefined)
-  const cartResult = await clientState.client.auth(Api.app.gc_api_cart_get, {}, {})
-  if (cartResult.error) return setErr(cartResult.error)
-  // noinspection SuspiciousTypeOfGuard
-  if (typeof cartResult.success == "string") {
-    const postResult = await clientState.client.authBody(Api.app.pc_api_cart_post, {}, {
-      products: [product_id]
-    }, {})
-    if (postResult.error) return setErr(postResult.error)
-  } else {
-    const patchResult = await clientState.client.authBody(Api.app.pac_api_cart_patch, {}, {
-      new_products: [product_id]
-    }, {})
-    if (patchResult.error) return setErr(patchResult.error)
-  }
-}
