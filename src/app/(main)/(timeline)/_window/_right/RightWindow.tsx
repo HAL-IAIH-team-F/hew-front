@@ -1,8 +1,9 @@
+"use client"
 import React, {CSSProperties, useEffect} from 'react';
-import {ProductWindowStyle} from '@/(main)/(timeline)/_sidebar/Styles';
-import RightWindowProduct from "@/(main)/(timeline)/_window/RightWindowProduct";
+import {ProductWindowStyle} from '@/(main)/(timeline)/_window/_sidebar/Styles';
 import useProduct from "~/hooks/useProduct";
 import useProductId from "~/products/useProductId";
+import RightWindowProduct from "@/(main)/(timeline)/_window/_right/RightWindowProduct";
 
 const RightWindow: React.FC = () => {
   const productId = useProductId()

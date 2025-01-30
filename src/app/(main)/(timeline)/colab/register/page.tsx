@@ -6,8 +6,9 @@ import {StyledButton} from "../../../../../util/form/element/StyledButton";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 import {useState} from "react";
-import {CreatorRes} from "@/(main)/(timeline)/colab/register/CreatorRes";
+
 import useRoutes from "~/route/useRoutes";
+import {CreatorRes} from "../../../../../util/hook/useCreatorData";
 
 
 export default function Page(

@@ -55,11 +55,25 @@ const PostCollaboBody = z
 const PostColabApproveBody = z
   .object({ colab_id: z.string().uuid() })
   .passthrough();
+const File = z
+  .object({
+    image_uuid: z.string().uuid(),
+    token: z.union([z.string(), z.null()]),
+  })
+  .passthrough();
+const UserData = z
+  .object({
+    user_id: z.string().uuid(),
+    name: z.string(),
+    screen_id: z.string(),
+    icon: z.union([File, z.null()]),
+  })
+  .passthrough();
 const CreatorResponse = z
   .object({
     creator_id: z.string().uuid(),
-    user_id: z.string().uuid(),
     contact_address: z.string(),
+    user_data: UserData,
   })
   .passthrough();
 const PostCreatorBody = z
@@ -170,18 +184,12 @@ const PostUserBody = z
     user_icon_uuid: z.union([z.string(), z.null()]),
   })
   .passthrough();
-const Img = z
-  .object({
-    image_uuid: z.string().uuid(),
-    token: z.union([z.string(), z.null()]),
-  })
-  .passthrough();
 const SelfUserRes = z
   .object({
     user_id: z.string().uuid(),
     user_name: z.string(),
     user_screen_id: z.string(),
-    user_icon: z.union([Img, z.null()]),
+    user_icon: z.union([File, z.null()]),
     user_date: z.string().datetime({ offset: true }),
     user_mail: z.string(),
   })
@@ -199,6 +207,8 @@ export const schemas = {
   PostColabRequestBody,
   PostCollaboBody,
   PostColabApproveBody,
+  File,
+  UserData,
   CreatorResponse,
   PostCreatorBody,
   UserFollow,
@@ -227,7 +237,6 @@ export const schemas = {
   PostTokenBody,
   ImgTokenRes,
   PostUserBody,
-  Img,
   SelfUserRes,
 };
 
@@ -456,6 +465,27 @@ const endpoints = makeApi([
   },
   {
     method: "get",
+    path: "/api/creator/:creator_id",
+    alias: "getcre_api_creator__creator_id__get",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "creator_id",
+        type: "Path",
+        schema: z.string().uuid(),
+      },
+    ],
+    response: CreatorResponse,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
     path: "/api/notification",
     alias: "gns_api_notification_get",
     requestFormat: "json",
@@ -583,7 +613,12 @@ const endpoints = makeApi([
       {
         name: "limit",
         type: "Query",
-        schema: limit,
+        schema: z.number().int().optional().default(20),
+      },
+      {
+        name: "page",
+        type: "Query",
+        schema: z.number().int().optional().default(0),
       },
       {
         name: "name",
@@ -624,7 +659,7 @@ const endpoints = makeApi([
   {
     method: "get",
     path: "/api/timeline",
-    alias: "gps_api_timeline_get",
+    alias: "gts_api_timeline_get",
     requestFormat: "json",
     parameters: [
       {
