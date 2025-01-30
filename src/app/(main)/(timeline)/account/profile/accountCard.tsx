@@ -3,7 +3,7 @@
 import {FC, useState} from "react";
 import ProfileProductsView from "~/products/ProfileProductsView";
 import {useUserData} from "~/api/context/useUserData";
-import Backcanvas from "@/(main)/user/profile/backcanvas";
+import Backcanvas from "@/(main)/(timeline)/account/profile/backcanvas";
 
 interface AccountCardProps {
 }

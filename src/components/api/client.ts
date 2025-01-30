@@ -583,7 +583,12 @@ const endpoints = makeApi([
       {
         name: "limit",
         type: "Query",
-        schema: limit,
+        schema: z.number().int().optional().default(20),
+      },
+      {
+        name: "page",
+        type: "Query",
+        schema: z.number().int().optional().default(0),
       },
       {
         name: "name",
@@ -624,7 +629,7 @@ const endpoints = makeApi([
   {
     method: "get",
     path: "/api/timeline",
-    alias: "gps_api_timeline_get",
+    alias: "gts_api_timeline_get",
     requestFormat: "json",
     parameters: [
       {

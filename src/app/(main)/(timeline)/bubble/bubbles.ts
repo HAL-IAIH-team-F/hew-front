@@ -7,6 +7,9 @@ import {showProduct} from "@/(main)/(timeline)/product/product";
 import {createGradientBackground} from "@/(main)/(timeline)/background/background"
 import Effects from "@/(main)/(timeline)/effects/camera/Effects"
 import {Manager} from "~/manager/manager";
+import fetchTimelineProduct from "@/(main)/(timeline)/_timeline/fetchTimelineProduct";
+import {LoadedClientState} from "~/api/context/ClientState";
+import {util} from "../../../../util/util";
 
 const vertexShader = `
   uniform float time;
@@ -93,12 +96,21 @@ const fragmentShader = `
 `;
 
 const txr = [
-   ["/curtain.png"]
+  ["/curtain.png"],
+  ["/curtain.png"],
 ]
 
-export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: number, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera) => {
+export const createBubbles = async (
+  scene: THREE.Scene, bubblecnt: number, sessionId: number, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera,
+  clientState: LoadedClientState,
+) => {
   const textureLoader = new THREE.TextureLoader();
-  for (let i = 0; i < bubblecnt; i++) {
+  const result = await fetchTimelineProduct(clientState, bubblecnt)
+  if (result.error) {
+    console.error(result.error)
+    throw new Error(util.createErrorMessage(result.error))
+  }
+  result.success.forEach((product) => {
     const txrpath = txr[0][0]
     // const txrpath = txr[i][0]
     const bubbleTexture = textureLoader.load(txrpath);
@@ -212,11 +224,14 @@ export const createBubbles = (scene: THREE.Scene, bubblecnt: number, sessionId: 
     };
     animateBubble();
 
-  }
+  })
   return bubbles;
 };
 
-export const onClickBubble = (manager: Manager, event: MouseEvent, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera, scene: THREE.Scene, effects: Effects) => {
+export const onClickBubble = (
+  manager: Manager, event: MouseEvent, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera, scene: THREE.Scene,
+  effects: Effects, clientState: LoadedClientState
+) => {
   const mouse = new THREE.Vector2(
     (event.clientX / window.innerWidth) * 2 - 1,
     -(event.clientY / window.innerHeight) * 2 + 1
@@ -259,8 +274,11 @@ export const onClickBubble = (manager: Manager, event: MouseEvent, bubbles: THRE
           onComplete: () => {
             (clickedBubble as any).bubbleId = 999;
             manager.update.sessionId(manager.value.sessionId + 1);
-            const newBubbles = createBubbles(scene, manager.value.bbnum - 1, manager.value.sessionId, bubbles, camera);
-            moveBubblesToPosition(newBubbles, manager.value.sessionId);
+            createBubbles(
+              scene, manager.value.bbnum - 1, manager.value.sessionId, bubbles, camera, clientState
+            ).then((newBubbles) => {
+              moveBubblesToPosition(newBubbles, manager.value.sessionId);
+            });
           },
         });
 

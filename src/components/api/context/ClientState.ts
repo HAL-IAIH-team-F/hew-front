@@ -6,8 +6,8 @@ import {TokenBundle,} from "~/auth/nextauth/TokenBundle";
 import {UnAuthClient} from "~/api/client/UnAuthClient";
 import {UserRes} from "~/res/UserRes";
 
-export type ClientState = LoadingClientState | LoadedClientContext;
-export type LoadedClientContext = UnregisteredClientState | UnAuthClientState | RegisteredClientState
+export type ClientState = LoadingClientState | LoadedClientState;
+export type LoadedClientState = UnregisteredClientState | UnAuthClientState | RegisteredClientState
 
 export function newLoadingClientState(idToken: IdTokenState): LoadingClientState {
   return {
