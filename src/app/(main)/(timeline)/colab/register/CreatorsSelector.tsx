@@ -1,6 +1,6 @@
 import {Dispatch, SetStateAction, useState} from "react";
-import CreatorSelectorModal from "@/(main)/colab/register/CreatorSelectorModal";
-import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
+import CreatorSelectorModal from "@/(main)/(timeline)/colab/register/CreatorSelectorModal";
+import {CreatorRes} from "@/(main)/(timeline)/colab/register/CreatorRes";
 
 export default function CreatorsSelector(
   {

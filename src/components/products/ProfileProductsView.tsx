@@ -1,37 +1,16 @@
 import {CSSProperties} from "react";
 import {ErrorMessage} from "../../util/err/ErrorMessage";
 import ProductThumbnail from "~/api/useImgData";
-import useProduct from "~/api/useProducts";
-import {useProductContext} from "./ContextProvider";
+import useProducts from "~/hooks/useProducts";
+import useRoutes from "~/route/useRoutes";
 
 interface ProductPageProps {
 }
 
 export default function ProfileProductsView({}: ProductPageProps) {
-  // 商品データの取得
-  const {
-    isProductOpen,
-    productId,
-    setProductId,
-    toggleProductWindow,
-  } = useProductContext();
+  const {products, error} = useProducts();
+  const routes = useRoutes()
 
-  const {products, error} = useProduct();
-
-  const handleProductClick = (id: string) => {
-    if (id === productId) return;
-
-    if (isProductOpen) {
-      toggleProductWindow();
-      setTimeout(() => {
-        setProductId(id);
-        toggleProductWindow();
-      }, 300);
-    } else {
-      setProductId(id);
-      toggleProductWindow();
-    }
-  };
 
   return (
     <div style={styles.container}>
@@ -43,7 +22,7 @@ export default function ProfileProductsView({}: ProductPageProps) {
               <div
                 key={product.product_id}
                 style={styles.card}
-                onClick={() => handleProductClick(product.product_id)}
+                onClick={(event) => routes.account().setProductId(product.product_id).transition(event)}
               >
                 <div style={styles.innerFrame}></div>
                 <div style={styles.thumbnailWrapper}>

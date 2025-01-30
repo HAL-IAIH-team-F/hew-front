@@ -1,11 +1,11 @@
-import ModalHeader from "@/(main)/colab/register/ModalHeader";
+import ModalHeader from "@/(main)/(timeline)/colab/register/ModalHeader";
 import {useEffect, useState} from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
-import {ErrorData} from "../../../../util/err/err";
-import {ErrorMessage} from "../../../../util/err/ErrorMessage";
-import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
-import CreatorSelectorItem from "@/(main)/colab/register/CreatorSelectorItem";
+import {ErrorData} from "../../../../../util/err/err";
+import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
+import {CreatorRes} from "@/(main)/(timeline)/colab/register/CreatorRes";
+import CreatorSelectorItem from "@/(main)/(timeline)/colab/register/CreatorSelectorItem";
 
 export default function CreatorSelectorModal(
   {
