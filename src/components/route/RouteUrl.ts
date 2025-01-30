@@ -18,15 +18,14 @@ export class RouteUrl {
 
   transition(event: React.UIEvent | undefined = undefined) {
     event?.preventDefault()
-    console.debug("transition", this)
     const tempPathname = this.animationTempPathname()
     const tempParams = this.animationTempParams()
     if (tempPathname == undefined && tempParams == undefined) {
       this.routes.router.push(this.toString())
       return
     }
-    const tempUrl = (tempPathname || this.pathname()) + "?" + (tempParams?.toString() || this.params().toString())
-    console.debug("transition tempUrl", tempUrl)
+    const tempUrl = (tempPathname != undefined ? tempPathname : this.pathname())
+      + "?" + (tempParams != undefined ? tempParams?.toString() : this.params().toString())
     this.routes.router.replace(tempUrl);
     setTimeout(() => {
       this.routes.router.push(this.toString())

@@ -19,7 +19,7 @@ export class TimelineRouteUrl extends RouteUrl {
     const prevId = this.prevProductId()
     if (this.productId == prevId) return undefined
     if (prevId == undefined) return undefined
-    const params = new URLSearchParams()
+    const params = new URLSearchParams(this.routes.prevParams)
     params.delete("productId")
     return params;
   }

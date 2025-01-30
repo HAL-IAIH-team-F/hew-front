@@ -68,8 +68,10 @@ export default function ProfileProductsView({}: ProductPageProps) {
 
                   onMouseEnter={() => setHoveredCard(product.product_id)} // ホバー開始
                   onMouseLeave={() => setHoveredCard(null)} // ホバー終了
-                  onClick={(event) => routes.account().setProductId(product.product_id).transition(event)}
-
+                  onClick={
+                    event =>
+                      routes.account().setProductId(product.product_id).transition(event)
+                  }
                 >
 
                   <div style={styles.descriptionOverlay}>
