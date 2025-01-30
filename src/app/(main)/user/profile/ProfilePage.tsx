@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import AccountCard from "./accountCard";
-import {styles} from "~/Sidebar/Styles";
 import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
 import Link from "next/link";
 import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig"
@@ -14,7 +13,10 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
     <div
       style={{
         display: "flex",
+<<<<<<< HEAD
         // height: "100vh",
+=======
+>>>>>>> develop
         background: "rgba(30, 60, 114, 0.6)", // 未来的な青のグラデーション
         fontFamily: "'Roboto', 'Arial', sans-serif",
         color: "#fff", // テキストの色を白に
@@ -22,6 +24,7 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
         position: "relative",
         backdropFilter: 'blur(12px)', // 背景ブラー効果
       }}
+      className={"h-full"}
     >
       <div
         style={{
@@ -116,15 +119,23 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
 
       {/* Main Content */}
       <div
-        style={{
-          width: "100%",
-          height: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-          margin: "10px",
-        }}
+        className={"flex-1 min-w-0 justify-center items-center m-[10px]"}
       >
-        <div style={styles.inAppPageWindowStyle}>
+        <div
+          className={"w-full h-full"}
+          style={{
+            backgroundColor: 'rgba(142, 142, 147, 0.35)',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.3)',
+            border: '1px solid rgba(128, 128, 128, 0.2)',
+            position: 'relative', // fixedからrelativeに変更
+            borderRadius: '28px',
+            zIndex: 1,
+            padding: "2px",
+            margin: "0 auto", // 自動中央揃え
+            boxSizing: "border-box",
+            transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
+          }}
+        >
           <AccountCard/>
         </div>
       </div>

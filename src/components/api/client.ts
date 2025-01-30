@@ -163,13 +163,7 @@ const TokenRes = z
   .object({ access: TokenInfo, refresh: TokenInfo })
   .passthrough();
 const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
-const TokenInfoOld = z
-  .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
-  .passthrough();
-const TokenResOld = z
-  .object({ access: TokenInfoOld, refresh: TokenInfoOld })
-  .passthrough();
-const ImgTokenRes = z.object({ upload: TokenInfoOld }).passthrough();
+const ImgTokenRes = z.object({ upload: TokenInfo }).passthrough();
 const PostUserBody = z
   .object({
     user_name: z.string(),
@@ -231,8 +225,6 @@ export const schemas = {
   PostRecruitBody,
   TokenRes,
   PostTokenBody,
-  TokenInfoOld,
-  TokenResOld,
   ImgTokenRes,
   PostUserBody,
   Img,
@@ -631,6 +623,32 @@ const endpoints = makeApi([
   },
   {
     method: "get",
+    path: "/api/timeline",
+    alias: "gps_api_timeline_get",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "limit",
+        type: "Query",
+        schema: z.number().int().optional().default(20),
+      },
+      {
+        name: "page",
+        type: "Query",
+        schema: z.number().int().optional().default(0),
+      },
+    ],
+    response: z.array(ProductRes),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
     path: "/api/token",
     alias: "gtr_api_token_get",
     requestFormat: "json",
@@ -648,7 +666,7 @@ const endpoints = makeApi([
         schema: z.object({ keycloak_token: z.string() }).passthrough(),
       },
     ],
-    response: TokenResOld,
+    response: TokenRes,
     errors: [
       {
         status: 422,
@@ -669,7 +687,7 @@ const endpoints = makeApi([
     path: "/api/token/refresh",
     alias: "token_refresh_api_token_refresh_get",
     requestFormat: "json",
-    response: TokenResOld,
+    response: TokenRes,
   },
   {
     method: "post",

@@ -1,13 +1,12 @@
 "use client"
-import {ReactNode} from "react";
+import {ReactNode, Suspense} from "react";
 import {ProductProvider} from "~/products/ContextProvider";
-import Sidebar from "~/Sidebar/Sidebar";
-import RightProductWindows from "~/products/RightProductWindows";
+import Sidebar from "@/(main)/(timeline)/_sidebar/Sidebar";
+import RightWindow from "@/(main)/(timeline)/_window/RightWindow";
 import {usePathname} from "next/navigation";
-import {SidebarManagerProvider} from "@/(main)/(timeline)/SidebarManaager";
+import {SidebarManagerProvider} from "@/(main)/(timeline)/_sidebar/SidebarManaager";
 import {Timeline} from "@/(main)/(timeline)/timeline";
 import Overlay from "@/(main)/(timeline)/effects/overlay/overlay";
-import {Routes} from "@/Routes";
 
 export default function Layout(
   {
@@ -16,17 +15,20 @@ export default function Layout(
     children: ReactNode;
   }>) {
   const pathname = usePathname()
-
   return (
     <>
       <ProductProvider>
         <SidebarManagerProvider>
           <Timeline/>
-          <Sidebar>
-            {pathname == Routes.timeline ? undefined : children}
-          </Sidebar>
+          <Suspense>
+            <Sidebar>
+              {pathname == "/" ? undefined : children}
+            </Sidebar>
+          </Suspense>
           <Overlay/>
-          <RightProductWindows/>
+          <Suspense>
+            <RightWindow/>
+          </Suspense>
         </SidebarManagerProvider>
       </ProductProvider>
     </>

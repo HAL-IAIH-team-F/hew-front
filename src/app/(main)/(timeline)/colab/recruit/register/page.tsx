@@ -1,5 +1,9 @@
+<<<<<<< HEAD:src/app/(main)/colab/recruit/register/page.tsx
 "use client"
 import ColabRegisterForm from "@/(main)/colab/recruit/register/ColabRegisterForm";
+=======
+import ColabRegisterForm from "@/(main)/(timeline)/colab/recruit/register/ColabRegisterForm";
+>>>>>>> develop:src/app/(main)/(timeline)/colab/recruit/register/page.tsx
 
 
 const RegisterRecruit: React.FC = () => {

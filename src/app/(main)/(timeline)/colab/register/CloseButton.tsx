@@ -1,5 +1,5 @@
 import {MouseEventHandler} from "react";
-import {sx} from "../../../../util/util";
+import {sx} from "../../../../../util/util";
 
 export default function CloseButton(
   {

@@ -1,9 +1,21 @@
 "use client"
+<<<<<<< HEAD:src/app/(main)/colab/recruit/register/ColabRegisterForm.tsx
 import { useState, useEffect } from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
+=======
+<<<<<<< HEAD:src/app/(main)/colab/recruit/register/ColabRegisterForm.tsx
+import { useState } from "react";
+import {useClientContextState} from "~/api/context/ClientContextProvider";
+>>>>>>> develop:src/app/(main)/(timeline)/colab/recruit/register/ColabRegisterForm.tsx
 import {StyledForm} from "../../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../../util/form/element/StyledButton";
+=======
+import {useClientState} from "~/api/context/ClientContextProvider";
+import {StyledForm} from "../../../../../../util/form/element/StyledForm";
+import {StyledInput} from "../../../../../../util/form/element/StyledInput";
+import {StyledButton} from "../../../../../../util/form/element/StyledButton";
+>>>>>>> fa1369d20a59254dec2a65692ef973762051bbc4:src/app/(main)/(timeline)/colab/recruit/register/ColabRegisterForm.tsx
 import {Api} from "~/api/context/Api";
 import { z } from "zod";
 

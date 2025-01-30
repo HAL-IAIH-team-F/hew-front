@@ -10,7 +10,7 @@ interface UseProductOptions {
   uuid?: string;
 }
 
-export default function useProduct(options: UseProductOptions = {}) {
+export default function useProducts(options: UseProductOptions = {}) {
   const [products, setProducts] = useState<ProductRes[]>([]);
   const [error, setError] = useState<ErrorData>();
   const client = useClientState();

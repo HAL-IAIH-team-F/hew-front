@@ -2,6 +2,7 @@ import {RecruitRes} from "./RecruitRes"
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {useState} from "react";
 import {Api} from "~/api/context/Api";
+<<<<<<< HEAD:src/app/(main)/colab/recruit/Recruit.tsx
 import {ErrorData} from "../../../../util/err/err";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
 import styled from "styled-components";
@@ -73,6 +74,10 @@ const Button = styled.button`
   }
 `;
 
+=======
+import {ErrorData} from "../../../../../util/err/err";
+import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
+>>>>>>> develop:src/app/(main)/(timeline)/colab/recruit/Recruit.tsx
 
 export default function Recruit(
   {
