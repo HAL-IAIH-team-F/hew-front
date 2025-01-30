@@ -14,17 +14,17 @@ import {StyledFormData} from "../../../../util/form/StyledFormData";
 import FlexBox from "../../../../util/FlexBox";
 import {Api} from "~/api/context/Api";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
-import CreatorsSelector from "@/(main)/colab/register/CreatorsSelector";
+import CreatorsSelector from "@/(main)/(timeline)/colab/register/CreatorsSelector";
 import {useState} from "react";
-import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
-import {Routes} from "@/Routes";
+import {Routes} from "~/route/Routes";
 import {ClientState} from "~/api/context/ClientState";
+import useRoutes from "~/route/useRoutes";
+import {CreatorRes} from "../../../../util/hook/useCreatorData";
 
 
 async function action(
-  formData: StyledFormData, clientContext: ClientState, router: AppRouterInstance, creators: CreatorRes[]
+  formData: StyledFormData, clientContext: ClientState, router: AppRouterInstance, creators: CreatorRes[], routes: Routes
 ) {
-
   const price = Number(formData.getStr("price"));
   const productTitle = formData.getStr("product_name");
   const productDescription = formData.getStr("description");
@@ -79,7 +79,7 @@ async function action(
 
   // 成功した場合に timeline にリダイレクト
   console.log("Successfully posted product. Redirecting to /timeline...");
-  router.push(Routes.timeline);
+  routes.timeline().transition()
   return undefined;
 }
 
@@ -87,11 +87,12 @@ export default function ProductListingForm() {
   const clientContext = useClientState();
   const router = useRouter();
   const [creators, setCreators] = useState<CreatorRes[]>([])
+  const routes = useRoutes()
 
   return (
     <StyledForm
       action={async (formData: StyledFormData) => {
-        await action(formData, clientContext, router, creators)
+        await action(formData, clientContext, router, creators, routes)
       }}
       className={"h-full overflow-y-scroll p-5"}
     >

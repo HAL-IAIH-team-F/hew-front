@@ -6,7 +6,7 @@ import {CartRes} from "@/(main)/(timeline)/cart/CartRes";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
 import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
 import ProductThumbnail from "~/api/useImgData";
-import useProduct from "~/api/useProducts";
+import useProducts from "~/hooks/useProducts";
 import {useClientState} from "~/api/context/ClientContextProvider";
 
 const styles: Record<string, CSSProperties> = {
@@ -143,7 +143,7 @@ interface ProductListProps {
 }
 
 const ProductList: React.FC<ProductListProps> = ({productId}) => {
-  const {products, error} = useProduct({productId});
+  const {products, error} = useProducts({productId});
 
   if (error) {
     return <div style={styles.error}>Error: {error.message}</div>;

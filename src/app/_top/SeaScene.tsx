@@ -4,9 +4,9 @@ import * as THREE from "three";
 import {useFrame, useThree} from "@react-three/fiber";
 import {EffectComposer, RenderPass, UnrealBloomPass, Water} from "three-stdlib";
 import gsap from "gsap";
-
-import { useRouter } from "next/navigation";
 import {useClientState} from "~/api/context/ClientContextProvider";
+import useRoutes from "~/route/useRoutes";
+
 type SeaSceneProps = {
   onButtonClick: boolean;
 };
@@ -28,10 +28,10 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
   const isInitialRender = useRef(true);
   const [FilmPass, setFilmPass] = useState<{ constructor: any }>()
   const clientContext = useClientState();
-  const router = useRouter()
+  const routes = useRoutes()
 
   const handleComplete = () => {
-    router.push("/");
+    routes.timeline().transition();
   };
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
   });
 
   useEffect(() => {
-   
+
     if (clientContext.state !== "registered") return;
     const tl = gsap.timeline();
     const targetPosition = new THREE.Vector3(
@@ -119,8 +119,8 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
     
     const lookAtTarget = new THREE.Vector3(-500, 323, -4);
     tl.to(camera.position, {
-      y: camera.position.y - 150, 
-      x: camera.position.x + 100, 
+      y: camera.position.y - 150,
+      x: camera.position.x + 100,
       duration: 4.5,
       ease: "expo.in",
       onUpdate: () => {
@@ -138,23 +138,11 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
       .to(
         lookAtTarget,
         {
-          y: targetPosition.y - 1200, 
+          y: targetPosition.y - 1200,
           duration: 2.5,
           ease: "expo.in",
           onUpdate: () => {
-            camera.lookAt(lookAtTarget); 
-          },
-        },
-        "<" 
-      )
-      .to(
-        camera,
-        {
-          fov: 100, 
-          duration: 2.5,
-          ease: "expo.in",
-          onUpdate: () => {
-            camera.updateProjectionMatrix(); 
+            camera.lookAt(lookAtTarget);
           },
         },
         "<"
@@ -162,11 +150,23 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
       .to(
         camera,
         {
-          fov: 120, 
+          fov: 100,
+          duration: 2.5,
+          ease: "expo.in",
+          onUpdate: () => {
+            camera.updateProjectionMatrix();
+          },
+        },
+        "<"
+      )
+      .to(
+        camera,
+        {
+          fov: 120,
           duration: 1,
           ease: "expo.out",
           onUpdate: () => {
-            camera.updateProjectionMatrix(); 
+            camera.updateProjectionMatrix();
           },
         },
       );

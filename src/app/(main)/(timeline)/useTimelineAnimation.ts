@@ -7,10 +7,10 @@ import Effects from "@/(main)/(timeline)/effects/camera/Effects";
 import {generateGomi} from "@/(main)/(timeline)/effects/gomi/gomi";
 
 import {EffectComposer} from "three-stdlib";
-import useProduct from "~/api/useProducts";
+import useProducts from "~/hooks/useProducts";
 import {createGradientBackground} from "@/(main)/(timeline)/background/background";
 import {createBubbles, onClickBubble} from "@/(main)/(timeline)/bubble/bubbles";
-import {useSidebarManagerState} from "@/(main)/(timeline)/SidebarManaager";
+import {useSidebarManagerState} from "@/(main)/(timeline)/_window/_sidebar/SidebarManaager";
 
 export default function useTimelineAnimation(
   mountRef: RefObject<HTMLDivElement | null>
@@ -26,7 +26,7 @@ export default function useTimelineAnimation(
   const rotationStrength = 0.05;
   const scene = useMemo(() => new THREE.Scene(), []);
   const effectsRef = useRef<Effects | null>(null);
-  const {products, error} = useProduct();
+  const {products, error} = useProducts();
   if (error) console.error(error)
   const managerState = useSidebarManagerState()
 

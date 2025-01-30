@@ -6,7 +6,6 @@ import {useRouter} from 'next/navigation';
 import {StyledForm} from "../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../util/form/element/StyledButton";
-import {Routes} from "@/Routes";
 
 
 export default function UserRegisterForm({...props}: UserRegisterFormProps) {
@@ -38,7 +37,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
 
       if (typeof user_name !== 'string' || !user_name) {
         formData.append("user_name", "ユーザーネームを入力してください");
-        return   
+        return
       }
       let iconUuid: string | null = null
       if (icon_file) {
@@ -58,7 +57,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
         formData.append("icon", postUserResult.error.error_id + ": " + postUserResult.error.message);
         return
       }
-      window.location.reload()
+      window.location.reload() // TODO
       return undefined
 
     }}>
