@@ -2,33 +2,33 @@
 import {useEffect, useState} from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
 
-import {RecruitRes} from "@/(main)/colab/recruit/RecruitRes";
-import Recruit from "@/(main)/colab/recruit/Recruit";
 import {Api, Img} from "~/api/context/Api";
-import { ImgRes, UserRes } from "~/res/UserRes";
-import { ErrorData } from "../err/err";
+import {ImgRes} from "~/res/UserRes";
+import {ErrorData} from "../err/err";
 
 export interface UserData {
-    user_id: string;
-    name: string;
-    screen_id: string;
-    icon: ImgRes | null;
+  user_id: string;
+  name: string;
+  screen_id: string;
+  icon: ImgRes | null;
 }
 
-export interface CreatorResponse {
+export interface CreatorRes {
   creator_id: string;
   contact_address: string;
   user_data: UserData;
 }
 
-export default function useCreatorData({ creator_id }: { creator_id: string }) : [CreatorResponse | undefined, UserData | undefined, ErrorData | undefined] {
+export default function useCreatorData({creator_id}: {
+  creator_id: string
+}): [CreatorRes | undefined, UserData | undefined, ErrorData | undefined] {
   const [user, setUser] = useState<UserData | undefined>();
-  const [creatordata, setCreatordata] = useState<CreatorResponse | undefined>();
+  const [creatordata, setCreatordata] = useState<CreatorRes | undefined>();
   const [err, setErr] = useState<ErrorData | undefined>();
   const client = useClientState();
 
   useEffect(() => {
-    client.client.unAuth(Api.app.getcre_api_creator__creator_id__get, {}, { creator_id: creator_id }).then(value => {
+    client.client.unAuth(Api.app.getcre_api_creator__creator_id__get, {}, {creator_id: creator_id}).then(value => {
       if (value.error) {
         setErr(value.error);
         return;

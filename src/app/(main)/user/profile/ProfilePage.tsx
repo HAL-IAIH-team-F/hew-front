@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
 import AccountCard from "./accountCard";
-import { styles } from "~/Sidebar/Styles";
-import { SignInOutButton } from "~/auth/nextauth/SignInOutButton";
+import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
 import Link from "next/link";
-import { KeycloakConfig } from "~/auth/keycloak/KeycloakConfig";
-import { useWindowSize } from "@/_hook/useWindowSize";
+import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
+import {useWindowSize} from "@/_hook/useWindowSize";
 
-interface ProfileProps {}
+interface ProfileProps {
+}
 
 const ProfilePage: React.FC<ProfileProps> = ({}) => {
   const size = useWindowSize();
@@ -21,7 +21,7 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
         color: "#fff", // テキストの色を白に
         overflow: "hidden",
         backdropFilter: "blur(12px)", // 背景ブラー効果
-        
+
       }}
     >
       {/* Sidebar */}
@@ -45,8 +45,8 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
         >
           Menu
         </h2>
-        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-          <li style={{ marginBottom: "10px" }}>
+        <ul style={{listStyle: "none", padding: 0, margin: 0}}>
+          <li style={{marginBottom: "10px"}}>
             <a
               href="#profile"
               style={{
@@ -61,7 +61,7 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
               Profile
             </a>
           </li>
-          <li style={{ marginBottom: "10px" }}>
+          <li style={{marginBottom: "10px"}}>
             <a
               href="#settings"
               style={{
@@ -76,7 +76,7 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
               Settings
             </a>
           </li>
-          <li style={{ marginBottom: "10px" }}>
+          <li style={{marginBottom: "10px"}}>
             <a
               href="#notifications"
               style={{
@@ -91,7 +91,7 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
               Notifications
             </a>
           </li>
-          <li style={{ marginBottom: "10px" }}>
+          <li style={{marginBottom: "10px"}}>
             <Link
               href={new URL("/realms/develop/account/", KeycloakConfig.baseUrl)}
               style={{
@@ -133,7 +133,7 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
           justifyContent: "center",
           alignItems: "center",
           overflow: "hidden", // サイズを超える部分を隠す
-          
+
         }}
       >
         <div
@@ -143,10 +143,10 @@ const ProfilePage: React.FC<ProfileProps> = ({}) => {
             maxWidth: "100%", // 最大幅制限を親要素の幅に設定
             maxHeight: "100%", // 最大高さ制限を親要素の高さに設定
             boxSizing: "border-box", // パディングや境界線を含めてサイズ計算
-            
+
           }}
         >
-          <AccountCard />
+          <AccountCard/>
         </div>
       </div>
     </div>

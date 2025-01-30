@@ -12,6 +12,10 @@ export class RouteUrl {
     return `${this.pathname()}?${this.params().toString()}`
   }
 
+  isCurrent() {
+    return this.routes.prevPath == this.path
+  }
+
   transition(event: React.UIEvent | undefined = undefined) {
     event?.preventDefault()
     console.debug("transition", this)

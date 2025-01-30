@@ -1,20 +1,19 @@
 "use client"
-import { useWindowSize } from '@/_hook/useWindowSize';
-import {usePathname, useRouter} from "next/navigation";
-import React, {createContext, useContext, useEffect, useMemo, useState} from 'react';
-import internal from 'stream';
-import {Routes} from "@/Routes";
+import {useWindowSize} from '@/_hook/useWindowSize';
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import useRoutes from "~/route/useRoutes";
+
 // Contextの型定義
 interface ProductContextType {
   productId: string;
   isProductOpen: boolean;
   isSidebarOpen: boolean;
-  isMobile:boolean;
+  isMobile: boolean;
   toggleProductWindow: () => void;
   setProductId: (id: string) => void;
   setIsSidebarOpen: (id: boolean) => void;
   setIsMobile: (id: boolean) => void;
-  }
+}
 
 // 初期値
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -26,41 +25,38 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isPathTimeline, setIsPathTimeline] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const [window, setWindow] = useState<boolean>(false);
-  const router = useRouter()
-  const pathname = usePathname(); // 現在のURLパスを取得
   const toggleProductWindow = () => setisProductOpen((prev) => !prev);
   const size = useWindowSize()
+  const routes = useRoutes()
   useEffect(() => {
-    if (pathname !== "/") {
-      if (isProductOpen && isMobile)
-      {
+    if (!routes.timeline().isCurrent()) {
+      if (isProductOpen && isMobile) {
         setProductId("none")
         setisProductOpen(false)
-      }else{
+      } else {
         return setIsPathTimeline(true)
       }
-    }else{
+    } else {
       return setIsPathTimeline(true)
     }
-    
-  },[pathname])
+
+  }, [routes])
   useEffect(() => {
     if (isMobile && isPathTimeline && isProductOpen) {
-      router.push(Routes.timeline)
+      routes.timeline().transition()
       console.log("a")
     }
-    console.log(isMobile,isPathTimeline,isProductOpen)
+    console.log(isMobile, isPathTimeline, isProductOpen)
   }, [size, isProductOpen, isSidebarOpen]);
 
   useEffect(() => {
     if (size.width <= 900) {
       setIsMobile(true)
       console.log(size.width)
-    }else{
+    } else {
       setIsMobile(false)
     }
-  },[size])
+  }, [size])
 
   return (
     <ProductContext.Provider

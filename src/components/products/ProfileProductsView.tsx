@@ -1,43 +1,24 @@
-import React, {CSSProperties, useState, useEffect, Dispatch, SetStateAction, useMemo} from "react";
+import React, {CSSProperties, Dispatch, SetStateAction, useEffect, useState} from "react";
 import {ErrorMessage} from "../../util/err/ErrorMessage";
 import ProductThumbnail from "~/api/useImgData";
-import useProduct from "~/api/useProducts";
-import {useProductContext} from "./ContextProvider";
 import {ClientState} from "~/api/context/ClientState";
 import {ErrorData} from "../../util/err/err";
-import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 import useCreatorData from "../../util/hook/useCreatorData";
 import Image from "../../util/Image";
-import {iconstyles} from "~/Sidebar/Styles";
-import useProducts from "~/hooks/useProducts";
 import useRoutes from "~/route/useRoutes";
+import useProductId from "~/products/useProductId";
+import useProducts from "~/hooks/useProducts";
 
 interface ProductPageProps {
 }
 
 export default function ProfileProductsView({}: ProductPageProps) {
-  const {setProductId, toggleProductWindow} = useProductContext();
-  const {products, error} = useProduct();
+  const {products, error} = useProducts();
   const [columns, setColumns] = useState(3); // 初期値
   const [hoveredCard, setHoveredCard] = useState<string | null>(null); // 現在ホバーされているカードIDを管理
-  const [err, setErr] = useState<ErrorData>();
-  const clientState = useClientState();
+  const openedProductId = useProductId()
 
-  const handleProductClick = (id: string) => {
-    if (id === productId) return;
-
-    if (isProductOpen) {
-      toggleProductWindow();
-      setTimeout(() => {
-        setProductId(id);
-        toggleProductWindow();
-      }, 300);
-    } else {
-      setProductId(id);
-      toggleProductWindow();
-    }
-  };
   const routes = useRoutes()
   // 親要素の幅を監視して列数を調整
   useEffect(() => {
@@ -45,7 +26,7 @@ export default function ProfileProductsView({}: ProductPageProps) {
       const width = window.innerWidth; // ウィンドウ幅を取得
       console.log("a", width)
       if (width >= 1200) {
-        if (isProductOpen) {
+        if (openedProductId != undefined) {
           setColumns(2);
         } else {
           setColumns(3);
@@ -61,7 +42,7 @@ export default function ProfileProductsView({}: ProductPageProps) {
     updateColumns(); // 初期実行
     window.addEventListener("resize", updateColumns); // リサイズイベント監視
     return () => window.removeEventListener("resize", updateColumns); // クリーンアップ
-  }, [isProductOpen]);
+  }, [openedProductId != undefined]);
 
   return (
     <div style={styles.container} className={"overflow-y-scroll h-full"}>
@@ -87,7 +68,8 @@ export default function ProfileProductsView({}: ProductPageProps) {
 
                   onMouseEnter={() => setHoveredCard(product.product_id)} // ホバー開始
                   onMouseLeave={() => setHoveredCard(null)} // ホバー終了
-                  onClick={() => handleProductClick(product.product_id)}
+                  onClick={(event) => routes.account().setProductId(product.product_id).transition(event)}
+
                 >
 
                   <div style={styles.descriptionOverlay}>
@@ -125,9 +107,9 @@ interface CreatorDataProps {
   creator_id: string;
 }
 
-export function CreatorData({ creator_id }: CreatorDataProps) {
+export function CreatorData({creator_id}: CreatorDataProps) {
   const [data, setData] = useState<any>(null);
-  const [creator_data, user_data, err] = useCreatorData({ creator_id });
+  const [creator_data, user_data, err] = useCreatorData({creator_id});
 
   return (
     <div>
@@ -137,9 +119,9 @@ export function CreatorData({ creator_id }: CreatorDataProps) {
           src={(user_data.icon as any).strUrl()} // 型の不一致を回避
           width={33}
           height={33}
-          style={styles.userIcon} />
+          style={styles.userIcon}/>
           <p>{user_data?.screen_id}</p>
-          </>
+        </>
       ) : (
         <div>No Icon</div> // 画像がない場合のフォールバック
       )}
@@ -163,7 +145,7 @@ const styles: { [key: string]: CSSProperties } = {
   },
   gridContainer: {
     width: "100%",
-    height:"100%",
+    height: "100%",
     display: "flex",
     justifyContent: "center",
   },
@@ -278,6 +260,7 @@ const styles: { [key: string]: CSSProperties } = {
     left: '30px',
   },
 };
+
 async function addCart(
   clientState: ClientState, setErr: Dispatch<SetStateAction<ErrorData | undefined>>,
   product_id: string
