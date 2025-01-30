@@ -55,11 +55,25 @@ const PostCollaboBody = z
 const PostColabApproveBody = z
   .object({ colab_id: z.string().uuid() })
   .passthrough();
+const File = z
+  .object({
+    image_uuid: z.string().uuid(),
+    token: z.union([z.string(), z.null()]),
+  })
+  .passthrough();
+const UserData = z
+  .object({
+    user_id: z.string().uuid(),
+    name: z.string(),
+    screen_id: z.string(),
+    icon: z.union([File, z.null()]),
+  })
+  .passthrough();
 const CreatorResponse = z
   .object({
     creator_id: z.string().uuid(),
-    user_id: z.string().uuid(),
     contact_address: z.string(),
+    user_data: UserData,
   })
   .passthrough();
 const PostCreatorBody = z
@@ -163,23 +177,11 @@ const TokenRes = z
   .object({ access: TokenInfo, refresh: TokenInfo })
   .passthrough();
 const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
-const TokenInfoOld = z
-  .object({ token: z.string(), expire: z.string().datetime({ offset: true }) })
-  .passthrough();
-const TokenResOld = z
-  .object({ access: TokenInfoOld, refresh: TokenInfoOld })
-  .passthrough();
-const ImgTokenRes = z.object({ upload: TokenInfoOld }).passthrough();
+const ImgTokenRes = z.object({ upload: TokenInfo }).passthrough();
 const PostUserBody = z
   .object({
     user_name: z.string(),
     user_icon_uuid: z.union([z.string(), z.null()]),
-  })
-  .passthrough();
-const Img = z
-  .object({
-    image_uuid: z.string().uuid(),
-    token: z.union([z.string(), z.null()]),
   })
   .passthrough();
 const SelfUserRes = z
@@ -187,7 +189,7 @@ const SelfUserRes = z
     user_id: z.string().uuid(),
     user_name: z.string(),
     user_screen_id: z.string(),
-    user_icon: z.union([Img, z.null()]),
+    user_icon: z.union([File, z.null()]),
     user_date: z.string().datetime({ offset: true }),
     user_mail: z.string(),
   })
@@ -205,6 +207,8 @@ export const schemas = {
   PostColabRequestBody,
   PostCollaboBody,
   PostColabApproveBody,
+  File,
+  UserData,
   CreatorResponse,
   PostCreatorBody,
   UserFollow,
@@ -231,11 +235,8 @@ export const schemas = {
   PostRecruitBody,
   TokenRes,
   PostTokenBody,
-  TokenInfoOld,
-  TokenResOld,
   ImgTokenRes,
   PostUserBody,
-  Img,
   SelfUserRes,
 };
 
@@ -464,6 +465,27 @@ const endpoints = makeApi([
   },
   {
     method: "get",
+    path: "/api/creator/:creator_id",
+    alias: "getcre_api_creator__creator_id__get",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "creator_id",
+        type: "Path",
+        schema: z.string().uuid(),
+      },
+    ],
+    response: CreatorResponse,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
     path: "/api/notification",
     alias: "gns_api_notification_get",
     requestFormat: "json",
@@ -591,7 +613,12 @@ const endpoints = makeApi([
       {
         name: "limit",
         type: "Query",
-        schema: limit,
+        schema: z.number().int().optional().default(20),
+      },
+      {
+        name: "page",
+        type: "Query",
+        schema: z.number().int().optional().default(0),
       },
       {
         name: "name",
@@ -631,6 +658,32 @@ const endpoints = makeApi([
   },
   {
     method: "get",
+    path: "/api/timeline",
+    alias: "gts_api_timeline_get",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "limit",
+        type: "Query",
+        schema: z.number().int().optional().default(20),
+      },
+      {
+        name: "page",
+        type: "Query",
+        schema: z.number().int().optional().default(0),
+      },
+    ],
+    response: z.array(ProductRes),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
     path: "/api/token",
     alias: "gtr_api_token_get",
     requestFormat: "json",
@@ -648,7 +701,7 @@ const endpoints = makeApi([
         schema: z.object({ keycloak_token: z.string() }).passthrough(),
       },
     ],
-    response: TokenResOld,
+    response: TokenRes,
     errors: [
       {
         status: 422,
@@ -669,7 +722,7 @@ const endpoints = makeApi([
     path: "/api/token/refresh",
     alias: "token_refresh_api_token_refresh_get",
     requestFormat: "json",
-    response: TokenResOld,
+    response: TokenRes,
   },
   {
     method: "post",

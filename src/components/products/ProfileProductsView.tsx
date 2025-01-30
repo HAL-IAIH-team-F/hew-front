@@ -1,4 +1,4 @@
-import React, { CSSProperties, useState, useEffect, Dispatch, SetStateAction } from "react";
+import React, { CSSProperties, useState, useEffect, Dispatch, SetStateAction, useMemo } from "react";
 import { ErrorMessage } from "../../util/err/ErrorMessage";
 import ProductThumbnail from "~/api/useImgData";
 import useProduct from "~/api/useProducts";
@@ -7,6 +7,9 @@ import { ClientState } from "~/api/context/ClientState";
 import { ErrorData } from "../../util/err/err";
 import { useClientState } from "~/api/context/ClientContextProvider";
 import { Api } from "~/api/context/Api";
+import useCreatorData from "../../util/hook/useCreatorData";
+import Image from "../../util/Image";
+import { iconstyles } from "~/Sidebar/Styles";
 
 interface ProductPageProps {}
 
@@ -17,6 +20,7 @@ export default function ProfileProductsView({}: ProductPageProps) {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null); // 現在ホバーされているカードIDを管理
   const [err, setErr] = useState<ErrorData>();
   const clientState = useClientState();
+  
   const handleProductClick = (id: string) => {
     if (id === productId) return;
 
@@ -86,8 +90,13 @@ export default function ProfileProductsView({}: ProductPageProps) {
                   <div style={styles.descriptionOverlay}>
                     <h2 style={styles.title}>
                       {product.product_title}
-                      <p style={styles.creator_data}>@{product.creator_ids}</p>
+                    
                     </h2>
+                      {product.creator_ids.map((id) => (
+                        <p key={id} style={styles.creator_data}>
+                          <CreatorData creator_id={id} />
+                        </p>
+                      ))}
                     <div style={styles.rightdescription}>
                       <p style={styles.price}>
                         <strong>{product.product_price} 円</strong>
@@ -109,6 +118,34 @@ export default function ProfileProductsView({}: ProductPageProps) {
   );
 }
 
+interface CreatorDataProps {
+  creator_id: string;
+}
+
+export function CreatorData({ creator_id }: CreatorDataProps) {
+  const [data, setData] = useState<any>(null);
+  const [creator_data, user_data, err] = useCreatorData({ creator_id }); 
+
+  return (
+    <div>
+      {user_data?.icon ? (
+        <><Image
+          alt="User Icon"
+          src={(user_data.icon as any).strUrl()} // 型の不一致を回避
+          width={33}
+          height={33}
+          style={styles.userIcon} />
+          <p>{user_data?.screen_id}</p>
+          </>
+      ) : (
+        <div>No Icon</div> // 画像がない場合のフォールバック
+      )}
+    </div>
+
+  );
+}
+
+
 const styles: { [key: string]: CSSProperties } = {
   container: {
     display: "flex",
@@ -117,9 +154,9 @@ const styles: { [key: string]: CSSProperties } = {
     padding: "20px",
     fontFamily:
       "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    
-
-    maxHeight: "calc(100vh - 30px)", // 親要素の高さを制限
+    scrollbarWidth: "none", // Firefox のスクロールバー非表示
+    msOverflowStyle: "none", // IE, Edge のスクロールバー非表示
+    maxHeight: "calc(100vh - 570px)", // 親要素の高さを制限
   },
   gridContainer: {
     width: "100%",
@@ -225,6 +262,17 @@ const styles: { [key: string]: CSSProperties } = {
     fontSize: "1.5rem",
     color: "#aaaaaa",
     marginTop: "20px",
+  },
+  userIcon: {
+    borderRadius: '50%',
+    width: '23px',
+    height: '23px',
+    objectFit: 'cover',
+    position: 'absolute',
+    transform: 'translate(-50%, -50%)',
+    border: '2px solid rgba(0, 0, 0, 0.8)',
+    top: '60px',
+    left: '30px',
   },
 };
 async function addCart(
