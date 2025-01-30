@@ -4,9 +4,9 @@ import * as THREE from "three";
 import {useFrame, useThree} from "@react-three/fiber";
 import {EffectComposer, RenderPass, UnrealBloomPass, Water} from "three-stdlib";
 import gsap from "gsap";
-import { useClientState } from "~/api/context/ClientContextProvider";
-import { useRouter } from "next/navigation";
-import {Routes} from "@/Routes";
+import {useClientState} from "~/api/context/ClientContextProvider";
+import useRoutes from "~/route/useRoutes";
+
 type SeaSceneProps = {
   onButtonClick: boolean;
 };
@@ -28,10 +28,10 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
   const isInitialRender = useRef(true);
   const [FilmPass, setFilmPass] = useState<{ constructor: any }>()
   const clientContext = useClientState();
-  const router = useRouter()
+  const routes = useRoutes()
 
   const handleComplete = () => {
-    router.push(Routes.timeline);
+    routes.timeline().transition();
   };
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
   });
 
   useEffect(() => {
-   
+
     if (clientContext.state !== "registered") return;
 
     console.log("login");
@@ -119,7 +119,7 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
       camera.position.y - 1200,
       camera.position.z
     );
-    
+
     const lookAtTarget = new THREE.Vector3(-500, 323, -4); // 初期のlookAtターゲット位置
 
     // カメラの移動アニメーション
@@ -153,7 +153,7 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
         },
         "<" // "<" で移動と同時に開始
       )
-}, [clientContext.state]);
+  }, [clientContext.state]);
 
   useEffect(() => {
 

@@ -1,26 +1,29 @@
-import React, { CSSProperties, useState, useEffect, Dispatch, SetStateAction, useMemo } from "react";
-import { ErrorMessage } from "../../util/err/ErrorMessage";
+import React, {CSSProperties, useState, useEffect, Dispatch, SetStateAction, useMemo} from "react";
+import {ErrorMessage} from "../../util/err/ErrorMessage";
 import ProductThumbnail from "~/api/useImgData";
 import useProduct from "~/api/useProducts";
-import { useProductContext } from "./ContextProvider";
-import { ClientState } from "~/api/context/ClientState";
-import { ErrorData } from "../../util/err/err";
-import { useClientState } from "~/api/context/ClientContextProvider";
-import { Api } from "~/api/context/Api";
+import {useProductContext} from "./ContextProvider";
+import {ClientState} from "~/api/context/ClientState";
+import {ErrorData} from "../../util/err/err";
+import {useClientState} from "~/api/context/ClientContextProvider";
+import {Api} from "~/api/context/Api";
 import useCreatorData from "../../util/hook/useCreatorData";
 import Image from "../../util/Image";
-import { iconstyles } from "~/Sidebar/Styles";
+import {iconstyles} from "~/Sidebar/Styles";
+import useProducts from "~/hooks/useProducts";
+import useRoutes from "~/route/useRoutes";
 
-interface ProductPageProps {}
+interface ProductPageProps {
+}
 
 export default function ProfileProductsView({}: ProductPageProps) {
-  const { isProductOpen, productId, setProductId, toggleProductWindow } = useProductContext();
-  const { products, error } = useProduct();
+  const {setProductId, toggleProductWindow} = useProductContext();
+  const {products, error} = useProduct();
   const [columns, setColumns] = useState(3); // 初期値
   const [hoveredCard, setHoveredCard] = useState<string | null>(null); // 現在ホバーされているカードIDを管理
   const [err, setErr] = useState<ErrorData>();
   const clientState = useClientState();
-  
+
   const handleProductClick = (id: string) => {
     if (id === productId) return;
 
@@ -35,19 +38,19 @@ export default function ProfileProductsView({}: ProductPageProps) {
       toggleProductWindow();
     }
   };
-
+  const routes = useRoutes()
   // 親要素の幅を監視して列数を調整
   useEffect(() => {
     const updateColumns = () => {
       const width = window.innerWidth; // ウィンドウ幅を取得
-      console.log("a",width)
+      console.log("a", width)
       if (width >= 1200) {
-        if (isProductOpen){
+        if (isProductOpen) {
           setColumns(2);
-        }else{
+        } else {
           setColumns(3);
         }
-        
+
       } else if (width >= 768) {
         setColumns(2);
       } else {
@@ -62,15 +65,15 @@ export default function ProfileProductsView({}: ProductPageProps) {
 
   return (
     <div style={styles.container} className={"overflow-y-scroll h-full"}>
-      <ErrorMessage error={error} />
-      <div style={styles.gridContainer} >
+      <ErrorMessage error={error}/>
+      <div style={styles.gridContainer}>
         {products.length > 0 ? (
           <div
             style={{
               ...styles.grid,
               gridTemplateColumns: `repeat(${columns}, 1fr)`, // 列数を動的に設定
             }}
-            
+
           >
             {products.map((product) => {
               const isHovered = hoveredCard === product.product_id; // カードがホバーされているか
@@ -81,22 +84,22 @@ export default function ProfileProductsView({}: ProductPageProps) {
                     ...styles.card,
                     ...(isHovered && styles.cardHover), // ホバー時のスタイルを適用
                   }}
-                  
+
                   onMouseEnter={() => setHoveredCard(product.product_id)} // ホバー開始
                   onMouseLeave={() => setHoveredCard(null)} // ホバー終了
                   onClick={() => handleProductClick(product.product_id)}
                 >
-                  
+
                   <div style={styles.descriptionOverlay}>
                     <h2 style={styles.title}>
                       {product.product_title}
-                    
+
                     </h2>
-                      {product.creator_ids.map((id) => (
-                        <p key={id} style={styles.creator_data}>
-                          <CreatorData creator_id={id} />
-                        </p>
-                      ))}
+                    {product.creator_ids.map((id) => (
+                      <p key={id} style={styles.creator_data}>
+                        <CreatorData creator_id={id}/>
+                      </p>
+                    ))}
                     <div style={styles.rightdescription}>
                       <p style={styles.price}>
                         <strong>{product.product_price} 円</strong>
@@ -104,7 +107,7 @@ export default function ProfileProductsView({}: ProductPageProps) {
                     </div>
                   </div>
                   <div style={styles.thumbnailWrapper}>
-                    <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid} />
+                    <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>
                   </div>
                 </div>
               );
@@ -124,7 +127,7 @@ interface CreatorDataProps {
 
 export function CreatorData({ creator_id }: CreatorDataProps) {
   const [data, setData] = useState<any>(null);
-  const [creator_data, user_data, err] = useCreatorData({ creator_id }); 
+  const [creator_data, user_data, err] = useCreatorData({ creator_id });
 
   return (
     <div>

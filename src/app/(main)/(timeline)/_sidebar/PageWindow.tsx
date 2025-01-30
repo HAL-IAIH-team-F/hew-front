@@ -3,6 +3,7 @@ import React, {ReactNode} from 'react';
 import {inAppPageStyle, pageWindowStyle} from './Styles';
 import {useProductContext} from '~/products/ContextProvider';
 import { useWindowSize } from '@/_hook/useWindowSize';
+import useProductId from "~/products/useProductId";
 
 const PageWindow: React.FC<{
   children?: ReactNode
@@ -13,9 +14,11 @@ const PageWindow: React.FC<{
     isProductOpen,
     isSidebarOpen,
   } = useProductContext();
+  const productId = useProductId()
+
   const size = useWindowSize()
   return (
-    <div style={pageWindowStyle(isSidebarOpen, isProductOpen, children != undefined,size.width,size.height)}>
+    <div style={pageWindowStyle(isSidebarOpen, productId != undefined, children != undefined,size.width,size.height)}>
       <div style={inAppPageStyle(children != undefined)}>
         <div style={{display: "block"}} className={"h-full"}>
           {children}

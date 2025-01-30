@@ -1,4 +1,4 @@
-import {CreatorRes} from "@/(main)/colab/register/CreatorRes";
+import {CreatorRes} from "@/(main)/(timeline)/colab/register/CreatorRes";
 
 export default function CreatorSelectorItem(
   {

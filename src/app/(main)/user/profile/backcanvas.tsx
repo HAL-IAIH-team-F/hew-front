@@ -53,7 +53,9 @@ const RotatingCard: React.FC<{ user: User | undefined }> = ({ user }) => {
 const Backcanvas: React.FC<{ user: User | undefined }> = ({ user }) => {
   const [isHovered, setIsHovered] = useState(false);
   return (
-    <Canvas
+    <div className={"w-full h-[300px] overflow-x-hidden"}
+    >
+      <Canvas
       camera={{
         position: [0, 0, 27], // カメラ位置
         fov: 40, // 視野角
@@ -90,6 +92,7 @@ const Backcanvas: React.FC<{ user: User | undefined }> = ({ user }) => {
       {/* カード */}
       <RotatingCard user={user} />
     </Canvas>
+    </div>
   );
 };
 

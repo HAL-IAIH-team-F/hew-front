@@ -1,10 +1,10 @@
 "use client"
 import {useEffect, useState} from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
-import {ErrorData} from "../../../../util/err/err";
-import {ErrorMessage} from "../../../../util/err/ErrorMessage";
-import {RecruitRes} from "@/(main)/colab/recruit/RecruitRes";
-import Recruit from "@/(main)/colab/recruit/Recruit";
+import {ErrorData} from "../../../../../util/err/err";
+import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
+import {RecruitRes} from "@/(main)/(timeline)/colab/recruit/RecruitRes";
+import Recruit from "@/(main)/(timeline)/colab/recruit/Recruit";
 import {Api} from "~/api/context/Api";
 
 export default function Page(

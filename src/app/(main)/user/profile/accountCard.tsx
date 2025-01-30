@@ -61,8 +61,6 @@ const AccountCard: FC<AccountCardProps> = ({}) => {
       style={{
         display: "flex",
         flexDirection: "column",
-        width: "100%",
-        height: "100%",
         fontSize: "20px",
         fontFamily: "'Roboto', 'Arial', sans-serif",
         color: "#fff",
@@ -71,6 +69,7 @@ const AccountCard: FC<AccountCardProps> = ({}) => {
         MozOsxFontSmoothing: "grayscale",
         textRendering: "optimizeLegibility",
       }}
+      className={"w-full h-full"}
     >
       {/* Header */}
       <div
@@ -80,10 +79,11 @@ const AccountCard: FC<AccountCardProps> = ({}) => {
           display: "flex",
           flexDirection: "column",
         }}
+        className={"w-full h-full"}
       >
         <Backcanvas user={user} />
 
-        {/* Tabs */}
+        {/*  /!* Tabs *!/*/}
         <div
           style={{
             display: "flex",
@@ -150,7 +150,7 @@ const AccountCard: FC<AccountCardProps> = ({}) => {
             overflowY: "auto",
           }}
         >
-          {activeTab === "商品" && <ProfileProductsView />}
+          {activeTab === "商品" && <ProfileProductsView/>}
           {activeTab === "コラボ" && <div>コラボ</div>}
           {activeTab === "Media" && <div>Displaying media...</div>}
           {activeTab === "Likes" && <div>Displaying likes...</div>}
