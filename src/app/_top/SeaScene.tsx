@@ -110,25 +110,20 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
   useEffect(() => {
 
     if (clientContext.state !== "registered") return;
-
-    console.log("login");
-
     const tl = gsap.timeline();
     const targetPosition = new THREE.Vector3(
       camera.position.x,
       camera.position.y - 1200,
       camera.position.z
     );
-
-    const lookAtTarget = new THREE.Vector3(-500, 323, -4); // 初期のlookAtターゲット位置
-
-    // カメラの移動アニメーション
+    
+    const lookAtTarget = new THREE.Vector3(-500, 323, -4);
     tl.to(camera.position, {
-      y: camera.position.y - 150, // カメラのY軸方向の移動
+      y: camera.position.y - 150,
+      x: camera.position.x + 100,
       duration: 4.5,
       ease: "expo.in",
       onUpdate: () => {
-        // アニメーション中のカメラの向きを更新
         camera.lookAt(lookAtTarget);
         if (camera.position.y < 0) {
           scene.background = new THREE.Color(0x00334d);
@@ -140,20 +135,42 @@ export const SeaScene: React.FC<SeaSceneProps> = ({onButtonClick}) => {
         handleComplete();
       },
     })
-      // lookAtターゲットの位置アニメーション
       .to(
         lookAtTarget,
         {
-          y: targetPosition.y - 1200, // 徐々にターゲットをカメラの下方に移動
-          duration: 3.5,
+          y: targetPosition.y - 1200,
+          duration: 2.5,
           ease: "expo.in",
           onUpdate: () => {
-            camera.lookAt(lookAtTarget); // lookAtターゲットを更新
+            camera.lookAt(lookAtTarget);
           },
         },
-        "<" // "<" で移動と同時に開始
+        "<"
       )
-  }, [clientContext.state]);
+      .to(
+        camera,
+        {
+          fov: 100,
+          duration: 2.5,
+          ease: "expo.in",
+          onUpdate: () => {
+            camera.updateProjectionMatrix();
+          },
+        },
+        "<"
+      )
+      .to(
+        camera,
+        {
+          fov: 120,
+          duration: 1,
+          ease: "expo.out",
+          onUpdate: () => {
+            camera.updateProjectionMatrix();
+          },
+        },
+      );
+}, [clientContext.state]);
 
   useEffect(() => {
 
