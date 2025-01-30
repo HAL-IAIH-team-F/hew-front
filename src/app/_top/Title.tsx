@@ -1,16 +1,16 @@
 // Title.tsx
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
 const Title = () => {
     const [fontSize, setFontSize] = useState('8em');
 
     const handleResize = () => {
         if (window.innerWidth <= 768) {
-            setFontSize('4em'); 
+            setFontSize('4em');
         } else if (window.innerWidth <= 1024) {
-            setFontSize('6em'); 
+            setFontSize('6em');
         } else {
-            setFontSize('8em'); 
+            setFontSize('8em');
         }
     };
 

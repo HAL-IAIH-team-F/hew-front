@@ -1,91 +1,81 @@
 // UIContainer.tsx
 'use client';
-import React, { useEffect, useState, useRef } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import gsap from 'gsap';
 import Title from './Title';
 import LoginButton from './LoginButton';
 import RegisterButton from './RegisterButton';
 
-import { FaCheckCircle } from 'react-icons/fa';
+import {FaCheckCircle} from 'react-icons/fa';
 import {useClientState} from "~/api/context/ClientContextProvider"; // React Icons のチェックマーク
+import {useWindowSize} from '@/_hook/useWindowSize';
+import {MOBILE_WIDTH} from '~/products/ContextProvider';
 
 type UIContainerProps = {
     onButtonClick: boolean;
 };
 
-const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {  
-    const [isMobile, setIsMobile] = useState(false);
+const UIContainer: React.FC<UIContainerProps> = ({onButtonClick}) => {
     const UIContainerRef = useRef<HTMLDivElement>(null);
-    const isInitialRender = useRef(true); 
+    const isInitialRender = useRef(true);
     const clientContext = useClientState();
     const [isloading, setIsloading] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const checkMarkRef = useRef<HTMLDivElement>(null); // チェックマークの参照
+    const windowSize = useWindowSize();
+    const isMobile = windowSize.width < MOBILE_WIDTH;
 
-    const handleResize = () => {
-        setIsMobile(window.innerWidth <= 768); 
-    };
-    
     useEffect(() => {
         if (clientContext.state === "registered") {
             setIsloading(false);
             setIsAuthenticated(true);
-        } 
+        }
         if (clientContext.state !== "loading") {
             setIsloading(false);
-        } 
-        else {
+        } else {
             setIsloading(true);
         }
     }, [clientContext.state]);
 
     useEffect(() => {
-        handleResize(); 
-        window.addEventListener("resize", handleResize);
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, []);
-
-    useEffect(() => {
         if (isInitialRender.current) {
             setTimeout(() => {
-              isInitialRender.current = false;
+                isInitialRender.current = false;
             }, 0);
             return;
         }
-      
-        if (UIContainerRef.current) { 
+
+        if (UIContainerRef.current) {
             if (onButtonClick) {
                 gsap.to(UIContainerRef.current, {
                     y: -40,
                     opacity: 0,
-                    duration: 2.4, 
+                    duration: 2.4,
                     ease: "expo.inOut",
                 });
             } else {
                 gsap.to(UIContainerRef.current, {
                     y: 0,
-                    duration: 2, 
+                    duration: 2,
                     ease: "expo.inOut",
                     onComplete: () => {
                         gsap.to(UIContainerRef.current, {
                             opacity: 1,
-                            duration: 1, 
+                            duration: 1,
                             ease: "expo.inOut",
                         });
                     }
                 });
             }
         }
-    }, [onButtonClick]); 
+    }, [onButtonClick]);
 
     useEffect(() => {
         if (isAuthenticated && checkMarkRef.current) {
             gsap.fromTo(
                 checkMarkRef.current,
-                { scale: 0, opacity: 0 },
-                { scale: 1, opacity: 1, duration: 1, ease: "expo.out" }
+                {scale: 0, opacity: 0},
+                {scale: 1, opacity: 1, duration: 1, ease: "expo.out"}
             );
         }
     }, [isAuthenticated]);
@@ -112,9 +102,8 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
                 backdropFilter: 'blur(10px)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 width: isMobile ? '90%' : '30%',
-                height: "38%"
-            }}>
-                <Title />
+            }} className={"min-w-fit h-fit"}>
+                <Title/>
                 <div
                     style={{
                         display: "flex",
@@ -132,7 +121,7 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
                             borderTop: '4px solid #ffffff',
                             borderRadius: '50%',
                             animation: 'spin 1s linear infinite'
-                        }} />
+                        }}/>
                     ) : isAuthenticated ? (
                         <div
                             ref={checkMarkRef}
@@ -143,7 +132,7 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
                                 opacity: 0, // 初期状態で非表示
                             }}
                         >
-                            <FaCheckCircle 
+                            <FaCheckCircle
                                 style={{
                                     color: '#4caf50',
                                     fontSize: '30px',
@@ -152,8 +141,8 @@ const UIContainer: React.FC<UIContainerProps> = ({ onButtonClick }) => {
                         </div>
                     ) : (
                         <>
-                            <LoginButton />
-                            <RegisterButton />
+                            <LoginButton/>
+                            <RegisterButton/>
                         </>
                     )}
                 </div>
