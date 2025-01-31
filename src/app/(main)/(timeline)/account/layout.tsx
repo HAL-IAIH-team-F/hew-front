@@ -1,16 +1,16 @@
 import React, {ReactNode} from "react";
-import AccountPage from "@/(main)/user/profile/ProfilePage";
+import ProfilePage from "@/(main)/(timeline)/account/profile/ProfilePage";
 
 export default function Layout(
-  {
-    children,
-  }: Readonly<{
-    children: ReactNode;
-  }>) {
+    {
+        children,
+    }: Readonly<{
+        children: ReactNode;
+    }>) {
 
-  return (
-    <>
-      <AccountPage/>
-    </>
-  )
+    return (
+        <>
+            <ProfilePage/>
+        </>
+    )
 }

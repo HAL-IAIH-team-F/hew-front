@@ -1,22 +1,24 @@
-import {MutableRefObject, RefObject, useEffect, useMemo, useRef} from "react";
-
+import {MutableRefObject, useEffect, useMemo, useRef} from "react";
 import * as THREE from "three";
-import {Mesh, PerspectiveCamera, Scene, WebGLRenderer} from "three";
-import {Manager} from "~/manager/manager";
-import Effects from "@/(main)/(timeline)/effects/camera/Effects";
-import {generateGomi} from "@/(main)/(timeline)/effects/gomi/gomi";
-
+import {Mesh, Scene, WebGLRenderer} from "three";
 import {EffectComposer} from "three-stdlib";
+import Effects from "@/(main)/(timeline)/effects/camera/Effects";
 import useProducts from "~/hooks/useProducts";
 import {createGradientBackground} from "@/(main)/(timeline)/background/background";
+import {generateGomi} from "@/(main)/(timeline)/effects/gomi/gomi";
 import {createBubbles, onClickBubble} from "@/(main)/(timeline)/bubble/bubbles";
+import {Manager} from "~/manager/manager";
+import {useThree} from "@react-three/fiber";
+import {LoadedClientState} from "~/api/context/ClientState";
+import {useClientState} from "~/api/context/ClientContextProvider";
 import {useSidebarManagerState} from "@/(main)/(timeline)/_window/_sidebar/SidebarManaager";
 
-export default function useTimelineAnimation(
-  mountRef: RefObject<HTMLDivElement | null>
+export default function TimelineAnimation(
+  {}: {},
 ) {
+  const {camera, gl} = useThree();
+  if (!(camera instanceof THREE.PerspectiveCamera)) throw new Error("camera is not PerspectiveCamera")
   const sceneRef = useRef<THREE.Scene | null>(null);
-  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const composerRef = useRef<EffectComposer | null>(null);
   const bubblesRef = useRef<THREE.Mesh[]>([]);
@@ -29,25 +31,22 @@ export default function useTimelineAnimation(
   const {products, error} = useProducts();
   if (error) console.error(error)
   const managerState = useSidebarManagerState()
+  const clientState = useClientState()
 
   useEffect(() => {
     if (sceneRef.current) return
-    if (!mountRef.current) return;
     if (managerState.state != "loaded") return;
+    if (clientState.state == "loading") return;
 
     createGradientBackground(scene, managerState.manager.value.sessionId);
     sceneRef.current = scene;
 
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 500;
-    cameraRef.current = camera;
 
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    rendererRef.current = renderer;
-    mountRef.current.appendChild(renderer.domElement);
+    gl.setSize(window.innerWidth, window.innerHeight);
+    rendererRef.current = gl;
 
-    const effects = new Effects(renderer, scene, camera);
+    const effects = new Effects(gl, scene, camera);
     effectsRef.current = effects;
 
     const {composer} = effects;
@@ -55,24 +54,28 @@ export default function useTimelineAnimation(
 
     generateGomi(scene, glowingGomiRef.current, 300, managerState.manager.value.riseSpeed, managerState.manager);
     console.log(products)
-    bubblesRef.current = createBubbles(scene, managerState.manager.value.bbnum, managerState.manager.value.sessionId, [], camera);
+    createBubbles(
+      scene, managerState.manager.value.bbnum, managerState.manager.value.sessionId, [], camera, clientState,
+    ).then((newBubbles) => {
+      bubblesRef.current = newBubbles
+      if (managerState.manager.value.sessionId == 1) {
+        effects.startAnimesion(bubblesRef.current, managerState.manager)
+      }
 
-    if (managerState.manager.value.sessionId == 1) {
-      effects.startAnimesion(bubblesRef.current, managerState.manager)
-    }
-
-    animateHighFPS(0, managerState.manager, cameraRef, targetCameraRotation, rotationStrength, composerRef, sceneRef);
-
-  }, [managerState.state]);
+      animateHighFPS(0, managerState.manager, camera, targetCameraRotation, rotationStrength, composerRef, sceneRef);
+    });
+  }, [managerState.state, clientState.state]);
 
   useEffect(() => {
     if (managerState.state != "loaded") return;
+    if (clientState.state == "loading") return;
+
     const handleMouseMove = (event: MouseEvent) =>
       onMouseMove(mousePosition, event, targetCameraRotation);
 
     const handleClick = (event: MouseEvent) =>
-      onClick(sceneRef, cameraRef, bubblesRef, managerState.manager, rendererRef, effectsRef, event);
-    const handleResize = () => onResize(cameraRef, rendererRef, composerRef)
+      onClick(sceneRef, camera, bubblesRef, managerState.manager, rendererRef, effectsRef, event, clientState);
+    const handleResize = () => onResize(camera, rendererRef, composerRef)
 
     window.addEventListener('resize', handleResize);
     window.addEventListener('mousemove', handleMouseMove);
@@ -83,32 +86,34 @@ export default function useTimelineAnimation(
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('click', handleClick);
     };
-  }, [managerState.state]);
+  }, [managerState.state, clientState.state]);
 
+  return (
+    <>
+    </>
+  )
 }
 
 function animateHighFPS(
   time: number,
   manager: Manager,
-  cameraRef: MutableRefObject<PerspectiveCamera | null>,
+  camera: THREE.Camera,
   targetCameraRotation: MutableRefObject<{ x: number; y: number }>,
   rotationStrength: number,
   composerRef: MutableRefObject<EffectComposer | null>,
   sceneRef: MutableRefObject<Scene | null>
 ) {
-  requestAnimationFrame(time1 => animateHighFPS(time1, manager, cameraRef, targetCameraRotation, rotationStrength, composerRef, sceneRef));
+  requestAnimationFrame(time1 => animateHighFPS(time1, manager, camera, targetCameraRotation, rotationStrength, composerRef, sceneRef));
   const currentTime = time / 1000;
   const deltaTime = currentTime - manager.value.lastFrameTimeHigh;
 
   if (deltaTime >= 1 / manager.value.fpshigh) {
     manager.value.lastFrameTimeHigh = currentTime;
-    if (cameraRef.current) {
-      // cameraRef.current.position.x += (targetCameraPosition.current.x - cameraRef.current.position.x) * parallaxStrength;
-      // // cameraRef.current.position.y += (targetCameraPosition.current.y - cameraRef.current.position.y) * parallaxStrength;
-      cameraRef.current.rotation.x += (targetCameraRotation.current.y - cameraRef.current.rotation.x) * rotationStrength;
-      cameraRef.current.rotation.y += (targetCameraRotation.current.x - cameraRef.current.rotation.y) * rotationStrength;
-    }
-    if (composerRef.current && sceneRef.current && cameraRef.current) {
+    // cameraRef.current.position.x += (targetCameraPosition.current.x - cameraRef.current.position.x) * parallaxStrength;
+    // // cameraRef.current.position.y += (targetCameraPosition.current.y - cameraRef.current.position.y) * parallaxStrength;
+    camera.rotation.x += (targetCameraRotation.current.y - camera.rotation.x) * rotationStrength;
+    camera.rotation.y += (targetCameraRotation.current.x - camera.rotation.y) * rotationStrength;
+    if (composerRef.current && sceneRef.current) {
       composerRef.current.render();
     }
   }
@@ -128,26 +133,27 @@ function onMouseMove(
 
 function onClick(
   sceneRef: MutableRefObject<Scene | null>,
-  cameraRef: MutableRefObject<PerspectiveCamera | null>,
+  camera: THREE.PerspectiveCamera,
   bubblesRef: MutableRefObject<Mesh[]>,
   manager: Manager,
   rendererRef: MutableRefObject<WebGLRenderer | null>,
   effectsRef: MutableRefObject<Effects | null>,
-  event: MouseEvent
+  event: MouseEvent,
+  clientState: LoadedClientState,
 ) {
-  if (sceneRef.current && cameraRef.current && bubblesRef.current && manager.value.animstate === "idle" && rendererRef.current && effectsRef.current) {
-    onClickBubble(manager, event, bubblesRef.current, cameraRef.current, sceneRef.current, effectsRef.current);
+  if (sceneRef.current && bubblesRef.current && manager.value.animstate === "idle" && rendererRef.current && effectsRef.current) {
+    onClickBubble(manager, event, bubblesRef.current, camera, sceneRef.current, effectsRef.current, clientState);
   }
 }
 
 function onResize(
-  cameraRef: MutableRefObject<PerspectiveCamera | null>,
+  camera: THREE.PerspectiveCamera,
   rendererRef: MutableRefObject<WebGLRenderer | null>,
   composerRef: MutableRefObject<EffectComposer | null>
 ) {
-  if (cameraRef.current && rendererRef.current) {
-    cameraRef.current.aspect = window.innerWidth / window.innerHeight;
-    cameraRef.current.updateProjectionMatrix();
+  if (rendererRef.current) {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
     rendererRef.current.setSize(window.innerWidth, window.innerHeight);
   }
   if (composerRef.current) {
