@@ -16,7 +16,7 @@ export function StyledButton(
   return (
     <>
       <button
-        className={sx("border-2 border-borderDef rounded py-1 px-4 bg-white hover:bg-lightGray", className)}
+        className={sx("border-2 border-borderDef rounded py-1 px-4 bg-white hover:bg-lightGray text-black", className)}
         {...props} disabled={formState.disabled} type={type}
       />
       <FormErrMsg name={type || "submit"}/>

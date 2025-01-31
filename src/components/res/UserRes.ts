@@ -9,5 +9,5 @@ export interface UserRes {
 
 export interface ImgRes {
   image_uuid: string
-  token: string | null
+  token?: string | null
 }

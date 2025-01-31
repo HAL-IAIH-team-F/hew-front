@@ -16,10 +16,10 @@ import {Api} from "~/api/context/Api";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import CreatorsSelector from "@/(main)/(timeline)/colab/register/CreatorsSelector";
 import {useState} from "react";
-import {CreatorRes} from "@/(main)/(timeline)/colab/register/CreatorRes";
 import {Routes} from "~/route/Routes";
 import {ClientState} from "~/api/context/ClientState";
 import useRoutes from "~/route/useRoutes";
+import {CreatorRes} from "../../../../util/hook/useCreatorData";
 
 
 async function action(

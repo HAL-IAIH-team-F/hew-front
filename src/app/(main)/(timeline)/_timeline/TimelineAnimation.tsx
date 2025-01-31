@@ -4,7 +4,6 @@ import {Mesh, Scene, WebGLRenderer} from "three";
 import {EffectComposer} from "three-stdlib";
 import Effects from "@/(main)/(timeline)/effects/camera/Effects";
 import useProducts from "~/hooks/useProducts";
-import {useSidebarManagerState} from "@/(main)/(timeline)/_sidebar/SidebarManaager";
 import {createGradientBackground} from "@/(main)/(timeline)/background/background";
 import {generateGomi} from "@/(main)/(timeline)/effects/gomi/gomi";
 import {createBubbles, onClickBubble} from "@/(main)/(timeline)/bubble/bubbles";
@@ -12,6 +11,7 @@ import {Manager} from "~/manager/manager";
 import {useThree} from "@react-three/fiber";
 import {LoadedClientState} from "~/api/context/ClientState";
 import {useClientState} from "~/api/context/ClientContextProvider";
+import {useSidebarManagerState} from "@/(main)/(timeline)/_window/_sidebar/SidebarManaager";
 
 export default function TimelineAnimation(
   {}: {},

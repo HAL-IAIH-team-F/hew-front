@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react';
 
-export const styles: { [key: string]: CSSProperties } = {
+export const styles = (width: number, height: number): Record<string, CSSProperties> => ({
   sidebar: {
     backgroundColor: 'rgba(142, 142, 147, 0.35)', // 背景色
     backdropFilter: 'blur(12px)', // 背景ブラー効果
@@ -9,8 +9,10 @@ export const styles: { [key: string]: CSSProperties } = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '110px',
-    height: 'calc(100vh - 30px)',
+    width: `${Math.max(80, width * 0.1)}px`, // 幅を動的に設定
+    height: `${Math.max(100, height - 30)}px`, // 高さも動的に設定
+    minWidth:  '110px',
+    maxWidth:  '110px',
     margin: '15px 0',
     padding: '20px 10px',
     gap: '24px',
@@ -62,6 +64,40 @@ export const styles: { [key: string]: CSSProperties } = {
     boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.3)',
     border: '3px solid rgba(128, 128, 128, 0.25)',
   },
+
+  inAppPageWindowStyle: {
+    backgroundColor: 'rgba(142, 142, 147, 0.35)',
+    border: '1px solid rgba(128, 128, 128, 0.2)',
+    position: "absolute", // fixedからrelativeに変更
+    borderRadius: '28px',
+    zIndex: 1,
+    padding: "2px",
+    margin: "0 auto", // 自動中央揃え
+    widows: "100%",
+    height: "100%",
+    boxSizing: "border-box",
+    transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
+    
+  },
+  ProductWindowStyle:{
+    backgroundColor: 'rgba(255, 0, 0, 1)',
+    backdropFilter: 'blur(12px)',
+    border: '1px solid rgba(128, 128, 128, 0.9)',
+    width: 'calc(40% - 300px)',
+    height: '90%',
+    position: 'fixed',
+    left: 'calc(100% - 300px)',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    borderRadius: '28px',
+    opacity: 1 ,
+    transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
+    zIndex: 999,
+  }
+
+});
+
+export const iconstyles: { [key: string]: CSSProperties } = {
   spinner: {
     fontSize: '24px',
     color: '#888',
@@ -105,23 +141,7 @@ export const styles: { [key: string]: CSSProperties } = {
     top: '23px',
     left: '70px',
   },
-  ProductWindowStyle:{
-    backgroundColor: 'rgba(255, 0, 0, 1)',
-    backdropFilter: 'blur(12px)',
-    border: '1px solid rgba(128, 128, 128, 0.9)',
-    width: 'calc(40% - 300px)',
-    height: '90%',
-    position: 'fixed',
-    left: 'calc(100% - 300px)',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-    borderRadius: '28px',
-    opacity: 1 ,
-    transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
-    zIndex: 999,
-  }
-
-};
+}
 
 export const iconContainerStyle = (isOpen: boolean): CSSProperties => ({
   width: '80px',
@@ -148,42 +168,55 @@ export const iconContainerStyle = (isOpen: boolean): CSSProperties => ({
 export const pageWindowStyle = (
   isOpen: boolean,
   ProductisOpen: boolean,
-  isAnimating: boolean
-): CSSProperties => ({
-  backgroundColor: 'rgba(142, 142, 147, 0.35)',
-  backdropFilter: 'blur(12px)',
-  border: '1px solid rgba(128, 128, 128, 0.9)',
-  width: isOpen
+  isAnimating: boolean,
+  width: number,
+  height: number,
+): CSSProperties => {
+  const windowWidth = width
+  const windowHeight = height
+
+  const calculatedWidth = isOpen
     ? ProductisOpen
-      ? 'calc(90% - 600px)' // ProductisOpen が true の場合の幅
-      : 'calc(90% - 110px)' // ProductisOpen が false の場合の幅
+      ? windowWidth - 750 // ProductisOpen が true の場合の幅
+      : windowWidth - 170 // ProductisOpen が false の場合の幅
     : ProductisOpen
-    ? 'calc(90% - 500px)' // isOpen が false かつ ProductisOpen が true の場合の幅
-    : '92%', // isOpen が false かつ ProductisOpen が false の場合の幅
-  height: '90%',
-  position: 'fixed',
-  left: isOpen
+    ? windowWidth - 630 // isOpen が false かつ ProductisOpen が true の場合の幅
+    : windowWidth - 70; // isOpen が false かつ ProductisOpen が false の場合の幅
+
+  const calculatedLeft = isOpen
     ? ProductisOpen
-      ? 'calc(50% - 220px)' // ProductisOpen が true の場合の位置
-      : 'calc(50% + 25px)' // ProductisOpen が false の場合の位置
+      ? (windowWidth / 2) - 240 // ProductisOpen が true の場合の位置
+      : (windowWidth / 2) + 40 // ProductisOpen が false の場合の位置
     : ProductisOpen
-    ? 'calc(50% - 270px)' // isOpen が false かつ ProductisOpen が true の場合の位置
-    : '50%', // isOpen が false かつ ProductisOpen が false の場合の位置
-  top: '50%',
-  transform: isAnimating
-    ? 'translateX(-50%) translateY(-50%)'
-    : 'translateX(-100%) translateY(-50%)', 
-  borderRadius: '28px',
-  opacity: isAnimating ? 1 : 0,
-  transition: `
-    opacity 0.3s ease-in-out, 
-    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
-    width 0.3s ease, 
-    left 0.3s ease`,
-  zIndex: 999,
-  display: "flex",
-  minWidth: ProductisOpen ? '550px' : '0',
-});
+    ? (windowWidth / 2) - 300 // isOpen が false かつ ProductisOpen が true の場合の位置
+    : windowWidth / 2; // isOpen が false かつ ProductisOpen が false の場合の位置
+
+  return {
+    
+    backgroundColor: 'rgba(142, 142, 147, 0.35)',
+    backdropFilter: 'blur(12px)',
+    border: '1px solid rgba(128, 128, 128, 0.9)',
+    width: `${calculatedWidth}px`,
+    height: `${windowHeight * 0.9}px`,
+    position: 'fixed',
+    left: `${calculatedLeft}px`,
+    marginLeft: "30px",
+    top: `${windowHeight / 2}px`,
+    transform: isAnimating
+      ? 'translateX(-50%) translateY(-50%)'
+      : 'translateX(-100%) translateY(-50%)',
+    borderRadius: '28px',
+    opacity: isAnimating ? 1 : 0,
+    transition: `
+      opacity 0.3s ease-in-out, 
+      transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+      width 0.3s ease, 
+      left 0.3s ease`,
+    zIndex: 999,
+    display: "flex",
+    minWidth: ProductisOpen ? '550px' : '0',
+  };
+};
 
 export const inAppPageStyle = (isAnimating: boolean): CSSProperties => ({
   position: 'fixed',
