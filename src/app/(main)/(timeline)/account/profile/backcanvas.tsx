@@ -53,7 +53,7 @@ const RotatingCard: React.FC<{ user: User | undefined }> = ({ user }) => {
 const Backcanvas: React.FC<{ user: User | undefined }> = ({ user }) => {
   const [isHovered, setIsHovered] = useState(false);
   return (
-    <div className={"w-full h-[300px] overflow-x-hidden"}
+    <div className={"w-full h-[290px]"}
     >
       <Canvas
       camera={{

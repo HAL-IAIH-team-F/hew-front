@@ -16,7 +16,7 @@ interface ProductContextType {
 
 // 初期値
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
-export const MOBILE_WIDTH = 900;
+export const MOBILE_WIDTH = 1270;
 // Providerコンポーネント
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const [productId, setProductId] = useState<string>("none");
