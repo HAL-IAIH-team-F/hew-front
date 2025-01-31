@@ -2,15 +2,16 @@
 import {ChangeEvent, useState} from "react";
 import {Api} from "~/api/context/Api";
 import {useClientState} from "~/api/context/ClientContextProvider";
+import {useRouter} from 'next/navigation';
 import {StyledForm} from "../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../util/form/element/StyledButton";
-import useRoutes from "~/route/useRoutes";
 
 
 export default function UserRegisterForm({...props}: UserRegisterFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState<string>("no");
+  const router = useRouter()
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -27,16 +28,16 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
   };
 
   const clientContext = useClientState()
-  const routes = useRoutes()
+
   return (
     <StyledForm {...props} action={async formData => {
-      if (clientContext.state != "unregistered") throw new Error("not authenticated")
+      if (clientContext.state !== "unregistered") throw new Error("not authenticated")
       const icon_file = formData.get("icon") as File | undefined;
       const user_name = formData.get("user_name");
 
       if (typeof user_name !== 'string' || !user_name) {
         formData.append("user_name", "ユーザーネームを入力してください");
-        return   // エラーがあればここで処理を終了
+        return
       }
       let iconUuid: string | null = null
       if (icon_file) {
@@ -56,7 +57,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
         formData.append("icon", postUserResult.error.error_id + ": " + postUserResult.error.message);
         return
       }
-      routes.timeline().transition()
+      window.location.reload() // TODO
       return undefined
 
     }}>
@@ -82,7 +83,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
         </label>
 
         <label htmlFor="icon-upload" className="cursor-pointer">
-          <div className="rounded-full px-4 py-2 bg-white border-2 border-borderDef hover:bg-lightGray text-center">
+          <div className="rounded-full px-4 py-2 bg-white border-2 border-borderDef hover:bg-lightGray text-center text-black">
             変更
           </div>
         </label>
@@ -95,39 +96,19 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
           className="hidden"
         />
       </div>
-      <StyledInput name="user_name" label="ユーザーネーム" type="text"/>
-
+      <div className="text-black">
+        <StyledInput name="user_name" label="ユーザーネーム" type="text"/>
+      </div>
       {/* クリエイターとして登録のラジオボタン */}
-      <div className="flex items-center space-x-10 mb-4"> {/* 隙間を開ける */}
+      <div className="flex items-center space-x-8 mb-4"> {/* 隙間を開ける */}
         <label htmlFor="register_creator" className="mr-4"> {/* ラベルとの隙間 */}
           クリエイターとして登録
         </label>
         <div className="flex items-center space-x-6"> {/* ラジオボタン間の隙間 */}
-          <label className="flex items-center space-x-2">
-            <input
-              type="radio"
-              name="creator"
-              value="yes"
-              checked={isCreator === "yes"}
-              onChange={handleCreatorChange}
-            />
-            <span>はい</span>
-          </label>
-          <label className="flex items-center space-x-2">
-            <input
-              type="radio"
-              name="creator"
-              value="no"
-              checked={isCreator === "no"}
-              onChange={handleCreatorChange}
-            />
-            <span>いいえ</span>
-          </label>
+          <div className="flex justify-end text-black">
+            <StyledButton>登録</StyledButton>
+          </div>
         </div>
-      </div>
-
-      <div className="flex justify-end">
-        <StyledButton>登録</StyledButton>
       </div>
     </StyledForm>
   );

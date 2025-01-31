@@ -1,4 +1,4 @@
-import {CreatorRes} from "@/(main)/(timeline)/colab/register/CreatorRes";
+import {CreatorRes} from "../../../../../util/hook/useCreatorData";
 
 export default function CreatorSelectorItem(
   {
@@ -16,7 +16,6 @@ export default function CreatorSelectorItem(
     >
       <p>creator: {creator.creator_id}</p>
       <p>contact: {creator.contact_address}</p>
-      <p>user_id: {creator.user_id}</p>
     </div>
   )
 }

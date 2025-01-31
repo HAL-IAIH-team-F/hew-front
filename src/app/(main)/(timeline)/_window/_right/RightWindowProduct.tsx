@@ -3,9 +3,9 @@ import React, {Dispatch, SetStateAction, useState} from "react";
 import {ProductRes} from "@/(main)/search/sample/ProductRes";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {ClientState} from "~/api/context/ClientState";
-import {ErrorData} from "../../../../util/err/err";
 import {Api} from "~/api/context/Api";
-import {ErrorMessage} from "../../../../util/err/ErrorMessage";
+import {ErrorData} from "../../../../../util/err/err";
+import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
 
 export default function RightWindowProduct(
   {

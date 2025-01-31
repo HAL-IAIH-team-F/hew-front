@@ -15,13 +15,11 @@ export function StyledButton(
 
   return (
     <>
-        <div className={sx("flex justify-center items-center", className)}>
-          <button
-            className={sx("border-2 rounded-2xl py-1 px-5 bg-white hover:bg-lightGray", className)}
-            {...props} disabled={formState.disabled} type={type}
-          />
-          <FormErrMsg name={type || "submit"}/>
-        </div>
+      <button
+        className={sx("border-2 border-borderDef rounded py-1 px-4 bg-white hover:bg-lightGray text-black", className)}
+        {...props} disabled={formState.disabled} type={type}
+      />
+      <FormErrMsg name={type || "submit"}/>
     </>
   )
 }

@@ -1,3 +1,4 @@
+"use client"
 import {createContext, ReactNode, useContext, useMemo} from "react";
 import {Manager} from "~/manager/manager";
 
