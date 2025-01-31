@@ -8,6 +8,9 @@ import {createGradientBackground} from "@/(main)/(timeline)/background/backgroun
 import Effects from "@/(main)/(timeline)/effects/camera/Effects"
 import {Manager} from "~/manager/manager";
 import {LoadedClientState} from "~/api/context/ClientState";
+import fetchTimelineProduct from "@/(main)/(timeline)/_timeline/fetchTimelineProduct";
+import {util} from "../../../../util/util";
+import {Img} from "~/api/context/Api";
 
 const vertexShader = `
   uniform float time;
@@ -97,24 +100,28 @@ const txr = [
     ["/curtain.png"],
     ["/curtain.png"],
 ]
-
+const errTexture = "/109671135_p2_master1200.webp"
 export const createBubbles = async (
     scene: THREE.Scene, bubblecnt: number, sessionId: number, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera,
     clientState: LoadedClientState,
 ) => {
     const textureLoader = new THREE.TextureLoader();
-    // const result = await fetchTimelineProduct(clientState, bubblecnt)
-    // if (result.error) {
-    //     console.error(result.error)
-    //     throw new Error(util.createErrorMessage(result.error))
-    // }
-    const temp = []
-    for (let i = 0; i < bubblecnt; i++) {
-        temp.push(1)
+    const result = await fetchTimelineProduct(clientState, bubblecnt)
+    if (result.error) {
+        console.error(result.error)
+        throw new Error(util.createErrorMessage(result.error))
     }
-    temp.forEach((product) => {
-        const txrpath = txr[0][0]
+    for (const product of result.success) {
+        // const txrpath = txr[0][0]
         // const txrpath = txr[i][0]
+        const imgResult = await Img.create(product.product_thumbnail_uuid, null)
+        let txrpath;
+        if (imgResult.error) {
+            console.error(imgResult.error)
+            txrpath = errTexture
+        } else {
+            txrpath = imgResult.success.strUrl()
+        }
         const bubbleTexture = textureLoader.load(txrpath);
         const bubbleMaterial = new THREE.ShaderMaterial({
             uniforms: {
@@ -226,7 +233,8 @@ export const createBubbles = async (
         };
         animateBubble();
 
-    })
+    }
+
     return bubbles;
 };
 

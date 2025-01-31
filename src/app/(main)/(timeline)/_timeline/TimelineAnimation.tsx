@@ -86,7 +86,7 @@ export default function TimelineAnimation(
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('click', handleClick);
     };
-  }, [managerState.state, clientState.state]);
+  }, [managerState.state, clientState]);
 
   return (
     <>
