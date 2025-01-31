@@ -1,6 +1,6 @@
 import React from "react";
-import RequestRecruit from "@/(main)/colab/recruit/page";
-import CollabRecruitPage from "./RecruitSideBar";
+import CollabRecruitPage from "@/(main)/(timeline)/colablisting/recruitsidebar";
+import RequestRecruit from "@/(main)/(timeline)/colab/recruit/page";
 
 
 export default function Page({}: {}) {

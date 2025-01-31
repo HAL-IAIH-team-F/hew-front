@@ -31,6 +31,10 @@ export class Routes {
     return new TimelinePageRouteUrl(this, "/message")
   }
 
+  colablisting() {
+    return new TimelinePageRouteUrl(this, "/colablisting")
+  }
+
   account() {
     return new TimelinePageRouteUrl(this, "/account")
   }

@@ -1,5 +1,5 @@
 "use client"
-import {useState} from "react";
+import React, {useState} from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {StyledForm} from "../../../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../../../util/form/element/StyledInput";
@@ -56,7 +56,7 @@ export default function ColabRegisterForm(
                 }
 
                 if (!clientContext || clientContext.state != "registered") {
-                    alert("ログインしてください");
+                    console.error("ログインしてください");
                     return;
                 }
 
@@ -414,8 +414,8 @@ export default function ColabRegisterForm(
                                               padding: "15px 33px",
                                               color: "white",
                                           }}
-                                          onMouseOver={(e) => (e.target.style.backgroundColor = "#32a1ce")}
-                                          onMouseOut={(e) => (e.target.style.backgroundColor = "transparent")}
+                                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#32a1ce"}
+                                          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                                           disabled={isButtonDisabled}
                                 // onClick={handleSubmit}
                             >
