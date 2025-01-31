@@ -1,23 +1,10 @@
 "use client"
-<<<<<<< HEAD:src/app/(main)/colab/recruit/register/ColabRegisterForm.tsx
-import { useState, useEffect } from "react";
-import {useClientState} from "~/api/context/ClientContextProvider";
-=======
-<<<<<<< HEAD:src/app/(main)/colab/recruit/register/ColabRegisterForm.tsx
-import { useState } from "react";
-import {useClientContextState} from "~/api/context/ClientContextProvider";
->>>>>>> develop:src/app/(main)/(timeline)/colab/recruit/register/ColabRegisterForm.tsx
-import {StyledForm} from "../../../../../util/form/element/StyledForm";
-import {StyledInput} from "../../../../../util/form/element/StyledInput";
-import {StyledButton} from "../../../../../util/form/element/StyledButton";
-=======
+import {useState} from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {StyledForm} from "../../../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../../../util/form/element/StyledButton";
->>>>>>> fa1369d20a59254dec2a65692ef973762051bbc4:src/app/(main)/(timeline)/colab/recruit/register/ColabRegisterForm.tsx
 import {Api} from "~/api/context/Api";
-import { z } from "zod";
 
 export default function ColabRegisterForm(
     {
@@ -29,11 +16,12 @@ export default function ColabRegisterForm(
     const [showPlaceholder, setShowPlaceholder] = useState(false);
     const [description, setDescription] = useState("");
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    {/* フォーカス時 */}
+    {/* フォーカス時 */
+    }
     const [isTitleFocused, setIsTitleFocused] = useState(false);
     const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
     // ボタンの有効/無料を判定
-    const isButtonDisabled =!title.trim() || !description.trim();
+    const isButtonDisabled = !title.trim() || !description.trim();
     const [successMessage, setSuccessMessage] = useState<string>("");
 
     // // AuthBodyResponse の型定義
@@ -49,22 +37,6 @@ export default function ColabRegisterForm(
     //     };
     // };
 
-// Zod スキーマ定義
-const AuthBodyResponseSchema = z.object({
-    success: z.object({
-        creator_id: z.string(),
-        description: z.string(),
-        recruit_id: z.string(),
-        title: z.string(),
-    }).optional(),
-    error: z.object({
-        message: z.string(),
-    }).optional(),
-});
-
-// 型を Zod スキーマから生成
-type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
-
     return (
         <StyledForm
             {...props}
@@ -77,8 +49,8 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
 
                 if (!title || !description) {
                     setErrors({
-                        title: title ? "": "募集タイトルを入力してください",
-                        description: description ? "": "募集要項を入力してください",
+                        title: title ? "" : "募集タイトルを入力してください",
+                        description: description ? "" : "募集要項を入力してください",
                     });
                     return;
                 }
@@ -88,61 +60,43 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                     return;
                 }
 
-                try {
-                    let result;
-                    try {
-                        console.log("APIエンドポイント:", Api.app.pr_api_recruit_post);
+                const result = await clientContext.client.authBody(
+                    Api.app.pr_api_recruit_post,
+                    {},
+                    {title, description},
+                    {}
+                );
 
-                        const rawResult = await clientContext.client.authBody(
-                            Api.app.pr_api_recruit_post,
-                            {},
-                            { title, description },
-                            {}
-                        );
-                        result = AuthBodyResponseSchema.parse(rawResult);
-                        console.log("authBodyの結果:", result);
-                    } catch (error) {
-                        console.log("authBody 内部エラー");
-                        alert("APIリクエスト中にエラーが発生しました。");
-                        return;
-                    }
-
-
-                    if (result ) {
-                        // 成功時の処理
-                        setSuccessMessage("募集投稿しました");
-                        console.log("APIリクエストが成功しました:", result.success);
-                        setTitle("");
-                        setDescription("");
-                        setErrors({});
-                    } else if (result.error) {
-                        const errorMessage = result?.error?.message || "予期しないエラーが発生しました。";
-                        setErrors((preveErrors) => ({
-                            ...preveErrors,
-                            submit: errorMessage,
-                        }));
-                        alert(`エラー: ${errorMessage}`);
-                    }
-                } catch (error) {
-                    console.log("くそ:", error);
-                    }
-                }}
-            >
+                if (result.error) {
+                    const errorMessage = result?.error?.message || "予期しないエラーが発生しました。";
+                    setErrors((preveErrors) => ({
+                        ...preveErrors,
+                        submit: errorMessage,
+                    }));
+                    console.error(`エラー: ${errorMessage}`);
+                    return
+                }
+                // 成功時の処理
+                setSuccessMessage("募集投稿しました");
+                console.log("APIリクエストが成功しました:", result.success);
+                setTitle("");
+                setDescription("");
+                setErrors({});
+            }}
+        >
 
             {/* h1＆募集＆ボタン */}
             <div className="w-full relative "
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    // width: "100%",
-                    // height: "100%",
-                }}
+                 style={{
+                     display: "flex",
+                     flexDirection: "column",
+                     // width: "100%",
+                     // height: "100%",
+                 }}
             >
                 {/* h1 */}
                 <div className="mt-11 mb-11 "
-                    style={{
-
-                    }}
+                     style={{}}
                 >
                     <h1 className="text-left text-6xl text-white"
                         style={{
@@ -150,9 +104,7 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                         }}
                     >
                         <div
-                            style={{
-
-                            }}
+                            style={{}}
                         >
                             <div>
                                 コラボ
@@ -172,19 +124,17 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
 
                 {/* 募集フォーム＆ボタン */}
                 <div style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        padding: "30px 25px 10px 25px",
-                        boxSizing: "border-box",
-                        borderRadius: "8px",
-                        backgroundColor: "rgba(142, 142, 147, 0.35)",
-                        boxShadow: "rgba(0, 0, 0, 0.4) 0px 10px 30px, rgba(0, 0, 0, 0.3) 0px 0px 15px inset",
-                        border: "1px solid rgba(128, 128, 128, 0.2)",
-                        }}>
+                    display: "flex",
+                    flexDirection: "column",
+                    padding: "30px 25px 10px 25px",
+                    boxSizing: "border-box",
+                    borderRadius: "8px",
+                    backgroundColor: "rgba(142, 142, 147, 0.35)",
+                    boxShadow: "rgba(0, 0, 0, 0.4) 0px 10px 30px, rgba(0, 0, 0, 0.3) 0px 0px 15px inset",
+                    border: "1px solid rgba(128, 128, 128, 0.2)",
+                }}>
                     <div
-                        style={{
-                            
-                        }}
+                        style={{}}
                     >
                         {/* 募集タイトル＆募集要項 */}
                         <div
@@ -214,16 +164,15 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                                 alignItems: "center",
                                 width: "100%",
                             }}
-                                className=""
+                                 className=""
                             >
                                 {/* 入力フォーム&カウント(募集タイトル) */}
-                                <div style={{
-                                    }}
+                                <div style={{}}
                                 >
                                     {/*　入力フォーム(募集タイトル) */}
                                     <div style={{
                                         margin: "0 auto",
-                                        }}
+                                    }}
                                     >
                                         <StyledInput
                                             as="input"
@@ -232,7 +181,7 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                                             maxLength={20}
                                             placeholder="募集タイトル(必須)"
                                             className="mb-0"
-                                            onFocus={()=> setIsTitleFocused(true)} // フォーカス時
+                                            onFocus={() => setIsTitleFocused(true)} // フォーカス時
                                             onBlur={() => setIsTitleFocused(false)} // フォーカス解除時
                                             onChange={(e) => {
                                                 setTitle(e.target.value);
@@ -270,14 +219,14 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                                         <span className="
                                             textSize: text-sm
                                             "
-                                            style={{
-                                                // textAlign: "right",
-                                                // position: "absolute",
-                                                // top: "70%", // 縦位置を中央に調整
-                                                // right: 430,
-                                                // transform: "translateY(-50%)", // 縦位置調整
-                                                color: "#999", // カウンターの色
-                                            }}
+                                              style={{
+                                                  // textAlign: "right",
+                                                  // position: "absolute",
+                                                  // top: "70%", // 縦位置を中央に調整
+                                                  // right: 430,
+                                                  // transform: "translateY(-50%)", // 縦位置調整
+                                                  color: "#999", // カウンターの色
+                                              }}
                                         >
                                             {title.length}/20
                                         </span>
@@ -289,7 +238,7 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
 
                                 {/*　エラー(募集タイトル) */}
                                 <div style={{
-                                    display:"flex",
+                                    display: "flex",
                                     // alignItems: "left",
                                     justifyContent: "center",
                                     width: "100%",
@@ -297,17 +246,16 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                                 }}
                                 >
                                     <p className="text-red-500"
-                                        style={{
-                                            marginTop: "0px",
-                                            width: "100%",
-                                            textAlign: "right",
-                                        }}
+                                       style={{
+                                           marginTop: "0px",
+                                           width: "100%",
+                                           textAlign: "right",
+                                       }}
                                     >
                                         {errors.title}
                                     </p>
                                 </div>
                             </div>
-
 
 
                             <div style={{
@@ -317,7 +265,7 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                                 justifyContent: "flex-start",
                                 alignItems: "stretch", // 横幅に揃えることができるが、いらないかも
                                 width: "100%",
-                                }}
+                            }}
                             >
                                 {/* 募集要項&カウント */}
                                 <div style={{
@@ -328,9 +276,7 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                                 >
                                     {/* 募集要項 */}
                                     <div
-                                        style={{
-
-                                        }}
+                                        style={{}}
                                     >
                                         <StyledInput
                                             as="textarea"
@@ -340,14 +286,19 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                                             onChange={(e) => {
                                                 setDescription(e.target.value);
                                                 if (successMessage) setSuccessMessage(""); // フォーム変更時にリセット
-                                                if (errors.description) setErrors((prev) => ({...prev, description: ""}));
+                                                if (errors.description) setErrors((prev) => ({
+                                                    ...prev,
+                                                    description: ""
+                                                }));
                                             }}
                                             onFocus={() => {
                                                 setIsDescriptionFocused(true)
-                                                setShowPlaceholder(true)}}
+                                                setShowPlaceholder(true)
+                                            }}
                                             onBlur={() => {
                                                 setIsDescriptionFocused(false)
-                                                setShowPlaceholder(false)}}
+                                                setShowPlaceholder(false)
+                                            }}
                                             placeholder={"募集要項(必須)"}
                                             maxLength={200}
                                             className=""
@@ -386,9 +337,9 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                                         }}
                                     >
                                         <p className="text-gray-500 text-sm"
-                                            style={{
-                                                color: "#000",
-                                            }}
+                                           style={{
+                                               color: "#000",
+                                           }}
                                         >
                                             {description.length}/200
                                         </p>
@@ -402,15 +353,15 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                                         height: "40px",
                                         width: "100%",
                                     }}
-                                    >
+                                >
                                     {errors.description &&
-                                        <p className="text-red-500"
-                                        style={{
-                                            textAlign: "right",
-                                        }}
-                                        >
-                                            {errors.description}
-                                        </p>
+                                      <p className="text-red-500"
+                                         style={{
+                                             textAlign: "right",
+                                         }}
+                                      >
+                                          {errors.description}
+                                      </p>
                                     }
                                 </div>
                             </div>
@@ -419,36 +370,35 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                     </div>
 
                     <div className=""
-                        style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        // alignItems: "center",
-                        }}
+                         style={{
+                             width: "100%",
+                             display: "flex",
+                             justifyContent: "space-between",
+                             // alignItems: "center",
+                         }}
                     >
 
                         <div style={{
-                                marginLeft: "50px",
-                                justifyContent: "flexStart", // flex-startかも
-                                position: "relative",
-                                top: "-10px",
+                            marginLeft: "50px",
+                            justifyContent: "flexStart", // flex-startかも
+                            position: "relative",
+                            top: "-10px",
                         }}>
                             {successMessage && (
-                                <div style = {{
-                                    }}
+                                <div style={{}}
                                 >
                                     <p className=""
-                                        style={{
-                                            fontSize: "1.5rem",
-                                            color: "white",
-                                        }}
+                                       style={{
+                                           fontSize: "1.5rem",
+                                           color: "white",
+                                       }}
                                     >
                                         {successMessage}
                                     </p>
                                 </div>
                             )}
                         </div>
-                        
+
                         {/* 募集ボタン */}
                         <div
                             style={{
@@ -457,16 +407,16 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
                             }}
                         >
                             <StyledButton className="disabled:opacity-50 disabled:cursor-not-allowed"
-                                style={{
-                                    backgroundColor: "transparent",
-                                    transition: "background-color 0.1s ease ",
-                                    borderRadius: "8px",
-                                    padding: "15px 33px",
-                                    color: "white",
-                                }}
-                                onMouseOver={ (e) => (e.target.style.backgroundColor = "#32a1ce")}
-                                onMouseOut = {(e) => (e.target.style.backgroundColor = "transparent")}
-                                disabled={isButtonDisabled}
+                                          style={{
+                                              backgroundColor: "transparent",
+                                              transition: "background-color 0.1s ease ",
+                                              borderRadius: "8px",
+                                              padding: "15px 33px",
+                                              color: "white",
+                                          }}
+                                          onMouseOver={(e) => (e.target.style.backgroundColor = "#32a1ce")}
+                                          onMouseOut={(e) => (e.target.style.backgroundColor = "transparent")}
+                                          disabled={isButtonDisabled}
                                 // onClick={handleSubmit}
                             >
                                 募集
@@ -481,4 +431,5 @@ type AuthBodyResponse = z.infer<typeof AuthBodyResponseSchema>;
     );
 }
 
-export interface ColabRegisterFormProps {}
+export interface ColabRegisterFormProps {
+}
