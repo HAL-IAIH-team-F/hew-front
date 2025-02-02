@@ -14,8 +14,8 @@ export default function CameraPosition(
     const productId = useProductId()
     const windowSize = useWindowSize()
     const targetPositionX = useMemo(() => {
-        if (productId == undefined || windowSize.width < MOBILE_WIDTH) return 0
-        else return 80
+        if (productId == undefined || windowSize.width < MOBILE_WIDTH) return -5
+        else return 70
     }, [productId, windowSize]);
     useEffect(() => {
         const tl = gsap.timeline({

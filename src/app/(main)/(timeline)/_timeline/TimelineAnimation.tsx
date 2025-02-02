@@ -12,24 +12,26 @@ import {useThree} from "@react-three/fiber";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {useSidebarManagerState} from "@/(main)/(timeline)/_window/_sidebar/SidebarManaager";
 import useTargetCameraRotation from "@/(main)/(timeline)/_timeline/hooks/useTargetCameraRotation";
-import BaubleClickHandler from "@/(main)/(timeline)/_timeline/BaubleClickHandler";
 import {BubbleMesh} from "@/(main)/(timeline)/_timeline/bubble/BubbleMesh";
 
 export default function TimelineAnimation(
-    {}: {},
+    {
+        sceneRef, bubblesRef, effectsRef,
+    }: {
+        sceneRef: MutableRefObject<Scene | null>,
+        bubblesRef: MutableRefObject<BubbleMesh[]>,
+        effectsRef: MutableRefObject<Effects | null>,
+    },
 ) {
     const targetCameraRotation = useTargetCameraRotation()
     const {camera, gl} = useThree();
     if (!(camera instanceof THREE.PerspectiveCamera)) throw new Error("camera is not PerspectiveCamera")
-    const sceneRef = useRef<THREE.Scene | null>(null);
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
     const composerRef = useRef<EffectComposer | null>(null);
-    const bubblesRef = useRef<BubbleMesh[]>([]);
     const glowingGomiRef = useRef<THREE.Mesh[]>([]);
     // const mousePosition = useRef({x: 0, y: 0});
     const rotationStrength = 0.05;
     const scene = useMemo(() => new THREE.Scene(), []);
-    const effectsRef = useRef<Effects | null>(null);
     const {products, error} = useProducts();
     if (error) console.error(error)
     const managerState = useSidebarManagerState()
@@ -68,9 +70,7 @@ export default function TimelineAnimation(
         });
     }, [managerState.state, clientState.state]);
 
-    return <BaubleClickHandler
-        sceneRef={sceneRef} bubblesRef={bubblesRef} effectsRef={effectsRef}
-    />
+    return undefined
 }
 
 function animateHighFPS(

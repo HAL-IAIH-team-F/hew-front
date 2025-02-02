@@ -1,5 +1,6 @@
 "use client";
 import * as THREE from "three";
+import {PerspectiveCamera, Scene} from "three";
 import {getRandomPosition, getRandomPositionWithExclusion, moveBubblesToPosition} from "./position";
 import {gsap} from "gsap";
 import {createGradientBackground} from "@/(main)/(timeline)/background/background"
@@ -11,7 +12,6 @@ import {util} from "../../../../../util/util";
 import {Img} from "~/api/context/Api";
 import {Routes} from "~/route/Routes";
 import {BubbleMesh} from "@/(main)/(timeline)/_timeline/bubble/BubbleMesh";
-import {showProduct} from "@/(main)/(timeline)/product/product";
 
 const vertexShader = `
   uniform float time;
@@ -238,7 +238,7 @@ export const createBubbles = async (
 };
 
 export const onClickBubble = (
-    manager: Manager, event: MouseEvent, bubbles: BubbleMesh[], camera: THREE.PerspectiveCamera, scene: THREE.Scene,
+    manager: Manager, event: MouseEvent, bubbles: BubbleMesh[], camera: PerspectiveCamera, scene: Scene,
     effects: Effects, clientState: LoadedClientState, routes: Routes
 ) => {
     const mouse = new THREE.Vector2(
