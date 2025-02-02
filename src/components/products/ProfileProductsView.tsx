@@ -1,7 +1,7 @@
 import React, {CSSProperties, useEffect, useState} from "react";
 import {ErrorMessage} from "../../util/err/ErrorMessage";
 import ProductThumbnail from "~/api/useImgData";
-import useCreatorData from "../../util/hook/useCreatorData";
+import useCreatorData from "../hooks/useCreatorData";
 import Image from "../../util/Image";
 import useRoutes from "~/route/useRoutes";
 import useProductId from "~/products/useProductId";

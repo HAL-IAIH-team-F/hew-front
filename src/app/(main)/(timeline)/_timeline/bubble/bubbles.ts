@@ -2,15 +2,16 @@
 import * as THREE from "three";
 import {getRandomPosition, getRandomPositionWithExclusion, moveBubblesToPosition} from "./position";
 import {gsap} from "gsap";
-
-import {showProduct} from "@/(main)/(timeline)/product/product";
 import {createGradientBackground} from "@/(main)/(timeline)/background/background"
 import Effects from "@/(main)/(timeline)/effects/camera/Effects"
 import {Manager} from "~/manager/manager";
 import {LoadedClientState} from "~/api/context/ClientState";
 import fetchTimelineProduct from "@/(main)/(timeline)/_timeline/fetchTimelineProduct";
-import {util} from "../../../../util/util";
+import {util} from "../../../../../util/util";
 import {Img} from "~/api/context/Api";
+import {Routes} from "~/route/Routes";
+import {BubbleMesh} from "@/(main)/(timeline)/_timeline/bubble/BubbleMesh";
+import {showProduct} from "@/(main)/(timeline)/product/product";
 
 const vertexShader = `
   uniform float time;
@@ -96,13 +97,10 @@ const fragmentShader = `
   }
 `;
 
-const txr = [
-    ["/curtain.png"],
-    ["/curtain.png"],
-]
+
 const errTexture = "/109671135_p2_master1200.webp"
 export const createBubbles = async (
-    scene: THREE.Scene, bubblecnt: number, sessionId: number, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene, bubblecnt: number, sessionId: number, bubbles: BubbleMesh[], camera: THREE.PerspectiveCamera,
     clientState: LoadedClientState,
 ) => {
     const textureLoader = new THREE.TextureLoader();
@@ -135,7 +133,7 @@ export const createBubbles = async (
         });
 
         const bubbleGeometry = new THREE.CircleGeometry(15, 32);
-        const bubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
+        const bubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial) as any as BubbleMesh;
 
         const scale = Math.random() * 0.5 + 0.6;
         bubble.scale.set(scale, scale, scale);
@@ -167,9 +165,10 @@ export const createBubbles = async (
                 return distance < bubbleRadius + otherBubbleRadius + 10;
             });
         }
-        (bubble as any).texturePath = txrpath;
-        (bubble as any).sessionId = sessionId;
-        (bubble as any).bubbleId = bubbles.length;
+        bubble.texturePath = txrpath;
+        bubble.sessionId = sessionId;
+        bubble.bubbleId = bubbles.length;
+        bubble.productRes = product;
 
         scene.add(bubble);
         bubbles.push(bubble);
@@ -223,8 +222,8 @@ export const createBubbles = async (
 
         startBubbleAnimation();
 
-        (bubble as any).startAnimation = startBubbleAnimation;
-        (bubble as any).stopAnimation = stopBubbleAnimation;
+        (bubble).startAnimation = startBubbleAnimation;
+        (bubble).stopAnimation = stopBubbleAnimation;
 
         const animateBubble = () => {
             bubbleMaterial.uniforms.time.value += 0.01;
@@ -239,8 +238,8 @@ export const createBubbles = async (
 };
 
 export const onClickBubble = (
-    manager: Manager, event: MouseEvent, bubbles: THREE.Mesh[], camera: THREE.PerspectiveCamera, scene: THREE.Scene,
-    effects: Effects, clientState: LoadedClientState
+    manager: Manager, event: MouseEvent, bubbles: BubbleMesh[], camera: THREE.PerspectiveCamera, scene: THREE.Scene,
+    effects: Effects, clientState: LoadedClientState, routes: Routes
 ) => {
     const mouse = new THREE.Vector2(
         (event.clientX / window.innerWidth) * 2 - 1,
@@ -253,15 +252,15 @@ export const onClickBubble = (
     const intersects = raycaster.intersectObjects(bubbles);
 
     if (intersects.length > 0) {
-        const clickedBubble = intersects[0].object as THREE.Mesh;
+        const clickedBubble = intersects[0].object as BubbleMesh;
 
-        (clickedBubble as any).stopAnimation();
-        if ((clickedBubble as any).bubbleId == 999) {
+        (clickedBubble).stopAnimation();
+        if ((clickedBubble).bubbleId == 999) {
             console.log(manager.value.animstate);
             if (manager.value.animstate != "product") {
-                showProduct(clickedBubble, scene, camera, manager, effects)
-                manager.update.animstate("product");
-
+                // showProduct(clickedBubble, scene, camera, manager, effects)
+                // manager.update.animstate("product");
+                routes.timeline().setProductId(clickedBubble.productRes.product_id).transition()
             }
         } else {
             if (manager.value.animstate == "idle") {
@@ -270,7 +269,7 @@ export const onClickBubble = (
                 effects.clickBubbleAnimesion()
 
                 gsap.to(clickedBubble.position, {
-                    x: camera.position.x,
+                    x: 0,
                     y: camera.position.y,
                     z: camera.position.z - 200,
                     duration: 1.5,
@@ -282,7 +281,7 @@ export const onClickBubble = (
                     duration: 1.5,
                     ease: "power2.inOut",
                     onComplete: () => {
-                        (clickedBubble as any).bubbleId = 999;
+                        (clickedBubble).bubbleId = 999;
                         manager.update.sessionId(manager.value.sessionId + 1);
                         createBubbles(
                             scene, manager.value.bbnum - 1, manager.value.sessionId, bubbles, camera, clientState
@@ -293,8 +292,9 @@ export const onClickBubble = (
                 });
 
                 bubbles.forEach((bubble) => {
+                    const bubbleMesh = bubble as BubbleMesh;
                     if (bubble !== clickedBubble) {
-                        (bubble as any).stopAnimation();
+                        (bubbleMesh).stopAnimation();
                         gsap.to(bubble.position, {
                             y: bubble.position.y,
                             z: bubble.position.z + 350,

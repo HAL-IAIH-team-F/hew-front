@@ -4,51 +4,58 @@ import {TimelinePageRouteUrl} from "~/route/TimelinePageRouteUrl";
 import {RouteUrl} from "~/route/RouteUrl";
 
 export class Routes {
-  constructor(
-    readonly prevParams: URLSearchParams,
-    readonly prevPath: string,
-    readonly router: AppRouterInstance,
-  ) {
-  }
+    constructor(
+        readonly prevParams: URLSearchParams,
+        readonly prevPath: string,
+        readonly router: AppRouterInstance,
+    ) {
+    }
 
-  timeline() {
-    return new TimelineRouteUrl(this, "/")
-  }
+    setParam(key: string, value: string | undefined) {
+        const newParams = new URLSearchParams(this.prevParams)
+        if (value == undefined) newParams.delete(key)
+        else newParams.set(key, value)
+        this.router.push(this.prevPath + "?" + newParams.toString())
+    }
 
-  lp() {
-    return new RouteUrl(this, "/lp")
-  }
+    timeline() {
+        return new TimelineRouteUrl(this, "/")
+    }
 
-  search() {
-    return new TimelinePageRouteUrl(this, "/search")
-  }
+    lp() {
+        return new RouteUrl(this, "/lp")
+    }
 
-  notification() {
-    return new TimelinePageRouteUrl(this, "/notification")
-  }
+    search() {
+        return new TimelinePageRouteUrl(this, "/search")
+    }
 
-  message() {
-    return new TimelinePageRouteUrl(this, "/message")
-  }
+    notification() {
+        return new TimelinePageRouteUrl(this, "/notification")
+    }
 
-  account() {
-    return new TimelinePageRouteUrl(this, "/account")
-  }
+    message() {
+        return new TimelinePageRouteUrl(this, "/message")
+    }
 
-  productListing() {
-    return new TimelinePageRouteUrl(this, "/product/listing")
-  }
+    account() {
+        return new TimelinePageRouteUrl(this, "/account")
+    }
 
-  cart() {
-    return new TimelinePageRouteUrl(this, "/cart")
-  }
+    productListing() {
+        return new TimelinePageRouteUrl(this, "/product/listing")
+    }
 
-  // joinToTimelinePath(path: string) {
-  //   let result
-  //   if (timeline.endsWith("/")) result = timeline.slice(0, -1)
-  //   else result = timeline
-  //   if (path.startsWith("/")) result += path
-  //   else result += "/" + path
-  //   return result
-  // }
+    cart() {
+        return new TimelinePageRouteUrl(this, "/cart")
+    }
+
+    // joinToTimelinePath(path: string) {
+    //   let result
+    //   if (timeline.endsWith("/")) result = timeline.slice(0, -1)
+    //   else result = timeline
+    //   if (path.startsWith("/")) result += path
+    //   else result += "/" + path
+    //   return result
+    // }
 }
