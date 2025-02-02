@@ -98,21 +98,21 @@ const styles: Record<string, CSSProperties> = {
     objectPosition: "center", // 画像を中央に配置
   },
   modalOverlay: {
-    position: "fixed",
+    position: "fixed", // 親要素の影響を受けず画面全体を覆う
     top: 0,
     left: 0,
-    width: "100%",
-    height: "100%",
+    width: "100vw", // ビューポート全体の幅
+    height: "100vh", // ビューポート全体の高さ
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 1000,
-  } as CSSProperties,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // 半透明の黒背景
+    zIndex: 999, // ほぼすべての要素より上に配置
+  },
   modalContent: {
-    position: "absolute",
+    position: "fixed",
     top: "50%",
     left: "50%",
-    transform: "translate(-50%, -50%)",
     background: "#333",
     color: "#fff",
     padding: "20px",
@@ -123,17 +123,18 @@ const styles: Record<string, CSSProperties> = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  } as CSSProperties,
+    zIndex: 1001,
+  },
   modalTitle: {
     fontSize: "16px",
     fontWeight: "bold",
     marginBottom: "15px",
-  } as CSSProperties,
+  },
   modalButtonContainer: {
     display: "flex",
     justifyContent: "space-between",
     width: "100%",
-  } as CSSProperties,
+  },
   modalButton: {
     flex: 1,
     padding: "10px",
