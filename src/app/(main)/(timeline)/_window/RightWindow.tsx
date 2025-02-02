@@ -1,64 +1,86 @@
-import React, {CSSProperties, useEffect} from 'react';
-import {ProductWindowStyle} from '@/(main)/(timeline)/_sidebar/Styles';
+// rightwindow.tsx
+import React, { CSSProperties, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { ProductWindowStyle } from '@/(main)/(timeline)/_sidebar/Styles';
 import RightWindowProduct from "@/(main)/(timeline)/_window/RightWindowProduct";
 import useProduct from "~/hooks/useProduct";
 import useProductId from "~/products/useProductId";
 
 const RightWindow: React.FC = () => {
-  const productId = useProductId()
+  const router = useRouter();
+  const productId = useProductId();
   const productState = useProduct(productId);
 
   useEffect(() => {
-    if (productState.state != "error") return;
-    console.error(productState.error)
+    if (productState.state !== "error") return;
+    console.error(productState.error);
   }, [productState]);
 
+  // 「×」ボタンで /account に戻るだけ
+  const handleClose = () => {
+    router.push("/account");
+  };
+
   return (
-    <div style={styles.container(productId != undefined)}>
-      {productState.state == "error" && <p style={styles.errorMessage}>エラーが発生しました。商品を取得できません。</p>}
-      {productState.state == "success" ? (
+    <div
+      style={{
+        ...ProductWindowStyle(productId !== undefined), // 元の位置やサイズは保持
+        // 背景の色や枠線、シャドウを消す
+        background: "transparent",
+        boxShadow: "none",
+        border: "none",
+      }}
+    >
+      {productState.state === "success" && (
+        <button
+          onClick={handleClose}
+          style={{
+            position: 'absolute',
+            top: '8px',
+            right: '8px',
+            background: 'transparent',
+            border: 'none',
+            fontSize: '1.5rem',
+            cursor: 'pointer',
+          }}
+        >
+          ×
+        </button>
+      )}
+
+      {productState.state === "error" && (
+        <p style={styles.errorMessage}>
+          エラーが発生しました。商品を取得できません。
+        </p>
+      )}
+      {productState.state === "success" ? (
         <div style={styles.product}>
           <RightWindowProduct product={productState.product} key={productState.product.product_id}/>
         </div>
       ) : (
-        <p style={styles.noProductsMessage}>現在、商品はありません。</p>
+        <p style={styles.noProductsMessage}>
+          現在、商品はありません。
+        </p>
       )}
     </div>
   );
 };
 
-const styles = {
-  container: (isProductOpen: boolean): CSSProperties => ({
-    ...ProductWindowStyle(isProductOpen),
-  }),
-  banner: {
-    width: '100%',
-    height: '15%',
-    backgroundColor: '#ff5722',
-    color: '#fff',
-    fontSize: '2rem',
-    fontWeight: 'bold',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center' as React.CSSProperties['textAlign'], // 型の明示
-  },
+export default RightWindow;
+
+const styles: Record<string, CSSProperties> = {
   errorMessage: {
     color: 'red',
-    textAlign: 'center' as React.CSSProperties['textAlign'], // 型の明示
+    textAlign: 'center',
     marginBottom: '1rem',
   },
   product: {
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-    gap: '1rem',
-    padding: '1rem',
-    width: '100%',
+    // ここはカードだけのスタイルを設定
+    // 必要なければ空でもOK
   },
   noProductsMessage: {
-    textAlign: 'center' as React.CSSProperties['textAlign'], // 型の明示
+    textAlign: 'center',
     color: '#555',
     fontSize: '1rem',
   },
 };
-
-export default RightWindow;
