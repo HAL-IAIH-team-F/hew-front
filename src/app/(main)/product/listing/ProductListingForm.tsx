@@ -19,7 +19,7 @@ import {useState} from "react";
 import {Routes} from "~/route/Routes";
 import {ClientState} from "~/api/context/ClientState";
 import useRoutes from "~/route/useRoutes";
-import {CreatorRes} from "../../../../util/hook/useCreatorData";
+import {CreatorRes} from "~/hooks/useCreatorData";
 
 
 async function action(

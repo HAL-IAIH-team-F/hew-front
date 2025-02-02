@@ -3,8 +3,9 @@ import {PerspectiveCamera, Vector2} from 'three';
 import {EffectComposer, RenderPass, ShaderPass} from 'three-stdlib';
 import {BlurShader} from './BlurShader';
 import gsap from 'gsap';
-import {initmoveBubblesToPosition} from '@/(main)/(timeline)/bubble/position';
+import {initmoveBubblesToPosition} from '@/(main)/(timeline)/_timeline/bubble/position';
 import {Manager} from "~/manager/manager";
+import {BubbleMesh} from "@/(main)/(timeline)/_timeline/bubble/BubbleMesh";
 
 
 class Effects {
@@ -34,7 +35,7 @@ class Effects {
 
   }
 
-  startAnimesion(bubbles: THREE.Mesh[], manager: Manager) {
+  startAnimesion(bubbles: BubbleMesh[], manager: Manager) {
     const tl = gsap.timeline();
     
     initmoveBubblesToPosition(bubbles, manager.value.sessionId, "idle", manager);
