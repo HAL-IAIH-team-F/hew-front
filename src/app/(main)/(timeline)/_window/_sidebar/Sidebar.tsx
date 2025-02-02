@@ -11,6 +11,7 @@ import SidebarRoutesLink from "@/(main)/(timeline)/_window/_sidebar/SidebarRoute
 import {useWindowSize} from "@/_hook/useWindowSize";
 import {iconstyles, styles} from "@/(main)/(timeline)/_window/_sidebar/Styles";
 import Image from "../../../../../util/Image";
+import { usePathname } from 'next/navigation';
 
 
 type SidebarProps = {};
@@ -23,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
   const size = useWindowSize()
   const {user} = useUserData();
   const routes = useRoutes();
-
+  const pathname = usePathname()
   return (
     <div>
       <div
@@ -38,6 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
             }}
           />
         </button>
+        
         <SidebarRoutesLink routeUrl={routes.search()}><FaSearch style={iconstyles.icon}/></SidebarRoutesLink>
         <SidebarRoutesLink routeUrl={routes.notification()}><FaBell style={iconstyles.icon}/></SidebarRoutesLink>
         <SidebarRoutesLink routeUrl={routes.message()}><FaRegMessage style={iconstyles.icon}/></SidebarRoutesLink>

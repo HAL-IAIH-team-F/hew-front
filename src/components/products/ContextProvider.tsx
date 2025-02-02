@@ -1,6 +1,8 @@
 "use client"
+import { ProductRes } from '@/(main)/search/sample/ProductRes';
 import {useWindowSize} from '@/_hook/useWindowSize';
 import React, {createContext, useContext, useEffect, useState} from 'react';
+import { useNotification } from '~/notification/notification';
 
 // Contextの型定義
 interface ProductContextType {
@@ -12,6 +14,7 @@ interface ProductContextType {
   setProductId: (id: string) => void;
   setIsSidebarOpen: (id: boolean) => void;
   setIsMobile: (id: boolean) => void;
+  showNotification: (msg: string, product?: ProductRes) => void;
 }
 
 // 初期値
@@ -25,7 +28,8 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const toggleProductWindow = () => setisProductOpen((prev) => !prev);
   const size = useWindowSize()
-
+  const [notification, showNotification] = useNotification();
+    
   useEffect(() => {
     if (size.width <= MOBILE_WIDTH) {
       setIsMobile(true)
@@ -46,9 +50,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
         setIsSidebarOpen,
         isMobile,
         setIsMobile,
+        showNotification,
       }}
     >
       {children}
+      {notification}
     </ProductContext.Provider>
   );
 };

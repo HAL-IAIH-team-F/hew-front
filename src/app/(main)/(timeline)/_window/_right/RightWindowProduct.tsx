@@ -6,6 +6,8 @@ import {ClientState} from "~/api/context/ClientState";
 import {Api} from "~/api/context/Api";
 import {ErrorData} from "../../../../../util/err/err";
 import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
+import { useNotification } from "~/notification/notification";
+import { useProductContext } from "~/products/ContextProvider";
 
 export default function RightWindowProduct(
   {
@@ -16,6 +18,7 @@ export default function RightWindowProduct(
 ) {
   const clientState = useClientState()
   const [err, setErr] = useState<ErrorData>()
+  const { showNotification } = useProductContext()
 
   return (
     <div key={product.product_id} style={{
@@ -52,17 +55,28 @@ export default function RightWindowProduct(
           color: '#888',
         }}>購入日: {product.purchase_date}</p>
       </div>
+
       <button
-        className={"border-2  enabled:hover:bg-gray-300 enabled:bg-gray-200"}
-        disabled={clientState.state != "registered"}
+        className="border-2 enabled:hover:bg-gray-300 enabled:bg-gray-200"
+        disabled={clientState.state !== "registered"}
         onClick={() => {
-          addCart(clientState, setErr, product.product_id).catch(reason => {
-            console.error(reason)
-          })
+          if (clientState.state !== "registered") {
+            showNotification("ログインしてください", product);
+            return;
+          }
+          
+          addCart(clientState, setErr, product.product_id)
+            .then(() => {
+              showNotification("カートに追加しました！", product);
+            })
+            .catch((reason) => {
+              console.error(reason);
+              showNotification("カート追加に失敗しました", product);
+            });
         }}
-      >カートに入れる
+      >
+        {clientState.state === "registered" ? "カートに入れる" : "ログインしてください"}
       </button>
-      <ErrorMessage error={err}/>
     </div>
   )
 }
