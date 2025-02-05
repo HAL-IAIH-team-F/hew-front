@@ -1,14 +1,15 @@
 import {RecruitRes} from "./RecruitRes"
 import {useClientState} from "~/api/context/ClientContextProvider";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {Api} from "~/api/context/Api";
 import styled from "styled-components";
 import {ErrorData} from "../../../../../util/err/err";
 import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
+import {CreatorData} from "../../../../../components/products/ProfileProductsView";
 
 
 // ✅ TSX 内でスタイルを定義
-const Button = styled.button`
+const Button = styled.button`{
   display: block;
   text-align: center;
   vertical-align: middle;
@@ -70,25 +71,24 @@ const Button = styled.button`
     border-bottom-color: #cbe8f7;
     border-left-color: #fff;
     transition: border-color 0s ease-out 0.2s, width 0.15s ease-out 0.2s, height 0.15s ease-out 0.3s;
-  }
-`;
+}`;
 
-export default function Recruit(
-    {
-        recruit,
-    }: {
-        recruit: RecruitRes
-    },
-) {
+export default function Recruit({ recruit }: { recruit: RecruitRes }) {
+
     const clientContext = useClientState()
     const [err, setErr] = useState<ErrorData>()
+    const [backgroundImage, setBackgroundImage] = useState<string>("");
+
+    useEffect(() => {
+        console.log("背景画像更新: ", backgroundImage); // デバッグ用ログ
+    }, [backgroundImage]);
 
     return (
         <div
             key={recruit.recruit_id}
             className="border-2 group flex flex-col rounded-lg shadow-lg bg-white bg-opacity-50 backdrop-blur-md hover:shadow-xl transition-shadow"
             style={{
-                backgroundImage: "url('/109671135_p2_master1200.webp')",
+                backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 // padding: "35px 25px",
@@ -104,6 +104,7 @@ export default function Recruit(
             onMouseEnter={(e) => e.currentTarget.style.backgroundSize = "110%"} // ✅ ホバー時にズーム
             onMouseLeave={(e) => e.currentTarget.style.backgroundSize = "100%"} // ✅ 戻す
         >
+            <CreatorData creator_id={recruit.creator_id} onIconUrlChange={setBackgroundImage} />
             <div style={{
                 display: "flex",
                 flexDirection: "column",
@@ -214,5 +215,5 @@ export default function Recruit(
             </div>
         </div>
     );
-}
+};
 

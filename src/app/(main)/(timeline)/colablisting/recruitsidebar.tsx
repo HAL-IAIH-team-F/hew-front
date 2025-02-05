@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import useProducts from "~/hooks/useProducts";
 
 
 // --- 2. メインのPageコンポーネント ---

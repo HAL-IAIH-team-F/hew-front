@@ -103,20 +103,31 @@ export default function ProfileProductsView({}: ProductPageProps) {
 
 interface CreatorDataProps {
   creator_id: string;
+  onIconUrlChange?: (iconUrl: string) => void;
 }
 
-export function CreatorData({creator_id}: CreatorDataProps) {
+export function CreatorData({creator_id, onIconUrlChange}: CreatorDataProps) {
   const [_, user_data, __] = useCreatorData({creator_id});
+
+  useEffect(() => {
+    if (user_data?.icon) {
+      const iconUrl = (user_data.icon as any).strUrl();
+      if (iconUrl) {
+        onIconUrlChange?.(iconUrl);
+      }
+    }
+  }, [user_data?.icon, onIconUrlChange]);
 
   return (
     <div>
       {user_data?.icon ? (
-        <><Image
-          alt="User Icon"
-          src={(user_data.icon as any).strUrl()} // 型の不一致を回避
-          width={33}
-          height={33}
-          style={styles.userIcon}/>
+        <>
+          <Image
+            alt="User Icon"
+            src={(user_data.icon as any).strUrl()} // 型の不一致を回避
+            width={33}
+            height={33}
+            style={styles.userIcon}/>
           <p>{user_data?.screen_id}</p>
         </>
       ) : (

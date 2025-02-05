@@ -36,7 +36,7 @@ const RequestRecruit: React.FC = () => {
                 boxShadow: "0px 4px 30px rgba(0, 0, 0, 0.3)", // 軽い影
                 border: "1px solid rgba(255, 255, 255, 0.3)", // 微妙な白い枠線
             }}
-                 className="hide-scrollbar"
+                    className="hide-scrollbar"
             >
                 {/* <ErrorMessage error={err}/> */}
                 {recruits && recruits.map(recruit =>
