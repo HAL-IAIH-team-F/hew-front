@@ -8,7 +8,7 @@ import {Api} from "~/api/context/Api";
 import {useState} from "react";
 
 import useRoutes from "~/route/useRoutes";
-import {CreatorRes} from "../../../../../util/hook/useCreatorData";
+import {CreatorRes} from "~/hooks/useCreatorData";
 
 
 export default function Page(
