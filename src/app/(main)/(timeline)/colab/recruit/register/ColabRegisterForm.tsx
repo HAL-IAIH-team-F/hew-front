@@ -5,6 +5,7 @@ import {StyledForm} from "../../../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../../../util/form/element/StyledButton";
 import {Api} from "~/api/context/Api";
+import {StyledTextarea} from "../../../../../../util/form/element/StyledTextarea";
 
 export default function ColabRegisterForm(
     {
@@ -175,7 +176,6 @@ export default function ColabRegisterForm(
                                     }}
                                     >
                                         <StyledInput
-                                            as="input"
                                             name="title"
                                             value={title}
                                             maxLength={20}
@@ -278,8 +278,7 @@ export default function ColabRegisterForm(
                                     <div
                                         style={{}}
                                     >
-                                        <StyledInput
-                                            as="textarea"
+                                        <StyledTextarea
                                             name="description"
                                             // label=""
                                             value={description}
