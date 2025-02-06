@@ -1,6 +1,6 @@
 import {Dispatch, SetStateAction, useState} from "react";
 import CreatorSelectorModal from "@/(main)/(timeline)/colab/register/CreatorSelectorModal";
-import {CreatorRes} from "../../../../../util/hook/useCreatorData";
+import {CreatorRes} from "~/hooks/useCreatorData";
 
 
 export default function CreatorsSelector(

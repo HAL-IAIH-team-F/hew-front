@@ -26,6 +26,7 @@ export class RouteUrl {
     }
     const tempUrl = (tempPathname != undefined ? tempPathname : this.pathname())
       + "?" + (tempParams != undefined ? tempParams?.toString() : this.params().toString())
+    console.debug("tempUrl", tempUrl)
     this.routes.router.replace(tempUrl);
     setTimeout(() => {
       this.routes.router.push(this.toString())

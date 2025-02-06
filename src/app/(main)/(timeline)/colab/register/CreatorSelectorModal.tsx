@@ -5,7 +5,7 @@ import {Api} from "~/api/context/Api";
 import {ErrorData} from "../../../../../util/err/err";
 import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
 import CreatorSelectorItem from "@/(main)/(timeline)/colab/register/CreatorSelectorItem";
-import {CreatorRes} from "../../../../../util/hook/useCreatorData";
+import {CreatorRes} from "~/hooks/useCreatorData";
 
 export default function CreatorSelectorModal(
   {

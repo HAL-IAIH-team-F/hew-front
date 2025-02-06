@@ -254,6 +254,6 @@ export const ProductWindowStyle = (ProductisOpen: boolean): CSSProperties => ({
     height 0.3s ease,
     transform 0.3s`, // transformにカスタムイージングを追加
   zIndex: 999,
-  minWidth: ProductisOpen ? '550px' : '0', // 最小幅を指定
+  minWidth: ProductisOpen ? '530px' : '0', // 最小幅を指定
   maxWidth: ProductisOpen ? '750px' : '0', // 最小幅を指定
 });
