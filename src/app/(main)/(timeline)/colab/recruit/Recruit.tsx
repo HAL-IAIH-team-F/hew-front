@@ -2,96 +2,46 @@ import {RecruitRes} from "./RecruitRes"
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {useState, useEffect} from "react";
 import {Api} from "~/api/context/Api";
-import styled from "styled-components";
 import {ErrorData} from "../../../../../util/err/err";
 import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
 import {CreatorData} from "../../../../../components/products/ProfileProductsView";
-
-
-// ✅ TSX 内でスタイルを定義
-const Button = styled.button`{
-  display: block;
-  text-align: center;
-  vertical-align: middle;
-  text-decoration: none;
-  width: 70px; /* ✅ サイズ小さく */
-  margin: auto;
-  padding: 0.5rem 0rem; /* ✅ 余白を小さく */
-  color: #fff;
-  font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.5); /* ✅ 背景を半透明の黒に */
-  position: relative;
-  transition: 0.3s ease-in-out;
-  border: none;
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: 20px; /* ✅ 角を丸くする */
-
-  /* ホバー時の背景変更 */
-  &:hover {
-    background: #fff;
-    color: rgba(0, 0, 0, 0.5);
-  }
-
-  /* ボーダーアニメーション */
-  &::before,
-  &::after {
-    box-sizing: inherit;
-    content: "";
-    position: absolute;
-    border: 2px solid transparent;
-    width: 0;
-    height: 0;
-    border-radius: 20px; /* ✅ ボーダーも丸く */
-  }
-
-  &::before {
-    top: 0;
-    left: 0;
-  }
-
-  &::after {
-    bottom: 0;
-    right: 0;
-  }
-
-  &:hover::before,
-  &:hover::after {
-    width: 100%;
-    height: 100%;
-  }
-
-  &:hover::before {
-    border-top-color: #fff;
-    border-right-color: #fff;
-    transition: width 0.15s ease-out, height 0.15s ease-out 0.15s;
-  }
-
-  &:hover::after {
-    border-bottom-color: #cbe8f7;
-    border-left-color: #fff;
-    transition: border-color 0s ease-out 0.2s, width 0.15s ease-out 0.2s, height 0.15s ease-out 0.3s;
-}`;
+import Button from "./Button";
 
 export default function Recruit({ recruit }: { recruit: RecruitRes }) {
 
     const clientContext = useClientState()
     const [err, setErr] = useState<ErrorData>()
-    const [backgroundImage, setBackgroundImage] = useState<string>("");
+    const [backgroundImage, setBackgroundImage] = useState<string>("none");
+
 
     useEffect(() => {
-        console.log("背景画像更新: ", backgroundImage); // デバッグ用ログ
-    }, [backgroundImage]);
+        if (!backgroundImage || backgroundImage === "none") {
+            setBackgroundImage("../../../../../../public/2020-01-01_09.26.42.png");
+        }
+    }, []);
+
+    const handleClick = () => {
+        setErr(undefined);
+        if (clientContext.state !== "registered") {
+            throw new Error("クリエイター登録が必要です");
+        }
+        clientContext.client
+            .authBody(Api.app.pcr_api_colab_request_post, {}, {recruit_id: recruit.recruit_id}, {})
+            .then((value) => {
+                if (!value.error) return;
+                setErr(value.error);
+            });
+        };
 
     return (
         <div
             key={recruit.recruit_id}
             className="border-2 group flex flex-col rounded-lg shadow-lg bg-white bg-opacity-50 backdrop-blur-md hover:shadow-xl transition-shadow"
             style={{
-                backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
+                backgroundImage: backgroundImage && backgroundImage !== "none" ? `url(${backgroundImage})` : "none",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                // padding: "35px 25px",
+                backgroundRepeat: "no-repeat",
                 width: "22%",
                 height: "180px",
                 margin: "3px",
@@ -101,10 +51,19 @@ export default function Recruit({ recruit }: { recruit: RecruitRes }) {
                 borderColor: "transparent",
                 borderStyle: "none",
             }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundSize = "110%"} // ✅ ホバー時にズーム
-            onMouseLeave={(e) => e.currentTarget.style.backgroundSize = "100%"} // ✅ 戻す
+            onMouseEnter={(e) => e.currentTarget.style.backgroundSize = "190%"} // ✅ ホバー時にズーム
+            onMouseLeave={(e) => e.currentTarget.style.backgroundSize = "160%"} // ✅ 戻す
         >
-            <CreatorData creator_id={recruit.creator_id} onIconUrlChange={setBackgroundImage} />
+            {/*  `onIconUrlChange` を渡して、CreatorData から背景画像を取得 */}
+            <CreatorData
+                creator_id={recruit?.creator_id ?? ""}
+                showView={false}
+                onDataFetched={({ iconUrl }) => {
+                    if (iconUrl) {
+                        setBackgroundImage(iconUrl);
+                    }
+                }}
+            />
             <div style={{
                 display: "flex",
                 flexDirection: "column",
@@ -122,30 +81,18 @@ export default function Recruit({ recruit }: { recruit: RecruitRes }) {
                     style={{
                         display: "flex",
                         width: "100%",
-                        backgroundColor: "rgba(166, 166, 166, 0.2)", // ✅ 半透明の黒背景
-                        backdropFilter: "blur(5px) brightness(0.7)", // ✅ 背景ぼかし + 薄暗くする
-                        borderRadius: "0 0 8px 8px", // ✅ 角丸でガラスっぽく
-                        padding: "5px 25px 11px 15px", // ✅ 内側に余白を追加
+                        backgroundColor: "rgba(166, 166, 166, 0.2)", // 半透明の黒背景
+                        backdropFilter: "blur(5px) brightness(0.7)", // 背景ぼかし + 薄暗くする
+                        borderRadius: "0 0 8px 8px", // 角丸でガラスっぽく
+                        padding: "5px 25px 11px 15px", // 内側に余白を追加
                     }}
                 >
                     <div style={{
-                        // display: "flex",
-                        // width: "70%",
-                        // flexDirection: "column",
                         color: "white",
                         width: "85%",
                     }}>
 
                         <div
-                            style={{
-                                // marginLeft: "5px",
-                                // maxWidth: "100%", // ✅ 親要素をはみ出さない
-                                // backgroundColor: "rgba(0, 0, 0, 0.3)", // ✅ 半透明の黒背景
-                                // backdropFilter: "blur(5px) brightness(0.7)", // ✅ 背景ぼかし + 薄暗くする
-                                // borderRadius: "8px", // ✅ 角丸でガラスっぽく
-                                // padding: "5px 25px 5px 15px", // ✅ 内側に余白を追加
-                                // display: "inline-block", // ✅ 文字数に応じて幅を調整
-                            }}
                         >
                             <h1
                                 className="group-hover:text-[#cbe8f7] font-bold"
@@ -162,19 +109,11 @@ export default function Recruit({ recruit }: { recruit: RecruitRes }) {
                                     {recruit.description}
                                 </p>
                             </div>
-
-                            {/* <div className="">
-                <p className="group-hover:text-red-500 text-xs">
-                  Creator: {recruit.creator_id}
-                </p>
-              </div> */}
                         </div>
                     </div>
 
                     <div
                         style={{
-                            // marginTop: "50px",
-                            // marginRight: "15px",
                             color: "white",
                             display: "flex",
                             flexDirection: "column",
@@ -182,31 +121,8 @@ export default function Recruit({ recruit }: { recruit: RecruitRes }) {
                             width: "30%",
                         }}
                     >
-                        <Button
-                            onClick={() => {
-                                setErr(undefined);
-                                if (clientContext.state !== "registered") {
-                                    throw new Error("not authenticated");
-                                }
-                                clientContext.client
-                                    .authBody(
-                                        Api.app.pcr_api_colab_request_post,
-                                        {},
-                                        {recruit_id: recruit.recruit_id},
-                                        {}
-                                    )
-                                    .then((value) => {
-                                        if (!value.error) return;
-                                        setErr(value.error);
-                                    });
-                            }}
-                            style={{
-                                // width: "70px",
-                                // backgroundColor: "rgba(0, 0, 0, 0.5)",
-                                // borderRadius: "20px",
-                            }}
-                        >
-                            話す
+                        <Button onClick={handleClick} disabled={clientContext.state !== "registered"}>
+                            Hey
                         </Button>
                     </div>
                 </div>
