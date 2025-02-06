@@ -97,70 +97,13 @@ const styles: Record<string, CSSProperties> = {
     objectFit: "cover", // 画像が要素を覆うようにリサイズ
     objectPosition: "center", // 画像を中央に配置
   },
-  modalOverlay: {
-    position: "fixed", // 親要素の影響を受けず画面全体を覆う
-    top: 0,
-    left: 0,
-    width: "100vw", // ビューポート全体の幅
-    height: "100vh", // ビューポート全体の高さ
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // 半透明の黒背景
-    zIndex: 999, // ほぼすべての要素より上に配置
-  },
-  modalContent: {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    background: "#333",
-    color: "#fff",
-    padding: "20px",
-    borderRadius: "10px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-    width: "350px",
-    textAlign: "center",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    zIndex: 1001,
-  },
-  modalTitle: {
-    fontSize: "16px",
-    fontWeight: "bold",
-    marginBottom: "15px",
-  },
-  modalButtonContainer: {
-    display: "flex",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  modalButton: {
-    flex: 1,
-    padding: "10px",
-    borderRadius: "5px",
-    cursor: "pointer",
-    border: "none",
-    fontSize: "14px",
-    margin: "0 5px",
-    zIndex: 1001,
-  } as CSSProperties,
-  modalButtonYes: {
-    background: "#ff5722",
-    color: "#fff",
-  } as CSSProperties,
-  modalButtonNo: {
-    background: "#ddd",
-    color: "#333",
-  } as CSSProperties,
-};
+}
 
 export default function CartPage({}: {}) {
   const clientState = useClientState();
   const [err, setErr] = useState<ErrorData | string>();
   const [cart, setCart] = useState<CartRes>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { showNotification } = useProductContext()
+  const { showPurchaseYesNo } = useProductContext()
 
   useEffect(() => {
     if (clientState.state != "registered") return;
@@ -184,69 +127,18 @@ export default function CartPage({}: {}) {
       
       <ErrorMessage error={err}/>
       <SignInOutButton/>
-      {/* 購入確認モーダル */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <>
-            {/* 背景の暗転 */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={styles.modalOverlay}
-              onClick={() => setIsModalOpen(false)}
-            />
 
-            {/* モーダル本体 */}
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={styles.modalContent}
-              onClick={(e) => e.stopPropagation()} // クリックイベントの競合を防ぐ
-            >
-              <CheckCircle size={40} color="green" />
-              <h3 style={styles.modalTitle}>購入しますか？</h3>
-              <div style={styles.modalButtonContainer}>
-                <button
-                  style={{ ...styles.modalButton, ...styles.modalButtonYes }}
-                  onClick={() => {
-                    if (clientState.state !== "registered") throw new Error("not authenticated");
-                    clientState.client
-                      .authBody(Api.app.cart_buy_api_cart_buy_put, {}, undefined, {})
-                      .then((value) => {
-                        if (value.error) return setErr(value.error);
-                        showNotification("購入完了")
-                        setCart(undefined)
-                        
-                        setTimeout(() => {
-                          setIsModalOpen(false);
-                        }, 300);
-                      });
-                  }}
-                >
-                  はい
-                </button>
-                <button
-                  style={{ ...styles.modalButton, ...styles.modalButtonNo }}
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  いいえ
-                </button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
       <button
         className="border-2 hover:bg-gray-300"
         disabled={!cart}
-        onClick={() => setIsModalOpen(true)}
+        onClick={(e) => {
+          e.preventDefault(); // イベントの誤発火防止
+          showPurchaseYesNo();
+        }}
       >
         購入
       </button>
+
     </div>
   );
 }

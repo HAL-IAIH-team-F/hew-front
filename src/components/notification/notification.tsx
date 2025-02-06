@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { CSSProperties, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 import ProductThumbnail from "~/api/useImgData";
 import { ProductRes } from "@/(main)/search/sample/ProductRes";
+import { useProductContext } from "~/products/ContextProvider";
+import { Api } from "~/api/context/Api";
+import { CartRes } from "@/(main)/(timeline)/cart/CartRes";
+import { useClientState } from "~/api/context/ClientContextProvider";
+import { ErrorData } from "../../util/err/err";
 
 const notificationStyle = {
   container: {
@@ -55,13 +60,72 @@ const notificationStyle = {
   } as React.CSSProperties,
 };
 
+
+const purchaseStyle : Record<string, CSSProperties> = {
+    modalOverlay: {
+      position: "fixed", // 親要素の影響を受けず画面全体を覆う
+      top: 0,
+      left: 0,
+      width: "100vw", // ビューポート全体の幅
+      height: "100vh", // ビューポート全体の高さ
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.5)", // 半透明の黒背景
+      zIndex: 999, // ほぼすべての要素より上に配置
+    },
+    modalContent: {
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      background: "#333",
+      color: "#fff",
+      padding: "20px",
+      borderRadius: "10px",
+      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+      width: "350px",
+      textAlign: "center",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      zIndex: 1001,
+    },
+    modalTitle: {
+      fontSize: "16px",
+      fontWeight: "bold",
+      marginBottom: "15px",
+    },
+    modalButtonContainer: {
+      display: "flex",
+      justifyContent: "space-between",
+      width: "100%",
+    },
+    modalButton: {
+      flex: 1,
+      padding: "10px",
+      borderRadius: "5px",
+      cursor: "pointer",
+      border: "none",
+      fontSize: "14px",
+      margin: "0 5px",
+      zIndex: 1001,
+    },
+    modalButtonYes: {
+      background: "#ff5722",
+      color: "#fff",
+    },
+    modalButtonNo: {
+      background: "#ddd",
+      color: "#333",
+    },
+};
+
 type NotificationProps = {
   message: string;
   product?: ProductRes;
   onClose: () => void;
   index: number;
 };
-
 const Notification: React.FC<NotificationProps> = ({ message, product, onClose, index }) => {
   return (
     <motion.div
@@ -122,5 +186,87 @@ export const useNotification = (): [JSX.Element | null, (msg: string, product?: 
       ))}
     </AnimatePresence>,
     showNotification,
+  ];
+};
+
+
+const PurchaseYesNo = () =>{
+  const { isModalOpen, setIsModalOpen, showNotification } = useProductContext();
+  const [cart, setCart] = useState<CartRes | undefined>(undefined);
+  const clientState = useClientState();
+  const [err, setErr] = useState<ErrorData | string | null>(null);
+
+  return (
+    <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              style={purchaseStyle.modalOverlay}
+              onClick={() => setIsModalOpen(false)}
+            />
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              style={purchaseStyle.modalContent}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <CheckCircle size={40} color="green" />
+              <h3 style={purchaseStyle.modalTitle}>購入しますか？</h3>
+              <div style={purchaseStyle.modalButtonContainer}>
+                <button
+                  style={{ ...purchaseStyle.modalButton, ...purchaseStyle.modalButtonYes }}
+                  onClick={async () => {
+                    try {
+                      if (clientState.state !== "registered") throw new Error("not authenticated");
+
+                      const response = await clientState.client.authBody(
+                        Api.app.cart_buy_api_cart_buy_put,
+                        {},
+                        undefined,
+                        {}
+                      );
+
+                      if (response.error) {
+                        setErr(response.error);
+                        return;
+                      }
+
+                      showNotification("購入完了");
+                      setCart(undefined);
+                      setTimeout(() => setIsModalOpen(false), 300);
+                    } catch (error) {
+                      setErr(error instanceof Error ? error.message : "不明なエラーが発生しました");
+                    }
+                  }}
+                >
+                  はい
+                </button>
+                <button
+                  style={{ ...purchaseStyle.modalButton, ...purchaseStyle.modalButtonNo }}
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  いいえ
+                </button>
+              </div>
+              {err && <p style={{ color: "red" }}>{typeof err === "string" ? err : err.message}</p>}
+            </motion.div>
+    </AnimatePresence>
+  );
+}
+
+export const usePurchaseYesNo = (): [JSX.Element | null, () => void] => {
+  const { setIsModalOpen } = useProductContext();
+
+  const showPurchaseYesNo = () => {
+      setIsModalOpen(true)
+  };
+
+  return [
+      <PurchaseYesNo/>,
+      showPurchaseYesNo,
   ];
 };

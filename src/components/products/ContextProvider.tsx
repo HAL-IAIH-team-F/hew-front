@@ -2,7 +2,7 @@
 import { ProductRes } from '@/(main)/search/sample/ProductRes';
 import {useWindowSize} from '@/_hook/useWindowSize';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import { useNotification } from '~/notification/notification';
+import { useNotification, usePurchaseYesNo } from '~/notification/notification';
 
 // Contextの型定義
 interface ProductContextType {
@@ -10,11 +10,14 @@ interface ProductContextType {
   isProductOpen: boolean;
   isSidebarOpen: boolean;
   isMobile: boolean;
+  isModalOpen: boolean;
   toggleProductWindow: () => void;
   setProductId: (id: string) => void;
   setIsSidebarOpen: (id: boolean) => void;
   setIsMobile: (id: boolean) => void;
   showNotification: (msg: string, product?: ProductRes) => void;
+  setIsModalOpen: (id: boolean) => void;
+  showPurchaseYesNo: () => void;
 }
 
 // 初期値
@@ -29,7 +32,10 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
   const toggleProductWindow = () => setisProductOpen((prev) => !prev);
   const size = useWindowSize()
   const [notification, showNotification] = useNotification();
-    
+  const [isModalOpen, setIsModalOpen] = useState(false);  
+  const [purchaseYesNo, showPurchaseYesNo] = usePurchaseYesNo();
+
+
   useEffect(() => {
     if (size.width <= MOBILE_WIDTH) {
       setIsMobile(true)
@@ -51,10 +57,14 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
         isMobile,
         setIsMobile,
         showNotification,
+        isModalOpen,
+        setIsModalOpen,
+        showPurchaseYesNo,
       }}
     >
       {children}
       {notification}
+      {purchaseYesNo}
     </ProductContext.Provider>
   );
 };
