@@ -163,7 +163,6 @@ export default function ColabRegisterForm(
                                     }}
                                     >
                                         <StyledInput
-                                            as="input"
                                             name="title"
                                             value={title}
                                             maxLength={20}
@@ -267,7 +266,6 @@ export default function ColabRegisterForm(
                                         style={{}}
                                     >
                                         <StyledInput
-                                            as="textarea"
                                             name="description"
                                             // label=""
                                             value={description}

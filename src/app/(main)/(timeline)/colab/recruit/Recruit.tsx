@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion"; // Framer Motion を追加
 import { RecruitRes } from "./RecruitRes";
 import { useClientState } from "~/api/context/ClientContextProvider";
 import { Api } from "~/api/context/Api";
@@ -10,15 +11,12 @@ import Button from "./Button";
 export default function Recruit({ recruit }: { recruit: RecruitRes }) {
     const clientContext = useClientState();
     const [err, setErr] = useState<ErrorData>();
-    const [backgroundImage, setBackgroundImage] = useState<string>("none");
-    const [backgroundSize, setBackgroundSize] = useState<string>("cover");
-    const [padding, setPadding] = useState("1px 15px 3px 10px");
-    const [hoverSize, setHoverSize] = useState<string>("cover");
+    const [backgroundImage, setBackgroundImage] = useState<string | undefined>("none");
 
     const [style, setStyle] = useState({
-        width: "100%",
+        width: "30%",
         minHeight: "100px",
-        backgroundSize: "cover",
+        paddingRight: "20px",
     });
 
     useEffect(() => {
@@ -29,58 +27,28 @@ export default function Recruit({ recruit }: { recruit: RecruitRes }) {
         const updateStyles = () => {
             const width = window.innerWidth;
 
-            if (width > 768 && width < 1024) {
-                setHoverSize("750%")
-            }
-            else if (width < 768) {
-                setHoverSize("350%")
-            } else {
-                setHoverSize("250%")
-            }
-
-
-            //  `padding-right` の設定を 1850px ～ 1400px の範囲で変更
-            if (width >= 1850) {
-                setPadding("10px 20px 8px 10px"); // 1850px以上はデフォルト
-            } else if (width >= 1260) {
-                setPadding("10px 45px 8px 10px"); // 1400px ～ 1650px は `右 45px`
-            } else if (width >= 768) {
-                setPadding("10px 45px 8px 10px")
-            } else {
-                setPadding("10px 20px 8px 10px"); // 1400px 未満はデフォルト
-            }
-
-            const newStyle = {
+            setStyle({
                 width: width >= 1400 ? "18%" :
-                    width >= 1024 ? "20%" :
-                        width >= 768  ? "40%" :
-                            width >= 640  ? "70%" : "90%",
-                minHeight: width >= 1400 ? "200px" :
+                    width >= 1024 ? "40%" :
+                        // width >= 768  ? "80%" :
+                            width >= 770  ? "70%" : "90%",
+                minHeight: width >= 1400 ? "20px" :
                     width >= 1024 ? "180px" :
                         width >= 768  ? "90%" :
                             width >= 640  ? "90%" : "100px",
-                backgroundSize: backgroundSize,
-            };
-
-            setStyle((prevStyle) =>
-                JSON.stringify(prevStyle) === JSON.stringify(newStyle)
-                    ? prevStyle
-                    : { ...newStyle }
-            );
+                paddingRight:
+                    width >= 1850 ? "20px" :
+                        width >= 1260 ? "45px" :
+                            width >= 768 ? "45px" :
+                                "20px",
+            });
         };
 
-        updateStyles(); // 初回実行
+        updateStyles();
         window.addEventListener("resize", updateStyles);
+
         return () => window.removeEventListener("resize", updateStyles);
     }, [backgroundImage]);
-
-    const handleMouseEnter = () => {
-        setBackgroundSize(hoverSize);
-    };
-
-    const handleMouseLeave = () => {
-        setBackgroundSize("cover");
-    };
 
     const handleClick = () => {
         setErr(undefined);
@@ -96,27 +64,31 @@ export default function Recruit({ recruit }: { recruit: RecruitRes }) {
     };
 
     return (
-        <div
+        <motion.div
             key={recruit.recruit_id}
             className="border-2 group flex flex-col rounded-lg shadow-lg bg-white bg-opacity-50 backdrop-blur-md
                        hover:shadow-xl transition-shadow"
+            initial={{ scale: 1, zIndex: 1 }}
+            whileHover={{
+                scale: 1.1,
+                zIndex: 10,
+                translateY: "-5px",
+            }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
             style={{
-                ...style,
-                backgroundImage: backgroundImage && backgroundImage !== "none" ? `url(${backgroundImage})` : "none",
-                backgroundSize: backgroundSize,
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
+                width: style.width,
+                minHeight: style.minHeight,
+                background: backgroundImage && backgroundImage !== "none"
+                    ? `url(${backgroundImage}) center/cover no-repeat`
+                    : "none",
                 boxSizing: "border-box",
                 overflow: "hidden",
-                transition: "background-size 0.75s ease-in-out",
                 borderColor: "transparent",
                 borderStyle: "none",
                 justifyContent: "end",
+                position: "relative",
             }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
         >
-            {/*  `onIconUrlChange` を渡して、CreatorData から背景画像を取得 */}
             <CreatorData
                 creator_id={recruit?.creator_id ?? ""}
                 showView={false}
@@ -126,28 +98,42 @@ export default function Recruit({ recruit }: { recruit: RecruitRes }) {
                     }
                 }}
             />
-            <div className="flex flex-col">
-                <div style={{ width: "100%" }}></div>
+            <div className="flex flex-col"
+                style={{ width: "style.width"}}
+            >
+                <div style={{ }}></div>
 
                 <div
                     style={{
                         display: "flex",
-                        width: "100%",
                         backgroundColor: "rgba(166, 166, 166, 0.2)",
-                        backdropFilter: "blur(5px) brightness(0.7)",
+                        backdropFilter: "blur(5px) brightness(1.1)",
                         borderRadius: "0 0 8px 8px",
-                        padding: padding, // ✅ `padding` を `style` から分離
+                        padding: `10px ${style.paddingRight} 8px 10px`,
                     }}
                 >
-                    <div style={{
-                        color: "white",
-                        width: "85%",
-                    }}>
-                        <h1 className="group-hover:text-[#cbe8f7] font-bold text-sm sm:text-base md:text-lg">
-                            {recruit.title}
+                    <div style={{ color: "white", padding: "10px ${style.paddingRight} 8px 10px",width: "100%" }}>
+                        <h1
+                            className="group-hover:text-[#35b0f0] font-bold text-sm sm:text-base md:text-lg linee-clamp-2"
+                            style={{
+                                maxHeight: "30px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                            }}
+                        >
+                            {recruit.title.length > 7 ? recruit.title.substring(0, 7) + "..." : recruit.title}
                         </h1>
-                        <p className="group-hover:text-[#cbe8f7] text-xs sm:text-sm md:text-base">
-                            {recruit.description}
+                        <p
+                            className="group-hover:text-[#35b0f0] text-xs sm:text-sm md:text-base"
+                            style={{
+                                maxHeight: "30px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                            }}
+                        >
+                            {recruit.description.length > 8 ? recruit.description.substring(0, 8) + "..." : recruit.description}
                         </p>
                     </div>
 
@@ -166,7 +152,6 @@ export default function Recruit({ recruit }: { recruit: RecruitRes }) {
 
                 <ErrorMessage error={err} />
             </div>
-        </div>
+        </motion.div>
     );
 };
-
