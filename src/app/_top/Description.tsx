@@ -1,14 +1,16 @@
+"use client"
 // DescriptionButton.tsx
 import React, { useState } from 'react';
+import useRoutes from "~/route/useRoutes";
 
 type DescriptionButtonProps = {
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-export const DescriptionButton: React.FC<DescriptionButtonProps> = ({ onClick }) => {
+export const DescriptionButton: React.FC<DescriptionButtonProps> = ({  }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [buttonText, setButtonText] = useState("Description of this site");
   const [buttonPosition, setButtonPosition] = useState("bottom");
+    const routes = useRoutes()
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (buttonText === "Description of this site") {
@@ -18,7 +20,7 @@ export const DescriptionButton: React.FC<DescriptionButtonProps> = ({ onClick })
         setButtonPosition("top");
         setIsClicked(false);
       }, 3000);
-      onClick(e);
+      routes.lpDescription().transition()
     } else {
       setIsClicked(true);
       setTimeout(() => {
@@ -26,7 +28,7 @@ export const DescriptionButton: React.FC<DescriptionButtonProps> = ({ onClick })
         setButtonPosition("bottom");
         setIsClicked(false);
       }, 3000);
-      onClick(e);
+      routes.lp().transition()
     }
   };
 

@@ -9,8 +9,10 @@ export default function UnregisteredUserRedirect(
     const routes = useRoutes()
     useEffect(() => {
         if (clientState.state != "unregistered") return
-        if (routes.userRegister().isCurrent()) return
-        routes.userRegister().transition()
+        if (routes.lp().isCurrent()) return
+        if (routes.lpRegister().isCurrent()) return
+        if (routes.lpDescription().isCurrent()) return
+        routes.lpRegister().transition()
     }, [routes, clientState.state]);
     return undefined
 }

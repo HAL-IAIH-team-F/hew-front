@@ -10,12 +10,11 @@ import {FaCheckCircle} from 'react-icons/fa';
 import {useClientState} from "~/api/context/ClientContextProvider"; // React Icons のチェックマーク
 import {useWindowSize} from '@/_hook/useWindowSize';
 import {MOBILE_WIDTH} from '~/products/ContextProvider';
+import useRoutes from "~/route/useRoutes";
 
-type UIContainerProps = {
-    onButtonClick: boolean;
-};
+type UIContainerProps = {};
 
-const UIContainer: React.FC<UIContainerProps> = ({onButtonClick}) => {
+const UIContainer: React.FC<UIContainerProps> = ({}) => {
     const UIContainerRef = useRef<HTMLDivElement>(null);
     const isInitialRender = useRef(true);
     const clientContext = useClientState();
@@ -24,7 +23,7 @@ const UIContainer: React.FC<UIContainerProps> = ({onButtonClick}) => {
     const checkMarkRef = useRef<HTMLDivElement>(null); // チェックマークの参照
     const windowSize = useWindowSize();
     const isMobile = windowSize.width < MOBILE_WIDTH;
-
+    const routes = useRoutes()
     useEffect(() => {
         if (clientContext.state === "registered") {
             setIsloading(false);
@@ -46,7 +45,7 @@ const UIContainer: React.FC<UIContainerProps> = ({onButtonClick}) => {
         }
 
         if (UIContainerRef.current) {
-            if (onButtonClick) {
+            if (routes.lpDescription().isCurrent()) {
                 gsap.to(UIContainerRef.current, {
                     y: -40,
                     opacity: 0,
@@ -68,7 +67,7 @@ const UIContainer: React.FC<UIContainerProps> = ({onButtonClick}) => {
                 });
             }
         }
-    }, [onButtonClick]);
+    }, [routes.lpDescription().isCurrent()]);
 
     useEffect(() => {
         if (isAuthenticated && checkMarkRef.current) {

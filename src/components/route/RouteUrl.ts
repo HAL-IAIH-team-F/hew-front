@@ -13,7 +13,7 @@ export class RouteUrl {
   }
 
   isCurrent() {
-    return this.routes.prevPath == this.path
+    return this.routes.currentPath == this.path
   }
 
   transition(event: React.UIEvent | undefined = undefined) {
