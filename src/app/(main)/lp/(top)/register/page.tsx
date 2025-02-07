@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import UserRegisterForm from "@/(main)/lp/register/UserRegisterForm";
+import UserRegisterForm from "@/(main)/lp/(top)/register/UserRegisterForm";
 import {useClientState} from "~/api/context/ClientContextProvider";
 
 export default function Page(

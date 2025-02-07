@@ -12,9 +12,14 @@ import {useWindowSize} from '@/_hook/useWindowSize';
 import {MOBILE_WIDTH} from '~/products/ContextProvider';
 import useRoutes from "~/route/useRoutes";
 
-type UIContainerProps = {};
 
-const UIContainer: React.FC<UIContainerProps> = ({}) => {
+function UIContainer(
+    {
+        requestDescription,
+    }: {
+        requestDescription: boolean
+    }
+) {
     const UIContainerRef = useRef<HTMLDivElement>(null);
     const isInitialRender = useRef(true);
     const clientContext = useClientState();
@@ -45,12 +50,15 @@ const UIContainer: React.FC<UIContainerProps> = ({}) => {
         }
 
         if (UIContainerRef.current) {
-            if (routes.lpDescription().isCurrent()) {
+            if (requestDescription) {
                 gsap.to(UIContainerRef.current, {
                     y: -40,
                     opacity: 0,
                     duration: 2.4,
                     ease: "expo.inOut",
+                    onComplete: () => {
+                        routes.lpDescription().transition()
+                    }
                 });
             } else {
                 gsap.to(UIContainerRef.current, {
@@ -62,12 +70,15 @@ const UIContainer: React.FC<UIContainerProps> = ({}) => {
                             opacity: 1,
                             duration: 1,
                             ease: "expo.inOut",
+                            onComplete: () => {
+                                routes.lp().transition()
+                            }
                         });
                     }
                 });
             }
         }
-    }, [routes.lpDescription().isCurrent()]);
+    }, [requestDescription]);
 
     useEffect(() => {
         if (isAuthenticated && checkMarkRef.current) {
@@ -80,73 +91,75 @@ const UIContainer: React.FC<UIContainerProps> = ({}) => {
     }, [isAuthenticated]);
 
     return (
-        <div ref={UIContainerRef} className="UI" style={{
-            position: 'fixed',
-            top: '0',
-            left: '0',
-            width: '100vw',
-            height: '100vh',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            color: 'rgba(255, 255, 255, 0.9)',
-            fontFamily: 'UDEVGothic, sans-serif',
-            zIndex: 6,
-        }}>
-            <div style={{
-                textAlign: 'center',
-                padding: isMobile ? '20px 30px' : '30px 50px',
-                borderRadius: '8px',
-                boxSizing: "border-box", // サイズ計算にパディングを含む
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                width: isMobile ? '90%' : '30%',
-            }} className={"min-w-fit h-fit"}>
-                <Title/>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "10px"
-                    }}
-                >
-                    {isloading ? (
-                        <div className="loading-spinner" style={{
-                            width: '30px',
-                            height: '30px',
-                            border: '4px solid rgba(255, 255, 255, 0.3)',
-                            borderTop: '4px solid #ffffff',
-                            borderRadius: '50%',
-                            animation: 'spin 1s linear infinite'
-                        }}/>
-                    ) : isAuthenticated ? (
-                        <div
-                            ref={checkMarkRef}
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                opacity: 0, // 初期状態で非表示
-                            }}
-                        >
-                            <FaCheckCircle
+        <>
+            <div ref={UIContainerRef} className="UI" style={{
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                width: '100vw',
+                height: '100vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontFamily: 'UDEVGothic, sans-serif',
+                zIndex: 6,
+            }}>
+                <div style={{
+                    textAlign: 'center',
+                    padding: isMobile ? '20px 30px' : '30px 50px',
+                    borderRadius: '8px',
+                    boxSizing: "border-box", // サイズ計算にパディングを含む
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    width: isMobile ? '90%' : '30%',
+                }} className={"min-w-fit h-fit"}>
+                    <Title/>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "10px"
+                        }}
+                    >
+                        {isloading ? (
+                            <div className="loading-spinner" style={{
+                                width: '30px',
+                                height: '30px',
+                                border: '4px solid rgba(255, 255, 255, 0.3)',
+                                borderTop: '4px solid #ffffff',
+                                borderRadius: '50%',
+                                animation: 'spin 1s linear infinite'
+                            }}/>
+                        ) : isAuthenticated ? (
+                            <div
+                                ref={checkMarkRef}
                                 style={{
-                                    color: '#4caf50',
-                                    fontSize: '30px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    opacity: 0, // 初期状態で非表示
                                 }}
-                            />
-                        </div>
-                    ) : (
-                        <>
-                            <LoginButton/>
-                            <RegisterButton/>
-                        </>
-                    )}
+                            >
+                                <FaCheckCircle
+                                    style={{
+                                        color: '#4caf50',
+                                        fontSize: '30px',
+                                    }}
+                                />
+                            </div>
+                        ) : (
+                            <>
+                                <LoginButton/>
+                                <RegisterButton/>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

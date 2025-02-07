@@ -1,15 +1,17 @@
-"use client";
+"use client"
 import React, {ReactNode, useEffect, useRef, useState} from "react";
-import {Canvas} from "@react-three/fiber";
-import {SeaScene} from "./SeaScene";
-import useRoutes from "~/route/useRoutes";
 import {useClientState} from "~/api/context/ClientContextProvider";
+import useRoutes from "~/route/useRoutes";
 
-function Sea({children}: { children?: ReactNode }) {
+export default function Layout(
+    {
+        children,
+    }: Readonly<{
+        children: ReactNode;
+    }>) {
     const routes = useRoutes()
     const clientState = useClientState()
     const [fadeOut, setFadeOut] = useState<boolean>(false)
-    const [node, setNode] = useState<ReactNode>(children)
     const prevPathRef = useRef<string>();
     useEffect(() => {
         const prevPath = prevPathRef.current;
@@ -19,20 +21,17 @@ function Sea({children}: { children?: ReactNode }) {
         if (prevPath == routes.lpDescription().pathname()) return
 
 
-        setFadeOut(true)
-        const timeout = setTimeout(() => {
-            setNode(children)
-            setFadeOut(false)
-        }, 2000);
-        return () => clearTimeout(timeout)
+        // setFadeOut(true)
+        // const timeout = setTimeout(() => {
+        //     setNode(children)
+        //     setFadeOut(false)
+        // }, 2000);
+        // return () => clearTimeout(timeout)
     }, [routes.currentPath]);
 
-    return (
-        <div style={{width: "100vw", height: "100vh", position: "relative", backgroundColor: "black"}}>
-            <Canvas style={{position: "absolute", top: 0, left: 0}}>
-                <SeaScene onButtonClick={routes.lpDescription().isCurrent()}/>
-            </Canvas>
 
+    return (
+        <>
             <div
                 style={{
                     position: "absolute",
@@ -51,9 +50,8 @@ function Sea({children}: { children?: ReactNode }) {
                     } : {}),
                 }}
             >
-                {node}
+                {children}
             </div>
-        </div>
-    );
-};
-export default Sea;
+        </>
+    )
+}
