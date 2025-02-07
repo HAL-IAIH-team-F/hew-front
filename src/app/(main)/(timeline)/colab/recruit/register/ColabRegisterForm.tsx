@@ -24,18 +24,6 @@ export default function ColabRegisterForm(
     const isButtonDisabled = !title.trim() || !description.trim();
     const [successMessage, setSuccessMessage] = useState<string>("");
 
-    // // AuthBodyResponse の型定義
-    // type AuthBodyResponse = {
-    //     success?: {
-    //         creator_id: string; // number から string に変更
-    //         description: string;
-    //         recruit_id: string; // number から string に変更
-    //         title: string;
-    //     };
-    //     error?: {
-    //         message: string;
-    //     };
-    // };
 
     return (
         <StyledForm
