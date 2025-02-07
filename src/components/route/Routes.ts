@@ -50,12 +50,16 @@ export class Routes {
         return new TimelinePageRouteUrl(this, "/cart")
     }
 
-    // joinToTimelinePath(path: string) {
-    //   let result
-    //   if (timeline.endsWith("/")) result = timeline.slice(0, -1)
-    //   else result = timeline
-    //   if (path.startsWith("/")) result += path
-    //   else result += "/" + path
-    //   return result
-    // }
+    colablisting() {
+        return new TimelinePageRouteUrl(this, "/colablisting")
+    }
+
+  // joinToTimelinePath(path: string) {
+  //   let result
+  //   if (timeline.endsWith("/")) result = timeline.slice(0, -1)
+  //   else result = timeline
+  //   if (path.startsWith("/")) result += path
+  //   else result += "/" + path
+  //   return result
+  // }
 }

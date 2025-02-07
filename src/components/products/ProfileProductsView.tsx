@@ -76,12 +76,11 @@ export default function ProfileProductsView({}: ProductPageProps) {
                         <strong>{product.product_price} 円</strong>
                       </p>
                     </div>
-                    {product.creator_ids.map((id) => (
-                      <p key={id} style={styles.creator_data}>
-                        <CreatorData creator_id={id}/>
-                      </p>
-                    ))}
-                    
+                      {product.creator_ids.map((id) => (
+                          <p key={id} style={styles.creator_data}>
+                              <CreatorData creator_id={id} showView={true}/>
+                          </p>
+                      ))}
                   </div>
                   <div style={styles.thumbnailWrapper}>
                     <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>
@@ -100,30 +99,51 @@ export default function ProfileProductsView({}: ProductPageProps) {
 
 interface CreatorDataProps {
   creator_id: string;
+  showView?: boolean; // trueならViewを表示、falseならデータのみ取得
+  onDataFetched?: (data: { iconUrl: string | null; screenId?: string}) => void;
 }
 
-export function CreatorData({creator_id}: CreatorDataProps) {
-  const [_, user_data, __] = useCreatorData({creator_id});
 
+export function CreatorData({creator_id, showView = true, onDataFetched }: CreatorDataProps) {
+  const [_, user_data, __] = useCreatorData({creator_id});
+  const iconUrl = user_data?.icon ? (user_data.icon as any).strUrl() : null;
+  const screenId = user_data?.screen_id;
+
+  useEffect(() => {
+    if (onDataFetched) {
+      onDataFetched({iconUrl, screenId});
+    }
+  }, [iconUrl, screenId, onDataFetched]);
+
+  // showViewがfalseの場合はViewを表示せず、データのみ取得
+  if (!showView) return null;
+
+  return <CreatorDataView iconUrl={iconUrl} screenId={screenId}/>;
+}
+
+interface CreatorDataViewProps {
+  iconUrl: string | null;
+  screenId?: string;
+}
+
+export function CreatorDataView({iconUrl, screenId}: CreatorDataViewProps) {
   return (
     <div>
-      {user_data?.icon ? (
-        
+      {iconUrl ? (
         <>
-        <div style={styles.userName}>@{user_data?.screen_id}</div>
-        <Image
-          alt="User Icon"
-          src={(user_data.icon as any).strUrl()} // 型の不一致を回避
-          width={33}
-          height={33}
-          style={styles.userIcon}/>
-          
+          <Image
+            alt="User Icon"
+            src={iconUrl}
+            width={33}
+            height={33}
+            style={styles.userIcon}
+          />
+          <p>{screenId}</p>
         </>
       ) : (
-        <div>No Icon</div> // 画像がない場合のフォールバック
+        <div>No Icon</div>
       )}
     </div>
-
   );
 }
 
@@ -261,6 +281,6 @@ const styles: { [key: string]: CSSProperties } = {
     top: '47px',
     left: '47px',
     color: "white",
-    
+
   }
 };
