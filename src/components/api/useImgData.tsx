@@ -30,20 +30,24 @@ const ProductThumbnail = ({product_thumbnail_uuid}: ProductUuid) => {
   }, [context, product_thumbnail_uuid]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <p>Error: {error}</p>;
+    return <div>Error: {error}</div>;
   }
 
   if (!image) {
-    return <p>No image available</p>;
+    return <div>No image available</div>;
   }
 
   return (
-    <div>
-      <img src={image.strUrl()} alt="Product Thumbnail"/>
+    <div className="w-full h-full">
+      <img
+        src={image.strUrl()}
+        alt="Product Thumbnail"
+        className="w-full h-full object-cover"
+      />
     </div>
   );
 };

@@ -26,7 +26,6 @@ export default function Layout(
             <RightWindow/>
           </Suspense>
           <Overlay/>
-          
         </SidebarManagerProvider>
       </ProductProvider>
     </>

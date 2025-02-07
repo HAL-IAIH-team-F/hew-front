@@ -1,109 +1,44 @@
-"use client";
-import {CSSProperties, useEffect, useState} from "react";
-import {Api} from "~/api/context/Api";
-import {ErrorData} from "../../../../util/err/err";
-import {CartRes} from "@/(main)/(timeline)/cart/CartRes";
-import {ErrorMessage} from "../../../../util/err/ErrorMessage";
-import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
-import ProductThumbnail from "~/api/useImgData";
-import useProducts from "~/hooks/useProducts";
-import {useClientState} from "~/api/context/ClientContextProvider";
-import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle } from "lucide-react";
-import { useNotification } from "~/notification/notification";
-import { useProductContext } from "~/products/ContextProvider";
+"use client"
+import React, { useEffect, useState } from 'react';
+import { Trash2, MinusCircle, PlusCircle, ShoppingCart } from 'lucide-react';
+import useProduct from '~/hooks/useProduct';
+import useProducts from '~/hooks/useProducts';
+import { useProductContext } from '~/products/ContextProvider';
+import { useClientState } from '~/api/context/ClientContextProvider';
+import { Api } from '~/api/context/Api';
+import ProductThumbnail from '~/api/useImgData';
 
-const styles: Record<string, CSSProperties> = {
-  productList: {
-    padding: "20px",
-    fontFamily: "'Arial', sans-serif",
-    backgroundColor: "#f6f6f6",
-  },
-  title: {
-    textAlign: "left" as CSSProperties["textAlign"],
-    fontSize: "20px",
-    fontWeight: "bold",
-    color: "#333",
-    borderBottom: "2px solid #e7e7e7",
-    paddingBottom: "10px",
-    marginBottom: "20px",
-  },
-  productGrid: {
-    display: "flex",
-    flexDirection: "column" as CSSProperties["flexDirection"],
-    gap: "15px",
-    listStyle: "none",
-    padding: 0,
-  },
-  productCard: {
-    display: "flex",
-    background: "#fff",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    overflow: "hidden",
-    transition: "transform 0.3s ease",
-    padding: "10px",
-    alignItems: "center",
-  },
-  productThumbnail: {
-    width: "80px",
-    height: "80px",
-    objectFit: "cover" as CSSProperties["objectFit"],
-    marginRight: "10px",
-    backgroundColor: "#f8f8f8",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
-  },
-  productDetails: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column" as CSSProperties["flexDirection"],
-    gap: "3px",
-  },
-  productTitle: {
-    fontSize: "14px",
-    fontWeight: "bold",
-    color: "#333",
-  },
-  productPrice: {
-    fontSize: "14px",
-    fontWeight: "bold",
-    color: "#B12704",
-  },
-  error: {
-    color: "red",
-    textAlign: "center" as CSSProperties["textAlign"],
-    margin: "10px 0",
-  },
-  loading: {
-    textAlign: "center" as CSSProperties["textAlign"],
-    fontSize: "18px",
-    color: "#555",
-  },
-  thumbnailWrapper: {
-    width: "13%",
-    height: "auto", // 高さを制御しない場合
-    backgroundColor: "#000",
-    overflow: "hidden",
-    display: "flex",
-    justifyContent: "center", // 画像を中央に配置
-    alignItems: "center",
-    borderRadius: "6px",
-  },
-  thumbnailImage: {
-    width: "100%", // 親要素の幅に合わせる
-    height: "100%", // 親要素の高さに合わせる
-    objectFit: "cover", // 画像が要素を覆うようにリサイズ
-    objectPosition: "center", // 画像を中央に配置
-  },
+// 元のコードの型定義を再現
+interface ErrorData {
+  message: string;
+  code?: string;
 }
 
-export default function CartPage({}: {}) {
+interface CartRes {
+  cart_id: string;
+  user_id: string;
+  product_ids: string[]
+}
+
+interface Product {
+  product_id: string;
+  product_title: string;
+  product_price: number;
+  product_thumbnail_uuid: string;
+}
+
+interface ProductListProps {
+  productId?: string;
+}
+
+
+
+const CartPage = () => {
   const clientState = useClientState();
   const [err, setErr] = useState<ErrorData | string>();
   const [cart, setCart] = useState<CartRes>();
-  const { showPurchaseYesNo } = useProductContext()
+  const { showNotification, showPurchaseYesNo } = useProductContext()
+  const [totalPrice, setTotalPrice] = useState<number>(0);
 
   useEffect(() => {
     if (clientState.state != "registered") return;
@@ -111,71 +46,159 @@ export default function CartPage({}: {}) {
       if (value.error) return setErr(value.error);
       // noinspection SuspiciousTypeOfGuard
       if (typeof value.success == "string") return setErr("no cart");
+      if (value.success.product_ids.length === 0)  return setErr("no cart");
+
       setCart(value.success);
     });
   }, [clientState.state]);
 
-
+  
   return (
-    
-    <div>
-      {cart?.product_ids.map((value) => (
-        <p key={value}>
-          {<ProductList productId={value}/>}
-        </p>
-      ))}
-      
-      <ErrorMessage error={err}/>
-      <SignInOutButton/>
-
-      <button
-        className="border-2 hover:bg-gray-300"
-        disabled={!cart}
-        onClick={(e) => {
-          e.preventDefault(); // イベントの誤発火防止
-          showPurchaseYesNo();
-        }}
-      >
-        購入
-      </button>
-
-    </div>
-  );
-}
-
-interface ProductListProps {
-  productId?: string;
-}
-
-const ProductList: React.FC<ProductListProps> = ({productId}) => {
-  const {products, error} = useProducts({productId});
-
-  if (error) {
-    return <div style={styles.error}>Error: {error.message}</div>;
-  }
-
-  if (!products.length) {
-    return <div style={styles.loading}>Loading or no products available...</div>;
-  }
-
-  return (
-    <div style={styles.productList}>
-      <ul style={styles.productGrid}>
-        {products.map((product) => (
-          <li key={product.product_id} style={styles.productCard}>
-            <div style={styles.thumbnailWrapper}>
-              <div style={styles.thumbnailImage}>
-                <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>
+    <div className="min-h-screen bg-gray-100">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8 text-gray-900 flex items-center gap-2">
+          <ShoppingCart className="w-8 h-8" />
+          カート
+        </h1>
+        
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Cart Items Section */}
+          <div className="flex-grow">
+            <div className="bg-white rounded-lg shadow-sm">
+              {cart?.product_ids.map((value) => (
+                <div key={value} className="border-b last:border-b-0">
+                  <ProductList productId={value} />
+                </div>
+              ))}
+            </div>
+            {err && (
+              <div className="mt-4 p-4 bg-red-50 text-red-600 rounded-lg">
+                {typeof err === 'string' ? err : err.message}
               </div>
-            </div>
-            <div style={styles.productDetails}>
-              <h2 style={styles.productTitle}>{product.product_title}</h2>
-              <p style={styles.productPrice}>{product.product_price}円</p>
-            </div>
+            )}
+          </div>
 
-          </li>
-        ))}
-      </ul>
+          {/* Order Summary Section */}
+          <div className="w-full md:w-80">
+            <div className="bg-white p-6 rounded-lg shadow-sm sticky top-4">
+              <div className="mb-4">
+                <h2 className="text-lg font-bold text-gray-900">注文内容</h2>
+                <div className="mt-4 space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">商品の小計</span>
+                    <span className="font-bold">¥{totalPrice}円</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">割引適応</span>
+                    <span className="text-green-600">10%OFF</span>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t">
+                  <div className="flex justify-between">
+                    <span className="text-lg font-bold">合計</span>
+                    <span className="text-lg font-bold">¥{totalPrice - totalPrice / 10}円 </span>
+                  </div>
+                </div>
+              </div>
+              
+              <button
+                className={`w-full font-semibold py-2 px-4 rounded-lg transition-colors ${
+                  !cart 
+                    ? "bg-gray-400 text-gray-700 cursor-not-allowed pointer-events-none"
+                    : "bg-yellow-400 hover:bg-yellow-500 text-gray-900"
+                }`}
+                disabled={!cart}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (cart) showPurchaseYesNo();
+                }}
+              >
+                {!cart ? "カートが空です" : "レジに進む"}
+              </button>
+
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
+
+const ProductList: React.FC<ProductListProps> = ({ productId}) => {
+  const {products, error} = useProducts({productId});
+  if (products.length == 0) {
+    return (
+      <div className="p-4 text-gray-500 text-center">
+        商品が見つかりませんでした
+      </div>
+    );
+  }
+  return (
+    <>
+      {products.map((product) => (
+        <div key={product.product_id} className="p-4 hover:bg-gray-50">
+          <div className="flex items-center gap-4">
+            {/* Product Image */}
+            <div className="w-32 h-32 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 relative">
+              <div className="absolute top-0 left-0 w-full h-full">
+                <div className="w-full h-full object-cover">
+                <ProductThumbnail
+                  product_thumbnail_uuid={product.product_thumbnail_uuid}
+                />
+                </div>
+              </div>
+            </div>
+
+            {/* Product Details */}
+            <div className="flex-grow">
+              <h3 className="text-lg font-medium text-gray-900 mb-1">
+                {product.product_title}
+              </h3>
+              <div className="text-xl font-bold text-[#B12704] mb-2">
+                ¥{product.product_price.toLocaleString()}円
+              </div>
+              
+              {/* Quantity Selector */}
+              <div className="flex items-center gap-3">
+                <button 
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <MinusCircle className="w-5 h-5" />
+                </button>
+                <button 
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <PlusCircle className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="mt-4 flex items-center gap-4">
+                <button className="text-sm text-blue-600 hover:text-blue-800">
+                  後で買う
+                </button>
+                <button 
+                  className="text-sm text-red-600 hover:text-red-800 flex items-center gap-1"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  削除
+                </button>
+              </div>
+            </div>
+
+            {/* Price */}
+            <div className="text-right flex-shrink-0">
+              <div className="text-xl font-bold text-gray-900">
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </>
+  );
+};
+
+export default CartPage;

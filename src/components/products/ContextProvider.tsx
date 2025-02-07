@@ -33,7 +33,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
   const size = useWindowSize()
   const [notification, showNotification] = useNotification();
   const [isModalOpen, setIsModalOpen] = useState(false);  
-  const [purchaseYesNo, showPurchaseYesNo] = usePurchaseYesNo();
+  const [purchaseYesNo, showPurchaseYesNo, purchaseComplete] = usePurchaseYesNo();
 
 
   useEffect(() => {
@@ -65,6 +65,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
       {children}
       {notification}
       {purchaseYesNo}
+      {purchaseComplete}
     </ProductContext.Provider>
   );
 };
