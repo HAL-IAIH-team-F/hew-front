@@ -2,31 +2,26 @@
 'use client';
 import React, {useEffect, useRef, useState} from 'react';
 import gsap from 'gsap';
-import Title from './Title';
-import LoginButton from './LoginButton';
-import RegisterButton from './RegisterButton';
+import Title from '../../../../_top/Title';
+import LoginButton from '../../../../_top/LoginButton';
+import RegisterButton from '../../../../_top/RegisterButton';
 
 import {FaCheckCircle} from 'react-icons/fa';
 import {useClientState} from "~/api/context/ClientContextProvider"; // React Icons のチェックマーク
 import {useWindowSize} from '@/_hook/useWindowSize';
 import {MOBILE_WIDTH} from '~/products/ContextProvider';
-import useRoutes from "~/route/useRoutes";
-import {useDescriptionSwitchAnimationState} from "@/(main)/lp/DescriptionSwitchState";
+import LpTopContainer from "@/(main)/lp/(top)/_top/LpTopContainer";
 
 
-function UIContainer(
+function LpTopUi(
     {}: {}
 ) {
-    const UIContainerRef = useRef<HTMLDivElement>(null);
-    const isInitialRender = useRef(true);
-    const clientContext = useClientState();
     const [isloading, setIsloading] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const checkMarkRef = useRef<HTMLDivElement>(null); // チェックマークの参照
     const windowSize = useWindowSize();
     const isMobile = windowSize.width < MOBILE_WIDTH;
-    const routes = useRoutes()
-    const descriptionState = useDescriptionSwitchAnimationState()
+    const clientContext = useClientState();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const checkMarkRef = useRef<HTMLDivElement>(null); // チェックマークの参照
     useEffect(() => {
         if (clientContext.state === "registered") {
             setIsloading(false);
@@ -38,22 +33,6 @@ function UIContainer(
             setIsloading(true);
         }
     }, [clientContext.state]);
-
-    useEffect(() => {
-        if (descriptionState.state != "requestOpen") return
-        gsap.to(UIContainerRef.current, {
-            y: -40,
-            opacity: 0,
-            duration: 2.4,
-            ease: "expo.inOut",
-            onComplete: () => {
-                routes.lpDescription().transition()
-            }
-        });
-        setTimeout(() => {
-            isInitialRender.current = false;
-        }, 0);
-    }, [descriptionState.state]);
     useEffect(() => {
         if (isAuthenticated && checkMarkRef.current) {
             gsap.fromTo(
@@ -63,44 +42,10 @@ function UIContainer(
             );
         }
     }, [isAuthenticated]);
-    const isFirst = useRef(true);
-    useEffect(() => {
-        if (!isFirst.current) return
-        isFirst.current = false;
-
-        gsap.to(UIContainerRef.current,  {
-            y: 0,
-            duration: descriptionState.prevState == "opened" ? 2 : 0.5,
-            ease: "expo.inOut",
-            onComplete: () => {
-                gsap.to(UIContainerRef.current, {
-                    opacity: 1,
-                    duration: 1,
-                    ease: "expo.inOut",
-                });
-            }
-        });
-        setTimeout(() => {
-            isInitialRender.current = false;
-        }, 0);
-    }, []);
 
     return (
         <>
-            <div ref={UIContainerRef} className="UI" style={{
-                position: 'fixed',
-                top: '-40px',
-                left: '0',
-                width: '100vw',
-                height: '100vh',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                color: 'rgba(255, 255, 255, 0.9)',
-                fontFamily: 'UDEVGothic, sans-serif',
-                zIndex: 6,
-                opacity: 0,
-            }}>
+            <LpTopContainer>
                 <div style={{
                     textAlign: 'center',
                     padding: isMobile ? '20px 30px' : '30px 50px',
@@ -154,9 +99,9 @@ function UIContainer(
                         )}
                     </div>
                 </div>
-            </div>
+            </LpTopContainer>
         </>
     );
 }
 
-export default UIContainer;
+export default LpTopUi;
