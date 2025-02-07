@@ -6,6 +6,7 @@ import {EffectComposer, RenderPass, UnrealBloomPass, Water} from "three-stdlib";
 import gsap from "gsap";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import useRoutes from "~/route/useRoutes";
+import {useDescriptionSwitchAnimationState} from "@/(main)/lp/DescriptionSwitchAnimation";
 
 
 function animate(composer: EffectComposer<THREE.WebGLRenderTarget<THREE.Texture>>, water: Water) {
@@ -20,11 +21,7 @@ function animate(composer: EffectComposer<THREE.WebGLRenderTarget<THREE.Texture>
 }
 
 export function SeaScene(
-    {
-        requestDescription,
-    }: {
-        requestDescription: boolean
-    }
+    {}: {}
 ) {
     const {scene, camera, gl: renderer} = useThree();
     const waterRef = useRef<THREE.Mesh>();
@@ -32,7 +29,7 @@ export function SeaScene(
     const [FilmPass, setFilmPass] = useState<{ constructor: any }>()
     const clientContext = useClientState();
     const routes = useRoutes()
-
+    const descriptionState = useDescriptionSwitchAnimationState()
     const handleComplete = () => {
         routes.timeline().transition();
     };
@@ -176,38 +173,33 @@ export function SeaScene(
     }, [clientContext.state]);
 
     useEffect(() => {
-
-        if (isInitialRender.current) {
-            setTimeout(() => {
-                isInitialRender.current = false;
-            }, 10);
-            return;
-        }
-
-        if (requestDescription) {
-            gsap.to(camera.position, {
-                y: camera.position.y - 50,
-                duration: 2.5,
-                ease: "expo.in",
-                onUpdate: () => {
-                    if (camera.position.y < 0) {
-                        scene.background = new THREE.Color(0x00334d);
-                    }
-                },
-            });
-        } else {
-            gsap.to(camera.position, {
-                y: camera.position.y + 50,
-                duration: 3,
-                ease: "expo.out",
-                onUpdate: () => {
-                    if (camera.position.y >= 0) {
-                        scene.background = new THREE.Color(0xbce2e8);
-                    }
-                },
-            });
-        }
-    }, [requestDescription]);
-
+        if (descriptionState.state != "requestOpen") return
+        gsap.to(camera.position, {
+            y: camera.position.y - 50,
+            duration: 2.5,
+            ease: "expo.in",
+            onUpdate: () => {
+                if (camera.position.y < 0) {
+                    scene.background = new THREE.Color(0x00334d);
+                }
+            },
+        });
+    }, [descriptionState.state]);
+    useEffect(() => {
+        if (descriptionState.state != "requestClose") return
+        gsap.to(camera.position, {
+            y: camera.position.y + 50,
+            duration: 3,
+            ease: "expo.out",
+            onUpdate: () => {
+                if (camera.position.y >= 0) {
+                    scene.background = new THREE.Color(0xbce2e8);
+                }
+            },
+        });
+        setTimeout(() => {
+            isInitialRender.current = false;
+        }, 10);
+    }, [descriptionState.state]);
     return null;
-};
+}

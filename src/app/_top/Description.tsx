@@ -1,20 +1,22 @@
 // DescriptionButton.tsx
 import React, {useState} from 'react';
+import {
+    createRequestCloseDescriptionAnimationState,
+    createRequestOpenDescriptionAnimationState,
+    useDescriptionSwitchAnimationState
+} from "@/(main)/lp/DescriptionSwitchAnimation";
 
 
 export function DescriptionButton(
-    {
-        requestUp, requestDown,
-    }: {
-        requestUp: () => void,
-        requestDown: () => void,
-    }
+    {}: {}
 ) {
     const [isClicked, setIsClicked] = useState(false);
     const [buttonText, setButtonText] = useState("Description of this site");
     const [buttonPosition, setButtonPosition] = useState("bottom");
+    const descriptionState = useDescriptionSwitchAnimationState()
 
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = () => {
+        if (descriptionState.state == "loading") return
         console.log("click", buttonText)
         if (buttonText === "Description of this site") {
             setIsClicked(true);
@@ -23,7 +25,7 @@ export function DescriptionButton(
                 setButtonPosition("top");
                 setIsClicked(false);
             }, 3000);
-            requestDown()
+            descriptionState.set(createRequestOpenDescriptionAnimationState(descriptionState.set))
         } else {
             setIsClicked(true);
             setTimeout(() => {
@@ -31,7 +33,7 @@ export function DescriptionButton(
                 setButtonPosition("bottom");
                 setIsClicked(false);
             }, 3000);
-            requestUp()
+            descriptionState.set(createRequestCloseDescriptionAnimationState(descriptionState.set))
         }
     };
 
@@ -78,4 +80,4 @@ export function DescriptionButton(
             {buttonText}
         </button>
     );
-};
+}

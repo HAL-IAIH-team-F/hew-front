@@ -11,14 +11,11 @@ import {useClientState} from "~/api/context/ClientContextProvider"; // React Ico
 import {useWindowSize} from '@/_hook/useWindowSize';
 import {MOBILE_WIDTH} from '~/products/ContextProvider';
 import useRoutes from "~/route/useRoutes";
+import {useDescriptionSwitchAnimationState} from "@/(main)/lp/DescriptionSwitchAnimation";
 
 
 function UIContainer(
-    {
-        requestDescription,
-    }: {
-        requestDescription: boolean
-    }
+    {}: {}
 ) {
     const UIContainerRef = useRef<HTMLDivElement>(null);
     const isInitialRender = useRef(true);
@@ -29,6 +26,7 @@ function UIContainer(
     const windowSize = useWindowSize();
     const isMobile = windowSize.width < MOBILE_WIDTH;
     const routes = useRoutes()
+    const descriptionState = useDescriptionSwitchAnimationState()
     useEffect(() => {
         if (clientContext.state === "registered") {
             setIsloading(false);
@@ -42,44 +40,41 @@ function UIContainer(
     }, [clientContext.state]);
 
     useEffect(() => {
-        if (isInitialRender.current) {
-            setTimeout(() => {
-                isInitialRender.current = false;
-            }, 0);
-            return;
-        }
-
-        if (UIContainerRef.current) {
-            if (requestDescription) {
+        if (descriptionState.state != "requestOpen") return
+        gsap.to(UIContainerRef.current, {
+            y: -40,
+            opacity: 0,
+            duration: 2.4,
+            ease: "expo.inOut",
+            onComplete: () => {
+                routes.lpDescription().transition()
+            }
+        });
+        setTimeout(() => {
+            isInitialRender.current = false;
+        }, 0);
+    }, [descriptionState.state]);
+    useEffect(() => {
+        if (descriptionState.state != "requestClose") return
+        gsap.to(UIContainerRef.current, {
+            y: 0,
+            duration: 2,
+            ease: "expo.inOut",
+            onComplete: () => {
                 gsap.to(UIContainerRef.current, {
-                    y: -40,
-                    opacity: 0,
-                    duration: 2.4,
+                    opacity: 1,
+                    duration: 1,
                     ease: "expo.inOut",
                     onComplete: () => {
-                        routes.lpDescription().transition()
-                    }
-                });
-            } else {
-                gsap.to(UIContainerRef.current, {
-                    y: 0,
-                    duration: 2,
-                    ease: "expo.inOut",
-                    onComplete: () => {
-                        gsap.to(UIContainerRef.current, {
-                            opacity: 1,
-                            duration: 1,
-                            ease: "expo.inOut",
-                            onComplete: () => {
-                                routes.lp().transition()
-                            }
-                        });
+                        routes.lp().transition()
                     }
                 });
             }
-        }
-    }, [requestDescription]);
-
+        });
+        setTimeout(() => {
+            isInitialRender.current = false;
+        }, 0);
+    }, [descriptionState.state]);
     useEffect(() => {
         if (isAuthenticated && checkMarkRef.current) {
             gsap.fromTo(
