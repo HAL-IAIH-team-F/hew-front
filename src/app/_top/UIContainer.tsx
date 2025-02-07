@@ -56,6 +56,7 @@ function UIContainer(
     }, [descriptionState.state]);
     useEffect(() => {
         if (descriptionState.state != "requestClose") return
+        routes.lp().transition()
         gsap.to(UIContainerRef.current, {
             y: 0,
             duration: 2,
@@ -65,9 +66,6 @@ function UIContainer(
                     opacity: 1,
                     duration: 1,
                     ease: "expo.inOut",
-                    onComplete: () => {
-                        routes.lp().transition()
-                    }
                 });
             }
         });

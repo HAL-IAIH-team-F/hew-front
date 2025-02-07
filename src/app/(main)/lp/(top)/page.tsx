@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import useRoutes from "~/route/useRoutes";
 import UIContainer from "@/_top/UIContainer";
+import OpenDescriptionButton from "@/(main)/lp/(top)/_top/OpenDescriptionButton";
 
 
 export default function Page(
@@ -28,5 +29,6 @@ export default function Page(
 
     return <>
         {/*<UIContainer/>*/}
+        <OpenDescriptionButton/>
     </>
 }
