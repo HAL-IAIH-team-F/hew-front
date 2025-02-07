@@ -4,7 +4,7 @@ import {
     createRequestCloseDescriptionAnimationState,
     createRequestOpenDescriptionAnimationState,
     useDescriptionSwitchAnimationState
-} from "@/(main)/lp/DescriptionSwitchAnimation";
+} from "@/(main)/lp/DescriptionSwitchState";
 
 
 export function DescriptionButton(

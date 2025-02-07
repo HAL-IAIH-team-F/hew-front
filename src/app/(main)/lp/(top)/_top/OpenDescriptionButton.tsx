@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {
     createRequestOpenDescriptionAnimationState,
     useDescriptionSwitchAnimationState
-} from "@/(main)/lp/DescriptionSwitchAnimation";
+} from "@/(main)/lp/DescriptionSwitchState";
 
 export default function OpenDescriptionButton(
     {}: {},
@@ -24,7 +24,7 @@ export default function OpenDescriptionButton(
     useEffect(() => {
         const timeout = setTimeout(() => {
             setIsTransparent(false);
-        }, 2000);
+        }, descriptionState.prevState == "opened" ? 2000 : 500);
         return () => clearTimeout(timeout);
     }, []);
 

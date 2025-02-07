@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {
     createRequestCloseDescriptionAnimationState,
     useDescriptionSwitchAnimationState
-} from "@/(main)/lp/DescriptionSwitchAnimation";
+} from "@/(main)/lp/DescriptionSwitchState";
 
 export default function CloseDescriptionButton(
     {}: {},

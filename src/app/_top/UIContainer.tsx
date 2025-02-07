@@ -11,7 +11,7 @@ import {useClientState} from "~/api/context/ClientContextProvider"; // React Ico
 import {useWindowSize} from '@/_hook/useWindowSize';
 import {MOBILE_WIDTH} from '~/products/ContextProvider';
 import useRoutes from "~/route/useRoutes";
-import {useDescriptionSwitchAnimationState} from "@/(main)/lp/DescriptionSwitchAnimation";
+import {useDescriptionSwitchAnimationState} from "@/(main)/lp/DescriptionSwitchState";
 
 
 function UIContainer(
@@ -55,11 +55,22 @@ function UIContainer(
         }, 0);
     }, [descriptionState.state]);
     useEffect(() => {
-        if (descriptionState.state != "requestClose") return
-        routes.lp().transition()
-        gsap.to(UIContainerRef.current, {
+        if (isAuthenticated && checkMarkRef.current) {
+            gsap.fromTo(
+                checkMarkRef.current,
+                {scale: 0, opacity: 0},
+                {scale: 1, opacity: 1, duration: 1, ease: "expo.out"}
+            );
+        }
+    }, [isAuthenticated]);
+    const isFirst = useRef(true);
+    useEffect(() => {
+        if (!isFirst.current) return
+        isFirst.current = false;
+
+        gsap.to(UIContainerRef.current,  {
             y: 0,
-            duration: 2,
+            duration: descriptionState.prevState == "opened" ? 2 : 0.5,
             ease: "expo.inOut",
             onComplete: () => {
                 gsap.to(UIContainerRef.current, {
@@ -72,22 +83,13 @@ function UIContainer(
         setTimeout(() => {
             isInitialRender.current = false;
         }, 0);
-    }, [descriptionState.state]);
-    useEffect(() => {
-        if (isAuthenticated && checkMarkRef.current) {
-            gsap.fromTo(
-                checkMarkRef.current,
-                {scale: 0, opacity: 0},
-                {scale: 1, opacity: 1, duration: 1, ease: "expo.out"}
-            );
-        }
-    }, [isAuthenticated]);
+    }, []);
 
     return (
         <>
             <div ref={UIContainerRef} className="UI" style={{
                 position: 'fixed',
-                top: '0',
+                top: '-40px',
                 left: '0',
                 width: '100vw',
                 height: '100vh',
@@ -97,6 +99,7 @@ function UIContainer(
                 color: 'rgba(255, 255, 255, 0.9)',
                 fontFamily: 'UDEVGothic, sans-serif',
                 zIndex: 6,
+                opacity: 0,
             }}>
                 <div style={{
                     textAlign: 'center',

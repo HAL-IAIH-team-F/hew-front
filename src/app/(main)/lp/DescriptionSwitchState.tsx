@@ -1,6 +1,7 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import useRoutes from "~/route/useRoutes";
 import {createLoadingState, LoadingState} from "~/auth/State";
+import DescriptionSwitchProcesser from "@/(main)/lp/DescriptionSwitchProcesser";
 
 export interface DescriptionSwitchAnimationProviderProps {
     children: ReactNode;
@@ -16,19 +17,28 @@ export function DescriptionSwitchAnimationProvider(
     const routes = useRoutes()
     const [state, setState] = useState<DescriptionSwitchAnimationState>(createLoadingState())
     useEffect(() => {
+        const setStateAndPrev =
+            (newState: DescriptionSwitchAnimationState) => {
+                setState(prevState1 => {
+                    newState.prevState = prevState1.state
+                    return newState
+                });
+            }
         if (routes.lpDescription().isCurrent()) {
-            setState({state: "opened", set: setState})
+            setStateAndPrev(createOpenedDescriptionAnimationState(setStateAndPrev))
             return
         }
         if (routes.lp().isCurrent()) {
-            setState({state: "canOpen", set: setState})
+            setStateAndPrev(createCanOpenDescriptionAnimationState(setStateAndPrev))
             return
         }
+        setStateAndPrev(createCantOpenDescriptionAnimationState(setStateAndPrev))
     }, [routes]);
     return <Context.Provider
         value={state}
     >
         {children}
+        <DescriptionSwitchProcesser/>
     </Context.Provider>;
 }
 
@@ -36,9 +46,11 @@ export function useDescriptionSwitchAnimationState() {
     return useContext(Context);
 }
 
-export type DescriptionSwitchAnimationState = LoadingState | OpenedDescriptionAnimationState |
+export type DescriptionSwitchAnimationState = (LoadingState | OpenedDescriptionAnimationState |
     RequestOpenDescriptionAnimationState | CanOpenDescriptionAnimationState | CantOpenDescriptionAnimationState |
-    RequestCloseDescriptionAnimationState
+    RequestCloseDescriptionAnimationState) & {
+    prevState?: DescriptionSwitchAnimationState["state"] | undefined
+}
 
 export interface LoadedDescriptionAnimationState {
     set: (state: DescriptionSwitchAnimationState) => void
@@ -46,6 +58,12 @@ export interface LoadedDescriptionAnimationState {
 
 export interface OpenedDescriptionAnimationState extends LoadedDescriptionAnimationState {
     state: "opened"
+}
+
+export function createOpenedDescriptionAnimationState(
+    set: (state: DescriptionSwitchAnimationState) => void
+): OpenedDescriptionAnimationState {
+    return {state: "opened", set}
 }
 
 export interface RequestOpenDescriptionAnimationState extends LoadedDescriptionAnimationState {
@@ -72,6 +90,18 @@ export interface CanOpenDescriptionAnimationState extends LoadedDescriptionAnima
     state: "canOpen"
 }
 
+export function createCanOpenDescriptionAnimationState(
+    set: (state: DescriptionSwitchAnimationState) => void
+): CanOpenDescriptionAnimationState {
+    return {state: "canOpen", set}
+}
+
 export interface CantOpenDescriptionAnimationState extends LoadedDescriptionAnimationState {
     state: "cantOpen"
+}
+
+export function createCantOpenDescriptionAnimationState(
+    set: (state: DescriptionSwitchAnimationState) => void
+): CantOpenDescriptionAnimationState {
+    return {state: "cantOpen", set}
 }

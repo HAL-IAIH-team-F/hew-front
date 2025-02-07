@@ -6,7 +6,7 @@ import {EffectComposer, RenderPass, UnrealBloomPass, Water} from "three-stdlib";
 import gsap from "gsap";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import useRoutes from "~/route/useRoutes";
-import {useDescriptionSwitchAnimationState} from "@/(main)/lp/DescriptionSwitchAnimation";
+import {useDescriptionSwitchAnimationState} from "@/(main)/lp/DescriptionSwitchState";
 
 
 function animate(composer: EffectComposer<THREE.WebGLRenderTarget<THREE.Texture>>, water: Water) {

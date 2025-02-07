@@ -3,8 +3,7 @@ import React, {ReactNode} from "react";
 import Sea from "@/(main)/lp/sea";
 import Filter from "@/_top/Filter";
 import DescriptionSwitcher from "@/(main)/lp/DescriptionSwitcher";
-import UIContainer from "@/_top/UIContainer";
-import {DescriptionSwitchAnimationProvider} from "@/(main)/lp/DescriptionSwitchAnimation";
+import {DescriptionSwitchAnimationProvider} from "@/(main)/lp/DescriptionSwitchState";
 
 export default function Layout(
     {
@@ -19,8 +18,6 @@ export default function Layout(
                 {children}
                 <Filter/>
                 <DescriptionSwitcher/>
-                <UIContainer/>
-                {/*<DescriptionButton/>*/}
             </DescriptionSwitchAnimationProvider>
         </>
     )
