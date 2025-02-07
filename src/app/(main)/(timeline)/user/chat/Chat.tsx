@@ -1,11 +1,11 @@
-import {ChatRes} from "@/(main)/user/chat/ChatRes";
+import {ChatRes} from "@/(main)/(timeline)/user/chat/ChatRes";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {useEffect, useState} from "react";
 import {Api} from "~/api/context/Api";
-import {ErrorData} from "../../../../util/err/err";
-import {ErrorMessage} from "../../../../util/err/ErrorMessage";
-import ChatSendForm from "@/(main)/user/chat/ChatSendForm";
-import {ChatMessageRes} from "@/(main)/user/chat/msg/ChatMessageRes";
+import {ErrorData} from "../../../../../util/err/err";
+import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
+import ChatSendForm from "@/(main)/(timeline)/user/chat/ChatSendForm";
+import {ChatMessageRes} from "@/(main)/(timeline)/user/chat/msg/ChatMessageRes";
 
 export default function Chat(
   {

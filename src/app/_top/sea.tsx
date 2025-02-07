@@ -6,7 +6,7 @@ import {SeaScene} from "./SeaScene";
 import {Img} from "~/api/context/Api";
 import UIContainer from "@/_top/UIContainer";
 import {useClientState} from "~/api/context/ClientContextProvider";
-import UserRegisterForm from "@/(main)/user/register/UserRegisterForm";
+import UserRegisterForm from "@/(main)/(timeline)/user/register/UserRegisterForm";
 
 const Sea = () => {
   const [buttonClicked, setButtonClicked] = useState(false);

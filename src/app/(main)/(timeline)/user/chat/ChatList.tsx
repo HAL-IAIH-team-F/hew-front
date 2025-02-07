@@ -1,8 +1,8 @@
-import {ErrorMessage} from "../../../../util/err/ErrorMessage";
+import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {useEffect, useState} from "react";
-import {ChatRes} from "@/(main)/user/chat/ChatRes";
-import {ErrorData} from "../../../../util/err/err";
+import {ChatRes} from "@/(main)/(timeline)/user/chat/ChatRes";
+import {ErrorData} from "../../../../../util/err/err";
 import {Api} from "~/api/context/Api";
 
 export default function ChatList(

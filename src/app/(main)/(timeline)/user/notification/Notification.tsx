@@ -3,11 +3,11 @@ import {
   ColabData,
   ColabRequestData,
   NotificationRes
-} from "@/(main)/user/notification/NotificationRes";
+} from "@/(main)/(timeline)/user/notification/NotificationRes";
 import {ReactNode} from "react";
-import ColabRequestNotification from "@/(main)/user/notification/ColabRequestNotification";
-import ColabNotification from "@/(main)/user/notification/ColabNotification";
-import ColabApproveNotification from "@/(main)/user/notification/ColabApproveNotification";
+import ColabRequestNotification from "@/(main)/(timeline)/user/notification/ColabRequestNotification";
+import ColabNotification from "@/(main)/(timeline)/user/notification/ColabNotification";
+import ColabApproveNotification from "@/(main)/(timeline)/user/notification/ColabApproveNotification";
 
 export default function Notification(
   {

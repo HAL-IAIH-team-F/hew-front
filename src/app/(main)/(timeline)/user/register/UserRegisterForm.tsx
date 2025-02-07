@@ -3,9 +3,9 @@ import {ChangeEvent, useState} from "react";
 import {Api} from "~/api/context/Api";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {useRouter} from 'next/navigation';
-import {StyledForm} from "../../../../util/form/element/StyledForm";
-import {StyledInput} from "../../../../util/form/element/StyledInput";
-import {StyledButton} from "../../../../util/form/element/StyledButton";
+import {StyledForm} from "../../../../../util/form/element/StyledForm";
+import {StyledInput} from "../../../../../util/form/element/StyledInput";
+import {StyledButton} from "../../../../../util/form/element/StyledButton";
 
 
 export default function UserRegisterForm({...props}: UserRegisterFormProps) {
