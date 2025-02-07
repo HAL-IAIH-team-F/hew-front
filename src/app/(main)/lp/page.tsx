@@ -6,10 +6,10 @@ import Filter from "../../_top/Filter";
 
 
 export default function Page(
-  {}: {}
+    {}: {}
 ) {
-  return <Main>
-    <Sea />
-    <Filter />
-  </Main>
+    return <Main>
+        <Sea/>
+        <Filter/>
+    </Main>
 }

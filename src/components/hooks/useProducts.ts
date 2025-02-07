@@ -8,6 +8,9 @@ interface UseProductOptions {
   productId?: string;
   limit?: number;
   uuid?: string;
+  name?: string;
+  tag?: string;
+
 }
 
 export default function useProducts(options: UseProductOptions = {}) {
@@ -18,9 +21,11 @@ export default function useProducts(options: UseProductOptions = {}) {
   useEffect(() => {
     if (client.state === "loading") return;
 
-    const {productId, limit} = options;
+    const {productId, limit, name, tag} = options;
     client.client.unAuthOrAuth(Api.app.gps_api_product_get, {
-      limit: limit
+      limit: limit,
+      name: name,
+      tag: tag,
     }, {}).then((value) => {
       if (value.error) {
         setError(value.error);
@@ -35,10 +40,20 @@ export default function useProducts(options: UseProductOptions = {}) {
           (product) => product.product_id === productId
         );
       }
+      if (name) {
+        fetchedProducts = fetchedProducts.filter(
+          (product) => product.product_title === name
+        );
+      }
+      if (tag) {
+        fetchedProducts = fetchedProducts.filter(
+          (product) => product.product_description === tag
+        );
+      }
 
       setProducts(fetchedProducts);
     });
-  }, [options.productId, client.state]); // productId を依存関係に追加
+  }, [options.productId, options.name, options.tag,client.state]); // productId を依存関係に追加
 
   return {products, error};
 }
