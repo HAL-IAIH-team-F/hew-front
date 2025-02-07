@@ -4,8 +4,8 @@ import useRoutes from "~/route/useRoutes";
 import useProductId from "~/products/useProductId";
 import useProducts from "~/hooks/useProducts";
 import { ErrorMessage } from "../../../util/err/ErrorMessage";
-import useCreatorData from "../../../util/hook/useCreatorData";
 import Image from "../../../util/Image";
+import useCreatorData from "~/hooks/useCreatorData";
 interface SerchProductViewProps {
     Search: string;
 }

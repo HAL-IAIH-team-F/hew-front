@@ -121,11 +121,23 @@ const CartRes = z
     product_ids: z.array(z.string().uuid()),
   })
   .passthrough();
-const hew_back__cart__post_cart__PostCartBody = z
+const PostCartBody = z
   .object({ products: z.array(z.string().uuid()) })
   .passthrough();
-const hew_back__cart__patch_cart__PostCartBody = z
-  .object({ new_products: z.array(z.string().uuid()) })
+const PatchCartBodyRmProducts = z
+  .object({ rm_products: z.array(z.any()).min(1).max(1) })
+  .partial()
+  .passthrough();
+const PatchCartBodyRmAll = z
+  .object({ rm_all: z.boolean().default(false) })
+  .partial()
+  .passthrough();
+const PatchCartBody = z
+  .object({
+    new_products: z.array(z.string().uuid()),
+    rm: z.union([PatchCartBodyRmProducts, PatchCartBodyRmAll]),
+  })
+  .partial()
   .passthrough();
 const PostProductBody = z
   .object({
@@ -219,8 +231,10 @@ export const schemas = {
   NotificationData,
   NotificationRes,
   CartRes,
-  hew_back__cart__post_cart__PostCartBody,
-  hew_back__cart__patch_cart__PostCartBody,
+  PostCartBody,
+  PatchCartBodyRmProducts,
+  PatchCartBodyRmAll,
+  PatchCartBody,
   PostProductBody,
   TokenInfo,
   PurchaseInfo,
@@ -257,7 +271,7 @@ const endpoints = makeApi([
       {
         name: "body",
         type: "Body",
-        schema: hew_back__cart__post_cart__PostCartBody,
+        schema: PostCartBody,
       },
     ],
     response: z.unknown(),
@@ -278,7 +292,7 @@ const endpoints = makeApi([
       {
         name: "body",
         type: "Body",
-        schema: hew_back__cart__patch_cart__PostCartBody,
+        schema: PatchCartBody,
       },
     ],
     response: z.unknown(),
@@ -295,7 +309,7 @@ const endpoints = makeApi([
     path: "/api/cart_buy",
     alias: "cart_buy_api_cart_buy_put",
     requestFormat: "json",
-    response: z.unknown(),
+    response: CartRes,
   },
   {
     method: "get",

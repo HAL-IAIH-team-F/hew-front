@@ -72,15 +72,16 @@ export default function ProfileProductsView({}: ProductPageProps) {
 
                     </h2>
                     <div style={styles.rightdescription}>
-                      <p style={styles.price}>
+                      <div style={styles.price}>
                         <strong>{product.product_price} 円</strong>
-                      </p>
+                      </div>
                     </div>
-                      {product.creator_ids.map((id) => (
-                          <p key={id} style={styles.creator_data}>
-                              <CreatorData creator_id={id} showView={true}/>
-                          </p>
-                      ))}
+                    {product.creator_ids.map((id) => (
+                      <div key={id} style={styles.creator_data}>
+                        <CreatorData creator_id={id} showView={true}/>
+                      </div>
+                    ))}
+                    
                   </div>
                   <div style={styles.thumbnailWrapper}>
                     <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>

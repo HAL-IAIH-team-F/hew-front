@@ -11,6 +11,7 @@ import SidebarRoutesLink from "@/(main)/(timeline)/_window/_sidebar/SidebarRoute
 import {useWindowSize} from "@/_hook/useWindowSize";
 import {iconstyles, styles} from "@/(main)/(timeline)/_window/_sidebar/Styles";
 import Image from "../../../../../util/Image";
+import {usePathname} from 'next/navigation';
 
 
 type SidebarProps = {};
@@ -23,6 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
     const size = useWindowSize()
     const {user} = useUserData();
     const routes = useRoutes();
+    const pathname = usePathname()
 
     return (
         <div>
@@ -58,7 +60,8 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
                 <SidebarRoutesLink routeUrl={routes.productListing()}><MdOutlineBubbleChart
                     style={iconstyles.icon}/></SidebarRoutesLink>
                 <SidebarRoutesLink routeUrl={routes.cart()}><IoCartOutline style={iconstyles.icon}/></SidebarRoutesLink>
-                <SidebarRoutesLink routeUrl={routes.colablisting()}><FaPray style={iconstyles.icon}/></SidebarRoutesLink>
+                <SidebarRoutesLink routeUrl={routes.colablisting()}><FaPray
+                    style={iconstyles.icon}/></SidebarRoutesLink>
             </div>
         </div>
     );
