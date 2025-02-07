@@ -3,9 +3,10 @@ import * as THREE from "three";
 import {Manager} from "~/manager/manager";
 import {gsap} from "gsap";
 import Effects from "@/(main)/(timeline)/effects/camera/Effects";
+import {BubbleMesh} from "@/(main)/(timeline)/_timeline/bubble/BubbleMesh";
 
 export const showProduct = (
-    clickedBubble: THREE.Mesh,
+    clickedBubble: BubbleMesh,
     scene: THREE.Scene,
     camera: THREE.PerspectiveCamera,
     manager: Manager,
@@ -14,11 +15,11 @@ export const showProduct = (
     const group = new THREE.Group();
 
     const closeButtonTexture = new THREE.TextureLoader().load("/close.png");
-    const closeButtonMaterial = new THREE.SpriteMaterial({ map: closeButtonTexture });
+    const closeButtonMaterial = new THREE.SpriteMaterial({map: closeButtonTexture});
     const closeButton = new THREE.Sprite(closeButtonMaterial);
 
     const htmlBox = document.createElement("div");
-    const imagePath = (clickedBubble as any).texturePath;
+    const imagePath = (clickedBubble).texturePath;
 
     htmlBox.style.position = "absolute";
     htmlBox.style.width = "800px";
@@ -43,7 +44,7 @@ export const showProduct = (
     `;
     document.body.appendChild(htmlBox);
 
-    effects.productAnimesionOpen(camera,clickedBubble,htmlBox)
+    effects.productAnimesionOpen(camera, clickedBubble, htmlBox)
 
     const onClick = (event: MouseEvent) => {
         const mouse = new THREE.Vector2();
@@ -63,11 +64,11 @@ export const showProduct = (
     const closePanel = () => {
         const tl = gsap.timeline();
         tl.to(camera.position,
-        {
-          x: 0,
-          duration: 1.5,
-          ease: 'power2.out',
-        });
+            {
+                x: 0,
+                duration: 1.5,
+                ease: 'power2.out',
+            });
         gsap.timeline()
             .to(group.scale, {
                 x: 0,

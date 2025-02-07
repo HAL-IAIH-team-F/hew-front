@@ -1,4 +1,4 @@
-import {CreatorRes} from "../../../../../util/hook/useCreatorData";
+import {CreatorRes} from "~/hooks/useCreatorData";
 
 export default function CreatorSelectorItem(
   {

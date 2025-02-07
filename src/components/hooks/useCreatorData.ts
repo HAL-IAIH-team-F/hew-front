@@ -4,7 +4,7 @@ import {useClientState} from "~/api/context/ClientContextProvider";
 
 import {Api, Img} from "~/api/context/Api";
 import {ImgRes} from "~/res/UserRes";
-import {ErrorData} from "../err/err";
+import {ErrorData} from "../../util/err/err";
 
 export interface UserData {
   user_id: string;

@@ -65,10 +65,10 @@ const AccountCard: FC<AccountCardProps> = ({}) => {
                 fontSize: "20px",
                 fontFamily: "'Roboto', 'Arial', sans-serif",
                 color: "#fff",
-                overflow: "hidden",
                 WebkitFontSmoothing: "antialiased",
                 MozOsxFontSmoothing: "grayscale",
                 textRendering: "optimizeLegibility",
+                
             }}
             className={"w-full h-full"}
         >

@@ -4,48 +4,55 @@ import {TimelinePageRouteUrl} from "~/route/TimelinePageRouteUrl";
 import {RouteUrl} from "~/route/RouteUrl";
 
 export class Routes {
-  constructor(
-    readonly prevParams: URLSearchParams,
-    readonly prevPath: string,
-    readonly router: AppRouterInstance,
-  ) {
-  }
+    constructor(
+        readonly prevParams: URLSearchParams,
+        readonly prevPath: string,
+        readonly router: AppRouterInstance,
+    ) {
+    }
 
-  timeline() {
-    return new TimelineRouteUrl(this, "/")
-  }
+    setParam(key: string, value: string | undefined) {
+        const newParams = new URLSearchParams(this.prevParams)
+        if (value == undefined) newParams.delete(key)
+        else newParams.set(key, value)
+        this.router.push(this.prevPath + "?" + newParams.toString())
+    }
 
-  lp() {
-    return new RouteUrl(this, "/lp")
-  }
+    timeline() {
+        return new TimelineRouteUrl(this, "/")
+    }
 
-  search() {
-    return new TimelinePageRouteUrl(this, "/search")
-  }
+    lp() {
+        return new RouteUrl(this, "/lp")
+    }
 
-  notification() {
-    return new TimelinePageRouteUrl(this, "/notification")
-  }
+    search() {
+        return new TimelinePageRouteUrl(this, "/search")
+    }
 
-  message() {
-    return new TimelinePageRouteUrl(this, "/message")
-  }
+    notification() {
+        return new TimelinePageRouteUrl(this, "/notification")
+    }
 
-  colablisting() {
-    return new TimelinePageRouteUrl(this, "/colablisting")
-  }
+    message() {
+        return new TimelinePageRouteUrl(this, "/message")
+    }
 
-  account() {
-    return new TimelinePageRouteUrl(this, "/account")
-  }
+    account() {
+        return new TimelinePageRouteUrl(this, "/account")
+    }
 
-  productListing() {
-    return new TimelinePageRouteUrl(this, "/product/listing")
-  }
+    productListing() {
+        return new TimelinePageRouteUrl(this, "/product/listing")
+    }
 
-  cart() {
-    return new TimelinePageRouteUrl(this, "/cart")
-  }
+    cart() {
+        return new TimelinePageRouteUrl(this, "/cart")
+    }
+
+    colablisting() {
+        return new TimelinePageRouteUrl(this, "/colablisting")
+    }
 
   // joinToTimelinePath(path: string) {
   //   let result

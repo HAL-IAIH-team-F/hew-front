@@ -1,7 +1,7 @@
 import React, {CSSProperties, useEffect, useState} from "react";
 import {ErrorMessage} from "../../util/err/ErrorMessage";
 import ProductThumbnail from "~/api/useImgData";
-import useCreatorData from "../../util/hook/useCreatorData";
+import useCreatorData from "../hooks/useCreatorData";
 import Image from "../../util/Image";
 import useRoutes from "~/route/useRoutes";
 import useProductId from "~/products/useProductId";
@@ -21,17 +21,13 @@ export default function ProfileProductsView({}: ProductPageProps) {
     const updateColumns = () => {
       const width = window.innerWidth; // ウィンドウ幅を取得
       console.log("a", width)
-      if (width >= 1200) {
-        if (openedProductId != undefined) {
-          setColumns(2);
-        } else {
-          setColumns(3);
-        }
 
-      } else if (width >= 768) {
-        setColumns(2);
-      } else {
-        setColumns(1);
+      if (openedProductId != undefined){
+        if (width >= 1480) return setColumns(2);
+        if (width >= 1080) return setColumns(1);
+      }else{
+        if (width <= 1000) return setColumns(1);
+        if (width <= 1480) return setColumns(2);
       }
     };
 
@@ -75,16 +71,16 @@ export default function ProfileProductsView({}: ProductPageProps) {
                       {product.product_title}
 
                     </h2>
-                    {product.creator_ids.map((id) => (
-                      <p key={id} style={styles.creator_data}>
-                        <CreatorData creator_id={id} showView={true}/>
-                      </p>
-                    ))}
                     <div style={styles.rightdescription}>
                       <p style={styles.price}>
                         <strong>{product.product_price} 円</strong>
                       </p>
                     </div>
+                      {product.creator_ids.map((id) => (
+                          <p key={id} style={styles.creator_data}>
+                              <CreatorData creator_id={id} showView={true}/>
+                          </p>
+                      ))}
                   </div>
                   <div style={styles.thumbnailWrapper}>
                     <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>
@@ -280,4 +276,11 @@ const styles: { [key: string]: CSSProperties } = {
     top: '60px',
     left: '30px',
   },
+  userName: {
+    position: 'absolute',
+    top: '47px',
+    left: '47px',
+    color: "white",
+
+  }
 };
