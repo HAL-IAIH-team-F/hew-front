@@ -1,57 +1,56 @@
 import { CSSProperties } from 'react';
-
+const color = 'rgba(42, 42, 44, 0.64)'
 export const styles = (width: number, height: number): Record<string, CSSProperties> => ({
   sidebar: {
-    backgroundColor: 'rgba(142, 142, 147, 0.35)', // 背景色
-    backdropFilter: 'blur(12px)', // 背景ブラー効果
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.3)', // ドラマチックで深みのある影
-    border: '1px solid rgba(128, 128, 128, 0.2)', // シンプルな枠線
+    backgroundColor: color,
+    backdropFilter: 'blur(20px)', // さらに強調された背景ブラー効果
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.25), inset 0 0 10px rgba(255, 255, 255, 0.2)', // 軽やかな影
+    border: '1px solid rgba(255, 255, 255, 0.2)', // 繊細な枠線
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: `${Math.max(80, width * 0.1)}px`, // 幅を動的に設定
-    height: `${Math.max(100, height - 30)}px`, // 高さも動的に設定
-    minWidth:  '110px',
-    maxWidth:  '110px',
+    width: '110px', // 固定幅
+    height: `${Math.max(100, height - 30)}px`, // 高さは動的
+    minWidth: '110px',
+    maxWidth: '110px',
     margin: '15px 0',
     padding: '20px 10px',
-    gap: '24px',
+    gap: '20px',
     position: 'fixed',
     left: '10px',
     top: '0',
-    borderRadius: '30px',
+    borderRadius: '24px', // より丸みを帯びたデザイン
     zIndex: 1000,
-    transition: 'left 0.3s ease, height 0.3s ease',
-    
+    transition: 'left 0.3s ease, height 0.3s ease, backdrop-filter 0.3s ease',
   },
   collapsedSidebar: {
-    backgroundColor: 'rgba(142, 142, 147, 0.35)',
-    backdropFilter: 'blur(12px)',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.3)',
-    border: '1px solid rgba(128, 128, 128, 0.2)',
+    backgroundColor: color,
+    backdropFilter: 'blur(20px)',
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.25), inset 0 0 10px rgba(255, 255, 255, 0.2)', // 軽やかな影
+    border: '1px solid rgba(255, 255, 255, 0.2)', // 繊細な枠線
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     width: '110px',
-    height: 'calc(100vh - 30px)',
+    height: `${Math.max(100, height - 30)}px`, // 高さは動的
     margin: '15px 0',
     padding: '20px 10px',
-    gap: '24px',
+    gap: '20px',
     position: 'fixed',
     left: '-100px',
     top: '0',
-    borderRadius: '30px',
+    borderRadius: '24px', // より丸みを帯びたデザイン
     zIndex: 1000,
     transition: 'left 0.3s ease, height 0.3s ease',
   },
   toggleButton: {
     position: 'absolute',
-    backgroundColor: 'rgba(142, 142, 147, 0.35)',
+    backgroundColor: color,
     top: '45px',
     right: '-25px',
     width: '25px',
     height: '80px',
-    borderRadius: '0 10px 10px 0',
+    borderRadius: '0 12px 12px 0', // 角の丸みを調整
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -60,13 +59,14 @@ export const styles = (width: number, height: number): Record<string, CSSPropert
     borderRight: '1px solid rgba(255, 255, 255, 0.2)',
     transition: 'background-color 0.3s ease, transform 0.3s ease',
     color: 'white',
-    backdropFilter: 'blur(12px)',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.3)',
-    border: '3px solid rgba(128, 128, 128, 0.25)',
+    backdropFilter: 'blur(20px)', // ぼかしを強調
+    boxShadow: '0 5px 20px rgba(0, 0, 0, 0.2), inset 0 0 8px rgba(255, 255, 255, 0.2)',
+    border: '2px solid rgba(255, 255, 255, 0.2)',
   },
 
+
   inAppPageWindowStyle: {
-    backgroundColor: 'rgba(142, 142, 147, 0.35)',
+    backgroundColor: color,
     border: '1px solid rgba(128, 128, 128, 0.2)',
     position: "absolute", // fixedからrelativeに変更
     borderRadius: '28px',
@@ -80,7 +80,7 @@ export const styles = (width: number, height: number): Record<string, CSSPropert
     
   },
   ProductWindowStyle:{
-    backgroundColor: 'rgba(255, 0, 0, 1)',
+    backgroundColor: color,
     backdropFilter: 'blur(12px)',
     border: '1px solid rgba(128, 128, 128, 0.9)',
     width: 'calc(40% - 300px)',
@@ -100,8 +100,8 @@ export const styles = (width: number, height: number): Record<string, CSSPropert
 export const iconstyles: { [key: string]: CSSProperties } = {
   spinner: {
     fontSize: '24px',
-    color: '#888',
-    animation: 'spin 3s linear infinite',
+    color: '#fff',
+    animation: 'spin 3s linear infinite !important'
   },
   icon: {
     fontSize: '27px',
@@ -112,7 +112,7 @@ export const iconstyles: { [key: string]: CSSProperties } = {
     left: '50%',
   },
   profileIcon: {
-    backgroundColor: 'rgba(70, 107, 143, 0.8)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     color: '#FFFFFF',
     borderRadius: '50%',
     width: '40px',
@@ -128,7 +128,7 @@ export const iconstyles: { [key: string]: CSSProperties } = {
     objectFit: 'cover',
     position: 'absolute',
     transform: 'translate(-50%, -50%)',
-    border: '2px solid rgba(0, 0, 0, 0.8)',
+    border: '2px solid rgba(255, 255, 255, 0.2)',
     top: '50%',
     left: '50%',
   },
@@ -143,27 +143,27 @@ export const iconstyles: { [key: string]: CSSProperties } = {
   },
 }
 
-export const iconContainerStyle = (isOpen: boolean): CSSProperties => ({
-  width: '80px',
-  height: '80px',
-  backgroundColor: 'rgba(220, 220, 220, 0.2)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  position: 'relative',
-  borderRadius: '17px',
-  transition: 'width 0.3s ease, box-shadow 0.3s ease',
-  overflow: 'hidden',
-  borderTopRightRadius: '24px',
-  borderTopLeftRadius: '24px',
-  borderBottomRightRadius: '24px',
-  borderBottomLeftRadius: '24px',
-  pointerEvents: 'auto',
+export const iconContainerStyle = (isHovered: boolean): CSSProperties => ({
+  width: "75px",
+  height: "75px",
+  backgroundColor: isHovered ? "rgba(255, 255, 255, 0.15)":"rgba(255, 255, 255, 0.2)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  position: "relative",
+  borderRadius: "24px",
+  transition: "all 0.3s ease-in-out",
+  overflow: "hidden",
+  pointerEvents: "auto",
   background: "linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.2))",
   backdropFilter: "blur(15px)",
-  boxShadow: `${2}px ${4 }px ${6 }px rgba(0, 0, 0, 0.5), inset 0 0 ${10}px rgba(255, 255, 255, 0.3)`,
-  border: `${2}px solid rgba(255, 255, 255, 0.2)`,
+  boxShadow: isHovered
+    ? `inset 4px 4px 10px rgba(0, 0, 0, 0.3), inset -4px -4px 10px rgba(255, 255, 255, 0.2)`
+    : `4px 6px 8px rgba(0, 0, 0, 0.2), inset 0 0 12px rgba(255, 255, 255, 0.1)`,
+  border: "2px solid rgba(255, 255, 255, 0.2)",
+  cursor: "pointer",
 });
+
 
 export const pageWindowStyle = (
   isOpen: boolean,
@@ -192,10 +192,9 @@ export const pageWindowStyle = (
     : windowWidth / 2; // isOpen が false かつ ProductisOpen が false の場合の位置
 
   return {
-    
-    backgroundColor: 'rgba(142, 142, 147, 0.35)',
-    backdropFilter: 'blur(12px)',
-    border: '1px solid rgba(128, 128, 128, 0.9)',
+    backgroundColor: color,
+    backdropFilter: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
     width: `${calculatedWidth}px`,
     height: `${windowHeight * 0.9}px`,
     position: 'fixed',
@@ -215,7 +214,7 @@ export const pageWindowStyle = (
     zIndex: 999,
     display: "flex",
     minWidth: ProductisOpen ? '550px' : '0',
-  };
+    };
 };
 
 export const inAppPageStyle = (isAnimating: boolean): CSSProperties => ({
@@ -232,9 +231,9 @@ export const inAppPageStyle = (isAnimating: boolean): CSSProperties => ({
 });
 
 export const ProductWindowStyle = (ProductisOpen: boolean): CSSProperties => ({
-  backgroundColor: 'rgba(142, 142, 147, 0.35)',
-  backdropFilter: 'blur(12px)',
-  border: '1px solid rgba(128, 128, 128, 0.9)',
+  backgroundColor: color,
+  backdropFilter: 'blur(20px)',
+  border: '1px solid rgba(255, 255, 255, 0.2)',
   width: ProductisOpen ? 'calc(27%)' : '0',
   height: ProductisOpen ? '90%' : '0',
   display: "flex",
@@ -242,18 +241,18 @@ export const ProductWindowStyle = (ProductisOpen: boolean): CSSProperties => ({
   right: '0',
   marginRight: "25px",
   top: '50%',
-  transformOrigin: 'right center', // 右支点を指定
+  transformOrigin: 'right center',
   transform: ProductisOpen
     ? 'translateX(0%) translateY(-50%) scale(1)'
-    : 'translateX(100%) translateY(-50%) scale(0.15)', // 閉じた状態では少し縮小
+    : 'translateX(100%) translateY(-50%) scale(0.15)',
   borderRadius: '28px',
   opacity: ProductisOpen ? 1 : 0,
   transition: `
     opacity 0.3s ease-in-out,
     width 0.3s ease,
     height 0.3s ease,
-    transform 0.3s`, // transformにカスタムイージングを追加
+    transform 0.3s`,
   zIndex: 999,
-  minWidth: ProductisOpen ? '530px' : '0', // 最小幅を指定
-  maxWidth: ProductisOpen ? '750px' : '0', // 最小幅を指定
+  minWidth: ProductisOpen ? '530px' : '0',
+  maxWidth: ProductisOpen ? '750px' : '0',
 });
