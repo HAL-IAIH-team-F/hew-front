@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import {Canvas} from "@react-three/fiber";
-import {SeaScene} from "@/_top/SeaScene";
+import {SeaScene} from "@/(main)/lp/SeaScene";
 
 function Sea(
     {}: {}

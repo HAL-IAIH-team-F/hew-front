@@ -22,7 +22,6 @@ export default function LpTopContainer(
             }
             onComplete={() => {
                 if (descriptionState.state == "requestOpen") return routes.lpDescription().transition()
-                if (clientState.state == "registered") return routes.timeline().transition()
                 if (clientState.state == "unregistered") return routes.lpRegister().transition()
             }}
         >
