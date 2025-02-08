@@ -1,20 +1,18 @@
 import {ReactNode, useEffect, useRef} from "react";
-import useRoutes from "~/route/useRoutes";
 import {useDescriptionSwitchAnimationState} from "@/(main)/lp/DescriptionSwitchState";
 import gsap from "gsap";
 
 export default function LpContainer(
     {
         children,
-        isShow,
+        isShow, onComplete,
     }: {
         children?: ReactNode,
         isShow: boolean,
+        onComplete?: () => void,
     },
 ) {
-
     const UIContainerRef = useRef<HTMLDivElement>(null);
-    const routes = useRoutes()
     const descriptionState = useDescriptionSwitchAnimationState()
     useEffect(() => {
         if (isShow) return
@@ -23,9 +21,7 @@ export default function LpContainer(
             opacity: 0,
             duration: 2.4,
             ease: "expo.inOut",
-            onComplete: () => {
-                routes.lpDescription().transition()
-            }
+            onComplete: onComplete
         });
     }, [isShow]);
     useEffect(() => {

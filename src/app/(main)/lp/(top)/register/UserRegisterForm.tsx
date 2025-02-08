@@ -5,6 +5,7 @@ import {useClientState} from "~/api/context/ClientContextProvider";
 import {StyledForm} from "../../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../../util/form/element/StyledButton";
+import {newRegisteredClientState} from "~/api/context/ClientState";
 
 
 export default function UserRegisterForm({...props}: UserRegisterFormProps) {
@@ -47,10 +48,13 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
                 {user_name: user_name, user_icon_uuid: iconUuid}, {}
             )
             if (postUserResult.error) {
-                formData.append("icon", postUserResult.error.error_id + ": " + postUserResult.error.message);
+                formData.append("submit", postUserResult.error.error_id + ": " + postUserResult.error.message);
                 return
             }
-            window.location.reload() // TODO
+            clientContext.set(newRegisteredClientState(
+                clientContext.oidcContext, clientContext.setIdToken, clientContext.signOut, clientContext.token,
+                clientContext.idToken, postUserResult.success, clientContext.set
+            ))
             return undefined
 
         }}>
