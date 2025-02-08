@@ -12,11 +12,11 @@ import useProductId from "~/products/useProductId";
 
 export default function BaubleClickHandler(
     {
-        sceneRef, bubblesRef, effectsRef, canvasRef,
+        sceneRef, bubblesRef, effects, canvasRef,
     }: {
         sceneRef: MutableRefObject<Scene | null>,
         bubblesRef: MutableRefObject<BubbleMesh[]>,
-        effectsRef: MutableRefObject<Effects | null>,
+        effects: Effects | undefined,
         canvasRef: MutableRefObject<HTMLCanvasElement | null>,
     },
 ) {
@@ -36,9 +36,9 @@ export default function BaubleClickHandler(
         const handleClick = (event: MouseEvent) => {
             if (managerState.manager.value.animstate !== "idle") return;
             if (bubblesRef.current == undefined) return;
-            if (effectsRef.current == undefined) return;
+            if (effects == undefined) return;
             if (sceneRef.current == undefined) return;
-            onClickBubble(managerState.manager, event, bubblesRef.current, camera, sceneRef.current, effectsRef.current, clientState, routes);
+            onClickBubble(managerState.manager, event, bubblesRef.current, camera, sceneRef.current, effects, clientState, routes);
         }
 
         canvas.addEventListener('click', handleClick);
@@ -46,7 +46,7 @@ export default function BaubleClickHandler(
         return () => {
             canvas.removeEventListener('click', handleClick);
         };
-    }, [managerState.state, clientState, productId, canvasRef.current]);
+    }, [managerState.state, clientState, productId, canvasRef.current, effects == undefined]);
 
 
     return undefined
