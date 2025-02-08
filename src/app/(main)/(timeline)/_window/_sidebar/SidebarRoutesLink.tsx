@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, {ReactNode} from "react";
+import React, {ReactNode, useState} from "react";
 import {iconContainerStyle} from "@/(main)/(timeline)/_window/_sidebar/Styles";
 import {MOBILE_WIDTH, useProductContext} from "~/products/ContextProvider";
 import useRoutes from "~/route/useRoutes";
@@ -27,10 +27,12 @@ export default function SidebarRoutesLink(
   const isShown = (!isMobile || productId == undefined) && routeUrl.isCurrent();
   if (isShown) routeUrl = routes.timeline()
   if (isMobile) routeUrl = routeUrl.setProductId(undefined)
-
+  const [isHovered, setIsHovered] = useState(false);
   return (
     <Link
-      style={iconContainerStyle(isSidebarOpen)}
+      style={iconContainerStyle(isHovered)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       href={routeUrl.toString()}
       onClick={(event) => {
         routeUrl.transition(event)

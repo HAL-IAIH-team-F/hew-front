@@ -5,148 +5,57 @@ import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
 import Link from "next/link";
 import {KeycloakConfig} from "~/auth/keycloak/KeycloakConfig";
 import {useWindowSize} from "@/_hook/useWindowSize";
+import {UserCircle} from 'lucide-react';
 
 interface ProfileProps {
 }
 
-const ProfilePage: React.FC<ProfileProps> = ({}) => {
+const ProfilePage = () => {
   const size = useWindowSize();
-  return (
-    <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        background: "rgba(30, 60, 114, 0.6)", // 未来的な青のグラデーション
-        fontFamily: "'Roboto', 'Arial', sans-serif",
-        color: "#fff", // テキストの色を白に
-        overflow: "hidden",
-        backdropFilter: "blur(12px)", // 背景ブラー効果
 
-      }}
-    >
+  return (
+    <div className="flex h-screen bg-gray-900">
       {/* Sidebar */}
-      <div
-        style={{
-          minWidth: "100px",
-          maxWidth: "200px",
-          background: "rgba(30, 60, 114, 0.9)", // 半透明な青の背景
-          display: "flex",
-          flexDirection: "column",
-          padding: "20px",
-          boxShadow: "2px 0 10px rgba(0, 0, 0, 0.5)",
-        }}
-      >
-        <h2
-          style={{
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-            marginBottom: "20px",
-          }}
-        >
-          Menu
-        </h2>
-        <ul style={{listStyle: "none", padding: 0, margin: 0}}>
-          <li style={{marginBottom: "10px"}}>
-            <a
-              href="#profile"
-              style={{
-                color: "#d1e1ff",
-                textDecoration: "none",
-                fontSize: "1.1rem",
-                transition: "color 0.3s",
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.color = "#ffffff")}
-              onMouseOut={(e) => (e.currentTarget.style.color = "#d1e1ff")}
-            >
-              Profile
-            </a>
-          </li>
-          <li style={{marginBottom: "10px"}}>
-            <a
-              href="#settings"
-              style={{
-                color: "#d1e1ff",
-                textDecoration: "none",
-                fontSize: "1.1rem",
-                transition: "color 0.3s",
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.color = "#ffffff")}
-              onMouseOut={(e) => (e.currentTarget.style.color = "#d1e1ff")}
-            >
-              Settings
-            </a>
-          </li>
-          <li style={{marginBottom: "10px"}}>
-            <a
-              href="#notifications"
-              style={{
-                color: "#d1e1ff",
-                textDecoration: "none",
-                fontSize: "1.1rem",
-                transition: "color 0.3s",
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.color = "#ffffff")}
-              onMouseOut={(e) => (e.currentTarget.style.color = "#d1e1ff")}
-            >
-              Notifications
-            </a>
-          </li>
-          <li style={{marginBottom: "10px"}}>
-            <Link
-              href={new URL("/realms/develop/account/", KeycloakConfig.baseUrl)}
-              style={{
-                color: "#d1e1ff",
-                textDecoration: "none",
-                fontSize: "1.1rem",
-                transition: "color 0.3s",
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.color = "#ffffff")}
-              onMouseOut={(e) => (e.currentTarget.style.color = "#d1e1ff")}
-            >
-              Account
-            </Link>
-          </li>
-          <li>
-            <a
-              style={{
-                color: "#d1e1ff",
-                textDecoration: "none",
-                fontSize: "1.1rem",
-                transition: "color 0.3s",
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.color = "#ffffff")}
-              onMouseOut={(e) => (e.currentTarget.style.color = "#d1e1ff")}
-            >
-              <SignInOutButton
-                className="font-bold block w-full my-1 py-1 text-left text-xs text-white hover:text-gray-400"
-              />
-            </a>
-          </li>
-        </ul>
+      <div className="w-56 bg-gray-800 border-r border-gray-700">
+        <div className="h-full flex flex-col">
+          {/* Logo/Header Area */}
+          <div className="p-6">
+            <h1 className="text-2xl font-bold mb-8 text-gray-100 flex items-center gap-2">
+              <UserCircle className="w-8 h-8"/>アカウント
+            </h1>
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="flex-1 px-4">
+            <ul className="space-y-1">
+              {[
+                { href: "#profile", label: "Profile" },
+                { href: "#settings", label: "Settings" },
+                { href: "#notifications", label: "Notifications" },
+                { href: "#account", label: "Account" }
+              ].map((item) => (
+                <li key={item.label}>
+                  <a
+                    href={item.href}
+                    className="flex items-center px-4 py-2 text-sm text-gray-300 rounded-lg hover:bg-gray-700/50 transition-colors duration-150 group"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div className="p-4 border-t border-gray-700">
+              <SignInOutButton className="w-full text-sm text-gray-300 hover:text-gray-100 transition-colors duration-150 bottom-0" />
+            </div>
+          </nav>  
+          
+        </div>
       </div>
 
-      <div
-        style={{
-          width: "100%", // 親要素の幅全体を使用
-          height: "100%", // 親要素の高さ全体を使用
-          display: "flex", // フレックスレイアウト
-          justifyContent: "center",
-          alignItems: "center",
-          overflow: "hidden", // サイズを超える部分を隠す
-
-        }}
-      >
-        <div
-          style={{
-            width: "100%", // 親要素の幅全体を使用
-            height: "100%", // 親要素の高さ全体を使用
-            maxWidth: "100%", // 最大幅制限を親要素の幅に設定
-            maxHeight: "100%", // 最大高さ制限を親要素の高さに設定
-            boxSizing: "border-box", // パディングや境界線を含めてサイズ計算
-
-          }}
-        >
-          <AccountCard/>
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-hidden bg-gray-800">
+        <div className="h-full w-full max-w-full max-h-full box-border">
+          <AccountCard />
         </div>
       </div>
     </div>
