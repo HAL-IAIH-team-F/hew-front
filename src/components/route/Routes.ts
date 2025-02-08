@@ -57,4 +57,16 @@ export class Routes {
    lpRegister(){
        return new RouteUrl(this, "/lp/register")
    }
+    colablisting() {
+        return new TimelinePageRouteUrl(this, "/colablisting")
+    }
+
+  // joinToTimelinePath(path: string) {
+  //   let result
+  //   if (timeline.endsWith("/")) result = timeline.slice(0, -1)
+  //   else result = timeline
+  //   if (path.startsWith("/")) result += path
+  //   else result += "/" + path
+  //   return result
+  // }
 }
