@@ -1,23 +1,16 @@
 "use client"
 import {createContext, ReactNode, Suspense, useContext, useEffect, useState} from "react";
 import SessionPersister from "~/auth/session/SessionPersister";
-import {Client} from "~/api/client/Client";
 import {AuthIdTokenState, IdTokenState} from "~/auth/idtoken/IdTokenState";
 import LogoutFrame from "~/auth/logout/LogoutFrame";
-import {ClientState} from "~/api/context/ClientState";
+import {ClientState, newLoadingClientState} from "~/api/context/ClientState";
 import UnregisteredUserRedirect from "~/api/context/UnregisteredUserRedirect";
 
 export interface ClientContextProviderProps {
     children: ReactNode;
 }
 
-const Context = createContext<ClientState>({
-    state: "loading",
-    client: new Client(),
-    idToken: {
-        state: "loading",
-    }
-});
+const Context = createContext<ClientState>(newLoadingClientState({state: "loading"}));
 
 export function ClientContextProvider(
     {
@@ -26,13 +19,9 @@ export function ClientContextProvider(
 ) {
     const [idToken, setIdToken] = useState<IdTokenState>({state: "loading"})
     const [clientState, setClientState] = useState<ClientState>(() => {
-        return {
+        return newLoadingClientState({
             state: "loading",
-            client: new Client(),
-            idToken: {
-                state: "loading",
-            }
-        }
+        })
     })
     const [requestIdToken, setLogoutRequestIdToken] = useState<AuthIdTokenState>()
 

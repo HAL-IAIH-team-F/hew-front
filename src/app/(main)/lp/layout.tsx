@@ -1,5 +1,5 @@
 "use client"
-import React, {ReactNode} from "react";
+import React, {ReactNode, Suspense} from "react";
 import Sea from "@/(main)/lp/sea";
 import Filter from "@/_top/Filter";
 import {DescriptionSwitchAnimationProvider} from "@/(main)/lp/DescriptionSwitchState";
@@ -12,11 +12,13 @@ export default function Layout(
     }>) {
     return (
         <>
-            <DescriptionSwitchAnimationProvider>
-                <Sea/>
-                {children}
-                <Filter/>
-            </DescriptionSwitchAnimationProvider>
+            <Suspense>
+                <DescriptionSwitchAnimationProvider>
+                    <Sea/>
+                    {children}
+                    <Filter/>
+                </DescriptionSwitchAnimationProvider>
+            </Suspense>
         </>
     )
 }

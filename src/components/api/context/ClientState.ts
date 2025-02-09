@@ -5,6 +5,7 @@ import {AuthIdTokenState, IdTokenState} from "~/auth/idtoken/IdTokenState";
 import {TokenBundle,} from "~/auth/nextauth/TokenBundle";
 import {UnAuthClient} from "~/api/client/UnAuthClient";
 import {UserRes} from "~/res/UserRes";
+import {LoadedClient} from "~/api/client/LoadedClient";
 
 export type ClientState =
     LoadingClientState
@@ -110,6 +111,7 @@ interface UnAuthClientState extends LoadedClientState {
 export interface LoadedClientState extends ClientStateBase {
     loaded: true,
     set: (state: ClientState) => void,
+    client: LoadedClient,
 }
 
 interface ClientStateBase {
