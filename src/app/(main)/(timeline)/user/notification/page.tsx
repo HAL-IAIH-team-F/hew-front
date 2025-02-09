@@ -2,10 +2,10 @@
 
 import {FC, useEffect, useState} from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
-import {NotificationRes} from "@/(main)/user/notification/NotificationRes";
-import Notification from "@/(main)/user/notification/Notification";
-import {ErrorData} from "../../../../util/err/err";
-import {ErrorMessage} from "../../../../util/err/ErrorMessage";
+import {NotificationRes} from "@/(main)/(timeline)/user/notification/NotificationRes";
+import Notification from "@/(main)/(timeline)/user/notification/Notification";
+import {ErrorData} from "../../../../../util/err/err";
+import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
 import {Api} from "~/api/context/Api";
 
 const NotificationPage: FC = () => {

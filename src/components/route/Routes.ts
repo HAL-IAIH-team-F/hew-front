@@ -6,7 +6,7 @@ import {RouteUrl} from "~/route/RouteUrl";
 export class Routes {
     constructor(
         readonly prevParams: URLSearchParams,
-        readonly prevPath: string,
+        readonly currentPath: string,
         readonly router: AppRouterInstance,
     ) {
     }
@@ -15,15 +15,11 @@ export class Routes {
         const newParams = new URLSearchParams(this.prevParams)
         if (value == undefined) newParams.delete(key)
         else newParams.set(key, value)
-        this.router.push(this.prevPath + "?" + newParams.toString())
+        this.router.push(this.currentPath + "?" + newParams.toString())
     }
 
     timeline() {
         return new TimelineRouteUrl(this, "/")
-    }
-
-    lp() {
-        return new RouteUrl(this, "/lp")
     }
 
     search() {
@@ -50,6 +46,17 @@ export class Routes {
         return new TimelinePageRouteUrl(this, "/cart")
     }
 
+    lp() {
+        return new RouteUrl(this, "/lp")
+    }
+
+    lpDescription() {
+        return new RouteUrl(this, "/lp/description")
+    }
+
+   lpRegister(){
+       return new RouteUrl(this, "/lp/register")
+   }
     colablisting() {
         return new TimelinePageRouteUrl(this, "/colablisting")
     }

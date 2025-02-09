@@ -239,7 +239,7 @@ export const createBubbles = async (
 
 export const onClickBubble = (
     manager: Manager, event: MouseEvent, bubbles: BubbleMesh[], camera: PerspectiveCamera, scene: Scene,
-    effects: Effects, clientState: LoadedClientState, routes: Routes
+    effects: Effects, clientState: LoadedClientState, routes: Routes,
 ) => {
     const mouse = new THREE.Vector2(
         (event.clientX / window.innerWidth) * 2 - 1,
@@ -258,8 +258,6 @@ export const onClickBubble = (
         if ((clickedBubble).bubbleId == 999) {
             console.log(manager.value.animstate);
             if (manager.value.animstate != "product") {
-                // showProduct(clickedBubble, scene, camera, manager, effects)
-                // manager.update.animstate("product");
                 routes.timeline().setProductId(clickedBubble.productRes.product_id).transition()
             }
         } else {

@@ -1,4 +1,4 @@
-import ChatModal from "@/(main)/user/chat/ChatModal";
+import ChatModal from "@/(main)/(timeline)/user/chat/ChatModal";
 import React from "react";
 
 

@@ -16,11 +16,12 @@ import {BubbleMesh} from "@/(main)/(timeline)/_timeline/bubble/BubbleMesh";
 
 export default function TimelineAnimation(
     {
-        sceneRef, bubblesRef, effectsRef,
+        sceneRef, bubblesRef, effects, setEffects,
     }: {
         sceneRef: MutableRefObject<Scene | null>,
         bubblesRef: MutableRefObject<BubbleMesh[]>,
-        effectsRef: MutableRefObject<Effects | null>,
+        effects: Effects | undefined,
+        setEffects: (effects: Effects) => void,
     },
 ) {
     const targetCameraRotation = useTargetCameraRotation()
@@ -29,20 +30,17 @@ export default function TimelineAnimation(
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
     const composerRef = useRef<EffectComposer | null>(null);
     const glowingGomiRef = useRef<THREE.Mesh[]>([]);
-    // const mousePosition = useRef({x: 0, y: 0});
     const rotationStrength = 0.05;
     const scene = useMemo(() => new THREE.Scene(), []);
     const {products, error} = useProducts();
     if (error) console.error(error)
     const managerState = useSidebarManagerState()
     const clientState = useClientState()
-
     useEffect(() => {
-        if (sceneRef.current) return
         if (managerState.state != "loaded") return;
-        if (clientState.state == "loading") return;
-
+        if (effects != undefined) return;
         createGradientBackground(scene, managerState.manager.value.sessionId);
+
         sceneRef.current = scene;
 
         camera.position.z = 500;
@@ -50,11 +48,33 @@ export default function TimelineAnimation(
         gl.setSize(window.innerWidth, window.innerHeight);
         rendererRef.current = gl;
 
-        const effects = new Effects(gl, scene, camera);
-        effectsRef.current = effects;
+        const newEffects = new Effects(gl, scene, camera);
 
-        const {composer} = effects;
+        const {composer} = newEffects;
         composerRef.current = composer;
+        // requestAnimationFrame(() => {
+        //     camera.rotation.x += (targetCameraRotation.current.y - camera.rotation.x) * rotationStrength;
+        //     camera.rotation.y += (targetCameraRotation.current.x - camera.rotation.y) * rotationStrength;
+        //     if (composerRef.current && sceneRef.current) {
+        //         composerRef.current.render();
+        //     }
+        // })
+        animateHighFPS(0, managerState.manager, camera, targetCameraRotation, rotationStrength, composerRef, sceneRef);
+        setEffects(newEffects)
+    }, [managerState.state != "loaded"]);
+    const isRendered = useRef(false);
+    useEffect(() => {
+        console.debug("render",
+            managerState.state,
+            clientState.state,
+            composerRef.current == undefined,
+            effects == undefined)
+        if (isRendered.current) return;
+        if (managerState.state != "loaded") return;
+        if (clientState.state == "loading") return;
+        if (composerRef.current == undefined) return;
+        if (effects == undefined) return;
+        isRendered.current = true;
 
         generateGomi(scene, glowingGomiRef.current, 300, managerState.manager.value.riseSpeed, managerState.manager);
         console.log(products)
@@ -65,10 +85,8 @@ export default function TimelineAnimation(
             if (managerState.manager.value.sessionId == 1) {
                 effects.startAnimesion(bubblesRef.current, managerState.manager)
             }
-
-            animateHighFPS(0, managerState.manager, camera, targetCameraRotation, rotationStrength, composerRef, sceneRef);
         });
-    }, [managerState.state, clientState.state]);
+    }, [managerState.state, clientState.state, composerRef.current == undefined, effects == undefined]);
 
     return undefined
 }
@@ -88,8 +106,6 @@ function animateHighFPS(
 
     if (deltaTime >= 1 / manager.value.fpshigh) {
         manager.value.lastFrameTimeHigh = currentTime;
-        // cameraRef.current.position.x += (targetCameraPosition.current.x - cameraRef.current.position.x) * parallaxStrength;
-        // // cameraRef.current.position.y += (targetCameraPosition.current.y - cameraRef.current.position.y) * parallaxStrength;
         camera.rotation.x += (targetCameraRotation.current.y - camera.rotation.x) * rotationStrength;
         camera.rotation.y += (targetCameraRotation.current.x - camera.rotation.y) * rotationStrength;
         if (composerRef.current && sceneRef.current) {

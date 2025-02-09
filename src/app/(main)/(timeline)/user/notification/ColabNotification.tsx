@@ -1,4 +1,4 @@
-import {ColabData} from "@/(main)/user/notification/NotificationRes";
+import {ColabData} from "@/(main)/(timeline)/user/notification/NotificationRes";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
 

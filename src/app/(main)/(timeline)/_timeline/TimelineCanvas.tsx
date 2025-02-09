@@ -19,13 +19,15 @@ export default function TimelineCanvas(
     }, []);
     const bubblesRef = useRef<BubbleMesh[]>([]);
     const sceneRef = useRef<THREE.Scene | null>(null);
-    const effectsRef = useRef<Effects | null>(null);
+    const [effects, setEffects] = useState<Effects>()
     return (
-        <Canvas ref={canvasRef}>
-            <TimelineAnimation sceneRef={sceneRef} bubblesRef={bubblesRef} effectsRef={effectsRef}/>
+        <Canvas ref={canvasRef}
+            className={"bg-[#05253e]"}
+        >
+            <TimelineAnimation sceneRef={sceneRef} bubblesRef={bubblesRef} effects={effects} setEffects={setEffects}/>
             <CameraPosition/>
             <BaubleClickHandler
-                sceneRef={sceneRef} bubblesRef={bubblesRef} effectsRef={effectsRef} canvasRef={canvasRef}
+                sceneRef={sceneRef} bubblesRef={bubblesRef} canvasRef={canvasRef} effects={effects}
             />
             <PerspectiveCamera
                 fov={75}

@@ -1,41 +1,31 @@
-// DescriptionButton.tsx
-import React, {useState} from 'react';
+"use client"
+import React, {useEffect, useState} from "react";
 import {
     createRequestCloseDescriptionAnimationState,
-    createRequestOpenDescriptionAnimationState,
     useDescriptionSwitchAnimationState
 } from "@/(main)/lp/DescriptionSwitchState";
 
-
-export function DescriptionButton(
-    {}: {}
+export default function CloseDescriptionButton(
+    {}: {},
 ) {
-    const [isClicked, setIsClicked] = useState(false);
-    const [buttonText, setButtonText] = useState("Description of this site");
-    const [buttonPosition, setButtonPosition] = useState("bottom");
+    const [isTransparent, setIsTransparent] = useState(true);
     const descriptionState = useDescriptionSwitchAnimationState()
 
     const handleClick = () => {
         if (descriptionState.state == "loading") return
-        console.log("click", buttonText)
-        if (buttonText === "Description of this site") {
-            setIsClicked(true);
-            setTimeout(() => {
-                setButtonText("Return Title");
-                setButtonPosition("top");
-                setIsClicked(false);
-            }, 3000);
-            descriptionState.set(createRequestOpenDescriptionAnimationState(descriptionState.set))
-        } else {
-            setIsClicked(true);
-            setTimeout(() => {
-                setButtonText("Description of this site");
-                setButtonPosition("bottom");
-                setIsClicked(false);
-            }, 3000);
-            descriptionState.set(createRequestCloseDescriptionAnimationState(descriptionState.set))
-        }
+        setIsTransparent(true);
+        setTimeout(() => {
+            setIsTransparent(false);
+        }, 3000);
+        descriptionState.set(createRequestCloseDescriptionAnimationState(descriptionState.set))
     };
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setIsTransparent(false);
+        }, 500);
+        return () => clearTimeout(timeout);
+    }, []);
 
     return (
         <button
@@ -43,8 +33,7 @@ export function DescriptionButton(
             style={{
                 position: "fixed",
                 textAlign: "center",
-                bottom: buttonPosition === "bottom" ? "6px" : "auto",
-                top: buttonPosition === "top" ? "6px" : "auto",
+                top: "6px",
                 left: "50%",
                 zIndex: 10,
                 transform: "translateX(-50%)",
@@ -55,7 +44,7 @@ export function DescriptionButton(
                 backgroundColor: 'transparent',
                 border: 'none',
                 cursor: 'pointer',
-                opacity: isClicked ? 0 : 1,
+                opacity: isTransparent ? 0 : 1,
                 transition: 'opacity 0.3s ease, color 0.3s ease, transform 0.3s ease, top 0.3s ease',
             }}
             onMouseEnter={(e) => {
@@ -77,7 +66,7 @@ export function DescriptionButton(
               content: '""',
           }}
       />
-            {buttonText}
+            Return Title
         </button>
-    );
+    )
 }
