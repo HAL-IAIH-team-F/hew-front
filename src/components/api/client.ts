@@ -125,7 +125,7 @@ const PostCartBody = z
   .object({ products: z.array(z.string().uuid()) })
   .passthrough();
 const PatchCartBodyRmProducts = z
-  .object({ rm_products: z.array(z.any()).min(1).max(1) })
+  .object({ rm_products: z.array(z.string().uuid()) })
   .partial()
   .passthrough();
 const PatchCartBodyRmAll = z
@@ -165,7 +165,7 @@ const ProductRes = z
     product_description: z.string(),
     purchase_date: z.string().datetime({ offset: true }),
     creator_ids: z.array(z.string().uuid()),
-    purchase_info: z.union([PurchaseInfo, z.null()]).optional(),
+    purchase_info: z.union([PurchaseInfo, z.null()]),
   })
   .passthrough();
 const name = z.union([z.array(z.string()), z.null()]).optional();
@@ -723,6 +723,13 @@ const endpoints = makeApi([
         schema: HTTPValidationError,
       },
     ],
+  },
+  {
+    method: "get",
+    path: "/api/token/file/access",
+    alias: "get_token_file_access____api_token_file_access_get",
+    requestFormat: "json",
+    response: ImgTokenRes,
   },
   {
     method: "get",

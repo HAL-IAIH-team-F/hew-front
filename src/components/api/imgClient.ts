@@ -1,5 +1,3 @@
-// noinspection JSUnusedGlobalSymbols
-
 import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
 import { z } from "zod";
 
@@ -23,6 +21,7 @@ const ImgPreferenceBody = z.object({ state: State }).passthrough();
 const ImgPreferenceRes = z.object({ filename: z.string() }).passthrough();
 const filename = z.union([z.string(), z.null()]);
 const q = z.union([z.string(), z.null()]).optional();
+const download = z.union([z.boolean(), z.null()]).optional().default(false);
 
 export const schemas = {
   Body_upload_image_upload__post,
@@ -34,9 +33,17 @@ export const schemas = {
   ImgPreferenceRes,
   filename,
   q,
+  download,
 };
 
 const endpoints = makeApi([
+  {
+    method: "get",
+    path: "/health",
+    alias: "health_health_get",
+    requestFormat: "json",
+    response: z.object({}).partial().passthrough(),
+  },
   {
     method: "get",
     path: "/img/:image_uuid/:filename",
@@ -57,6 +64,11 @@ const endpoints = makeApi([
         name: "q",
         type: "Query",
         schema: q,
+      },
+      {
+        name: "download",
+        type: "Query",
+        schema: download,
       },
     ],
     response: z.unknown(),
