@@ -22,15 +22,21 @@ export class RouteUrl {
     const tempParams = this.animationTempParams()
     if (tempPathname == undefined && tempParams == undefined) {
       this.routes.router.push(this.toString())
-      return
+      return new Promise((resolve) => 
+        resolve(undefined)
+      )
     }
     const tempUrl = (tempPathname != undefined ? tempPathname : this.pathname())
       + "?" + (tempParams != undefined ? tempParams?.toString() : this.params().toString())
     console.debug("tempUrl", tempUrl)
     this.routes.router.replace(tempUrl);
-    setTimeout(() => {
-      this.routes.router.push(this.toString())
-    }, 300);
+    return new Promise(resolve => {
+        setTimeout(() => {
+        this.routes.router.push(this.toString())
+        resolve(undefined)
+      }, 300);
+    });
+ 
 
   }
 

@@ -5,7 +5,6 @@ import FormErrMsg from "../FormErrMsg";
 
 export function StyledButton(
   {
-    onClick,
     className,
     type,
     ...props
@@ -16,8 +15,14 @@ export function StyledButton(
   return (
     <>
       <button
-        className={sx("border-2 border-borderDef rounded py-1 px-4 bg-white hover:bg-lightGray text-black", className)}
-        {...props} disabled={formState.disabled} type={type}
+        className={sx(
+          "border-2 border-gray-600 rounded py-1 px-4 bg-gray-800 hover:bg-gray-700 text-white",
+          formState.disabled ? "opacity-50 cursor-not-allowed" : undefined, // 無効時のスタイル
+          className
+        )}
+        {...props}
+        disabled={formState.disabled}
+        type={type}
       />
       <FormErrMsg name={type || "submit"}/>
     </>

@@ -50,7 +50,7 @@ const CartPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-7 py-10">
         <h1 className="text-3xl font-bold mb-8 text-gray-100 flex items-center gap-2">
           <ShoppingCart className="w-8 h-8" />
           カート
@@ -81,7 +81,7 @@ const CartPage = () => {
                 <div className="mt-4 space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-300">商品の小計</span>
-                    <span className="font-bold text-gray-100">¥{totalPrice}円</span>
+                    <span className="font-bold text-gray-100">{totalPrice}円</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-300">割引適応</span>
@@ -91,7 +91,7 @@ const CartPage = () => {
                 <div className="mt-4 pt-4 border-t border-gray-700">
                   <div className="flex justify-between">
                     <span className="text-lg font-bold text-gray-100">合計</span>
-                    <span className="text-lg font-bold text-gray-100">¥{totalPrice - totalPrice / 10}円 </span>
+                    <span className="text-lg font-bold text-gray-100">{totalPrice - totalPrice / 10}円 </span>
                   </div>
                 </div>
               </div>
@@ -149,28 +149,12 @@ const ProductList: React.FC<ProductListProps> = ({ productId}) => {
                 {product.product_title}
               </h3>
               <div className="text-xl font-bold text-red-400 mb-2">
-                ¥{product.product_price.toLocaleString()}円
-              </div>
-              
-              {/* Quantity Selector */}
-              <div className="flex items-center gap-3">
-                <button 
-                  className="text-gray-400 hover:text-gray-200"
-                >
-                  <MinusCircle className="w-5 h-5" />
-                </button>
-                <button 
-                  className="text-gray-400 hover:text-gray-200"
-                >
-                  <PlusCircle className="w-5 h-5" />
-                </button>
+                {product.product_price.toLocaleString()}円
               </div>
 
               {/* Action Buttons */}
               <div className="mt-4 flex items-center gap-4">
-                <button className="text-sm text-blue-400 hover:text-blue-300">
-                  後で買う
-                </button>
+
                 <button 
                   className="text-sm text-red-400 hover:text-red-300 flex items-center gap-1"
                 >

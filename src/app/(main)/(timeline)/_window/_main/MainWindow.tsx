@@ -5,6 +5,7 @@ import {MOBILE_WIDTH, useProductContext} from '~/products/ContextProvider';
 import {useWindowSize} from '@/_hook/useWindowSize';
 import useProductId from "~/products/useProductId";
 import useRoutes from "~/route/useRoutes";
+import { X } from "lucide-react";
 
 const MainWindow: React.FC<{
     children?: ReactNode
@@ -21,6 +22,11 @@ const MainWindow: React.FC<{
         ? undefined : children
     const [isRendering, setIsRendering] = useState(children != undefined)
     const [isOpen, setIsOpen] = useState(children != undefined)
+    const windowSize = useWindowSize();
+    
+    const closeHandler = () => {
+        routes.timeline().transition()
+    }
 
     useEffect(() => {
         const isNextRendering = children != undefined
@@ -37,17 +43,28 @@ const MainWindow: React.FC<{
         }, 300)
         return () => clearTimeout(timeout)
     }, [children != undefined]);
-
+    
     return (
         isRendering &&
         <div
-          style={pageWindowStyle(isSidebarOpen, productId != undefined, isOpen, size.width, size.height)}>
-          <div style={inAppPageStyle(children != undefined)}>
-            <div style={{display: "block"}} className={"h-full"}>
-                {children}
+            style={pageWindowStyle(isSidebarOpen, productId != undefined, isOpen, size.width, size.height)}
+            >
+            <div style={inAppPageStyle(children != undefined)} className="relative">
+                <button
+                onClick={closeHandler} 
+                className="absolute top-3 right-3 bg-transparent text-white p-2 rounded-full 
+                            backdrop-blur-md border border-white/20 shadow-md 
+                            transition-all duration-200 hover:bg-red-600/20 hover:border-red-500 hover:scale-105 z-50"
+                >
+                <X className="w-5 h-5" />
+                </button>
+
+                <div style={{ display: "block" }} className={"h-full"}>
+                    {children}
+                </div>
             </div>
-          </div>
         </div>
+
     );
 };
 

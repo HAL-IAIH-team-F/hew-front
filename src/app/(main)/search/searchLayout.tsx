@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Search, Command } from "lucide-react";
+import { Search, Command, ShoppingCart } from "lucide-react";
 import SerchProductView from "./SerchProductView";
 
 interface SearchLayoutProps {
@@ -36,17 +36,22 @@ const SearchLayout: React.FC<SearchLayoutProps> = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800">
+    <div className="min-h-screen bg-gradient-to-b bg-gray-900 from-gray-900">
       {/* Header with Search Bar */}
+      
       <div
         className={`
           ${isMobileView 
-            ? "fixed top-0 left-0 w-full z-20" 
+            ? "fixed top-10 left-0 w-full z-1" 
             : "absolute top-0 z-10 w-full"}
           backdrop-blur-xl bg-gray-900/80 border-b border-gray-800/50
         `}
       >
-        <div className="max-w-7xl mx-auto px-4 h-20">
+        <h1 className="absolute left-7 top-10  text-3xl font-bold mb-8 text-gray-100 flex items-center gap-2">
+          <Search className="w-8 h-8" />
+          検索
+        </h1>
+        <div className="max-w-7xl mx-auto px-4 h-28">
           <div className="h-full flex items-center justify-center">
             <div className={`
               relative w-full max-w-2xl transition-all duration-200
