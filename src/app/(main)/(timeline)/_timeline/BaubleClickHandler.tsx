@@ -30,7 +30,6 @@ export default function BaubleClickHandler(
     useEffect(() => {
         if (managerState.state != "loaded") return;
         if (clientState.state == "loading") return;
-        if (productId != undefined) return
         if (canvasRef.current == undefined) return;
         const canvas = canvasRef.current
         const handleClick = (event: MouseEvent) => {
@@ -38,7 +37,15 @@ export default function BaubleClickHandler(
             if (bubblesRef.current == undefined) return;
             if (effects == undefined) return;
             if (sceneRef.current == undefined) return;
-            onClickBubble(managerState.manager, event, bubblesRef.current, camera, sceneRef.current, effects, clientState, routes);
+            if (productId != undefined) {
+                routes.timeline().setProductId(undefined).transition()
+                return
+            }
+
+            onClickBubble(
+                managerState.manager, event, bubblesRef.current, camera, sceneRef.current, effects,
+                clientState, routes
+            );
         }
 
         canvas.addEventListener('click', handleClick);
