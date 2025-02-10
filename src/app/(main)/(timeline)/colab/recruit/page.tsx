@@ -22,6 +22,7 @@ const RequestRecruit: React.FC = () => {
         <>
             <div style={{
                 height: "750px",
+                width: "100%",
                 padding: "60px 0 50px 0",
                 margin: "0 0 0 0",
                 display: "flex",
