@@ -19,7 +19,7 @@
     "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",
     "leva": "^0.10.0",
-    "lucide-react": "^0.474.0",
+    "lucide-react": "^0.475.0",
     "motion": "^12.4.1",
     "next": "^14.2.15",
     "react": "^18",
