@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {ProductRes} from "@/(main)/search/sample/ProductRes";
+import {ProductRes} from "~/res/ProductRes";
 
 export interface BubbleMesh extends THREE.Mesh {
     stopAnimation: () => void;

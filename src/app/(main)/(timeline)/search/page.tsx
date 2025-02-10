@@ -1,5 +1,5 @@
-import SearchLayout from "@/(main)/search/searchLayout";
-import {TCanvas} from "@/(main)/search/TCanvas";
+import SearchLayout from "@/(main)/(timeline)/search/searchLayout";
+import {TCanvas} from "@/(main)/(timeline)/search/TCanvas";
 
 export default function Page(
   {}: {}

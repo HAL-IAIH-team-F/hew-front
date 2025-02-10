@@ -71,7 +71,7 @@ export default function UserRegisterForm({...props}: UserRegisterFormProps) {
                             <div className="w-full h-full flex items-center justify-center">
                                 <img
                                     className="w-full h-full"
-                                    src="/curtain.png"
+                                    src="/icon.png"
                                     alt="デフォルトアイコン"
                                 />
                             </div>

@@ -1,6 +1,6 @@
 import ProductThumbnail from "~/api/useImgData";
 import React from "react";
-import {ProductRes} from "@/(main)/search/sample/ProductRes";
+import {ProductRes} from "~/res/ProductRes";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {ClientState} from "~/api/context/ClientState";
 import {Api} from "~/api/context/Api";

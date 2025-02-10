@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {ProductRes} from "@/(main)/search/sample/ProductRes";
+import {ProductRes} from "~/res/ProductRes";
 import {ErrorData} from "../../util/err/err";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";

@@ -7,7 +7,7 @@ interface SearchLayoutProps {
   children: React.ReactNode;
 }
 
-const SearchLayout: React.FC<SearchLayoutProps> = ({ children }) => {
+const SearchLayout: React.FC<SearchLayoutProps> = ({  }) => {
   const [isMobileView, setIsMobileView] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);

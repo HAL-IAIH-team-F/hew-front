@@ -1,5 +1,5 @@
 "use client"
-import { ProductRes } from '@/(main)/search/sample/ProductRes';
+import { ProductRes } from '~/res/ProductRes';
 import {useWindowSize} from '@/_hook/useWindowSize';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import { useNotification, usePurchaseYesNo } from '~/notification/notification';

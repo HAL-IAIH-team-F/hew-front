@@ -1,4 +1,4 @@
-import {PurchaseInfo} from "@/(main)/search/sample/ProductRes";
+import {PurchaseInfo} from "~/res/ProductRes";
 import {useEffect, useState} from "react";
 import {Img} from "~/api/context/Api";
 import {ErrorData} from "../../../../../util/err/err";

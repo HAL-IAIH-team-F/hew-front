@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {ErrorData} from "../../util/err/err";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
-import {ProductRes} from "@/(main)/search/sample/ProductRes";
+import {ProductRes} from "~/res/ProductRes";
 
 interface UseProductOptions {
   productId?: string;

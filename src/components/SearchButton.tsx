@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {FaSearch, FaTimes} from "react-icons/fa";
-import SearchPage from "@/(main)/search/search";
+import SearchPage from "@/(main)/(timeline)/search/search";
 import {gsap} from "gsap";
 
 // ボタンのスタイル
