@@ -32,8 +32,8 @@ export default function Recruit({ recruit }: { recruit: RecruitRes }) {
                     width >= 1024 ? "40%" :
                         // width >= 768  ? "80%" :
                             width >= 770  ? "70%" : "90%",
-                minHeight: width >= 1400 ? "20px" :
-                    width >= 1024 ? "180px" :
+                minHeight: width >= 1400 ? "260px" :
+                    width >= 1024 ? "280px" :
                         width >= 768  ? "90%" :
                             width >= 640  ? "90%" : "100px",
                 paddingRight:
@@ -107,7 +107,7 @@ export default function Recruit({ recruit }: { recruit: RecruitRes }) {
                     style={{
                         display: "flex",
                         backgroundColor: "rgba(166, 166, 166, 0.2)",
-                        backdropFilter: "blur(5px) brightness(1.1)",
+                        backdropFilter: "blur(5px) brightness(0.)",
                         borderRadius: "0 0 8px 8px",
                         padding: `10px ${style.paddingRight} 8px 10px`,
                     }}

@@ -9,7 +9,7 @@ export default function Page({}: {}) {
     <>
       <div
         style={{
-          margin: "30px 0 0 0",
+          margin: "60px 0 60px 0",
           display: "flex",
         }}
       >
