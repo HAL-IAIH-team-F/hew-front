@@ -174,6 +174,7 @@ const following = z.union([z.boolean(), z.null()]).optional();
 const limit = z.union([z.number(), z.null()]).optional().default(20);
 const OrderDirection = z.enum(["asc", "desc"]);
 const time_order = OrderDirection.optional();
+const is_bought = z.union([z.boolean(), z.null()]).optional().default(false);
 const RecruitRes = z
   .object({
     recruit_id: z.string().uuid(),
@@ -190,7 +191,7 @@ const TokenRes = z
   .passthrough();
 const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
 const ImgTokenRes = z.object({ upload: TokenInfo }).passthrough();
-const PostUserBody = z
+const UserBody = z
   .object({
     user_name: z.string(),
     user_icon_uuid: z.union([z.string(), z.null()]),
@@ -245,12 +246,13 @@ export const schemas = {
   limit,
   OrderDirection,
   time_order,
+  is_bought,
   RecruitRes,
   PostRecruitBody,
   TokenRes,
   PostTokenBody,
   ImgTokenRes,
-  PostUserBody,
+  UserBody,
   SelfUserRes,
 };
 
@@ -583,6 +585,11 @@ const endpoints = makeApi([
         schema: time_order,
       },
       {
+        name: "is_bought",
+        type: "Query",
+        schema: is_bought,
+      },
+      {
         name: "sort",
         type: "Query",
         schema: z.array(z.string()).optional(),
@@ -746,6 +753,27 @@ const endpoints = makeApi([
     response: TokenRes,
   },
   {
+    method: "put",
+    path: "/api/user",
+    alias: "put_user____api_user_put",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: UserBody,
+      },
+    ],
+    response: SelfUserRes,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
     method: "post",
     path: "/api/user",
     alias: "post_user_api_user_post",
@@ -754,7 +782,7 @@ const endpoints = makeApi([
       {
         name: "body",
         type: "Body",
-        schema: PostUserBody,
+        schema: UserBody,
       },
     ],
     response: SelfUserRes,
