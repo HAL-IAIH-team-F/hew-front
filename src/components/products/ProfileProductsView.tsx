@@ -1,6 +1,6 @@
 import React, {CSSProperties, useEffect, useState} from "react";
 import {ErrorMessage} from "../../util/err/ErrorMessage";
-import ProductThumbnail from "~/api/useImgData";
+import ProductThumbnail from "~/api/useProductThumbnail";
 import useCreatorData from "../hooks/useCreatorData";
 import Image from "../../util/Image";
 import useRoutes from "~/route/useRoutes";
@@ -78,7 +78,7 @@ export default function ProfileProductsView({}: ProductPageProps) {
                     </div>
                     {product.creator_ids.map((id) => (
                       <div key={id} style={styles.creator_data}>
-                        <CreatorData creator_id={id} showView={true}/>
+                        <CreatorIcon creator_id={id} showView={true}/>
                       </div>
                     ))}
                     
@@ -105,7 +105,7 @@ interface CreatorDataProps {
 }
 
 
-export function CreatorData({creator_id, showView = true, onDataFetched }: CreatorDataProps) {
+export function CreatorIcon({creator_id, showView = true, onDataFetched }: CreatorDataProps) {
   const [_, user_data, __] = useCreatorData({creator_id});
   const iconUrl = user_data?.icon ? (user_data.icon as any).strUrl() : null;
   const screenId = user_data?.screen_id;
@@ -119,15 +119,83 @@ export function CreatorData({creator_id, showView = true, onDataFetched }: Creat
   // showViewがfalseの場合はViewを表示せず、データのみ取得
   if (!showView) return null;
 
-  return <CreatorDataView iconUrl={iconUrl} screenId={screenId}/>;
+  return <CreatorIconView iconUrl={iconUrl}/>;
+}
+
+export function CreatorScreenId({creator_id, showView = true }: CreatorDataProps) {
+  const [_, user_data, __] = useCreatorData({creator_id});
+  const screenId = user_data?.screen_id;
+
+  if (!showView) return null;
+
+  return screenId;
+}
+
+export function CreatorCard({creator_id, onDataFetched}: CreatorDataProps) {
+  const [_, user_data, __] = useCreatorData({creator_id});
+  const iconUrl = user_data?.icon ? (user_data.icon as any).strUrl() : null;
+  const screenId = user_data?.screen_id;
+  const name = user_data?.name;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (onDataFetched) {
+      onDataFetched({iconUrl, screenId});
+    }
+  }, [iconUrl, screenId, onDataFetched]);
+
+  return (
+    <div className="w-60 p-1 rounded-lg bg-gray-900">
+      <div className="flex items-center gap-4">
+        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-900 flex items-center justify-center">
+            {iconUrl && !error ? (
+            <img
+              src={iconUrl}
+              alt={name || "User Icon"}
+              className="w-full h-full object-cover"
+              onLoad={() => setLoading(false)}
+              onError={() => {
+                setLoading(false);
+                setError(true);
+              }}
+            />
+          ) : loading || error ? (
+            // くるくるスピナー
+            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-gray-500 dark:border-gray-400"></div>
+          ) : (
+            // デフォルトのアイコン
+            <div className="w-6 h-6 text-gray-400">
+              <div className="w-full h-full rounded-full border-2 border-gray-400 flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full border-2 border-gray-400 -mt-1" />
+              </div>
+            </div>
+          )}
+        </div>
+        
+        <div className="flex flex-col">
+          {name && (
+            <h3 className="font-medium text-lg text-white">
+              {name}
+            </h3>
+          )}
+          {screenId && (
+            <p className="text-sm text-gray-400">
+              @{screenId}
+            </p>
+          )}
+        </div>
+        
+      </div>
+    </div>
+  );
 }
 
 interface CreatorDataViewProps {
   iconUrl: string | null;
-  screenId?: string;
 }
 
-export function CreatorDataView({iconUrl, screenId}: CreatorDataViewProps) {
+export function CreatorIconView({ iconUrl }: CreatorDataViewProps) {
   return (
     <div>
       {iconUrl ? (
@@ -139,7 +207,6 @@ export function CreatorDataView({iconUrl, screenId}: CreatorDataViewProps) {
             height={33}
             style={styles.userIcon}
           />
-          <p>{screenId}</p>
         </>
       ) : (
         <div>No Icon</div>
@@ -274,14 +341,11 @@ const styles: { [key: string]: CSSProperties } = {
     position: 'absolute',
     transform: 'translate(-50%, -50%)',
     border: '2px solid rgba(0, 0, 0, 0.8)',
-    top: '60px',
-    left: '30px',
   },
   userName: {
     position: 'absolute',
     top: '47px',
     left: '47px',
     color: "white",
-
   }
 };

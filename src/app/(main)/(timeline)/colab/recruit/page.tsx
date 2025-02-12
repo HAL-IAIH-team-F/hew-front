@@ -21,15 +21,11 @@ const RequestRecruit: React.FC = () => {
     return (
         <>
             <div style={{
-                height: "750px",
-                padding: "60px 0 50px 0",
-                margin: "0 0 0 0",
                 display: "flex",
                 flexWrap: "wrap",
                 justifyContent: "center",
-                gap: "8px",
-                overflowY: "auto", // 縦方向スクロールを有効にする
-                // maxHeight: "80vh", // 表示エリアの高さを制限する
+                height: "100%",
+                width: "100%",
                 borderRadius: "0 16px 16px 0", // 角を少し丸める
                 background: "linear-gradient(135deg, rgba(135, 206, 235, 0.3), rgba(255, 255, 255, 0.1))", // 青空っぽいグラデーション
                 backdropFilter: "blur(8px)", // 背景のぼかし効果を追加

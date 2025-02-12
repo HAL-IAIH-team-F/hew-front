@@ -30,18 +30,24 @@ export function StyledForm(
   const [formContext, setFormContext] = useState<FormContext>({err: undefined, disabled: disabled})
 
   return (
-    <Context.Provider
-      value={formContext}
-    >
-      <form className={sx(className, "")} {...props} action={formData => {
-        setFormContext({err: undefined, disabled: disabled})
-        const styledData = new StyledFormData(formData)
-        action && action(styledData).then(_ => {
-          setFormContext({err: styledData.formError, disabled: disabled})
-        }).catch(reason => {
-          styledData.append("submit", reason.toString())
-        })
-      }}>
+    <Context.Provider value={formContext}>
+      <form
+        className={sx(
+          "bg-gray-900 text-white p-6 rounded-lg",
+          disabled ? "opacity-50 cursor-not-allowed" : undefined, // ここを修正
+          className
+        )}
+        {...props}
+        action={formData => {
+          setFormContext({err: undefined, disabled: disabled})
+          const styledData = new StyledFormData(formData)
+          action && action(styledData).then(_ => {
+            setFormContext({err: styledData.formError, disabled: disabled})
+          }).catch(reason => {
+            styledData.append("submit", reason.toString())
+          })
+        }}
+      >
         <FormErrList/>
         {children}
         <FormErrList/>

@@ -8,14 +8,21 @@ import {StyledButton} from "../../../../../util/form/element/StyledButton";
 import FlexBox from "../../../../../util/FlexBox";
 import {Api} from "~/api/context/Api";
 import useRoutes from "~/route/useRoutes";
+import { useUserData } from "~/api/context/useUserData";
+import { useEffect, useState } from "react";
 
 
 export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps) {
   const routes = useRoutes()
-
+  
   // セッションとクライアントコンテキストの取得
   const clientContext = useClientState();
-
+  const [mail, setMail ] = useState<string>();
+  useEffect(() =>
+  {
+    if(clientContext.state !== "registered") return
+    setMail(clientContext.user.user_mail)
+  })
   // 入力チェックの関数
   const validateForm = (formData: StyledFormData) => {
     const contactAddress = formData.getStr("contact_address");
@@ -31,6 +38,7 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
   };
 
   return (
+    
     <StyledForm
       {...props}
       action={async formData => {
@@ -66,8 +74,9 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
         return;
       }}
     >
+      <h2 className="text-xl font-bold mb-4">クリエイター登録</h2>
       <div>
-        <StyledInput name="contact_address" label="連絡先(一般に表示されます)"/>
+        <StyledInput name="contact_address" label="連絡先(一般に表示されます)" value={mail} />
       </div>
       <div>
         <StyledInput name="transfer_target" label="振込先"/>

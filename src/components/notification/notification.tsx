@@ -1,7 +1,7 @@
 import React, { CSSProperties, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle } from "lucide-react";
-import ProductThumbnail from "~/api/useImgData";
+import { CheckCircle, Loader2 } from "lucide-react";
+import ProductThumbnail from "~/api/useProductThumbnail";
 import { ProductRes } from "@/(main)/search/sample/ProductRes";
 import { useProductContext } from "~/products/ContextProvider";
 import { Api } from "~/api/context/Api";
@@ -207,10 +207,13 @@ const PurchaseYesNo: React.FC<PurchaseYesNoProps> = ({ isModalOpen, onClose, set
   const [cart, setCart] = useState<CartRes | undefined>(undefined);
   const clientState = useClientState();
   const [err, setErr] = useState<ErrorData | string | null>(null);
+  const [isLoading, setIsLoading] = useState(false); // ローディング状態
 
   const handlePurchase = async () => {
     try {
       if (clientState.state !== "registered") throw new Error("not authenticated");
+
+      setIsLoading(true); // ローディング開始
 
       const response = await clientState.client.authBody(
         Api.app.cart_buy_api_cart_buy_put,
@@ -221,58 +224,73 @@ const PurchaseYesNo: React.FC<PurchaseYesNoProps> = ({ isModalOpen, onClose, set
 
       if (response.error) {
         setErr(response.error);
+        setIsLoading(false); // エラー発生時はローディング解除
         return;
       }
-      setPurchased_Products(response.success)
-
-      setCompleteOpen(true);
-      setCart(undefined);
-      setTimeout(() => onClose(), 300);
+      
+      setPurchased_Products(response.success);
+      setTimeout(() => {
+        setIsLoading(false); // ローディング終了
+        setCompleteOpen(true);
+        onClose();
+      }, 1500);
     } catch (error) {
       setErr(error instanceof Error ? error.message : "不明なエラーが発生しました");
+      setIsLoading(false); // エラー発生時はローディング解除
     }
   };
 
   return (
     <AnimatePresence>
       {isModalOpen && (
-        <>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          style={purchaseStyle.modalOverlay}
+          onClick={onClose}
+        >
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ y: "-50%", x: "-50%", opacity: 0 }}
+            animate={{ y: "-50%", x: "-50%", opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            style={purchaseStyle.modalOverlay}
-            onClick={onClose}
+            style={purchaseStyle.modalContent}
+            onClick={(e) => e.stopPropagation()}
           >
-            <motion.div
-              initial={{ y: "-50%", x: "-50%", opacity: 0 }}
-              animate={{ y: "-50%", x: "-50%", opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={purchaseStyle.modalContent}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <CheckCircle size={40} color="green" />
-              <h3 style={purchaseStyle.modalTitle}>購入しますか？</h3>
-              <div style={purchaseStyle.modalButtonContainer}>
-                <button
-                  style={{ ...purchaseStyle.modalButton, ...purchaseStyle.modalButtonYes }}
-                  onClick={handlePurchase}
-                >
-                  はい
-                </button>
-                <button
-                  style={{ ...purchaseStyle.modalButton, ...purchaseStyle.modalButtonNo }}
-                  onClick={onClose}
-                >
-                  いいえ
-                </button>
-              </div>
-              {err && <p style={{ color: "red" }}>{typeof err === "string" ? err : err.message}</p>}
-            </motion.div>
+            {isLoading ? (
+              // ローディングアニメーション
+              <motion.div
+
+                style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+              >
+                <Loader2 className="w-6 h-6 animate-spin" />
+                <p className="text-lg font-medium mt-2">購入処理中…</p>
+              </motion.div>
+            ) : (
+              <>
+                <CheckCircle size={40} color="green" />
+                <h3 style={purchaseStyle.modalTitle}>購入しますか？</h3>
+                <div style={purchaseStyle.modalButtonContainer}>
+                  <button
+                    style={{ ...purchaseStyle.modalButton, ...purchaseStyle.modalButtonYes }}
+                    onClick={handlePurchase}
+                  >
+                    はい
+                  </button>
+                  <button
+                    style={{ ...purchaseStyle.modalButton, ...purchaseStyle.modalButtonNo }}
+                    onClick={onClose}
+                  >
+                    いいえ
+                  </button>
+                </div>
+                {err && <p style={{ color: "red" }}>{typeof err === "string" ? err : err.message}</p>}
+              </>
+            )}
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   );

@@ -2,7 +2,7 @@
 // util/form/StyledTextarea.tsx
 // Author: injectxr
 // Date: 2024-09-07
-// Description: テキストエリアコンポーネント
+// Description: テキストエリアコンポーネント (ダークモード対応)
 // ============================
 
 "use client"
@@ -23,7 +23,6 @@ export function StyledTextarea(
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const invisibleTextAreaRef = useRef<HTMLTextAreaElement>(null);
 
-
   useEffect(() => {
     if (invisibleTextAreaRef.current) {
       setHeight(invisibleTextAreaRef.current.scrollHeight);
@@ -35,26 +34,30 @@ export function StyledTextarea(
   }
 
   return (
-    <ItemBackground type={"label"} className={sx("p-3 block my-6", className)}>
-      <p className={sx("px-4 mb-4 block text-xl")}>{label || name}</p>
+    <ItemBackground type={"label"} className={sx("p-3 block my-6 bg-gray-900 rounded-lg", className)}>
+      <p className={sx("px-4 mb-4 block text-xl text-white")}>{label || name}</p>
       <textarea
         ref={textAreaRef}
         value={value}
         onChange={(evt) => handleChangeValue(evt.target.value)}
         style={{height: height ? `${height}px` : 'auto'}}
         name={name}
-        className={sx("block w-full border-2 overflow-hidden resize-none border-borderDef rounded-lg px-3 py-1 text-lg")}
+        className={sx(
+          "block w-full border-2 overflow-hidden resize-none border-gray-700 rounded-lg px-3 py-1 text-lg bg-gray-800 text-white",
+          "placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 hover:bg-gray-700 transition"
+        )}
         placeholder={props.maxLength ? `最大${props.maxLength}文字まで入力できます` : undefined}
         {...props}
       />
       <textarea
         ref={invisibleTextAreaRef}
         value={value}
-        onChange={() => {
-        }}
+        onChange={() => {}}
         tabIndex={-1}
         style={{position: 'fixed', top: -999, visibility: 'hidden'}}
-        className={sx("block w-full border-2 overflow-hidden resize-none border-borderDef rounded-lg px-3 py-1 text-lg")}
+        className={sx(
+          "block w-full border-2 overflow-hidden resize-none border-gray-700 rounded-lg px-3 py-1 text-lg bg-gray-800 text-white"
+        )}
       />
     </ItemBackground>
   );

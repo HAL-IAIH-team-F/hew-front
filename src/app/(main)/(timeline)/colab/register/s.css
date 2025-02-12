@@ -1,0 +1,24 @@
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #1e1e1e; /* ダークグレーの背景 */
+    border-radius: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #444; /* 少し明るいグレー */
+    border-radius: 10px;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #666; /* ホバー時に明るく */
+  }
+  
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #444 #1e1e1e;
+  }
+  

@@ -174,6 +174,7 @@ const following = z.union([z.boolean(), z.null()]).optional();
 const limit = z.union([z.number(), z.null()]).optional().default(20);
 const OrderDirection = z.enum(["asc", "desc"]);
 const time_order = OrderDirection.optional();
+const is_bought = z.union([z.boolean(), z.null()]).optional().default(false);
 const RecruitRes = z
   .object({
     recruit_id: z.string().uuid(),
@@ -245,6 +246,7 @@ export const schemas = {
   limit,
   OrderDirection,
   time_order,
+  is_bought,
   RecruitRes,
   PostRecruitBody,
   TokenRes,
@@ -581,6 +583,11 @@ const endpoints = makeApi([
         name: "like_order",
         type: "Query",
         schema: time_order,
+      },
+      {
+        name: "is_bought",
+        type: "Query",
+        schema: is_bought,
       },
       {
         name: "sort",

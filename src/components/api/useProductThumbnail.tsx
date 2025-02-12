@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {Img} from "~/api/context/Api";
+import { FaSpinner } from 'react-icons/fa';
 
 interface ProductUuid {
   product_thumbnail_uuid: string;
@@ -30,15 +31,33 @@ const ProductThumbnail = ({product_thumbnail_uuid}: ProductUuid) => {
   }, [context, product_thumbnail_uuid]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center w-full h-full bg-black">
+        <FaSpinner className="animate-spin text-white text-3xl" />
+      </div>
+    );
   }
+  
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex justify-center items-center w-full h-full">
+        <div className="text-red-500 text-lg font-bold bg-red-100 border border-red-400 p-4 rounded-md">
+          Error: {error}
+        </div>
+      </div>
+    );
   }
+  
 
   if (!image) {
-    return <div>No image available</div>;
+    return (
+      <div className="flex justify-center items-center w-full h-full">
+        <div className="text-gray-500 text-lg font-semibold bg-gray-100 border border-gray-300 p-4 rounded-md">
+          No image available
+        </div>
+      </div>
+    );
   }
 
   return (

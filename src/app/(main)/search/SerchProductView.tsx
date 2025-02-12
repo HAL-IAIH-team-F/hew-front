@@ -1,113 +1,133 @@
-import React, { CSSProperties, useEffect, useState } from "react";
-import ProductThumbnail from "~/api/useImgData";
+import React, { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
+import ProductThumbnail from "~/api/useProductThumbnail";
 import useRoutes from "~/route/useRoutes";
 import useProductId from "~/products/useProductId";
 import useProducts from "~/hooks/useProducts";
 import { ErrorMessage } from "../../../util/err/ErrorMessage";
 import Image from "../../../util/Image";
 import useCreatorData from "~/hooks/useCreatorData";
+import { useWindowSize } from "@/_hook/useWindowSize";
+import { useProductContext } from "~/products/ContextProvider";
 interface SerchProductViewProps {
     Search: string;
 }
-
 export default function SerchProductView({ Search }: SerchProductViewProps) {
-    const [searchTag, setSearchTag] = useState(Search);
-    const { products, error } = useProducts({ name: searchTag });
-    const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-    const routes = useRoutes();
-    const [columns, setColumns] = useState(3); // 初期値
-    const openedProductId = useProductId()
-    // Search の変更を監視し、searchTag を更新
-    useEffect(() => {
-        setSearchTag(Search);
-    }, [Search]);
+  const [searchTag, setSearchTag] = useState(Search);
+  const { products, error } = useProducts({ name: searchTag });
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const openedProductId = useProductId();
+  const routes = useRoutes();
+  const windowSize = useWindowSize();
+  const { isSidebarOpen, isProductOpen }= useProductContext()
+  // レスポンシブ用の基準値
+  const baseCardWidth = 370;
+  const baseCardHeight = 200;
+  const minCardWidth = 300;
 
-    // デバッグ用のログ出力
-    useEffect(() => {
-        console.log("検索ワード:", searchTag);
-        console.log("検索結果:", products);
-    }, [searchTag, products]);
-    useEffect(() => {
-        const updateColumns = () => {
-          const width = window.innerWidth; // ウィンドウ幅を取得
-          console.log("a", width)
-    
-          if (openedProductId != undefined){
-            if (width >= 1480) return setColumns(2);
-            if (width >= 1080) return setColumns(1);
-          }else{
-            if (width <= 885) return setColumns(1);
-            if (width <= 1280) return setColumns(2);
-            if (width <= 1680) return setColumns(3);
-          }
-        };
-    
-        updateColumns(); // 初期実行
-        window.addEventListener("resize", updateColumns); // リサイズイベント監視
-        return () => window.removeEventListener("resize", updateColumns); // クリーンアップ
-      }, [openedProductId != undefined]);
+  // カードのレイアウト計算関数
+  const calculateLayout = useCallback(() => {
+    const columns = Math.max(1, Math.floor(containerWidth / baseCardWidth));
+    const availableWidth = containerWidth - (20 * (columns - 1));
+    const cardWidth = Math.max(minCardWidth, Math.min(baseCardWidth, availableWidth / columns));
+    const cardHeight = (cardWidth * baseCardHeight) / baseCardWidth;
 
-      return (
-        <div style={styles.container} className={"overflow-y-scroll h-full"}>
-          <ErrorMessage error={error}/>
-          <div style={styles.gridContainer}>
-            {products.length > 0 ? (
-              <div
-                style={{
-                  ...styles.grid,
-                  gridTemplateColumns: `repeat(${columns}, 1fr)`, // 列数を動的に設定
-                }}
-    
-              >
-                {products.map((product) => {
-                  const isHovered = hoveredCard === product.product_id; // カードがホバーされているか
-                  return (
-                    <div
-                      key={product.product_id}
-                      style={{
-                        ...styles.card,
-                        ...(isHovered && styles.cardHover), // ホバー時のスタイルを適用
-                      }}
-    
-                      onMouseEnter={() => setHoveredCard(product.product_id)} // ホバー開始
-                      onMouseLeave={() => setHoveredCard(null)} // ホバー終了
-                      onClick={
-                        event =>
-                          routes.search().setProductId(product.product_id).transition(event)
-                      }
-                    >
-    
-                      <div style={styles.descriptionOverlay}>
-                        <h2 style={styles.title}>
-                          {product.product_title}
-    
-                        </h2>
-                        <div style={styles.rightdescription}>
-                          <p style={styles.price}>
-                            <strong>{product.product_price} 円</strong>
-                          </p>
-                        </div>
-                        {product.creator_ids.map((id) => (
-                          <p key={id} style={styles.creator_data}>
-                            <CreatorData creator_id={id}/>
-                          </p>
-                        ))}
-                        
-                      </div>
-                      <div style={styles.thumbnailWrapper}>
-                        <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>
-                      </div>
-                    </div>
-                  );
-                })}
+    return { columns, cardWidth, cardHeight };
+  }, [containerWidth, baseCardWidth, baseCardHeight, minCardWidth]);
+
+  // 初期レイアウトを設定
+  const [layout, setLayout] = useState(calculateLayout);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (!containerRef.current) return;
+      setContainerWidth(containerRef.current.offsetWidth);
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+
+    return () => window.removeEventListener('resize', updateWidth);
+  }, [windowSize,isSidebarOpen,isProductOpen]);
+
+  // レイアウトの再計算
+  useEffect(() => {
+    setLayout(calculateLayout());
+  }, [containerWidth, calculateLayout]);
+
+  useEffect(() => {
+      setSearchTag(Search);
+  }, [Search]);
+
+  // デバッグ用のログ出力
+  useEffect(() => {
+      console.log("検索ワード:", searchTag);
+      console.log("検索結果:", products);
+  }, [searchTag, products]);
+
+    return (
+      <div className="p-6 overflow-y-auto flex-grow min-h-0 " ref={containerRef}>
+        <div 
+          className="grid gap-5 mx-auto"
+          style={{
+            gridTemplateColumns: `repeat(${layout.columns}, 1fr)`,
+            maxWidth: `${layout.cardWidth * layout.columns + (layout.columns - 1) * 20}px`
+          }}
+        >
+          {products.map((product) => (
+          <div
+            key={product.product_id}
+            className="relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 "
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(20px)',
+              border: '2px solid rgba(255, 255, 255, 0.5)',
+              width: '100%',
+              height: `${layout.cardHeight}px`,
+              outline: hoveredCard === product.product_id ? '3px solid rgba(255, 255, 255, 0.5)' : 'none',
+            }}
+            onMouseEnter={() => setHoveredCard(product.product_id)} // ホバー開始
+            onMouseLeave={() => setHoveredCard(null)} // ホバー終了
+            onClick={
+            event =>
+                routes.search().setProductId(product.product_id).transition(event)
+            }
+          >
+            {/* サムネイル背景 */}
+            <div className="absolute inset-0 bg-black ">
+              <div className={`absolute inset-0 transition-transform duration-500   ${hoveredCard === product.product_id  ? "scale-105" : "scale-100"}`}>
+                <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>
               </div>
-            ) : (
-              <div style={styles.noProducts}>商品が見つかりません。</div>
-            )}
+              <div
+                className={`absolute inset-0 bg-gradient-to-t from-black/50 to-transparent transition-opacity duration-300 ${hoveredCard === product.product_id  ?"opacity-0" : "opacity-100"}`}
+              />
+            </div>
+
+            {/* 商品情報オーバーレイ */}
+
+              
+            <div className="absolute bottom-0 w-full flex justify-end p-4">
+              <p 
+                className="font-bold text-white p-2 rounded"
+                style={{ fontSize: `${layout.cardWidth * 0.04}px` }}
+              >
+                <span 
+                  className="text-white px-3 py-1 rounded-full"
+                  style={{ 
+                    backgroundColor: "rgba(0, 0, 0, 0.7)" // 半透明の黒背景
+                  }}
+                >
+                  ¥{product.product_price.toLocaleString()}
+                </span>
+              </p>
+            </div>
           </div>
+        ))}
         </div>
-      );
-    }
+      </div>
+    );
+}
 
 interface CreatorDataProps {
   creator_id: string;

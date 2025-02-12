@@ -3,44 +3,42 @@ const color = 'rgba(42, 42, 44, 0.64)'
 export const styles = (width: number, height: number): Record<string, CSSProperties> => ({
   sidebar: {
     backgroundColor: color,
-    backdropFilter: 'blur(20px)', // さらに強調された背景ブラー効果
-    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.25), inset 0 0 10px rgba(255, 255, 255, 0.2)', // 軽やかな影
-    border: '1px solid rgba(255, 255, 255, 0.2)', // 繊細な枠線
+    backdropFilter: 'blur(0px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '110px', // 固定幅
-    height: `${Math.max(100, height - 30)}px`, // 高さは動的
-    minWidth: '110px',
-    maxWidth: '110px',
+    justifyContent: 'space-between', // アイテムを均等に配置
+    height: `${Math.max(100, height - 30)}px`,
+
+    maxWidth: '80px',
     margin: '15px 0',
-    padding: '20px 10px',
-    gap: '20px',
+    padding: '30px 0', // 上下の余白を調整
     position: 'fixed',
-    left: '10px',
+    left: '30px',
     top: '0',
-    borderRadius: '24px', // より丸みを帯びたデザイン
-    zIndex: 1000,
+    borderRadius: '60px',
+    zIndex: 3000,
     transition: 'left 0.3s ease, height 0.3s ease, backdrop-filter 0.3s ease',
   },
+  
   collapsedSidebar: {
     backgroundColor: color,
     backdropFilter: 'blur(20px)',
-    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.25), inset 0 0 10px rgba(255, 255, 255, 0.2)', // 軽やかな影
-    border: '1px solid rgba(255, 255, 255, 0.2)', // 繊細な枠線
+    border: '1px solid rgba(255, 255, 255, 0.1)', // 繊細な枠線
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '110px',
+    width: '80px', // 固定幅
     height: `${Math.max(100, height - 30)}px`, // 高さは動的
     margin: '15px 0',
     padding: '20px 10px',
-    gap: '20px',
+    gap: '50px',
     position: 'fixed',
-    left: '-100px',
+    left: '-170px',
     top: '0',
-    borderRadius: '24px', // より丸みを帯びたデザイン
-    zIndex: 1000,
+    borderRadius: '60px', // より丸みを帯びたデザイン
+    zIndex: 3000,
     transition: 'left 0.3s ease, height 0.3s ease',
   },
   toggleButton: {
@@ -55,16 +53,13 @@ export const styles = (width: number, height: number): Record<string, CSSPropert
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-    zIndex: 1000,
+    zIndex: 3000,
     borderRight: '1px solid rgba(255, 255, 255, 0.2)',
     transition: 'background-color 0.3s ease, transform 0.3s ease',
     color: 'white',
     backdropFilter: 'blur(20px)', // ぼかしを強調
-    boxShadow: '0 5px 20px rgba(0, 0, 0, 0.2), inset 0 0 8px rgba(255, 255, 255, 0.2)',
-    border: '2px solid rgba(255, 255, 255, 0.2)',
+    border: '1px solid rgba(255, 255, 255, 0.1)', // 繊細な枠線
   },
-
-
   inAppPageWindowStyle: {
     backgroundColor: color,
     border: '1px solid rgba(128, 128, 128, 0.2)',
@@ -77,7 +72,6 @@ export const styles = (width: number, height: number): Record<string, CSSPropert
     height: "100%",
     boxSizing: "border-box",
     transition: 'opacity 0.2s ease, width 0.3s ease, left 0.3s ease',
-    
   },
   ProductWindowStyle:{
     backgroundColor: color,
@@ -112,7 +106,6 @@ export const iconstyles: { [key: string]: CSSProperties } = {
     left: '50%',
   },
   profileIcon: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     color: '#FFFFFF',
     borderRadius: '50%',
     width: '40px',
@@ -142,27 +135,38 @@ export const iconstyles: { [key: string]: CSSProperties } = {
     left: '70px',
   },
 }
+export const selectedRouteStyle: CSSProperties = {
+  position: "absolute",
+  width: "65px", // 幅をアイコンに合わせる
+  height: "calc(12.5% + 24px)", // 高さをパーセンテージから特定のピクセル値を引いた値に調整
+  transition: "top 0.3s ease-in-out", // 背景の滑らかな移動
+  zIndex: -1, // アイコンの下に配置
+  padding: "0px", // padding は負の値が無効なので削除
+  left:"50%",
+  transform: 'translateX(-50%)',
+  
+};
+
+
 
 export const iconContainerStyle = (isHovered: boolean): CSSProperties => ({
   width: "75px",
   height: "75px",
-  backgroundColor: isHovered ? "rgba(255, 255, 255, 0.15)":"rgba(255, 255, 255, 0.2)",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   position: "relative",
   borderRadius: "24px",
-  transition: "all 0.3s ease-in-out",
+  transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
   overflow: "hidden",
   pointerEvents: "auto",
-  background: "linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.2))",
-  backdropFilter: "blur(15px)",
-  boxShadow: isHovered
-    ? `inset 4px 4px 10px rgba(0, 0, 0, 0.3), inset -4px -4px 10px rgba(255, 255, 255, 0.2)`
-    : `4px 6px 8px rgba(0, 0, 0, 0.2), inset 0 0 12px rgba(255, 255, 255, 0.1)`,
-  border: "2px solid rgba(255, 255, 255, 0.2)",
   cursor: "pointer",
+  transform: isHovered ? "scale(1.2)" : "scale(1)",
+  transformOrigin: "center",
+  willChange: "transform",
 });
+
+
 
 
 export const pageWindowStyle = (
@@ -194,7 +198,7 @@ export const pageWindowStyle = (
   return {
     backgroundColor: color,
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
     width: `${calculatedWidth}px`,
     height: `${windowHeight * 0.9}px`,
     position: 'fixed',
@@ -233,7 +237,7 @@ export const inAppPageStyle = (isAnimating: boolean): CSSProperties => ({
 export const ProductWindowStyle = (ProductisOpen: boolean): CSSProperties => ({
   backgroundColor: color,
   backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
   width: ProductisOpen ? 'calc(27%)' : '0',
   height: ProductisOpen ? '90%' : '0',
   display: "flex",

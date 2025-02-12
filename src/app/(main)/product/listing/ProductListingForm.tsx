@@ -20,7 +20,8 @@ import {Routes} from "~/route/Routes";
 import {ClientState} from "~/api/context/ClientState";
 import useRoutes from "~/route/useRoutes";
 import {CreatorRes} from "~/hooks/useCreatorData";
-
+import { Image, Tag, DollarSign, Users, Send, ImagePlus, Tags, LoaderIcon } from 'lucide-react';
+import { Dialog } from "@headlessui/react";
 
 async function action(
   formData: StyledFormData, clientContext: ClientState, router: AppRouterInstance, creators: CreatorRes[], routes: Routes
@@ -86,44 +87,121 @@ async function action(
 export default function ProductListingForm() {
   const clientContext = useClientState();
   const router = useRouter();
-  const [creators, setCreators] = useState<CreatorRes[]>([])
-  const routes = useRoutes()
+  const [creators, setCreators] = useState<CreatorRes[]>([]);
+  const routes = useRoutes();
+  const [isSubmitting, setIsSubmitting] = useState(false); // 出品中の状態を管理
 
+  async function handleSubmit(formData: StyledFormData) {
+    setIsSubmitting(true); // 出品処理開始
+    await action(formData, clientContext, router, creators, routes);
+    setIsSubmitting(false); // 出品処理完了後に解除
+  }
   return (
-    <StyledForm
-      action={async (formData: StyledFormData) => {
-        await action(formData, clientContext, router, creators, routes)
-      }}
-      className={"h-full overflow-y-scroll p-5"}
-    >
-      <div className="flex flex-row flex-wrap gap-2.5">
-        <div className="min-w-96 flex-1">
-          <ThumbnailUpload label="サムネイルを選択" name="thumbnail"/>
-        </div>
-        <div className="min-w-96 flex-1">
-          <div className="flex flex-col space-y-4">
-            <StyledInput name="product_name" type="text" label="商品名 (40文字まで)"/>
-            <ItemBackground>
-              <label className="block font-medium text-xl">
-                商品画像を追加 (最大8枚)
-              </label>
-              <ImageUpload label="+" name="product_images" maxImages={8}/>
-            </ItemBackground>
+    <div className="flex-1 flex-grow overflow-y-auto transition-all duration-300 ease-out bg-gray-900">
+      <div className="min-h-screen bg-gray-900 h-full">
+        <StyledForm
+          action={handleSubmit}
+          className="h-full"
+        >
+          <div className="max-w-6xl mx-auto px-4 py-6">
+            <h1 className="text-3xl font-bold mb-8 text-gray-100 flex items-center gap-2">
+              <Image className="w-8 h-8" />
+              商品を出品
+            </h1>
+
+            <div className="space-y-8 overflow-y-auto" style={{
+              height: "calc(100vh - 210px)",
+              maxHeight: "calc(100vh)",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}>
+              <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+                {/* 商品名 & サムネイル */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <div className="space-y-4">
+                    <label className="block text-lg font-medium text-gray-100">
+                      サムネイル
+                    </label>
+                    <div className="bg-gray-700/50 rounded-lg p-4 bg-gray-900">
+                      <ThumbnailUpload label="サムネイルを選択" name="thumbnail" />
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <StyledInput
+                      name="product_name"
+                      type="text"
+                      label="商品名 (40文字まで)"
+                      className="bg-gray-700/50 border-gray-600 text-gray-100"
+                    />
+                    <div className="bg-gray-700/50 rounded-lg p-4 bg-gray-900">
+                      <label className="block text-lg font-medium text-gray-100 mb-4">
+                        商品画像を追加 (最大8枚)
+                      </label>
+                      <ImageUpload label="+" name="product_images" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* カテゴリー & 価格 */}
+                <div className="grid grid-cols-2 gap-6">
+                  <StyledInput
+                    name="category"
+                    type="text"
+                    label="カテゴリー"
+                    className="bg-gray-700/50 border-gray-600 text-gray-100"
+                  />
+                  <StyledInput
+                    name="price"
+                    type="text"
+                    label="価格"
+                    className="bg-gray-700/50 border-gray-600 text-gray-100"
+                  />
+                </div>
+
+                {/* 説明 */}
+                <StyledTextarea
+                  name="description"
+                  label="説明"
+                  className="bg-gray-700/50 border-gray-600 text-gray-100 min-h-[150px]"
+                />
+
+                {/* コラボ相手 */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-5 h-5 text-gray-400" />
+                    <p className="text-lg font-medium text-gray-100">コラボ相手</p>
+                  </div>
+                  <div className="bg-gray-700/50 rounded-lg p-4">
+                    <CreatorsSelector creators={creators} setCreators={setCreators} />
+                  </div>
+                </div>
+              </div>
+
+              {/* 出品ボタン */}
+              <div className="flex justify-end pb-8">
+                <StyledButton
+                  className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-3 px-6 rounded-lg flex items-center gap-2"
+                  disabled={isSubmitting} // 出品中はボタンを無効化
+                >
+                  <Send className="w-5 h-5" />
+                  出品する
+                </StyledButton>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </StyledForm>
 
-      <div className="space-y-4">
-        <StyledInput name="category" type="text" label="カテゴリー"/>
-        <StyledTextarea name="description" label="説明"/>
-        <StyledInput name="price" type="text" maxLength={160} label="価格"/>
-        <p>コラボ相手</p>
-        <CreatorsSelector creators={creators} setCreators={setCreators}/>
-      </div>
+        {/* 出品中モーダル */}
+        <Dialog open={isSubmitting} onClose={() => {}} className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-md z-[9999]">
+          <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+            <div className="flex items-center gap-2">
+              <LoaderIcon className="w-6 h-6 animate-spin" />
+              <p className="text-lg font-medium">出品中…</p>
+            </div>
+          </div>
+        </Dialog>
 
-      <FlexBox className="justify-end items-center pb-5">
-        <StyledButton>出品</StyledButton>
-      </FlexBox>
-    </StyledForm>
+      </div>
+    </div>
   );
 }

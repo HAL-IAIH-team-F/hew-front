@@ -11,9 +11,11 @@ export default function SidebarRoutesLink(
   {
     children,
     routeUrl,
+    setTransitions,
   }: {
     children?: ReactNode,
     routeUrl: TimelineRouteUrl,
+    setTransitions: (transitions: boolean) => void 
   },
 ) {
 
@@ -27,16 +29,26 @@ export default function SidebarRoutesLink(
   const isShown = (!isMobile || productId == undefined) && routeUrl.isCurrent();
   if (isShown) routeUrl = routes.timeline()
   if (isMobile) routeUrl = routeUrl.setProductId(undefined)
+  
   const [isHovered, setIsHovered] = useState(false);
+
   return (
     <Link
-      style={iconContainerStyle(isHovered)}
+      href={routeUrl.toString()}
+      style={{
+        ...iconContainerStyle(isHovered),
+        height: "12.5%"
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      href={routeUrl.toString()}
       onClick={(event) => {
-        routeUrl.transition(event)
+        setTransitions(true)
+        routeUrl.transition(event)?.then(()=>
+          setTransitions(false) 
+        )
       }}
-    >{children}</Link>
+    >
+      {children}
+    </Link>
   )
 }

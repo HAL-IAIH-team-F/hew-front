@@ -35,7 +35,6 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
   const [isModalOpen, setIsModalOpen] = useState(false);  
   const [purchaseYesNo, showPurchaseYesNo, purchaseComplete] = usePurchaseYesNo();
 
-
   useEffect(() => {
     if (size.width <= MOBILE_WIDTH) {
       setIsMobile(true)
