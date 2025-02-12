@@ -1,7 +1,8 @@
 import {Dispatch, SetStateAction, useState} from "react";
 import CreatorSelectorModal from "@/(main)/(timeline)/colab/register/CreatorSelectorModal";
 import {CreatorRes} from "~/hooks/useCreatorData";
-
+import "./s.css"
+import { CreatorCard } from "~/products/ProfileProductsView";
 
 export default function CreatorsSelector(
   {
@@ -14,11 +15,11 @@ export default function CreatorsSelector(
 
   return (
     <div>
+      
       {creators.map(creator => <div
         key={creator.creator_id} className={"border-2 border-gray-100 p-4"}
       >
-        <p>creator: {creator.creator_id}</p>
-        <p>contact: {creator.contact_address}</p>
+        <CreatorCard creator_id={creator.creator_id} />
       </div>)}
       <button
         type={"button"} className={"border-2 border-gray-400 rounded-xl px-5 py-1 hover:bg-gray-300"}

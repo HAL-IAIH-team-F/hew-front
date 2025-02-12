@@ -12,7 +12,7 @@ import {useWindowSize} from "@/_hook/useWindowSize";
 import {iconstyles, selectedRouteStyle, styles} from "@/(main)/(timeline)/_window/_sidebar/Styles";
 import Image from "../../../../../util/Image";
 import {usePathname} from 'next/navigation';
-import { House } from "lucide-react";
+import { Handshake, House } from "lucide-react";
 import {  ImagePlus} from 'lucide-react';
 
 type SidebarProps = {};
@@ -88,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
                     <SidebarRoutesLink routeUrl={routes.productListing()} setTransitions={setTransitions}><ImagePlus
                         style={iconstyles.icon}/></SidebarRoutesLink>
                     <SidebarRoutesLink routeUrl={routes.cart()} setTransitions={setTransitions}><IoCartOutline style={iconstyles.icon}/></SidebarRoutesLink>
-                    <SidebarRoutesLink routeUrl={routes.colablisting()} setTransitions={setTransitions}><FaPray
+                    <SidebarRoutesLink routeUrl={routes.colablisting()} setTransitions={setTransitions}><Handshake
                         style={iconstyles.icon}/></SidebarRoutesLink>
                     
                 </div>

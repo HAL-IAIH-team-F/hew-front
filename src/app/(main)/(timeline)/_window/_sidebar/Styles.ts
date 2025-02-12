@@ -198,7 +198,7 @@ export const pageWindowStyle = (
   return {
     backgroundColor: color,
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
     width: `${calculatedWidth}px`,
     height: `${windowHeight * 0.9}px`,
     position: 'fixed',
@@ -237,7 +237,7 @@ export const inAppPageStyle = (isAnimating: boolean): CSSProperties => ({
 export const ProductWindowStyle = (ProductisOpen: boolean): CSSProperties => ({
   backgroundColor: color,
   backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
   width: ProductisOpen ? 'calc(27%)' : '0',
   height: ProductisOpen ? '90%' : '0',
   display: "flex",

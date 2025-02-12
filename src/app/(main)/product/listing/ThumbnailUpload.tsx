@@ -12,9 +12,9 @@ export default function ThumbnailUpload({ label, name }: { label: string; name: 
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center ">
       {/* クリック可能エリアを広げ、ホバー時に視覚的変化を追加 */}
-      <label className="relative max-h-full aspect-video w-full max-w-full border border-gray-700 rounded-md bg-gray-800 p-2 cursor-pointer hover:border-blue-400 hover:bg-gray-700 transition">
+      <label className="relative max-h-full aspect-video w-full max-w-full border border-gray-700 rounded-md bg-gray-800 p-2 cursor-pointer hover:border-blue-400 hover:bg-gray-700 transition ">
         {thumbnail ? (
           <img src={thumbnail} alt={label} className="max-h-full max-w-full mx-auto object-cover" />
         ) : (

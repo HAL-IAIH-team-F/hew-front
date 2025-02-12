@@ -5,7 +5,6 @@ import { useClientState } from "~/api/context/ClientContextProvider";
 import { Api } from "~/api/context/Api";
 import { ErrorData } from "../../../../../util/err/err";
 import { ErrorMessage } from "../../../../../util/err/ErrorMessage";
-import { CreatorData } from "~/products/ProfileProductsView";
 import Button from "./Button";
 
 export default function Recruit({ recruit }: { recruit: RecruitRes }) {
@@ -89,15 +88,7 @@ export default function Recruit({ recruit }: { recruit: RecruitRes }) {
                 position: "relative",
             }}
         >
-            <CreatorData
-                creator_id={recruit?.creator_id ?? ""}
-                showView={false}
-                onDataFetched={({ iconUrl }) => {
-                    if (iconUrl) {
-                        setBackgroundImage(iconUrl);
-                    }
-                }}
-            />
+            
             <div className="flex flex-col"
                 style={{ width: "style.width"}}
             >

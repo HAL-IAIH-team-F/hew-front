@@ -1,7 +1,7 @@
 import React, { CSSProperties, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle } from "lucide-react";
-import ProductThumbnail from "~/api/useImgData";
+import { CheckCircle, Loader2 } from "lucide-react";
+import ProductThumbnail from "~/api/useProductThumbnail";
 import { ProductRes } from "@/(main)/search/sample/ProductRes";
 import { useProductContext } from "~/products/ContextProvider";
 import { Api } from "~/api/context/Api";
@@ -262,13 +262,11 @@ const PurchaseYesNo: React.FC<PurchaseYesNoProps> = ({ isModalOpen, onClose, set
             {isLoading ? (
               // ローディングアニメーション
               <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+
                 style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
               >
-                <ShoppingCart size={50} color="white" />
-                <p style={{ marginTop: "10px", color: "#fff" }}>購入処理中...</p>
+                <Loader2 className="w-6 h-6 animate-spin" />
+                <p className="text-lg font-medium mt-2">購入処理中…</p>
               </motion.div>
             ) : (
               <>

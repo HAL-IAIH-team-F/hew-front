@@ -49,16 +49,20 @@ const MainWindow: React.FC<{
         <div
             style={pageWindowStyle(isSidebarOpen, productId != undefined, isOpen, size.width, size.height)}
             >
+                
             <div style={inAppPageStyle(children != undefined)} className="relative">
                 <button
-                onClick={closeHandler} 
-                className="absolute top-3 right-3 bg-transparent text-white p-2 rounded-full 
-                            backdrop-blur-md border border-white/20 shadow-md 
-                            transition-all duration-200 hover:bg-red-600/20 hover:border-red-500 hover:scale-105 z-50"
-                >
-                <X className="w-5 h-5" />
+                      onClick={closeHandler}
+                      className="group absolute top-3 right-3 p-2 rounded-full
+                                bg-zinc-900/40 backdrop-blur-sm
+                                border border-zinc-300/50
+                                transition-all duration-300 ease-in-out
+                                hover:scale-110 hover:bg-zinc-800/60
+                                hover:border-zinc-600 z-[9999]"
+                    >
+                    <X className="w-5 h-5 text-zinc-300 transition-colors duration-300 
+                                  group-hover:text-white" />
                 </button>
-
                 <div style={{ display: "block" }} className={"h-full"}>
                     {children}
                 </div>

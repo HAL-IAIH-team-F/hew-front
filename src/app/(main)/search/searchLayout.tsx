@@ -109,7 +109,14 @@ const SearchLayout: React.FC<SearchLayoutProps> = ({ children }) => {
         ${isMobileView ? "pt-20" : "pt-20"}
       `}>
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="w-full h-full rounded-2xl">
+          <div className="w-full h-full rounded-2xl overflow-y-auto"
+          style={{
+            height: "calc(100vh - 0px)",
+            maxHeight: "calc(100vh - 200px)",
+            boxSizing: "border-box",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}>
             <SerchProductView Search={searchQuery} />
           </div>
         </div>

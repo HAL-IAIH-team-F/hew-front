@@ -14,3 +14,11 @@ export interface ProductRes {
     }
   }  | undefined | null
 }
+
+export interface PurchaseInfo {
+  content_uuid: string
+  token: {
+      token: string,
+      expire: string
+  }
+}

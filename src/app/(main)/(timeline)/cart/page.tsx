@@ -6,7 +6,7 @@ import useProducts from '~/hooks/useProducts';
 import { useProductContext } from '~/products/ContextProvider';
 import { useClientState } from '~/api/context/ClientContextProvider';
 import { Api } from '~/api/context/Api';
-import ProductThumbnail from '~/api/useImgData';
+import ProductThumbnail from '~/api/useProductThumbnail';
 
 interface ErrorData {
   message: string;
@@ -43,7 +43,6 @@ const CartPage = () => {
       if (value.error) return setErr(value.error);
       if (typeof value.success == "string") return setErr("no cart");
       if (value.success.product_ids.length === 0)  return setErr("no cart");
-
       setCart(value.success);
     });
   }, [clientState.state]);

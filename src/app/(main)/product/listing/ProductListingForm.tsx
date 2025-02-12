@@ -20,7 +20,8 @@ import {Routes} from "~/route/Routes";
 import {ClientState} from "~/api/context/ClientState";
 import useRoutes from "~/route/useRoutes";
 import {CreatorRes} from "~/hooks/useCreatorData";
-import { Image, Tag, DollarSign, Users, Send, ImagePlus, Tags } from 'lucide-react';
+import { Image, Tag, DollarSign, Users, Send, ImagePlus, Tags, LoaderIcon } from 'lucide-react';
+import { Dialog } from "@headlessui/react";
 
 async function action(
   formData: StyledFormData, clientContext: ClientState, router: AppRouterInstance, creators: CreatorRes[], routes: Routes
@@ -88,21 +89,18 @@ export default function ProductListingForm() {
   const router = useRouter();
   const [creators, setCreators] = useState<CreatorRes[]>([]);
   const routes = useRoutes();
+  const [isSubmitting, setIsSubmitting] = useState(false); // 出品中の状態を管理
 
+  async function handleSubmit(formData: StyledFormData) {
+    setIsSubmitting(true); // 出品処理開始
+    await action(formData, clientContext, router, creators, routes);
+    setIsSubmitting(false); // 出品処理完了後に解除
+  }
   return (
-    <div
-    className="flex-1 flex-grow overflow-y-auto transition-all duration-300 ease-out bg-gray-900" 
-    style={{
-      height: "calc(100vh - 100px)",
-      maxHeight: "calc(100vh)",
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
-    }}>
+    <div className="flex-1 flex-grow overflow-y-auto transition-all duration-300 ease-out bg-gray-900">
       <div className="min-h-screen bg-gray-900 h-full">
         <StyledForm
-          action={async (formData: StyledFormData) => {
-            await action(formData, clientContext, router, creators, routes);
-          }}
+          action={handleSubmit}
           className="h-full"
         >
           <div className="max-w-6xl mx-auto px-4 py-6">
@@ -111,90 +109,79 @@ export default function ProductListingForm() {
               商品を出品
             </h1>
 
-            <div className="space-y-8">
+            <div className="space-y-8 overflow-y-auto" style={{
+              height: "calc(100vh - 210px)",
+              maxHeight: "calc(100vh)",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}>
               <div className="bg-gray-800 rounded-lg shadow-lg p-6">
-                {/* Thumbnail and Product Name Section */}
+                {/* 商品名 & サムネイル */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                   <div className="space-y-4">
                     <label className="block text-lg font-medium text-gray-100">
                       サムネイル
                     </label>
-                    <div className="bg-gray-700/50 rounded-lg p-4">
-                      <ThumbnailUpload 
-                        label="サムネイルを選択" 
-                        name="thumbnail"
-                      />
+                    <div className="bg-gray-700/50 rounded-lg p-4 bg-gray-900">
+                      <ThumbnailUpload label="サムネイルを選択" name="thumbnail" />
                     </div>
                   </div>
-
                   <div className="space-y-4">
-                    <StyledInput 
-                      name="product_name" 
-                      type="text" 
+                    <StyledInput
+                      name="product_name"
+                      type="text"
                       label="商品名 (40文字まで)"
                       className="bg-gray-700/50 border-gray-600 text-gray-100"
                     />
-                    
-                    <div className="bg-gray-700/50 rounded-lg p-4">
+                    <div className="bg-gray-700/50 rounded-lg p-4 bg-gray-900">
                       <label className="block text-lg font-medium text-gray-100 mb-4">
                         商品画像を追加 (最大8枚)
                       </label>
-                      <ImageUpload 
-                        label="+" 
-                        name="product_images" 
-                        maxImages={8}
-                      />
+                      <ImageUpload label="+" name="product_images" />
                     </div>
                   </div>
                 </div>
 
-                {/* Details Section */}
-              <div className="space-y-6">
-                {/* カテゴリーと価格を同じ行に配置 */}
+                {/* カテゴリー & 価格 */}
                 <div className="grid grid-cols-2 gap-6">
-                  <StyledInput 
-                    name="category" 
-                    type="text" 
+                  <StyledInput
+                    name="category"
+                    type="text"
                     label="カテゴリー"
                     className="bg-gray-700/50 border-gray-600 text-gray-100"
                   />
-                  <StyledInput 
-                    name="price" 
-                    type="text" 
-                    maxLength={160} 
+                  <StyledInput
+                    name="price"
+                    type="text"
                     label="価格"
                     className="bg-gray-700/50 border-gray-600 text-gray-100"
                   />
                 </div>
 
-                {/* 説明フィールド */}
-                <StyledTextarea 
-                  name="description" 
+                {/* 説明 */}
+                <StyledTextarea
+                  name="description"
                   label="説明"
                   className="bg-gray-700/50 border-gray-600 text-gray-100 min-h-[150px]"
                 />
 
-                {/* コラボ相手選択 */}
+                {/* コラボ相手 */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
                     <Users className="w-5 h-5 text-gray-400" />
                     <p className="text-lg font-medium text-gray-100">コラボ相手</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-4">
-                    <CreatorsSelector 
-                      creators={creators} 
-                      setCreators={setCreators}
-                    />
+                    <CreatorsSelector creators={creators} setCreators={setCreators} />
                   </div>
                 </div>
               </div>
 
-              </div>
-
-              {/* Submit Button */}
+              {/* 出品ボタン */}
               <div className="flex justify-end pb-8">
-                <StyledButton 
+                <StyledButton
                   className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-3 px-6 rounded-lg flex items-center gap-2"
+                  disabled={isSubmitting} // 出品中はボタンを無効化
                 >
                   <Send className="w-5 h-5" />
                   出品する
@@ -203,6 +190,17 @@ export default function ProductListingForm() {
             </div>
           </div>
         </StyledForm>
+
+        {/* 出品中モーダル */}
+        <Dialog open={isSubmitting} onClose={() => {}} className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-md z-[9999]">
+          <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+            <div className="flex items-center gap-2">
+              <LoaderIcon className="w-6 h-6 animate-spin" />
+              <p className="text-lg font-medium">出品中…</p>
+            </div>
+          </div>
+        </Dialog>
+
       </div>
     </div>
   );

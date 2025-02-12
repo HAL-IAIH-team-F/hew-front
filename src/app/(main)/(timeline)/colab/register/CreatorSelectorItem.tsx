@@ -1,21 +1,21 @@
-import {CreatorRes} from "~/hooks/useCreatorData";
+import { CreatorRes } from "~/hooks/useCreatorData";
+import { CreatorCard } from "~/products/ProfileProductsView";
 
-export default function CreatorSelectorItem(
-  {
-    creator, oneSelect,
-  }: {
-    creator: CreatorRes,
-    oneSelect: () => void,
-  },
-) {
-
-
+export default function CreatorSelectorItem({
+  creator,
+  oneSelect,
+}: {
+  creator: CreatorRes;
+  oneSelect: () => void;
+}) {
   return (
     <div
-      className={"border-2 border-gray-100 p-4 m-4 hover:bg-gray-300 cursor-pointer"} onClick={oneSelect}
+      className="relative border border-transparent hover:border-gray-500 
+                 hover:shadow-md hover:shadow-gray-500/30 transition-all 
+                 duration-300 cursor-pointer rounded-lg p-2"
+      onClick={oneSelect}
     >
-      <p>creator: {creator.creator_id}</p>
-      <p>contact: {creator.contact_address}</p>
+      <CreatorCard creator_id={creator.creator_id} />
     </div>
-  )
+  );
 }

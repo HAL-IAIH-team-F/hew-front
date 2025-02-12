@@ -1,52 +1,61 @@
-import React, { CSSProperties, useEffect, useRef, useState } from 'react';
-import ProductThumbnail from '~/api/useImgData';
+import React, { CSSProperties, useEffect, useRef, useState, useCallback } from 'react';
+import ProductThumbnail from '~/api/useProductThumbnail';
 import useProducts from '~/hooks/useProducts';
 import useProductId from '~/products/useProductId';
 import useRoutes from '~/route/useRoutes';
 import Image from '../../../../../../util/Image';
 import useCreatorData from '~/hooks/useCreatorData';
 import { useUserData } from '~/api/context/useUserData';
+import { useWindowSize } from '@/_hook/useWindowSize';
+import { useProductContext } from '~/products/ContextProvider';
 
 const ProductsGrid = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
-  const { products, error } = useProducts();
-  const openedProductId = useProductId()
-  const routes = useRoutes()
+  const { products } = useProducts({});
+  const openedProductId = useProductId();
+  const routes = useRoutes();
+  const windowSize = useWindowSize();
+  const { isSidebarOpen, isProductOpen }= useProductContext()
+  // レスポンシブ用の基準値
+  const baseCardWidth = 370;
+  const baseCardHeight = 200;
+  const minCardWidth = 300;
+
+  // カードのレイアウト計算関数
+  const calculateLayout = useCallback(() => {
+    const columns = Math.max(1, Math.floor(containerWidth / baseCardWidth));
+    const availableWidth = containerWidth - (20 * (columns - 1));
+    const cardWidth = Math.max(minCardWidth, Math.min(baseCardWidth, availableWidth / columns));
+    const cardHeight = (cardWidth * baseCardHeight) / baseCardWidth;
+
+    return { columns, cardWidth, cardHeight };
+  }, [containerWidth, baseCardWidth, baseCardHeight, minCardWidth]);
+
+  // 初期レイアウトを設定
+  const [layout, setLayout] = useState(calculateLayout);
 
   useEffect(() => {
     const updateWidth = () => {
       if (!containerRef.current) return;
       setContainerWidth(containerRef.current.offsetWidth);
     };
-  
+
     updateWidth();
     window.addEventListener('resize', updateWidth);
+
     return () => window.removeEventListener('resize', updateWidth);
-  }, []);
 
-  const baseCardWidth = 370;
-  const baseCardHeight = 200;
-  const minCardWidth = 300;
+  }, [windowSize,isSidebarOpen,isProductOpen]);
 
-  const calculateLayout = () => {
-    const columns = Math.max(1, Math.floor(containerWidth / baseCardWidth));
-    const availableWidth = containerWidth - (20 * (columns - 1));
-    const cardWidth = Math.max(minCardWidth, Math.min(baseCardWidth, availableWidth / columns));
-    const cardHeight = (cardWidth * baseCardHeight) / baseCardWidth;
-
-    return {
-      columns,
-      cardWidth,
-      cardHeight
-    };
-  };
-
-  const layout = calculateLayout();
+  // レイアウトの再計算
+  useEffect(() => {
+    setLayout(calculateLayout());
+  }, [containerWidth, calculateLayout]);
 
   return (
-    <div className="p-6 overflow-y-auto flex-grow min-h-0" ref={containerRef}>
+    <div className="p-6 overflow-y-auto flex-grow min-h-0 " ref={containerRef}>
       <div 
         className="grid gap-5 mx-auto"
         style={{
@@ -57,15 +66,14 @@ const ProductsGrid = () => {
         {products.map((product) => (
           <div
             key={product.product_id}
-            className="relative rounded-3xl overflow-hidden cursor-pointer transition-all duration-300"
+            className="relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 "
             style={{
               background: 'rgba(255, 255, 255, 0.1)',
               backdropFilter: 'blur(20px)',
               border: '2px solid rgba(255, 255, 255, 0.5)',
               width: '100%',
               height: `${layout.cardHeight}px`,
-              transform: hoveredCard === product.product_id ? 'scale(1.01)' : 'scale(1)',
-              outline: hoveredCard === product.product_id ? '5px solid rgba(255, 255, 255, 0.5)' : 'none',
+              outline: hoveredCard === product.product_id ? '3px solid rgba(255, 255, 255, 0.5)' : 'none',
             }}
             onMouseEnter={() => setHoveredCard(product.product_id)} // ホバー開始
             onMouseLeave={() => setHoveredCard(null)} // ホバー終了
@@ -75,42 +83,32 @@ const ProductsGrid = () => {
             }
           >
             {/* サムネイル背景 */}
-            <div className="absolute inset-0 bg-black">
+            <div className="absolute inset-0 bg-black ">
+              <div className={`absolute inset-0 transition-transform duration-500   ${hoveredCard === product.product_id  ? "scale-105" : "scale-100"}`}>
                 <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>
+              </div>
+              <div
+                className={`absolute inset-0 bg-gradient-to-t from-black/50 to-transparent transition-opacity duration-300 ${hoveredCard === product.product_id  ?"opacity-0" : "opacity-100"}`}
+              />
             </div>
 
             {/* 商品情報オーバーレイ */}
-            <div
-              className="absolute top-[60%] left-0 w-full h-full p-4"
-              style={{
-                background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.6))',
-                backdropFilter: 'blur(0.2px)',
-              }}
-            >
-              <h2 
-                className="text-left font-bold text-white absolute left-[5%]"
-                style={{ 
-                  textShadow: '3px 3px 6px rgba(100, 99, 99, 0.7)',
-                  fontSize: `${layout.cardWidth * 0.05}px`
-                }}
+
+              
+            <div className="absolute bottom-0 w-full flex justify-end p-4">
+              <p 
+                className="font-bold text-white p-2 rounded"
+                style={{ fontSize: `${layout.cardWidth * 0.04}px` }}
               >
-                {product.product_title}
-              </h2>
-              <div className="text-right">
-                <p 
-                  className="font-bold text-white"
+                <span 
+                  className="text-white px-3 py-1 rounded-full"
                   style={{ 
-                    fontSize: `${layout.cardWidth * 0.04}px`
+                    backgroundColor: "rgba(0, 0, 0, 0.7)" // 半透明の黒背景
                   }}
                 >
-                  {product.product_price} 円
-                </p>
-                {product.creator_ids.map((id) => (
-                    <div key={id} style={styles.creator_data}>
-                        <CreatorData creator_id={id} showView={true}/>
-                    </div>
-                ))}
-              </div>
+                  ¥{product.product_price.toLocaleString()}
+                </span>
+              </p>
             </div>
           </div>
         ))}
@@ -121,7 +119,7 @@ const ProductsGrid = () => {
 
 const AccountCard = () => {
   const [activeTab, setActiveTab] = useState("商品");
-  const tabs = ["商品", "コラボ", "Media", "Likes"];
+  const tabs = ["商品", "コラボ",];
   const tabRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>(
       Object.fromEntries(tabs.map((tab) => [tab, React.createRef<HTMLButtonElement>()]))
   );
@@ -146,27 +144,30 @@ const AccountCard = () => {
       <div className="flex flex-col h-screen bg-gray-900 text-gray-100">
           {/* ヘッダー */}
           <div className="w-full h-48 bg-gradient-to-b from-gray-800 to-gray-900 flex flex-col items-center justify-center">
-              {user && user.icon ? (
-                  <div className="flex flex-col items-center">
-                      <Image
-                          alt="User Icon"
-                          src={user.icon.strUrl()}
-                          className="w-24 h-24  object-cover border-4 border-gray-700"
-                      />
-                      <div className="mt-3 text-lg font-semibold">{user.name}</div>
-                      <div className="text-sm text-gray-400">@{user.id}</div>
-                  </div>
-              ) : (
-                  <div className="flex flex-col items-center">
-                      <Image
-                          alt="Default Icon"
-                          src="/icon.png"
-                          className="w-24 h-24 rounded-full object-cover border-4 border-gray-700"
-                      />
-                      <div className="mt-3 text-lg font-semibold">ログインしていません</div>
-                      <div className="text-sm text-gray-400">error</div>
-                  </div>
-              )}
+          {user && user.icon ? (
+          <div className="flex flex-col items-center">
+            <div className="rounded-full">
+                <Image
+                    alt="User Icon"
+                    src={user.icon.strUrl()}
+                    className="w-24 h-24 rounded-full object-contain border-4 border-gray-700"
+                />
+              </div>
+              <div className="mt-3 text-lg font-semibold">{user.name}</div>
+              <div className="text-sm text-gray-400">@{user.id}</div>
+          </div>
+          ) : (
+              <div className="flex flex-col items-center">
+                  <Image
+                      alt="Default Icon"
+                      src="/icon.png"
+                      className="w-24 h-24 rounded-full object-cover border-4 border-gray-700"
+                  />
+                  <div className="mt-3 text-lg font-semibold">ログインしていません</div>
+                  <div className="text-sm text-gray-400">error</div>
+              </div>
+          )}
+
           </div>
 
           {/* タブ */}
@@ -189,7 +190,6 @@ const AccountCard = () => {
                   ))}
               </div>
           </div>
-
           {/* コンテンツ */}
           <div
               ref={contentRef}
@@ -209,110 +209,6 @@ const AccountCard = () => {
           </div>
       </div>
   );
-};
-// CreatorData components remain the same
-interface CreatorDataViewProps {
-  iconUrl: string | null;
-  screenId?: string;
-}
-
-interface CreatorDataProps {
-    creator_id: string;
-    showView?: boolean;
-    onDataFetched?: (data: { iconUrl: string | null; screenId?: string}) => void;
-}
-
-export function CreatorData({creator_id, showView = true, onDataFetched }: CreatorDataProps) {
-  const [_, user_data, __] = useCreatorData({creator_id});
-  const iconUrl = user_data?.icon ? (user_data.icon as any).strUrl() : null;
-  const screenId = user_data?.screen_id;
-
-  useEffect(() => {
-    if (onDataFetched) {
-      onDataFetched({iconUrl, screenId});
-    }
-  }, [iconUrl, screenId, onDataFetched]);
-
-  if (!showView) return null;
-
-  return <CreatorDataView iconUrl={iconUrl} screenId={screenId}/>;
-}
-
-export function CreatorDataView({iconUrl, screenId}: CreatorDataViewProps) {
-  return (
-    <div>
-      {iconUrl ? (
-        <>
-          <Image
-            alt="User Icon"
-            src={iconUrl}
-            width={33}
-            height={33}
-            style={styles.userIcon}
-          />
-          <div style={{...styles.userName, color: 'rgba(255, 255, 255, 0.9)'}}>{screenId}</div>
-        </>
-      ) : (
-        <div>No Icon</div>
-      )}
-    </div>
-  );
-}
-
-const styles: { [key: string]: CSSProperties } = {
-    userIcon: {
-        borderRadius: '50%',
-        width: '23px',
-        height: '23px',
-        objectFit: 'cover',
-        position: 'absolute',
-        transform: 'translate(-50%, -50%)',
-        border: '2px solid rgba(17, 24, 39, 0.8)',
-        top: '60px',
-        left: '30px',
-    },
-    userName: {
-        position: 'absolute',
-        top: '47px',
-        left: '47px',
-        color: "rgba(255, 255, 255, 0.9)",
-    },
-    creator_data: {
-        fontSize: "0.9rem",
-        color: "rgba(255, 255, 255, 0.8)",
-        margin: "0",
-        lineHeight: "1.4",
-    },
-    icon: {
-        fontSize: '27px',
-        color: 'rgba(255, 255, 255, 0.9)',
-        position: 'absolute',
-        transform: 'translate(-50%, -50%)',
-        top: '50%',
-        left: '50%',
-    },
-    profileIcon: {
-        borderRadius: '50%',
-        width: '120px',
-        height: '120px',
-        objectFit: 'cover',
-        position: 'fixed',
-        transform: 'translate(-50%, -50%)',
-        border: '2px solid rgba(17, 24, 39, 0.8)',
-        top: "10%",
-        left: "60%"
-    },
-    profileuserIcon: {
-        borderRadius: '50%',
-        width: '43px',
-        height: '43px',
-        objectFit: 'cover',
-        position: 'absolute',
-        transform: 'translate(-50%, -50%)',
-        border: '2px solid rgba(255, 255, 255, 0.2)',
-        top: '50%',
-        left: '50%',
-    },
 };
 
 export default AccountCard;
