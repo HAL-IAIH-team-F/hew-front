@@ -12,24 +12,30 @@ import {CreatorRes} from "~/hooks/useCreatorData";
 
 
 export default function Page(
-  {}: {}
+    {}: {}
 ) {
   const clientContext = useClientState()
   const [creators, setCreators] = useState<CreatorRes[]>([])
   const routes = useRoutes()
 
   return <StyledForm action={async formData => {
+    console.debug("submit-b", creators,clientContext.state)
     if (clientContext.state != "registered") throw new Error("not authenticated")
     const title = formData.getStr("title")
     const description = formData.getStr("description")
+    console.debug("submit", creators, title, description)
 
     if (!title || !description) return
 
+    console.debug("submit-a", creators, title, description)
     const result = await clientContext.client.authBody(Api.app.pc_api_colab_post,
-      {}, {
-        creators: creators.map(value => value.creator_id), title: title, description: description
-      }, {})
-    if (!result.error) return routes.timeline().transition()
+        {}, {
+          creators: creators.map(value => value.creator_id), title: title, description: description
+        }, {})
+    if (!result.error) {
+      routes.timeline().transition()
+      return
+    }
     formData.append("submit", `{${result.error.error_id}: ${result.error.message}}`)
   }}>
     <StyledInput name={"title"}/>

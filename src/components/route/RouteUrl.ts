@@ -3,8 +3,8 @@ import React from "react";
 
 export class RouteUrl {
   constructor(
-    protected readonly routes: Routes,
-    protected readonly path: string,
+      protected readonly routes: Routes,
+      protected readonly path: string,
   ) {
   }
 
@@ -25,11 +25,11 @@ export class RouteUrl {
       return
     }
     const tempUrl = (tempPathname != undefined ? tempPathname : this.pathname())
-      + "?" + (tempParams != undefined ? tempParams?.toString() : this.params().toString())
+        + "?" + (tempParams != undefined ? tempParams?.toString() : this.params().toString())
     console.debug("tempUrl", tempUrl)
-    this.routes.router.replace(tempUrl);
+    this.routes.router.push(tempUrl);
     setTimeout(() => {
-      this.routes.router.push(this.toString())
+      this.routes.router.replace(this.toString())
     }, 300);
 
   }
