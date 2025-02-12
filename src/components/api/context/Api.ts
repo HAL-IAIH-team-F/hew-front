@@ -1,3 +1,4 @@
+
 import {Results} from "../../../util/err/result";
 import {ErrorIds} from "../../../util/err/errorIds";
 import {Env} from "~/env";
@@ -41,3 +42,4 @@ export class Img {
         return this.url(download).toString()
     }
 }
+
