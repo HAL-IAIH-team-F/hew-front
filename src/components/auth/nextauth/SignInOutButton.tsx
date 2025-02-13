@@ -1,3 +1,4 @@
+"use client"
 import {SignInButton} from "~/auth/nextauth/SignInButton";
 import {SignOutButton} from "~/auth/nextauth/SignOutButton";
 import {useClientState} from "~/api/context/ClientContextProvider";

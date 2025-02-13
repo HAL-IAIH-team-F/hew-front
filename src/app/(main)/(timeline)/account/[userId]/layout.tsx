@@ -1,5 +1,5 @@
 import React, {ReactNode} from "react";
-import ProfilePage from "@/(main)/(timeline)/account/profile/ProfilePage";
+import ProfilePage from "@/(main)/(timeline)/account/[userId]/profile/ProfilePage";
 
 export default function Layout(
     {

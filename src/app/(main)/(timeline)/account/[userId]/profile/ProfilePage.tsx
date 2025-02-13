@@ -5,7 +5,7 @@ import { SignInOutButton } from "~/auth/nextauth/SignInOutButton";
 import { UserCircle } from "lucide-react";
 import PurchaseHistoryCard from "./PurchaseHistory/PurchaseHistoryCard";
 import SettingsCard from "./Setting/settingsCard";
-import CreatorRegisterForm from "../../creator/register/CreatorRegisterForm";
+import CreatorRegisterForm from "../../../creator/register/CreatorRegisterForm";
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("アカウント");
