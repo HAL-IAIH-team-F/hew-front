@@ -29,23 +29,23 @@ export class Routes {
   }
 
   search() {
-    return new TimelinePageRouteUrl(this, "/search")
+    return new TimelinePageRouteUrl(this, "/search", "/search")
   }
 
   notification() {
-    return new TimelinePageRouteUrl(this, "/notification")
+    return new TimelinePageRouteUrl(this, "/notification", "/notification")
   }
 
   message() {
-    return new TimelinePageRouteUrl(this, "/message")
+    return new TimelinePageRouteUrl(this, "/message", "/message")
   }
 
   productListing() {
-    return new TimelinePageRouteUrl(this, "/product/listing")
+    return new TimelinePageRouteUrl(this, "/product/listing", "/product/listing")
   }
 
   cart() {
-    return new TimelinePageRouteUrl(this, "/cart")
+    return new TimelinePageRouteUrl(this, "/cart", "/cart")
   }
 
   lp() {
@@ -61,7 +61,7 @@ export class Routes {
   }
 
   colablisting() {
-    return new TimelinePageRouteUrl(this, "/colablisting")
+    return new TimelinePageRouteUrl(this, "/colablisting", "/colablisting")
   }
 
   // joinToTimelinePath(path: string) {
