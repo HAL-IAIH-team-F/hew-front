@@ -29,6 +29,7 @@ export const UserIconCard: React.FC<{ user: User | undefined }> = ({ user }) => 
     return () => window.removeEventListener("resize", updateScale);
   }, []);
 
+  // noinspection PointlessArithmeticExpressionJS
   const frameStyle: React.CSSProperties = {
     position: "absolute",
     width: `${260 * scale}px`, // 基本の幅を調整

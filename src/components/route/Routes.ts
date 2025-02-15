@@ -3,14 +3,18 @@ import {TimelineRouteUrl} from "~/route/TimelineRouteUrl";
 import {TimelinePageRouteUrl} from "~/route/TimelinePageRouteUrl";
 import {RouteUrl} from "~/route/RouteUrl";
 import {UserRes} from "~/res/UserRes";
+import {AccountRoutes} from "~/route/AccountRoutes";
 
 export class Routes {
+  readonly accountRoutes: AccountRoutes
+
   constructor(
       readonly prevParams: URLSearchParams,
       readonly currentPath: string,
       readonly router: AppRouterInstance,
-      readonly loginUser: undefined | UserRes,
+      loginUser: undefined | UserRes,
   ) {
+    this.accountRoutes = new AccountRoutes(loginUser, this)
   }
 
   setParam(key: string, value: string | undefined) {
@@ -34,14 +38,6 @@ export class Routes {
 
   message() {
     return new TimelinePageRouteUrl(this, "/message")
-  }
-
-  account(userId: string | undefined = undefined) {
-    if (userId != undefined)
-      return new TimelinePageRouteUrl(this, `/account/${userId}`)
-    if (this.loginUser != undefined)
-      return new TimelinePageRouteUrl(this, `/account/${this.loginUser.user_id}`)
-    return new TimelinePageRouteUrl(this, "/account")
   }
 
   productListing() {
