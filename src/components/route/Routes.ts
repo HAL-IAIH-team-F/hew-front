@@ -2,64 +2,67 @@ import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-
 import {TimelineRouteUrl} from "~/route/TimelineRouteUrl";
 import {TimelinePageRouteUrl} from "~/route/TimelinePageRouteUrl";
 import {RouteUrl} from "~/route/RouteUrl";
+import {UserRes} from "~/res/UserRes";
+import {AccountRoutes} from "~/route/AccountRoutes";
 
 export class Routes {
-    constructor(
-        readonly prevParams: URLSearchParams,
-        readonly currentPath: string,
-        readonly router: AppRouterInstance,
-    ) {
-    }
+  readonly accountRoutes: AccountRoutes
 
-    setParam(key: string, value: string | undefined) {
-        const newParams = new URLSearchParams(this.prevParams)
-        if (value == undefined) newParams.delete(key)
-        else newParams.set(key, value)
-        this.router.push(this.currentPath + "?" + newParams.toString())
-    }
+  constructor(
+      readonly prevParams: URLSearchParams,
+      readonly currentPath: string,
+      readonly router: AppRouterInstance,
+      loginUser: undefined | UserRes,
+  ) {
+    this.accountRoutes = new AccountRoutes(loginUser, this)
+  }
 
-    timeline() {
-        return new TimelineRouteUrl(this, "/")
-    }
+  setParam(key: string, value: string | undefined) {
+    const newParams = new URLSearchParams(this.prevParams)
+    if (value == undefined) newParams.delete(key)
+    else newParams.set(key, value)
+    this.router.push(this.currentPath + "?" + newParams.toString())
+  }
 
-    search() {
-        return new TimelinePageRouteUrl(this, "/search")
-    }
+  timeline() {
+    return new TimelineRouteUrl(this, "/")
+  }
 
-    notification() {
-        return new TimelinePageRouteUrl(this, "/notification")
-    }
+  search() {
+    return new TimelinePageRouteUrl(this, "/search", "/search")
+  }
 
-    message() {
-        return new TimelinePageRouteUrl(this, "/message")
-    }
+  notification() {
+    return new TimelinePageRouteUrl(this, "/notification", "/notification")
+  }
 
-    account() {
-        return new TimelinePageRouteUrl(this, "/account")
-    }
+  message() {
+    return new TimelinePageRouteUrl(this, "/message", "/message")
+  }
 
-    productListing() {
-        return new TimelinePageRouteUrl(this, "/product/listing")
-    }
+  productListing() {
+    return new TimelinePageRouteUrl(this, "/product/listing", "/product/listing")
+  }
 
-    cart() {
-        return new TimelinePageRouteUrl(this, "/cart")
-    }
+  cart() {
+    return new TimelinePageRouteUrl(this, "/cart", "/cart")
+  }
 
-    lp() {
-        return new RouteUrl(this, "/lp")
-    }
+  lp() {
+    return new RouteUrl(this, "/lp")
+  }
 
-    lpDescription() {
-        return new RouteUrl(this, "/lp/description")
-    }
+  lpDescription() {
+    return new RouteUrl(this, "/lp/description")
+  }
 
-   lpRegister(){
-       return new RouteUrl(this, "/lp/register")
-   }
-    colablisting() {
-        return new TimelinePageRouteUrl(this, "/colablisting")
-    }
+  lpRegister() {
+    return new RouteUrl(this, "/lp/register")
+  }
+
+  colablisting() {
+    return new TimelinePageRouteUrl(this, "/colablisting", "/colablisting")
+  }
 
   // joinToTimelinePath(path: string) {
   //   let result

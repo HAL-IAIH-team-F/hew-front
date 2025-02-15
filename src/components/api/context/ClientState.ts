@@ -75,7 +75,7 @@ export function newRegisteredClientState(
     }
 }
 
-interface RegisteredClientState extends LoadedClientState {
+export interface RegisteredClientState extends LoadedClientState {
     state: "registered",
     client: AuthClient,
     oidcContext: OidcContext,

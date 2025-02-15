@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Img } from "~/api/context/Api";
-import { ErrorData } from "../../../../../../util/err/err";
-import { ErrorMessage } from "../../../../../../util/err/ErrorMessage";
+import { ErrorData } from "../../../../../../../util/err/err";
+import { ErrorMessage } from "../../../../../../../util/err/ErrorMessage";
 import { PurchaseInfo } from "@/(main)/search/sample/ProductRes";
 import { Download } from "lucide-react";
 

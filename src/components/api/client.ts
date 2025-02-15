@@ -139,6 +139,12 @@ const PatchCartBody = z
   })
   .partial()
   .passthrough();
+const CartPatchRes = z
+  .object({
+    new_products_filtered: z.array(z.string().uuid()),
+    rm_products_filtered: z.array(z.string().uuid()),
+  })
+  .passthrough();
 const PostProductBody = z
   .object({
     price: z.number().int(),
@@ -191,20 +197,33 @@ const TokenRes = z
   .passthrough();
 const PostTokenBody = z.object({ keycloak_token: z.string() }).passthrough();
 const ImgTokenRes = z.object({ upload: TokenInfo }).passthrough();
-const PostUserBody = z
+const UserBody = z
   .object({
     user_name: z.string(),
     user_icon_uuid: z.union([z.string(), z.null()]),
   })
   .passthrough();
+const CreatorData = z
+  .object({ creator_id: z.string().uuid(), contact_address: z.string() })
+  .passthrough();
 const SelfUserRes = z
   .object({
     user_id: z.string().uuid(),
-    user_name: z.string(),
-    user_screen_id: z.string(),
-    user_icon: z.union([File, z.null()]),
-    user_date: z.string().datetime({ offset: true }),
+    name: z.string(),
+    screen_id: z.string(),
+    icon: z.union([File, z.null()]),
+    register_date: z.string().datetime({ offset: true }),
     user_mail: z.string(),
+    creator_data: z.union([CreatorData, z.null()]),
+  })
+  .passthrough();
+const UserRes = z
+  .object({
+    user_id: z.string().uuid(),
+    name: z.string(),
+    screen_id: z.string(),
+    icon: z.union([File, z.null()]),
+    creator_data: z.union([CreatorData, z.null()]),
   })
   .passthrough();
 
@@ -236,6 +255,7 @@ export const schemas = {
   PatchCartBodyRmProducts,
   PatchCartBodyRmAll,
   PatchCartBody,
+  CartPatchRes,
   PostProductBody,
   TokenInfo,
   PurchaseInfo,
@@ -252,8 +272,10 @@ export const schemas = {
   TokenRes,
   PostTokenBody,
   ImgTokenRes,
-  PostUserBody,
+  UserBody,
+  CreatorData,
   SelfUserRes,
+  UserRes,
 };
 
 const endpoints = makeApi([
@@ -297,7 +319,7 @@ const endpoints = makeApi([
         schema: PatchCartBody,
       },
     ],
-    response: z.unknown(),
+    response: CartPatchRes,
     errors: [
       {
         status: 422,
@@ -753,6 +775,27 @@ const endpoints = makeApi([
     response: TokenRes,
   },
   {
+    method: "put",
+    path: "/api/user",
+    alias: "put_user____api_user_put",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: UserBody,
+      },
+    ],
+    response: SelfUserRes,
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
     method: "post",
     path: "/api/user",
     alias: "post_user_api_user_post",
@@ -761,7 +804,7 @@ const endpoints = makeApi([
       {
         name: "body",
         type: "Body",
-        schema: PostUserBody,
+        schema: UserBody,
       },
     ],
     response: SelfUserRes,
@@ -786,6 +829,27 @@ const endpoints = makeApi([
       },
     ],
     response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/api/user/:user_id",
+    alias: "get_user____api_user__user_id__get",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "user_id",
+        type: "Path",
+        schema: z.string().uuid(),
+      },
+    ],
+    response: z.union([SelfUserRes, UserRes]),
     errors: [
       {
         status: 422,
