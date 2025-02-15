@@ -19,14 +19,14 @@ export class Img {
     ) {
     }
 
-    static async create(uuid: string, token: string | null) {
+    static async create(uuid: string, token: string | null | undefined) {
         const preference = await Api.img.img_preference_preference__image_uuid__get({params: {image_uuid: uuid}})
             .then(value => Results.createSuccessResult(value))
             .catch(reason => {
                 return Results.errResultByReason(reason, ErrorIds.ApiError)
             })
         if (preference.error) return preference
-        return createSuccessResult(new Img(uuid, token, preference.success));
+        return createSuccessResult(new Img(uuid, token || null, preference.success));
     }
 
     url(download = false) {

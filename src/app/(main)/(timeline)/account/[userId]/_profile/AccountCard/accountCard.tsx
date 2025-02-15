@@ -116,13 +116,19 @@ const ProductsGrid = () => {
   );
 };
 
-const AccountCard = () => {
+function AccountCard  (
+    {
+        userId
+    }:{
+      userId: string
+    }
+)  {
   const [activeTab, setActiveTab] = useState("商品");
   const tabs = ["商品", "コラボ",];
   const tabRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>(
       Object.fromEntries(tabs.map((tab) => [tab, React.createRef<HTMLButtonElement>()]))
   );
-  const {user} = useUserData();
+  const {user} = useUserData(userId);
   const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -209,6 +215,6 @@ const AccountCard = () => {
         </div>
       </div>
   );
-};
+}
 
 export default AccountCard;
