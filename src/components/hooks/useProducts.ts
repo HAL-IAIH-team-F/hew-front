@@ -10,7 +10,7 @@ interface UseProductOptions {
   uuid?: string;
   name?: string;
   tag?: string;
-
+  post_by?: string[];
 }
 
 export default function useProducts(options: UseProductOptions = {}) {
@@ -20,12 +20,17 @@ export default function useProducts(options: UseProductOptions = {}) {
 
   useEffect(() => {
     if (client.state === "loading") return;
-
-    const {productId, limit, name, tag} = options;
+    
+    const {productId, limit, name, tag, post_by} = options;
+    if (post_by?.length == 0) {
+      setProducts([]);
+      return
+    }
     client.client.unAuthOrAuth(Api.app.gps_api_product_get, {
       limit: limit,
       name: name,
       tag: tag,
+      post_by: post_by,
     }, {}).then((value) => {
       if (value.error) {
         setError(value.error);
@@ -34,7 +39,11 @@ export default function useProducts(options: UseProductOptions = {}) {
       }
 
       let fetchedProducts = Array.isArray(value.success) ? value.success : [];
-
+      if (post_by) {
+        fetchedProducts = fetchedProducts.filter(
+          (product) => product.post_by === post_by
+        );
+      }
       if (productId) {
         fetchedProducts = fetchedProducts.filter(
           (product) => product.product_id === productId

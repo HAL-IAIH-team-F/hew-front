@@ -4,15 +4,16 @@ import ProductThumbnail from '~/api/useProductThumbnail';
 import useProducts from '~/hooks/useProducts';
 import useRoutes from '~/route/useRoutes';
 import Image from '../../../../../../../util/Image';
-import {useUserData} from '~/api/context/useUserData';
+import {UserData, useUserData} from '~/api/context/useUserData';
 import {useWindowSize} from '@/_hook/useWindowSize';
 import {useProductContext} from '~/products/ContextProvider';
+import CollaborationButton from './CollaborationButton';
 
-const ProductsGrid = () => {
+const ProductsGrid: React.FC<{ userdata: UserData }> = ({ userdata }) => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
-  const {products} = useProducts({});
+ 
   const routes = useRoutes();
   const windowSize = useWindowSize();
   const {isSidebarOpen, isProductOpen} = useProductContext()
@@ -21,6 +22,7 @@ const ProductsGrid = () => {
   const baseCardHeight = 200;
   const minCardWidth = 300;
 
+  const {products} = useProducts({post_by: userdata?.creator_data?.creator_id? [userdata.creator_data?.creator_id]: [] });
   // カードのレイアウト計算関数
   const calculateLayout = useCallback(() => {
     const columns = Math.max(1, Math.floor(containerWidth / baseCardWidth));
@@ -131,6 +133,7 @@ function AccountCard  (
   const {user} = useUserData(userId);
   const contentRef = useRef<HTMLDivElement | null>(null);
 
+
   useEffect(() => {
     if (!contentRef.current) return;
     contentRef.current.style.opacity = "0";
@@ -176,6 +179,8 @@ function AccountCard  (
 
         </div>
 
+        <CollaborationButton/>
+
         {/* タブ */}
         <div className="border-b border-gray-700">
           <div className="flex justify-center space-x-5 px-4 pb-3">
@@ -208,10 +213,11 @@ function AccountCard  (
               msOverflowStyle: "none",
             }}
         >
-          {activeTab === "商品" && <ProductsGrid/>}
-          {activeTab === "コラボ" && <div className="p-6">コラボ content...</div>}
-          {activeTab === "Media" && <div className="p-6">Media content...</div>}
-          {activeTab === "Likes" && <div className="p-6">Likes content...</div>}
+          {activeTab === "商品" ? (
+            user ? <ProductsGrid userdata={user} /> : <div className="p-6 text-center text-gray-400">商品がありません</div>
+          ) : (
+            <div className="p-6">コラボ content...</div>
+          )}
         </div>
       </div>
   );

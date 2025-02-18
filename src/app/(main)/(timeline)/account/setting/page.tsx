@@ -1,10 +1,11 @@
-import SettingsCard from "@/(main)/(timeline)/account/[userId]/_profile/Setting/settingsCard";
+
 import React from "react";
+import ProfileEditPage from "../[userId]/_profile/Setting/ProfileEditPage";
 
 export default function Page(
     {}: {}
 ) {
 
 
-  return <SettingsCard/>
+  return <ProfileEditPage/>
 }

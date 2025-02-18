@@ -8,7 +8,11 @@ import {RegisteredClientState} from "~/api/context/ClientState";
 export interface UserData {
   id: string;
   name: string;
-  icon: Img | undefined
+  icon: Img | undefined 
+  creator_data: {
+    creator_id: string,
+    contact_address: string
+  } | undefined | null
 }
 
 export function useUserData(userId: string | undefined = undefined) {
@@ -31,13 +35,14 @@ async function fetchUserData(userId: string | undefined, context: RegisteredClie
   if (user.icon) {
     const imgResult = await Img.create(user.icon.image_uuid, user.icon.token);
     if (imgResult.error) {
-      console.error(`${imgResult.error.error_id}: ${imgResult.error.message}`);
+      // console.error(${imgResult.error.error_id}: ${imgResult.error.message});
       return undefined
     }
     return {
       id: user.screen_id,
       name: user.name,
       icon: imgResult.success,
+      creator_data: user.creator_data
     }
 
   }
@@ -45,6 +50,7 @@ async function fetchUserData(userId: string | undefined, context: RegisteredClie
     id: user.screen_id,
     name: user.name,
     icon: undefined,
+    creator_data: user.creator_data
   }
 }
 
