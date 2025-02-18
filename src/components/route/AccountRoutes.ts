@@ -1,5 +1,5 @@
 import {TimelinePageRouteUrl} from "~/route/TimelinePageRouteUrl";
-import {UserRes} from "~/res/UserRes";
+import {UserRes} from "~/res/reses";
 import {Routes} from "~/route/Routes";
 
 export class AccountRoutes {

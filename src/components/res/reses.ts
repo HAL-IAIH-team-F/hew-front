@@ -1,4 +1,4 @@
-export interface UserRes {
+export interface UserRes extends UserData {
   user_id: string
   name: string
   screen_id: string
@@ -9,6 +9,15 @@ export interface UserRes {
     creator_id: string,
     contact_address: string
   } | undefined | null
+}
+
+export interface UserData {
+}
+
+export interface CreatorRes {
+  creator_id: string;
+  contact_address: string;
+  user_data: UserData;
 }
 
 export interface ImgRes {

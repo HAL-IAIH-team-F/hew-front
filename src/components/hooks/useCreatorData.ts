@@ -3,37 +3,30 @@ import {useEffect, useState} from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
 
 import {Api, Img} from "~/api/context/Api";
-import {ImgRes} from "~/res/UserRes";
 import {ErrorData} from "../../util/err/err";
+import {CreatorRes} from "~/res/reses";
 
-export interface UserData {
+export interface UserInfo {
   user_id: string;
   name: string;
   screen_id: string;
-  icon: ImgRes | null;
+  icon: Img | null;
 }
 
-export interface CreatorRes {
-  creator_id: string;
-  contact_address: string;
-  user_data: UserData;
-}
 
-export default function useCreatorData({creator_id}: {
-  creator_id: string
-}): [CreatorRes | undefined, UserData | undefined, ErrorData | undefined] {
-  const [user, setUser] = useState<UserData | undefined>();
-  const [creatordata, setCreatordata] = useState<CreatorRes | undefined>();
+export default function useCreatorData(creator_id: string):
+    [CreatorRes | undefined, UserInfo | undefined, ErrorData | undefined] {
+  const [user, setUser] = useState<UserInfo | undefined>();
   const [err, setErr] = useState<ErrorData | undefined>();
   const client = useClientState();
-
+  const [creatorRes, setCreatorRes] = useState<CreatorRes>()
   useEffect(() => {
     client.client.unAuth(Api.app.getcre_api_creator__creator_id__get, {}, {creator_id: creator_id}).then(value => {
       if (value.error) {
         setErr(value.error);
         return;
       }
-      setCreatordata(value.success);
+      setCreatorRes(value.success);
 
       if (value.success.user_data.icon) {
         Img.create(value.success.user_data.icon.image_uuid, value.success.user_data.icon.token).then((value1) => {
@@ -58,5 +51,9 @@ export default function useCreatorData({creator_id}: {
     });
   }, [creator_id]);
 
-  return [creatordata, user, err];
+  // return useMemo(() => {
+  //
+  //   return [creatordata, user, err];
+  // }, []);
+  return [creatorRes, user, err]
 }

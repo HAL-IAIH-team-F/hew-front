@@ -9,11 +9,11 @@ import {useWindowSize} from '@/_hook/useWindowSize';
 import {useProductContext} from '~/products/ContextProvider';
 import CollaborationButton from './CollaborationButton';
 
-const ProductsGrid: React.FC<{ userdata: UserData }> = ({ userdata }) => {
+const ProductsGrid: React.FC<{ userdata: UserData }> = ({userdata}) => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
- 
+
   const routes = useRoutes();
   const windowSize = useWindowSize();
   const {isSidebarOpen, isProductOpen} = useProductContext()
@@ -22,7 +22,7 @@ const ProductsGrid: React.FC<{ userdata: UserData }> = ({ userdata }) => {
   const baseCardHeight = 200;
   const minCardWidth = 300;
 
-  const {products} = useProducts({post_by: userdata.creator_data?.creator_id? userdata.creator_data?.creator_id: "" });
+  const {products} = useProducts({post_by: userdata.creator_data?.creator_id ? userdata.creator_data?.creator_id : ""});
   // console.debug("productGrid",products)
   // カードのレイアウト計算関数
   const calculateLayout = useCallback(() => {
@@ -119,13 +119,13 @@ const ProductsGrid: React.FC<{ userdata: UserData }> = ({ userdata }) => {
   );
 };
 
-function AccountCard  (
+function AccountCard(
     {
-        userId
-    }:{
+      userId
+    }: {
       userId: string
     }
-)  {
+) {
   const [activeTab, setActiveTab] = useState("商品");
   const tabs = ["商品", "コラボ",];
   const tabRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>(
@@ -179,8 +179,7 @@ function AccountCard  (
           )}
 
         </div>
-
-        <CollaborationButton/>
+         <CollaborationButton creatorId={user?.creator_data?.creator_id}/>
 
         {/* タブ */}
         <div className="border-b border-gray-700">
@@ -215,9 +214,10 @@ function AccountCard  (
             }}
         >
           {activeTab === "商品" ? (
-            user ? <ProductsGrid userdata={user} /> : <div className="p-6 text-center text-gray-400">商品がありません</div>
+              user ? <ProductsGrid userdata={user}/> :
+                  <div className="p-6 text-center text-gray-400">商品がありません</div>
           ) : (
-            <div className="p-6">コラボ content...</div>
+              <div className="p-6">コラボ content...</div>
           )}
         </div>
       </div>

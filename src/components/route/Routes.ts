@@ -2,7 +2,7 @@ import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-
 import {TimelineRouteUrl} from "~/route/TimelineRouteUrl";
 import {TimelinePageRouteUrl} from "~/route/TimelinePageRouteUrl";
 import {RouteUrl} from "~/route/RouteUrl";
-import {UserRes} from "~/res/UserRes";
+import {UserRes} from "~/res/reses";
 import {AccountRoutes} from "~/route/AccountRoutes";
 
 export class Routes {

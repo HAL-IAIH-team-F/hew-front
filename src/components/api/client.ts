@@ -83,7 +83,12 @@ const PostCreatorBody = z
   .object({ contact_address: z.string(), transfer_target: z.string() })
   .passthrough();
 const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
-const NotificationType = z.enum(["colab_request", "colab_approve", "colab"]);
+const NotificationType = z.enum([
+  "colab_request",
+  "colab_want",
+  "colab_approve",
+  "colab",
+]);
 const ColabNotificationData = z
   .object({
     notification_type: NotificationType,
@@ -109,10 +114,18 @@ const ColabApproveNotificationData = z
     colab_creator_id: z.string().uuid(),
   })
   .passthrough();
+const ColabWantNotificationData = z
+  .object({
+    notification_type: NotificationType,
+    colab_want_id: z.string().uuid(),
+    from_creator_id: z.string().uuid(),
+  })
+  .passthrough();
 const NotificationData = z.union([
   ColabNotificationData,
   ColabRequestNotificationData,
   ColabApproveNotificationData,
+  ColabWantNotificationData,
 ]);
 const NotificationRes = z
   .object({ notification_id: z.string().uuid(), data: NotificationData })
@@ -252,6 +265,7 @@ export const schemas = {
   ColabNotificationData,
   ColabRequestNotificationData,
   ColabApproveNotificationData,
+  ColabWantNotificationData,
   NotificationData,
   NotificationRes,
   CartRes,

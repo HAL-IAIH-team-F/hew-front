@@ -1,4 +1,4 @@
-import {ColabApproveData} from "@/(main)/(timeline)/user/notification/NotificationRes";
+import {ColabApproveData} from "@/(main)/(timeline)/notification/notification/NotificationRes";
 
 export default function ColabApproveNotification(
   {

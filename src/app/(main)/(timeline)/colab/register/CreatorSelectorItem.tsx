@@ -1,5 +1,6 @@
-import { CreatorRes } from "~/hooks/useCreatorData";
+
 import { CreatorCard } from "~/products/ProfileProductsView";
+import {CreatorRes} from "~/res/reses";
 
 export default function CreatorSelectorItem({
   creator,
