@@ -4,19 +4,12 @@ import {useClientState} from "~/api/context/ClientContextProvider";
 
 import {Api, Img} from "~/api/context/Api";
 import {ErrorData} from "../../util/err/err";
-import {CreatorRes} from "~/res/reses";
-
-export interface UseCreatorDataUserInfo {
-  user_id: string;
-  name: string;
-  screen_id: string;
-  icon: Img | null;
-}
+import {CreatorRes, UserDataWithImg} from "~/res/reses";
 
 
 export default function useCreatorData(creator_id: string):
-    [CreatorRes | undefined, UseCreatorDataUserInfo | undefined, ErrorData | undefined] {
-  const [user, setUser] = useState<UseCreatorDataUserInfo | undefined>();
+    [CreatorRes | undefined, UserDataWithImg | undefined, ErrorData | undefined] {
+  const [user, setUser] = useState<UserDataWithImg | undefined>();
   const [err, setErr] = useState<ErrorData | undefined>();
   const client = useClientState();
   const [creatorRes, setCreatorRes] = useState<CreatorRes>()
@@ -34,18 +27,14 @@ export default function useCreatorData(creator_id: string):
             console.error(`${value1.error.error_id}: ${value1.error.message}`);
           }
           setUser({
-            user_id: value.success.user_data.user_id,
-            name: value.success.user_data.name,
-            screen_id: value.success.user_data.screen_id,
-            icon: value1.success || null, // iconが取得できなかった場合はnullを設定
+            ...value.success.user_data,
+            icon: value1.success || undefined, // iconが取得できなかった場合はnullを設定
           });
         });
       } else {
         setUser({
-          user_id: value.success.user_data.user_id,
-          name: value.success.user_data.name,
-          screen_id: value.success.user_data.screen_id,
-          icon: null,
+          ...value.success.user_data,
+          icon: undefined,
         });
       }
     });

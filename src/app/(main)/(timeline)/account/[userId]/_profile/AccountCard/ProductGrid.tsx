@@ -3,11 +3,12 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import ProductThumbnail from '~/api/useProductThumbnail';
 import useProducts from '~/hooks/useProducts';
 import useRoutes from '~/route/useRoutes';
-import {UserInfo} from '~/api/context/useUserData';
+
 import {useWindowSize} from '@/_hook/useWindowSize';
 import {useProductContext} from '~/products/ContextProvider';
+import {UserResWithImg} from "~/res/reses";
 
-export const ProductsGrid: React.FC<{ userdata: UserInfo }> = ({userdata}) => {
+export const ProductsGrid: React.FC<{ userdata: UserResWithImg }> = ({userdata}) => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);

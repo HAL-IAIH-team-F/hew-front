@@ -1,15 +1,14 @@
 import {useState} from "react";
 import {Api} from "~/api/context/Api";
 import {useClientState} from "~/api/context/ClientContextProvider";
-import {CreatorRes} from "~/res/reses";
-import {UseCreatorDataUserInfo} from "~/hooks/useCreatorData";
-import {UserInfo} from "~/api/context/useUserData";
+import {UserResWithImg} from "~/res/reses";
+
 
 export default function CollaborationButton(
     {
       userInfo,
     }: {
-      userInfo: UserInfo | undefined,
+      userInfo: UserResWithImg | undefined,
     }
 ) {
   const [messageSent, setMessageSent] = useState(false);

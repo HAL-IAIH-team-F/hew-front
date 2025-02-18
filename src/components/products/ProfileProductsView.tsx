@@ -131,66 +131,6 @@ export function CreatorScreenId({creator_id, showView = true}: CreatorDataProps)
   return screenId;
 }
 
-export function CreatorCard({creator_id, onDataFetched}: CreatorDataProps) {
-  const [_, user_data, __] = useCreatorData(creator_id);
-  const iconUrl = user_data?.icon ? (user_data.icon as any).strUrl() : null;
-  const screenId = user_data?.screen_id;
-  const name = user_data?.name;
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    if (onDataFetched) {
-      onDataFetched({iconUrl, screenId});
-    }
-  }, [iconUrl, screenId, onDataFetched]);
-  // console.debug("CreatorCard", iconUrl, screenId, name, loading, error)
-  return (
-      <div className="w-60 p-1 rounded-lg bg-gray-900">
-        <div className="flex items-center gap-4">
-          <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-900 flex items-center justify-center">
-            {iconUrl && !error ? (
-                <img
-                    src={iconUrl}
-                    alt={name || "User Icon"}
-                    className="w-full h-full object-cover"
-                    onLoad={() => setLoading(false)}
-                    onError={() => {
-                      setLoading(false);
-                      setError(true);
-                    }}
-                />
-            ) : loading || error ? (
-                // くるくるスピナー
-                <div
-                    className="animate-spin rounded-full h-6 w-6 border-t-2 border-gray-500 dark:border-gray-400"></div>
-            ) : (
-                // デフォルトのアイコン
-                <div className="w-6 h-6 text-gray-400">
-                  <div className="w-full h-full rounded-full border-2 border-gray-400 flex items-center justify-center">
-                    <div className="w-3 h-3 rounded-full border-2 border-gray-400 -mt-1"/>
-                  </div>
-                </div>
-            )}
-          </div>
-
-          <div className="flex flex-col">
-            {name && (
-                <h3 className="font-medium text-lg text-white">
-                  {name}
-                </h3>
-            )}
-            {screenId && (
-                <p className="text-sm text-gray-400">
-                  @{screenId}
-                </p>
-            )}
-          </div>
-
-        </div>
-      </div>
-  );
-}
 
 interface CreatorDataViewProps {
   iconUrl: string | null;

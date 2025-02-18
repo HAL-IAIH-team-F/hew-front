@@ -1,5 +1,5 @@
 "use client"
-import React, {DetailedHTMLProps, HTMLAttributes, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useUserData} from "~/api/context/useUserData";
 import Image from "../../../../../util/Image";
 import CollaborationButton from "@/(main)/(timeline)/account/[userId]/_profile/AccountCard/CollaborationButton";
@@ -18,7 +18,7 @@ export function AccountCard(
   const tabRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>(
       Object.fromEntries(tabs.map((tab) => [tab, React.createRef<HTMLButtonElement>()]))
   );
-  const {user} = useUserData(userId);
+  const user = useUserData(userId);
   const contentRef = useRef<HTMLDivElement | null>(null);
 
 
@@ -51,7 +51,7 @@ export function AccountCard(
                   />
                 </div>
                 <div className="mt-3 text-lg font-semibold">{user.name}</div>
-                <div className="text-sm text-gray-400">@{user.id}</div>
+                <div className="text-sm text-gray-400">@{user.screen_id}</div>
               </div>
           ) : (
               <div className="flex flex-col items-center">

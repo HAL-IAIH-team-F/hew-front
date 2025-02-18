@@ -4,19 +4,10 @@ import {Api, Img} from './Api';
 import {ErrorIds} from '../../../util/err/errorIds';
 import {useClientState} from './ClientContextProvider';
 import {RegisteredClientState} from "~/api/context/ClientState";
-
-export interface UserInfo {
-  id: string;
-  name: string;
-  icon: Img | undefined 
-  creator_data: {
-    creator_id: string,
-    contact_address: string
-  } | undefined | null
-}
+import {UserResWithImg} from "~/res/reses";
 
 export function useUserData(userId: string | undefined = undefined) {
-  const [user, setUser] = useState<UserInfo>();
+  const [user, setUser] = useState<UserResWithImg>();
   const context = useClientState();
 
   useEffect(() => {
@@ -26,10 +17,10 @@ export function useUserData(userId: string | undefined = undefined) {
     }
     fetchUserData(userId, context).then(value => setUser(value));
   }, [context, context.state]);
-  return {user};
+  return user;
 }
 
-async function fetchUserData(userId: string | undefined, context: RegisteredClientState): Promise<UserInfo | undefined> {
+async function fetchUserData(userId: string | undefined, context: RegisteredClientState): Promise<UserResWithImg | undefined> {
   const user = await fetchUser(userId, context);
   if (!user) return undefined;
   if (user.icon) {
@@ -39,18 +30,14 @@ async function fetchUserData(userId: string | undefined, context: RegisteredClie
       return undefined
     }
     return {
-      id: user.screen_id,
-      name: user.name,
+      ...user,
       icon: imgResult.success,
-      creator_data: user.creator_data
     }
 
   }
   return {
-    id: user.screen_id,
-    name: user.name,
+    ...user,
     icon: undefined,
-    creator_data: user.creator_data
   }
 }
 

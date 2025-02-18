@@ -4,7 +4,7 @@ import {OidcContext} from "~/auth/keycloak/api/internal/OidcContext";
 import {AuthIdTokenState, IdTokenState} from "~/auth/idtoken/IdTokenState";
 import {TokenBundle,} from "~/auth/nextauth/TokenBundle";
 import {UnAuthClient} from "~/api/client/UnAuthClient";
-import {UserRes} from "~/res/reses";
+import {SelfUserRes} from "~/res/reses";
 import {LoadedClient} from "~/api/client/LoadedClient";
 
 export type ClientState =
@@ -58,7 +58,7 @@ interface UnregisteredClientState extends LoadedClientState {
 
 export function newRegisteredClientState(
     oidcContext: OidcContext, setIdToken: (idToken: IdTokenState) => void,
-    signOut: () => void, token: TokenBundle, idToken: AuthIdTokenState, user: UserRes,
+    signOut: () => void, token: TokenBundle, idToken: AuthIdTokenState, user: SelfUserRes,
     set: (state: ClientState) => void,
 ): RegisteredClientState {
     return {
@@ -83,7 +83,7 @@ export interface RegisteredClientState extends LoadedClientState {
     signOut: () => void,
     idToken: AuthIdTokenState,
     token: TokenBundle,
-    user: UserRes
+    user: SelfUserRes
 }
 
 export function newUnAuthClientState(

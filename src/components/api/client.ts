@@ -21,15 +21,6 @@ const HTTPValidationError = z
 const PostChatMessageBody = z
   .object({ message: z.string(), images: z.array(z.string().uuid()) })
   .passthrough();
-const ChatMessageRes = z
-  .object({
-    chat_id: z.string().uuid(),
-    chat_message_id: z.string().uuid(),
-    index: z.number().int(),
-    message: z.string(),
-    images: z.array(z.string().uuid()),
-  })
-  .passthrough();
 const MessageRes = z
   .object({
     chat_message_id: z.string().uuid(),
@@ -249,7 +240,6 @@ export const schemas = {
   ValidationError,
   HTTPValidationError,
   PostChatMessageBody,
-  ChatMessageRes,
   MessageRes,
   ChatMessagesRes,
   PostColabRequestBody,
@@ -398,7 +388,7 @@ const endpoints = makeApi([
         schema: z.string().uuid(),
       },
     ],
-    response: ChatMessageRes,
+    response: MessageRes,
     errors: [
       {
         status: 422,

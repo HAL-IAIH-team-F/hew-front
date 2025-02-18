@@ -21,7 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
     setIsSidebarOpen,
   } = useProductContext();
   const size = useWindowSize()
-  const {user} = useUserData();
+  const user = useUserData();
   const routes = useRoutes();
   const pathname = usePathname()
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
