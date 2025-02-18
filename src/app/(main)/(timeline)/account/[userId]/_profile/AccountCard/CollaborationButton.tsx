@@ -1,12 +1,15 @@
 import {useState} from "react";
 import {Api} from "~/api/context/Api";
 import {useClientState} from "~/api/context/ClientContextProvider";
+import {CreatorRes} from "~/res/reses";
+import {UseCreatorDataUserInfo} from "~/hooks/useCreatorData";
+import {UserInfo} from "~/api/context/useUserData";
 
 export default function CollaborationButton(
     {
-      creatorId,
+      userInfo,
     }: {
-      creatorId: string | undefined,
+      userInfo: UserInfo | undefined,
     }
 ) {
   const [messageSent, setMessageSent] = useState(false);
@@ -14,9 +17,11 @@ export default function CollaborationButton(
 
   const handleClick = () => {
     if (clientState.state !== "registered") return
-    if (creatorId == undefined) return
-    clientState.client.authBody(Api.app.post_colab_want___api_colab_want_post, {}, {
-      target_creator_id: creatorId,
+    if (userInfo?.creator_data == undefined) return
+    clientState.client.authBody(Api.app.pc_api_colab_post, {}, {
+      title: `${clientState.user.name}と${userInfo.name}のコラボ`,
+      description: "",
+      creators: [userInfo.creator_data.creator_id]
     }, {}).then(value => {
       console.debug(value)
       if (value.error) {
@@ -31,9 +36,10 @@ export default function CollaborationButton(
   return (
       <div className="flex justify-center pb-3">
         <button
-            className={`px-10 py-1 rounded-lg text-white bg-gray-700 ${messageSent || creatorId == undefined ? "" : "hover:bg-indigo-700 transform hover:scale-105 transition-all duration-200"} font-medium`}
+            className={`px-10 py-1 rounded-lg text-white bg-gray-700 ${messageSent || userInfo?.creator_data == undefined
+                ? "" : "hover:bg-indigo-700 transform hover:scale-105 transition-all duration-200"} font-medium`}
             onClick={handleClick}
-            disabled={messageSent || creatorId == undefined} // 送信済みの場合はクリックも無効化
+            disabled={messageSent || userInfo?.creator_data == undefined} // 送信済みの場合はクリックも無効化
         >
           {messageSent ? "送信済み" : "「 コラボしたい 」を送る"}
         </button>

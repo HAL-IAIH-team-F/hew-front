@@ -1,4 +1,4 @@
-import {ColabRequestData} from "@/(main)/(timeline)/notification/notification/NotificationRes";
+import {ColabRequestData} from "@/(main)/(timeline)/notification/NotificationRes";
 
 export default function ColabRequestNotification(
   {

@@ -5,7 +5,7 @@ import {ErrorIds} from '../../../util/err/errorIds';
 import {useClientState} from './ClientContextProvider';
 import {RegisteredClientState} from "~/api/context/ClientState";
 
-export interface UserData {
+export interface UserInfo {
   id: string;
   name: string;
   icon: Img | undefined 
@@ -16,7 +16,7 @@ export interface UserData {
 }
 
 export function useUserData(userId: string | undefined = undefined) {
-  const [user, setUser] = useState<UserData>();
+  const [user, setUser] = useState<UserInfo>();
   const context = useClientState();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export function useUserData(userId: string | undefined = undefined) {
   return {user};
 }
 
-async function fetchUserData(userId: string | undefined, context: RegisteredClientState): Promise<UserData | undefined> {
+async function fetchUserData(userId: string | undefined, context: RegisteredClientState): Promise<UserInfo | undefined> {
   const user = await fetchUser(userId, context);
   if (!user) return undefined;
   if (user.icon) {

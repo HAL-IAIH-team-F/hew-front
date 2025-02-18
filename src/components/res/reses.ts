@@ -1,6 +1,5 @@
 export interface UserRes extends UserData {
   user_id: string
-  name: string
   screen_id: string
   icon: ImgRes | null
   register_date: string
@@ -12,6 +11,7 @@ export interface UserRes extends UserData {
 }
 
 export interface UserData {
+  name: string
 }
 
 export interface CreatorRes {

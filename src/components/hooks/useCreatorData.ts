@@ -6,7 +6,7 @@ import {Api, Img} from "~/api/context/Api";
 import {ErrorData} from "../../util/err/err";
 import {CreatorRes} from "~/res/reses";
 
-export interface UserInfo {
+export interface UseCreatorDataUserInfo {
   user_id: string;
   name: string;
   screen_id: string;
@@ -15,8 +15,8 @@ export interface UserInfo {
 
 
 export default function useCreatorData(creator_id: string):
-    [CreatorRes | undefined, UserInfo | undefined, ErrorData | undefined] {
-  const [user, setUser] = useState<UserInfo | undefined>();
+    [CreatorRes | undefined, UseCreatorDataUserInfo | undefined, ErrorData | undefined] {
+  const [user, setUser] = useState<UseCreatorDataUserInfo | undefined>();
   const [err, setErr] = useState<ErrorData | undefined>();
   const client = useClientState();
   const [creatorRes, setCreatorRes] = useState<CreatorRes>()

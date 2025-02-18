@@ -2,9 +2,9 @@
 import React, {useEffect, useState} from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {ErrorData} from "../../../../util/err/err";
-import {NotificationRes} from "@/(main)/(timeline)/notification/notification/NotificationRes";
+import {NotificationRes} from "@/(main)/(timeline)/notification/NotificationRes";
 import {Api} from "~/api/context/Api";
-import Notification from "@/(main)/(timeline)/notification/notification/Notification";
+import Notification from "@/(main)/(timeline)/notification/Notification";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
 
 export default function Page(
