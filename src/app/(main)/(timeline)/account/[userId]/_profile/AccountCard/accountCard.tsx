@@ -22,7 +22,8 @@ const ProductsGrid: React.FC<{ userdata: UserData }> = ({ userdata }) => {
   const baseCardHeight = 200;
   const minCardWidth = 300;
 
-  const {products} = useProducts({post_by: userdata?.creator_data?.creator_id? [userdata.creator_data?.creator_id]: [] });
+  const {products} = useProducts({post_by: userdata.creator_data?.creator_id? userdata.creator_data?.creator_id: "" });
+  // console.debug("productGrid",products)
   // カードのレイアウト計算関数
   const calculateLayout = useCallback(() => {
     const columns = Math.max(1, Math.floor(containerWidth / baseCardWidth));
