@@ -1,8 +1,9 @@
 import {Dispatch, SetStateAction, useState} from "react";
 import CreatorSelectorModal from "@/(main)/(timeline)/colab/register/CreatorSelectorModal";
-import {CreatorRes} from "~/hooks/useCreatorData";
+
 import "./s.css"
 import { CreatorCard } from "~/products/ProfileProductsView";
+import {CreatorRes} from "~/res/reses";
 
 export default function CreatorsSelector(
   {
