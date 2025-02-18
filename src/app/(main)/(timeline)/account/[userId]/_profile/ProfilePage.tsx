@@ -2,7 +2,7 @@
 import React, {ReactNode} from "react";
 import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
 import {UserCircle} from "lucide-react";
-import AccountLink from "@/(main)/(timeline)/account/[userId]/_profile/side/AccountLink";
+import MenuLink from "@/(main)/(timeline)/_window/_main/menu/MenuLink";
 import useRoutes from "~/route/useRoutes";
 
 function ProfilePage(
@@ -29,21 +29,21 @@ function ProfilePage(
             {/* Navigation Links */}
             <nav className="flex-1 px-4">
               <ul className="space-y-1 p-1">
-                <AccountLink
+                <MenuLink
                     label={"アカウント"}
-                    routeUrl={routes.accountRoutes.account()}
+                    routeUrl={routes.account.account()}
                 />
-                <AccountLink
+                <MenuLink
                     label={"設定"}
-                    routeUrl={routes.accountRoutes.setting()}
+                    routeUrl={routes.account.setting()}
                 />
-                <AccountLink
+                <MenuLink
                     label={"購入履歴"}
-                    routeUrl={routes.accountRoutes.history()}
+                    routeUrl={routes.account.history()}
                 />
-                <AccountLink
+                <MenuLink
                     label={"クリエイター登録"}
-                    routeUrl={routes.accountRoutes.creatorRegister()}
+                    routeUrl={routes.account.creatorRegister()}
                 />
               </ul>
               <div className="p-4 border-t border-gray-700">

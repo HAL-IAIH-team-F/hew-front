@@ -77,7 +77,7 @@ const ProductsGrid = () => {
                   onMouseLeave={() => setHoveredCard(null)} // ホバー終了
                   onClick={
                     event =>
-                        routes.accountRoutes.account().setProductId(product.product_id).transition(event)
+                        routes.account.account().setProductId(product.product_id).transition(event)
                   }
               >
                 {/* サムネイル背景 */}

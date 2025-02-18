@@ -1,4 +1,4 @@
-import {ChatRes} from "@/(main)/(timeline)/user/chat/ChatRes";
+import {ChatRes} from "~/res/ChatRes";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {useEffect, useState} from "react";
 import {Api} from "~/api/context/Api";

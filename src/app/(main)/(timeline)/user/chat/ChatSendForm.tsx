@@ -1,4 +1,4 @@
-import {ChatRes} from "./ChatRes";
+import {ChatRes} from "~/res/ChatRes";
 import {StyledForm} from "../../../../../util/form/element/StyledForm";
 import {StyledInput} from "../../../../../util/form/element/StyledInput";
 import {StyledButton} from "../../../../../util/form/element/StyledButton";

@@ -5,6 +5,10 @@ export interface UserRes {
   icon: ImgRes | null
   register_date: string
   user_mail: string
+  creator_data: {
+    creator_id: string,
+    contact_address: string
+  } | undefined
 }
 
 export interface ImgRes {

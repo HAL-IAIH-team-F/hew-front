@@ -8,6 +8,6 @@ export default function Page(
   const routes = useRoutes()
   return <div className={"text-white"}>
     <p>no user</p>
-    <SignInOutButton onClose={() => routes.accountRoutes.account().transition()}/>
+    <SignInOutButton onClose={() => routes.account.account().transition()}/>
   </div>
 }

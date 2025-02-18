@@ -4,9 +4,11 @@ import {TimelinePageRouteUrl} from "~/route/TimelinePageRouteUrl";
 import {RouteUrl} from "~/route/RouteUrl";
 import {UserRes} from "~/res/UserRes";
 import {AccountRoutes} from "~/route/AccountRoutes";
+import {ColabRoutes} from "~/route/ColabRoutes";
 
 export class Routes {
-  readonly accountRoutes: AccountRoutes
+  readonly account: AccountRoutes
+  readonly colab: ColabRoutes
 
   constructor(
       readonly prevParams: URLSearchParams,
@@ -14,7 +16,8 @@ export class Routes {
       readonly router: AppRouterInstance,
       loginUser: undefined | UserRes,
   ) {
-    this.accountRoutes = new AccountRoutes(loginUser, this)
+    this.account = new AccountRoutes(loginUser, this)
+    this.colab = new ColabRoutes(loginUser, this)
   }
 
   setParam(key: string, value: string | undefined) {
@@ -58,10 +61,6 @@ export class Routes {
 
   lpRegister() {
     return new RouteUrl(this, "/lp/register")
-  }
-
-  colablisting() {
-    return new TimelinePageRouteUrl(this, "/colablisting", "/colablisting")
   }
 
   // joinToTimelinePath(path: string) {

@@ -9,6 +9,10 @@ export interface UserData {
   id: string;
   name: string;
   icon: Img | undefined
+  creator_data: {
+    creator_id: string,
+    contact_address: string
+  } | null | undefined
 }
 
 export function useUserData(userId: string | undefined = undefined) {
@@ -38,6 +42,7 @@ async function fetchUserData(userId: string | undefined, context: RegisteredClie
       id: user.screen_id,
       name: user.name,
       icon: imgResult.success,
+      creator_data: user.creator_data
     }
 
   }
@@ -45,6 +50,7 @@ async function fetchUserData(userId: string | undefined, context: RegisteredClie
     id: user.screen_id,
     name: user.name,
     icon: undefined,
+    creator_data: user.creator_data
   }
 }
 

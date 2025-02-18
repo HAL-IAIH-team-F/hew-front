@@ -2,7 +2,7 @@ import React from "react";
 import {RouteUrl} from "~/route/RouteUrl";
 import Link from "next/link";
 
-export default function AccountLink(
+export default function MenuLink(
     {
       routeUrl, label,
     }: {

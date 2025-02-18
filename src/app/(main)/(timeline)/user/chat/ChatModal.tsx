@@ -2,7 +2,7 @@
 
 import {FC, useState} from "react";
 import ChatList from "@/(main)/(timeline)/user/chat/ChatList";
-import {ChatRes} from "@/(main)/(timeline)/user/chat/ChatRes";
+import {ChatRes} from "~/res/ChatRes";
 import Chat from "@/(main)/(timeline)/user/chat/Chat";
 
 const ChatModal: FC = () => {

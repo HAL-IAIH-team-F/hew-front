@@ -73,7 +73,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
 
             <SidebarRoutesLink routeUrl={routes.timeline()} setTransitions={setTransitions}><House
                 style={iconstyles.icon}/></SidebarRoutesLink>
-            <SidebarRoutesLink routeUrl={routes.accountRoutes.account()}
+            <SidebarRoutesLink routeUrl={routes.account.account()}
                                setTransitions={setTransitions}>{user && user.icon ? (
                 <Image
                     alt="User Icon"
@@ -96,7 +96,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
                 style={iconstyles.icon}/></SidebarRoutesLink>
             <SidebarRoutesLink routeUrl={routes.cart()} setTransitions={setTransitions}><IoCartOutline
                 style={iconstyles.icon}/></SidebarRoutesLink>
-            <SidebarRoutesLink routeUrl={routes.colablisting()} setTransitions={setTransitions}><Handshake
+            <SidebarRoutesLink routeUrl={routes.colab.chat()} setTransitions={setTransitions}><Handshake
                 style={iconstyles.icon}/></SidebarRoutesLink>
 
           </div>
