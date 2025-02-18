@@ -4,8 +4,8 @@ import AccountCard from "./AccountCard/accountCard";
 import { SignInOutButton } from "~/auth/nextauth/SignInOutButton";
 import { UserCircle } from "lucide-react";
 import PurchaseHistoryCard from "./PurchaseHistory/PurchaseHistoryCard";
-import SettingsCard from "./Setting/settingsCard";
 import CreatorRegisterForm from "../../creator/register/CreatorRegisterForm";
+import ProfileEditPage from "./Setting/ProfileEditPage";
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("アカウント");
@@ -56,7 +56,7 @@ const ProfilePage = () => {
       <div className="flex-1 overflow-hidden bg-gray-900">
         <div className="h-full w-full max-w-full max-h-full box-border">
           {activeTab === "アカウント" && <AccountCard />}
-          {activeTab === "設定" && <SettingsCard />}
+          {activeTab === "設定" && <ProfileEditPage />}
           {activeTab === "購入履歴" && <PurchaseHistoryCard />}
           {activeTab === "クリエイター登録" && <CreatorRegisterForm />}
         </div>
