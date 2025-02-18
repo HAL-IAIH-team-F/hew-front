@@ -209,10 +209,10 @@ const CreatorData = z
 const SelfUserRes = z
   .object({
     user_id: z.string().uuid(),
-    user_name: z.string(),
-    user_screen_id: z.string(),
-    user_icon: z.union([File, z.null()]),
-    user_date: z.string().datetime({ offset: true }),
+    name: z.string(),
+    screen_id: z.string(),
+    icon: z.union([File, z.null()]),
+    register_date: z.string().datetime({ offset: true }),
     user_mail: z.string(),
     creator_data: z.union([CreatorData, z.null()]),
   })

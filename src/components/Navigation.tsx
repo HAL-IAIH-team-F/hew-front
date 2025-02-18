@@ -78,10 +78,10 @@ export function StyledNavigation() {
           console.error("get self error", value.error)
           return
         }
-        if (value.success.user_icon) Img.create(value.success.user_icon.image_uuid, value.success.user_icon.token)
+        if (value.success.icon) Img.create(value.success.icon.image_uuid, value.success.icon.token)
           .then(value1 => {
             setUser({
-              name: value.success.user_name,
+              name: value.success.name,
               icon: value1.success,
             })
             if (value1.error) {
@@ -89,7 +89,7 @@ export function StyledNavigation() {
             }
           })
         else setUser({
-          name: value.success.user_name,
+          name: value.success.name,
           icon: undefined,
         })
       })
