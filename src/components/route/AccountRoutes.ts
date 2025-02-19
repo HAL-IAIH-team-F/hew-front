@@ -1,10 +1,10 @@
 import {TimelinePageRouteUrl} from "~/route/TimelinePageRouteUrl";
-import {UserRes} from "~/res/UserRes";
+import {SelfUserRes} from "~/res/reses";
 import {Routes} from "~/route/Routes";
 
 export class AccountRoutes {
   constructor(
-      readonly loginUser: undefined | UserRes,
+      readonly loginUser: undefined | SelfUserRes,
       readonly routes: Routes
   ) {
   }

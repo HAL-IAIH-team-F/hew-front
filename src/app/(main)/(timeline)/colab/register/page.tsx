@@ -8,7 +8,8 @@ import {Api} from "~/api/context/Api";
 import {useState} from "react";
 
 import useRoutes from "~/route/useRoutes";
-import {CreatorRes} from "~/hooks/useCreatorData";
+import {CreatorRes} from "~/res/reses";
+
 
 
 export default function ColabRegisterpage(
