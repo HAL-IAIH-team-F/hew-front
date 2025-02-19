@@ -31,7 +31,7 @@ export default function Notification(
   }
 
   return (
-      <div key={notification.notification_id} className="bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-700/50">
+      <div key={notification.notification_id} className="bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-700/50" >
         <div className="flex items-center gap-4">
           {/* Notification Details */}
           <div className="flex-grow">

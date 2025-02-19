@@ -6,6 +6,8 @@ import {NotificationRes} from "@/(main)/(timeline)/notification/NotificationRes"
 import {Api} from "~/api/context/Api";
 import Notification from "@/(main)/(timeline)/notification/Notification";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
+import { Search } from "lucide-react";
+import { FaBell } from "react-icons/fa";
 
 export default function Page(
     {}: {}
@@ -29,12 +31,21 @@ export default function Page(
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       {/* Header */}
-      <div className="bg-gray-800 py-4 shadow-md">
-        <h1 className="text-2xl font-bold text-center">通知一覧</h1>
+      <div className="top-0 left-0 w-full bg-gray-900 text-gray-100 px-7 py-5 flex items-center gap-2 shadow-md">
+        <FaBell className="w-8 h-8" />
+        <span className="text-3xl font-bold">通知</span>
       </div>
 
+
+
       {/* Notifications Section */}
-      <div className="overflow-y-scroll max-h-screen px-4 py-6">
+      <div className="overflow-y-scroll max-h-screen px-4 py-6" style={{
+            height: "calc(100vh - 0px)",
+            maxHeight: "calc(100vh - 200px)",
+            boxSizing: "border-box",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}>
         {notifications && notifications.length > 0 ? (
           <div className="space-y-4">
             {notifications.map((value) => (

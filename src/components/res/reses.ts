@@ -17,6 +17,7 @@ export interface UserData {
   name: string
   screen_id: string
   icon: ImgRes | null
+  user_id: string,
 }
 
 export interface CreatorRes {

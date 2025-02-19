@@ -4,6 +4,9 @@ import {useUserData} from "~/api/context/useUserData";
 import Image from "../../../../../util/Image";
 import CollaborationButton from "@/(main)/(timeline)/account/[userId]/_profile/AccountCard/CollaborationButton";
 import {ProductsGrid} from "@/(main)/(timeline)/account/[userId]/_profile/AccountCard/ProductGrid";
+import { CreatorIconView } from "~/products/ProfileProductsView";
+import { IconCard } from "~/Icon/IconCard";
+import { FullScreenLoader } from "~/loadingUI/FullSceenLoader";
 
 
 export function AccountCard(
@@ -37,34 +40,23 @@ export function AccountCard(
   }, [activeTab]);
 
   return (
+    <div>
+      { user ? (
       <div className="flex flex-col h-screen bg-gray-900 text-gray-100">
         {/* ヘッダー */}
-        <div
-            className="w-full h-48 bg-gradient-to-b from-gray-800 to-gray-900 flex flex-col items-center justify-center">
-          {user && user.icon ? (
-              <div className="flex flex-col items-center">
-                <div className="rounded-full">
-                  <Image
-                      alt="User Icon"
-                      src={user.icon.strUrl()}
-                      className="w-24 h-24 rounded-full object-contain border-4 border-gray-700"
-                  />
-                </div>
-                <div className="mt-3 text-lg font-semibold">{user.name}</div>
-                <div className="text-sm text-gray-400">@{user.screen_id}</div>
+        <div>
+              <div style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
+                top: "10%",
+                left: "50px",
+                margin: "30px",
+                transform: "scale(1.3)" // 拡大
+              }}>
+                <IconCard userData={user} />
               </div>
-          ) : (
-              <div className="flex flex-col items-center">
-                <Image
-                    alt="Default Icon"
-                    src="/icon.png"
-                    className="w-24 h-24 rounded-full object-cover border-4 border-gray-700"
-                />
-                <div className="mt-3 text-lg font-semibold">ログインしていません</div>
-                <div className="text-sm text-gray-400">error</div>
-              </div>
-          )}
-
         </div>
         <CollaborationButton userInfo={user}/>
 
@@ -108,5 +100,9 @@ export function AccountCard(
           )}
         </div>
       </div>
+      ) : (
+        <FullScreenLoader/>
+      )}
+    </div>
   );
 }

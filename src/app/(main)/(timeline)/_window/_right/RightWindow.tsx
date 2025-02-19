@@ -6,6 +6,7 @@ import useProductId from "~/products/useProductId";
 import RightWindowProduct from "@/(main)/(timeline)/_window/_right/RightWindowProduct";
 import useRoutes from '~/route/useRoutes';
 import { Key, X } from 'lucide-react';
+import { FullScreenLoader } from '~/loadingUI/FullSceenLoader';
 
 const RightWindow: React.FC = () => {
   const productId = useProductId()
@@ -43,7 +44,9 @@ const RightWindow: React.FC = () => {
           <RightWindowProduct product={productState.product} key={productState.product.product_id}/>
         </div>
       ) : (
-        <p style={styles.noProductsMessage}>現在、商品はありません。</p>
+        <div className="rounded">
+          <FullScreenLoader/>
+        </div>
       )}
     </div>
   );

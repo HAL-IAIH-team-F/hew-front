@@ -10,6 +10,7 @@ import { useClientState } from "~/api/context/ClientContextProvider";
 import { ErrorData } from "../../util/err/err";
 import useProducts from "~/hooks/useProducts";
 import { Trash2, MinusCircle, PlusCircle, ShoppingCart } from 'lucide-react';
+import useProduct from "~/hooks/useProduct";
 
 const notificationStyle = {
   container: {
@@ -364,24 +365,24 @@ export const usePurchaseYesNo = (): [JSX.Element | null, () => void, JSX.Element
 };
 
 const ProductList: React.FC<ProductListProps> = ({ productId }) => {
-  const { products } = useProducts({ productId });
-
-  if (!products.length) {
-    return <div className="p-4 text-gray-500 text-center">商品が見つかりませんでした</div>;
-  }
-
+  const productState = useProduct(productId);
+    if (productState.state !== "success") {
+      return (
+        <div className="p-4 text-gray-400 text-center">
+          商品が見つかりませんでした
+        </div>
+      );
+    }
   return (
     <>
-      {products.map(({ product_id, product_thumbnail_uuid, product_title, product_price }) => (
-        <div key={product_id} className="p-4 flex items-center gap-4">
-          <div className="w-32 h-32 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 relative">
-            <ProductThumbnail product_thumbnail_uuid={product_thumbnail_uuid} />
-          </div>
-          <div className="flex-grow">
-            <h3 className="text-lg font-medium text-white-900 mb-1">{product_title}</h3>
-          </div>
+      <div key={productState.product.product_id} className="p-4 flex items-center gap-4">
+        <div className="w-32 h-32 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 relative">
+          <ProductThumbnail product_thumbnail_uuid={productState.product.product_thumbnail_uuid} />
         </div>
-      ))}
+        <div className="flex-grow">
+          <h3 className="text-lg font-medium text-white-900 mb-1">{productState.product.product_title}</h3>
+        </div>
+      </div>
     </>
   );
 };

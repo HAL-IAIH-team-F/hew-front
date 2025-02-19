@@ -43,6 +43,7 @@ const CartPage = () => {
       if (value.error) return setErr(value.error);
       if (typeof value.success == "string") return setErr("no cart");
       if (value.success.product_ids.length === 0)  return setErr("no cart");
+      console.log("cart",value.success)
       setCart(value.success);
     });
   }, [clientState.state]);
@@ -117,9 +118,9 @@ const CartPage = () => {
   );
 };
 
-const ProductList: React.FC<ProductListProps> = ({ productId}) => {
-  const {products, error} = useProducts({productId});
-  if (products.length == 0) {
+const ProductList: React.FC<ProductListProps> = ({ productId }) => {
+  const productState = useProduct(productId);
+  if (productState.state !== "success") {
     return (
       <div className="p-4 text-gray-400 text-center">
         商品が見つかりませんでした
@@ -128,15 +129,14 @@ const ProductList: React.FC<ProductListProps> = ({ productId}) => {
   }
   return (
     <>
-      {products.map((product) => (
-        <div key={product.product_id} className="p-4 hover:bg-gray-700/50">
+        <div key={productState.product.product_id} className="p-4 hover:bg-gray-700/50">
           <div className="flex items-center gap-4">
             {/* Product Image */}
             <div className="w-32 h-32 bg-gray-700 rounded-md overflow-hidden flex-shrink-0 relative">
               <div className="absolute top-0 left-0 w-full h-full">
                 <div className="w-full h-full object-cover">
                 <ProductThumbnail
-                  product_thumbnail_uuid={product.product_thumbnail_uuid}
+                  product_thumbnail_uuid={productState.product.product_thumbnail_uuid}
                 />
                 </div>
               </div>
@@ -145,10 +145,10 @@ const ProductList: React.FC<ProductListProps> = ({ productId}) => {
             {/* Product Details */}
             <div className="flex-grow">
               <h3 className="text-lg font-medium text-gray-100 mb-1">
-                {product.product_title}
+                {productState.product.product_title}
               </h3>
               <div className="text-xl font-bold text-red-400 mb-2">
-                {product.product_price.toLocaleString()}円
+                {productState.product.product_price.toLocaleString()}円
               </div>
 
               {/* Action Buttons */}
@@ -170,7 +170,6 @@ const ProductList: React.FC<ProductListProps> = ({ productId}) => {
             </div>
           </div>
         </div>
-      ))}
     </>
   );
 };

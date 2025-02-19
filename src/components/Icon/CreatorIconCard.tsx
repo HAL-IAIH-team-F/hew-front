@@ -1,6 +1,7 @@
 import {IconCard} from "~/Icon/IconCard";
 import useCreatorData from "~/hooks/useCreatorData";
 import {useEffect} from "react";
+import useRoutes from "~/route/useRoutes";
 
 export default function CreatorIconCard(
     {
@@ -15,13 +16,17 @@ export default function CreatorIconCard(
   const [_, user_data, __] = useCreatorData(creator_id);
   const iconUrl = user_data?.icon ? user_data.icon.strUrl() : null;
   const screenId = user_data?.screen_id;
-
+  const routes = useRoutes();
   useEffect(() => {
     if (onDataFetched) {
       onDataFetched({iconUrl, screenId});
     }
   }, [iconUrl, screenId, onDataFetched]);
   return (
-      <IconCard userData={user_data}/>
+      <div
+        onClick={(event) => routes.accountRoutes.account(user_data?.user_id).transition(event)}
+      >
+        <IconCard userData={user_data}/>
+      </div>
   )
 }
