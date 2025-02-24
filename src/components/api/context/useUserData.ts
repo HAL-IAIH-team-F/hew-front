@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {Api, Img} from './Api';
 import {ErrorIds} from '../../../util/err/errorIds';
 import {useClientState} from './ClientContextProvider';
-import {RegisteredClientState} from "~/api/context/ClientState";
+import {LoadedClientState} from "~/api/context/ClientState";
 import {UserResWithImg} from "~/res/reses";
 
 export function useUserData(userId: string | undefined = undefined) {
@@ -11,16 +11,24 @@ export function useUserData(userId: string | undefined = undefined) {
   const context = useClientState();
 
   useEffect(() => {
-    if (context.state != "registered") {
+    console.debug("useUserData", context.state)
+    if (context.state == "loading") {
       setUser(undefined);
       return
     }
+    if (userId == undefined) {
+      if (context.state != "registered") {
+        console.debug("useUserData userId is undefined but state is not registered")
+        return;
+      }
+      userId = context.user.user_id;
+    }
     fetchUserData(userId, context).then(value => setUser(value));
-  }, [context, context.state]);
+  }, [context, context.state, userId]);
   return user;
 }
 
-async function fetchUserData(userId: string | undefined, context: RegisteredClientState): Promise<UserResWithImg | undefined> {
+async function fetchUserData(userId: string, context: LoadedClientState): Promise<UserResWithImg | undefined> {
   const user = await fetchUser(userId, context);
   if (!user) return undefined;
   if (user.icon) {
@@ -41,10 +49,9 @@ async function fetchUserData(userId: string | undefined, context: RegisteredClie
   }
 }
 
-async function fetchUser(userId: string | undefined, context: RegisteredClientState) {
-  if (userId == undefined) return context.user
-  if (context.user.user_id == userId) return context.user
-  const result = await context.client.auth(
+async function fetchUser(userId: string, context: LoadedClientState) {
+  if (context.state == "registered" && context.user.user_id == userId) return context.user
+  const result = await context.client.unAuthOrAuth(
       Api.app.get_user____api_user__user_id__get, {}, {user_id: userId}
   )
   if (!result.success) {

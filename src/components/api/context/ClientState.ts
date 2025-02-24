@@ -14,18 +14,18 @@ export type ClientState =
     | RegisteredClientState;
 
 export function newLoadingClientState(idToken: IdTokenState): LoadingClientState {
-    return {
-        state: "loading",
-        client: new UnAuthClient(),
-        idToken: idToken,
-        loaded: false,
-    }
+  return {
+    state: "loading",
+    client: new UnAuthClient(),
+    idToken: idToken,
+    loaded: false,
+  }
 }
 
 interface LoadingClientState extends ClientStateBase {
-    state: "loading",
-    client: Client,
-    loaded: false
+  state: "loading",
+  client: Client,
+  loaded: false
 }
 
 export function newUnregisteredClientState(
@@ -33,27 +33,27 @@ export function newUnregisteredClientState(
     signOut: () => void, token: TokenBundle, idToken: AuthIdTokenState,
     set: (state: ClientState) => void,
 ): UnregisteredClientState {
-    return {
-        state: "unregistered",
-        client: new AuthClient(token.access.token),
-        oidcContext: oidcContext,
-        setIdToken: setIdToken,
-        signOut: signOut,
-        token: token,
-        idToken: idToken,
-        loaded: true,
-        set,
-    }
+  return {
+    state: "unregistered",
+    client: new AuthClient(token.access.token),
+    oidcContext: oidcContext,
+    setIdToken: setIdToken,
+    signOut: signOut,
+    token: token,
+    idToken: idToken,
+    loaded: true,
+    set,
+  }
 }
 
-interface UnregisteredClientState extends LoadedClientState {
-    state: "unregistered",
-    client: AuthClient,
-    oidcContext: OidcContext,
-    setIdToken: (idToken: IdTokenState) => void,
-    signOut: () => void,
-    token: TokenBundle,
-    idToken: AuthIdTokenState,
+interface UnregisteredClientState extends AbstractLoadedClientState {
+  state: "unregistered",
+  client: AuthClient,
+  oidcContext: OidcContext,
+  setIdToken: (idToken: IdTokenState) => void,
+  signOut: () => void,
+  token: TokenBundle,
+  idToken: AuthIdTokenState,
 }
 
 export function newRegisteredClientState(
@@ -61,59 +61,62 @@ export function newRegisteredClientState(
     signOut: () => void, token: TokenBundle, idToken: AuthIdTokenState, user: SelfUserRes,
     set: (state: ClientState) => void,
 ): RegisteredClientState {
-    return {
-        state: "registered",
-        client: new AuthClient(token.access.token),
-        oidcContext: oidcContext,
-        setIdToken: setIdToken,
-        signOut: signOut,
-        idToken: idToken,
-        token: token,
-        user: user,
-        loaded: true,
-        set,
-    }
+  return {
+    state: "registered",
+    client: new AuthClient(token.access.token),
+    oidcContext: oidcContext,
+    setIdToken: setIdToken,
+    signOut: signOut,
+    idToken: idToken,
+    token: token,
+    user: user,
+    loaded: true,
+    set,
+  }
 }
 
-export interface RegisteredClientState extends LoadedClientState {
-    state: "registered",
-    client: AuthClient,
-    oidcContext: OidcContext,
-    setIdToken: (idToken: IdTokenState) => void,
-    signOut: () => void,
-    idToken: AuthIdTokenState,
-    token: TokenBundle,
-    user: SelfUserRes
+export interface RegisteredClientState extends AbstractLoadedClientState {
+  state: "registered",
+  client: AuthClient,
+  oidcContext: OidcContext,
+  setIdToken: (idToken: IdTokenState) => void,
+  signOut: () => void,
+  idToken: AuthIdTokenState,
+  token: TokenBundle,
+  user: SelfUserRes
 }
 
 export function newUnAuthClientState(
     oidcContext: OidcContext, setIdToken: (idToken: IdTokenState) => void, idToken: IdTokenState,
     set: (state: ClientState) => void,
 ): UnAuthClientState {
-    return {
-        state: "unauthenticated",
-        client: new UnAuthClient(),
-        oidcContext: oidcContext,
-        setIdToken: setIdToken,
-        idToken: idToken,
-        loaded: true,
-        set,
-    }
-}
-
-interface UnAuthClientState extends LoadedClientState {
+  return {
     state: "unauthenticated",
-    client: UnAuthClient,
-    oidcContext: OidcContext,
-    setIdToken: (idToken: IdTokenState) => void,
+    client: new UnAuthClient(),
+    oidcContext: oidcContext,
+    setIdToken: setIdToken,
+    idToken: idToken,
+    loaded: true,
+    set,
+  }
 }
 
-export interface LoadedClientState extends ClientStateBase {
-    loaded: true,
-    set: (state: ClientState) => void,
-    client: LoadedClient,
+interface UnAuthClientState extends AbstractLoadedClientState {
+  state: "unauthenticated",
+  client: UnAuthClient,
+  oidcContext: OidcContext,
+  setIdToken: (idToken: IdTokenState) => void,
+}
+
+export type LoadedClientState = UnAuthClientState | RegisteredClientState | UnregisteredClientState
+
+interface AbstractLoadedClientState extends ClientStateBase {
+  loaded: true,
+  set: (state: ClientState) => void,
+  client: LoadedClient,
 }
 
 interface ClientStateBase {
-    idToken: IdTokenState
+  idToken: IdTokenState
+  state: string
 }

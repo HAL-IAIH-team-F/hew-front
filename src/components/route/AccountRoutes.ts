@@ -32,6 +32,6 @@ export class AccountRoutes {
       return `/account/${userId}`
     if (this.loginUser != undefined)
       return `/account/${this.loginUser.user_id}`
-    return `/account/empty`
+    return `/account`
   }
 }
