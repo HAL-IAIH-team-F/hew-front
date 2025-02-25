@@ -21,6 +21,7 @@ import useRoutes from "~/route/useRoutes";
 import {Image, LoaderIcon, Send, Users} from 'lucide-react';
 import {Dialog} from "@headlessui/react";
 import {CreatorRes} from "~/res/reses";
+import LoginNeed from "~/UI/loginNeed";
 
 async function action(
     formData: StyledFormData, clientContext: ClientState, router: AppRouterInstance, creators: CreatorRes[], routes: Routes
@@ -95,7 +96,13 @@ export default function ProductListingForm() {
     await action(formData, clientContext, router, creators, routes);
     setIsSubmitting(false); // 出品処理完了後に解除
   }
-
+  if (clientContext.state !== "registered") {
+      return (
+          <div>
+            <LoginNeed/>
+          </div>
+      )
+  }
   return (
       <div className="flex-1 flex-grow overflow-y-auto transition-all duration-300 ease-out bg-gray-900">
         <div className="min-h-screen bg-gray-900 h-full">

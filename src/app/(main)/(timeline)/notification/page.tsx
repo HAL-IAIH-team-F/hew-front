@@ -8,6 +8,7 @@ import Notification from "@/(main)/(timeline)/notification/Notification";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
 import { Search } from "lucide-react";
 import { FaBell } from "react-icons/fa";
+import LoginNeed from "~/UI/loginNeed";
 
 export default function Page(
     {}: {}
@@ -27,7 +28,13 @@ export default function Page(
       setNotifications(value.success);
     });
   }, [clientContext.state]);
-
+  if (clientContext.state !== "registered") {
+        return (
+            <div>
+              <LoginNeed/>
+            </div>
+        )
+    }
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       {/* Header */}
