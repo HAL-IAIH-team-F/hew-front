@@ -1,4 +1,4 @@
-export interface ChatMessageRes {
+export interface ChatMessagesRes {
   chat_id: string
   messages: MessageRes[]
 }

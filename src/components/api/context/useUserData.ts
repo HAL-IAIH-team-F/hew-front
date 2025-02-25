@@ -3,61 +3,55 @@ import {useEffect, useState} from 'react';
 import {Api, Img} from './Api';
 import {ErrorIds} from '../../../util/err/errorIds';
 import {useClientState} from './ClientContextProvider';
-import {RegisteredClientState} from "~/api/context/ClientState";
-
-export interface UserData {
-  id: string;
-  name: string;
-  icon: Img | undefined
-  creator_data: {
-    creator_id: string,
-    contact_address: string
-  } | null | undefined
-}
+import {LoadedClientState} from "~/api/context/ClientState";
+import {UserResWithImg} from "~/res/reses";
 
 export function useUserData(userId: string | undefined = undefined) {
-  const [user, setUser] = useState<UserData>();
+  const [user, setUser] = useState<UserResWithImg>();
   const context = useClientState();
 
   useEffect(() => {
-    if (context.state != "registered") {
+    console.debug("useUserData", context.state)
+    if (context.state == "loading") {
       setUser(undefined);
       return
     }
+    if (userId == undefined) {
+      if (context.state != "registered") {
+        console.debug("useUserData userId is undefined but state is not registered")
+        return;
+      }
+      userId = context.user.user_id;
+    }
     fetchUserData(userId, context).then(value => setUser(value));
-  }, [context, context.state]);
-  return {user};
+  }, [context, context.state, userId]);
+  return user;
 }
 
-async function fetchUserData(userId: string | undefined, context: RegisteredClientState): Promise<UserData | undefined> {
+async function fetchUserData(userId: string, context: LoadedClientState): Promise<UserResWithImg | undefined> {
   const user = await fetchUser(userId, context);
   if (!user) return undefined;
   if (user.icon) {
     const imgResult = await Img.create(user.icon.image_uuid, user.icon.token);
     if (imgResult.error) {
-      console.error(`${imgResult.error.error_id}: ${imgResult.error.message}`);
+      // console.error(${imgResult.error.error_id}: ${imgResult.error.message});
       return undefined
     }
     return {
-      id: user.screen_id,
-      name: user.name,
+      ...user,
       icon: imgResult.success,
-      creator_data: user.creator_data
     }
 
   }
   return {
-    id: user.screen_id,
-    name: user.name,
+    ...user,
     icon: undefined,
-    creator_data: user.creator_data
   }
 }
 
-async function fetchUser(userId: string | undefined, context: RegisteredClientState) {
-  if (userId == undefined) return context.user
-  if (context.user.user_id == userId) return context.user
-  const result = await context.client.auth(
+async function fetchUser(userId: string, context: LoadedClientState) {
+  if (context.state == "registered" && context.user.user_id == userId) return context.user
+  const result = await context.client.unAuthOrAuth(
       Api.app.get_user____api_user__user_id__get, {}, {user_id: userId}
   )
   if (!result.success) {

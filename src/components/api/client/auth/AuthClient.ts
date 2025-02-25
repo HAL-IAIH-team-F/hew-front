@@ -28,6 +28,7 @@ export class AuthClient extends LoadedClient {
   async authBody<F extends BodiedFunc>(
     func: F, opt: BodiedParamsLessOpt<F>, body: ApiBody<F>, params: BodiedParams<F>
   ): Promise<Result<Res<F>>> {
+    // console.debug("authBody", func, opt, body, params)
     return this.bodiedClient.authBody(func, opt, body, params)
   }
 

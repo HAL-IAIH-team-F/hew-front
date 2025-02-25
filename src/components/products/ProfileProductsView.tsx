@@ -22,10 +22,10 @@ export default function ProfileProductsView({}: ProductPageProps) {
       const width = window.innerWidth; // ウィンドウ幅を取得
       console.log("a", width)
 
-      if (openedProductId != undefined){
+      if (openedProductId != undefined) {
         if (width >= 1480) return setColumns(2);
         if (width >= 1080) return setColumns(1);
-      }else{
+      } else {
         if (width <= 1000) return setColumns(1);
         if (width <= 1480) return setColumns(2);
       }
@@ -37,76 +37,76 @@ export default function ProfileProductsView({}: ProductPageProps) {
   }, [openedProductId != undefined]);
 
   return (
-    <div style={styles.container} className={"overflow-y-scroll h-full"}>
-      <ErrorMessage error={error}/>
-      <div style={styles.gridContainer}>
-        {products.length > 0 ? (
-          <div
-            style={{
-              ...styles.grid,
-              gridTemplateColumns: `repeat(${columns}, 1fr)`, // 列数を動的に設定
-            }}
-
-          >
-            {products.map((product) => {
-              const isHovered = hoveredCard === product.product_id; // カードがホバーされているか
-              return (
-                <div
-                  key={product.product_id}
+      <div style={styles.container} className={"overflow-y-scroll h-full"}>
+        <ErrorMessage error={error}/>
+        <div style={styles.gridContainer}>
+          {products.length > 0 ? (
+              <div
                   style={{
-                    ...styles.card,
-                    ...(isHovered && styles.cardHover), // ホバー時のスタイルを適用
+                    ...styles.grid,
+                    gridTemplateColumns: `repeat(${columns}, 1fr)`, // 列数を動的に設定
                   }}
 
-                  onMouseEnter={() => setHoveredCard(product.product_id)} // ホバー開始
-                  onMouseLeave={() => setHoveredCard(null)} // ホバー終了
-                  onClick={
-                    event =>
-                      routes.account.account().setProductId(product.product_id).transition(event)
-                  }
-                >
+              >
+                {products.map((product) => {
+                  const isHovered = hoveredCard === product.product_id; // カードがホバーされているか
+                  return (
+                      <div
+                          key={product.product_id}
+                          style={{
+                            ...styles.card,
+                            ...(isHovered && styles.cardHover), // ホバー時のスタイルを適用
+                          }}
 
-                  <div style={styles.descriptionOverlay}>
-                    <h2 style={styles.title}>
-                      {product.product_title}
+                          onMouseEnter={() => setHoveredCard(product.product_id)} // ホバー開始
+                          onMouseLeave={() => setHoveredCard(null)} // ホバー終了
+                          onClick={
+                            event =>
+                                routes.accountRoutes.account().setProductId(product.product_id).transition(event)
+                          }
+                      >
 
-                    </h2>
-                    <div style={styles.rightdescription}>
-                      <div style={styles.price}>
-                        <strong>{product.product_price} 円</strong>
+                        <div style={styles.descriptionOverlay}>
+                          <h2 style={styles.title}>
+                            {product.product_title}
+
+                          </h2>
+                          <div style={styles.rightdescription}>
+                            <div style={styles.price}>
+                              <strong>{product.product_price} 円</strong>
+                            </div>
+                          </div>
+                          {product.creator_ids.map((id) => (
+                              <div key={id} style={styles.creator_data}>
+                                <CreatorIcon creator_id={id} showView={true}/>
+                              </div>
+                          ))}
+
+                        </div>
+                        <div style={styles.thumbnailWrapper}>
+                          <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>
+                        </div>
                       </div>
-                    </div>
-                    {product.creator_ids.map((id) => (
-                      <div key={id} style={styles.creator_data}>
-                        <CreatorIcon creator_id={id} showView={true}/>
-                      </div>
-                    ))}
-                    
-                  </div>
-                  <div style={styles.thumbnailWrapper}>
-                    <ProductThumbnail product_thumbnail_uuid={product.product_thumbnail_uuid}/>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div style={styles.noProducts}>商品が見つかりません。</div>
-        )}
+                  );
+                })}
+              </div>
+          ) : (
+              <div style={styles.noProducts}>商品が見つかりません。</div>
+          )}
+        </div>
       </div>
-    </div>
   );
 }
 
 interface CreatorDataProps {
   creator_id: string;
   showView?: boolean; // trueならViewを表示、falseならデータのみ取得
-  onDataFetched?: (data: { iconUrl: string | null; screenId?: string}) => void;
+  onDataFetched?: (data: { iconUrl: string | null; screenId?: string }) => void;
 }
 
 
-export function CreatorIcon({creator_id, showView = true, onDataFetched }: CreatorDataProps) {
-  const [_, user_data, __] = useCreatorData({creator_id});
+export function CreatorIcon({creator_id, showView = true, onDataFetched}: CreatorDataProps) {
+  const [_, user_data, __] = useCreatorData(creator_id);
   const iconUrl = user_data?.icon ? (user_data.icon as any).strUrl() : null;
   const screenId = user_data?.screen_id;
 
@@ -122,8 +122,8 @@ export function CreatorIcon({creator_id, showView = true, onDataFetched }: Creat
   return <CreatorIconView iconUrl={iconUrl}/>;
 }
 
-export function CreatorScreenId({creator_id, showView = true }: CreatorDataProps) {
-  const [_, user_data, __] = useCreatorData({creator_id});
+export function CreatorScreenId({creator_id, showView = true}: CreatorDataProps) {
+  const [_, user_data, __] = useCreatorData(creator_id);
   const screenId = user_data?.screen_id;
 
   if (!showView) return null;
@@ -131,87 +131,28 @@ export function CreatorScreenId({creator_id, showView = true }: CreatorDataProps
   return screenId;
 }
 
-export function CreatorCard({creator_id, onDataFetched}: CreatorDataProps) {
-  const [_, user_data, __] = useCreatorData({creator_id});
-  const iconUrl = user_data?.icon ? (user_data.icon as any).strUrl() : null;
-  const screenId = user_data?.screen_id;
-  const name = user_data?.name;
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    if (onDataFetched) {
-      onDataFetched({iconUrl, screenId});
-    }
-  }, [iconUrl, screenId, onDataFetched]);
-
-  return (
-    <div className="w-60 p-1 rounded-lg bg-gray-900">
-      <div className="flex items-center gap-4">
-        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-900 flex items-center justify-center">
-            {iconUrl && !error ? (
-            <img
-              src={iconUrl}
-              alt={name || "User Icon"}
-              className="w-full h-full object-cover"
-              onLoad={() => setLoading(false)}
-              onError={() => {
-                setLoading(false);
-                setError(true);
-              }}
-            />
-          ) : loading || error ? (
-            // くるくるスピナー
-            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-gray-500 dark:border-gray-400"></div>
-          ) : (
-            // デフォルトのアイコン
-            <div className="w-6 h-6 text-gray-400">
-              <div className="w-full h-full rounded-full border-2 border-gray-400 flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full border-2 border-gray-400 -mt-1" />
-              </div>
-            </div>
-          )}
-        </div>
-        
-        <div className="flex flex-col">
-          {name && (
-            <h3 className="font-medium text-lg text-white">
-              {name}
-            </h3>
-          )}
-          {screenId && (
-            <p className="text-sm text-gray-400">
-              @{screenId}
-            </p>
-          )}
-        </div>
-        
-      </div>
-    </div>
-  );
-}
 
 interface CreatorDataViewProps {
   iconUrl: string | null;
 }
 
-export function CreatorIconView({ iconUrl }: CreatorDataViewProps) {
+export function CreatorIconView({iconUrl}: CreatorDataViewProps) {
   return (
-    <div>
-      {iconUrl ? (
-        <>
-          <Image
-            alt="User Icon"
-            src={iconUrl}
-            width={33}
-            height={33}
-            style={styles.userIcon}
-          />
-        </>
-      ) : (
-        <div>No Icon</div>
-      )}
-    </div>
+      <div>
+        {iconUrl ? (
+            <>
+              <Image
+                  alt="User Icon"
+                  src={iconUrl}
+                  width={33}
+                  height={33}
+                  style={styles.userIcon}
+              />
+            </>
+        ) : (
+            <div>No Icon</div>
+        )}
+      </div>
   );
 }
 
@@ -223,7 +164,7 @@ const styles: { [key: string]: CSSProperties } = {
     alignItems: "center",
     padding: "20px",
     fontFamily:
-      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
     scrollbarWidth: "none", // Firefox のスクロールバー非表示
     msOverflowStyle: "none", // IE, Edge のスクロールバー非表示
     maxHeight: "calc(100vh - 570px)", // 親要素の高さを制限

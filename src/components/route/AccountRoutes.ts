@@ -1,10 +1,10 @@
 import {TimelinePageRouteUrl} from "~/route/TimelinePageRouteUrl";
-import {UserRes} from "~/res/UserRes";
+import {SelfUserRes} from "~/res/reses";
 import {Routes} from "~/route/Routes";
 
 export class AccountRoutes {
   constructor(
-      readonly loginUser: undefined | UserRes,
+      readonly loginUser: undefined | SelfUserRes,
       readonly routes: Routes
   ) {
   }
@@ -32,6 +32,6 @@ export class AccountRoutes {
       return `/account/${userId}`
     if (this.loginUser != undefined)
       return `/account/${this.loginUser.user_id}`
-    return `/account/empty`
+    return `/account`
   }
 }

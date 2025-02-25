@@ -2,7 +2,7 @@ import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-
 import {TimelineRouteUrl} from "~/route/TimelineRouteUrl";
 import {TimelinePageRouteUrl} from "~/route/TimelinePageRouteUrl";
 import {RouteUrl} from "~/route/RouteUrl";
-import {UserRes} from "~/res/UserRes";
+import {SelfUserRes} from "~/res/reses";
 import {AccountRoutes} from "~/route/AccountRoutes";
 import {ColabRoutes} from "~/route/ColabRoutes";
 
@@ -14,7 +14,7 @@ export class Routes {
       readonly prevParams: URLSearchParams,
       readonly currentPath: string,
       readonly router: AppRouterInstance,
-      loginUser: undefined | UserRes,
+      loginUser: undefined | SelfUserRes,
   ) {
     this.account = new AccountRoutes(loginUser, this)
     this.colab = new ColabRoutes(loginUser, this)

@@ -21,15 +21,6 @@ const HTTPValidationError = z
 const PostChatMessageBody = z
   .object({ message: z.string(), images: z.array(z.string().uuid()) })
   .passthrough();
-const ChatMessageRes = z
-  .object({
-    chat_id: z.string().uuid(),
-    chat_message_id: z.string().uuid(),
-    index: z.number().int(),
-    message: z.string(),
-    images: z.array(z.string().uuid()),
-  })
-  .passthrough();
 const MessageRes = z
   .object({
     chat_message_id: z.string().uuid(),
@@ -54,6 +45,9 @@ const PostCollaboBody = z
   .passthrough();
 const PostColabApproveBody = z
   .object({ colab_id: z.string().uuid() })
+  .passthrough();
+const PostColabWantBody = z
+  .object({ target_creator_id: z.string().uuid() })
   .passthrough();
 const File = z
   .object({
@@ -80,7 +74,12 @@ const PostCreatorBody = z
   .object({ contact_address: z.string(), transfer_target: z.string() })
   .passthrough();
 const UserFollow = z.object({ creator_id: z.string().uuid() }).passthrough();
-const NotificationType = z.enum(["colab_request", "colab_approve", "colab"]);
+const NotificationType = z.enum([
+  "colab_request",
+  "colab_want",
+  "colab_approve",
+  "colab",
+]);
 const ColabNotificationData = z
   .object({
     notification_type: NotificationType,
@@ -106,10 +105,18 @@ const ColabApproveNotificationData = z
     colab_creator_id: z.string().uuid(),
   })
   .passthrough();
+const ColabWantNotificationData = z
+  .object({
+    notification_type: NotificationType,
+    colab_want_id: z.string().uuid(),
+    from_creator_id: z.string().uuid(),
+  })
+  .passthrough();
 const NotificationData = z.union([
   ColabNotificationData,
   ColabRequestNotificationData,
   ColabApproveNotificationData,
+  ColabWantNotificationData,
 ]);
 const NotificationRes = z
   .object({ notification_id: z.string().uuid(), data: NotificationData })
@@ -174,8 +181,8 @@ const ProductRes = z
     purchase_info: z.union([PurchaseInfo, z.null()]),
   })
   .passthrough();
-const name = z.union([z.array(z.string()), z.null()]).optional();
-const start_datetime = z.union([z.string(), z.null()]).optional();
+const name = z.union([z.string(), z.null()]).optional();
+const tag = z.union([z.array(z.string()), z.null()]).optional();
 const following = z.union([z.boolean(), z.null()]).optional();
 const limit = z.union([z.number(), z.null()]).optional().default(20);
 const OrderDirection = z.enum(["asc", "desc"]);
@@ -233,12 +240,12 @@ export const schemas = {
   ValidationError,
   HTTPValidationError,
   PostChatMessageBody,
-  ChatMessageRes,
   MessageRes,
   ChatMessagesRes,
   PostColabRequestBody,
   PostCollaboBody,
   PostColabApproveBody,
+  PostColabWantBody,
   File,
   UserData,
   CreatorResponse,
@@ -248,6 +255,7 @@ export const schemas = {
   ColabNotificationData,
   ColabRequestNotificationData,
   ColabApproveNotificationData,
+  ColabWantNotificationData,
   NotificationData,
   NotificationRes,
   CartRes,
@@ -261,7 +269,7 @@ export const schemas = {
   PurchaseInfo,
   ProductRes,
   name,
-  start_datetime,
+  tag,
   following,
   limit,
   OrderDirection,
@@ -380,7 +388,7 @@ const endpoints = makeApi([
         schema: z.string().uuid(),
       },
     ],
-    response: ChatMessageRes,
+    response: MessageRes,
     errors: [
       {
         status: 422,
@@ -462,6 +470,29 @@ const endpoints = makeApi([
         name: "body",
         type: "Body",
         schema: z.object({ recruit_id: z.string().uuid() }).passthrough(),
+      },
+    ],
+    response: z.unknown(),
+    errors: [
+      {
+        status: 422,
+        description: `Validation Error`,
+        schema: HTTPValidationError,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/api/colab/want",
+    alias: "post_colab_want___api_colab_want_post",
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: z
+          .object({ target_creator_id: z.string().uuid() })
+          .passthrough(),
       },
     ],
     response: z.unknown(),
@@ -564,7 +595,7 @@ const endpoints = makeApi([
       {
         name: "tag",
         type: "Query",
-        schema: name,
+        schema: tag,
       },
       {
         name: "post_by",
@@ -574,12 +605,12 @@ const endpoints = makeApi([
       {
         name: "start_datetime",
         type: "Query",
-        schema: start_datetime,
+        schema: name,
       },
       {
         name: "end_datetime",
         type: "Query",
-        schema: start_datetime,
+        schema: name,
       },
       {
         name: "following",
@@ -666,7 +697,7 @@ const endpoints = makeApi([
       {
         name: "name",
         type: "Query",
-        schema: name,
+        schema: tag,
       },
     ],
     response: z.array(RecruitRes),

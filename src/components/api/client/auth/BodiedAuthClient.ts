@@ -21,6 +21,7 @@ export class BodiedAuthClient {
       if (!token) return Results.errResultByReason("token is undefined", ErrorIds.UnknownError)
       opt.headers.Authorization = `Bearer ${token}`
     }
+    // console.debug("authBody", func, opt, body, params)
     return await func(body, {...opt, params: params}).then(value => Results.createSuccessResult(value))
       .catch(reason => {
         return Results.errResultByReason(reason, ErrorIds.ApiError)
