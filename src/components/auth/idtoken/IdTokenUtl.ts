@@ -1,4 +1,4 @@
-import handleCallbackEvent from "@/auth/callback/[mode]/handleCallbackEvent";
+import handleCallbackEvent from "@/(func)/auth/callback/[mode]/handleCallbackEvent";
 import {
   AuthenticationImplicitFlowUrl
 } from "~/auth/keycloak/api/internal/authentication/implicit-flow/AuthenticationImplicitFlowUrl";

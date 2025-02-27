@@ -2,7 +2,7 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import {ReactNode} from "react";
-import {ModalProvider} from "~/modal/Modal";
+import {LoginModalProvider} from "~/modal/LoginModal";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -19,12 +19,10 @@ export default function RootLayout(
     }>) {
   return (
       <html lang="ja">
-        <body className={inter.className + " bg-backcolor"}>
-          {/*<SessionProvider>*/}
-          <ModalProvider>
+        <body className={inter.className}>
+          <LoginModalProvider>
             {children}
-          </ModalProvider>
-          {/*</SessionProvider>*/}
+          </LoginModalProvider>
         </body>
       </html>
   );

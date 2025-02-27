@@ -1,8 +1,7 @@
 "use client"
-import {ReactNode, useState} from "react";
-import {ErrorMessage} from "../../util/err/ErrorMessage";
+import {CSSProperties, MouseEventHandler, ReactNode} from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
-import {useModalState} from "~/modal/Modal";
+import {useLoginModalState} from "~/modal/LoginModal";
 import SignInFrame from "~/auth/SignInFrame";
 
 
@@ -10,31 +9,30 @@ export function SignInButton(
     {
       children,
       onClose,
+        onClick,
       ...props
     }: LoginButtonProps,
 ) {
-  const [err, setErr] = useState<string>()
-  const modalState = useModalState()
+  const modalState = useLoginModalState()
   const clientState = useClientState()
 
   return (
       <>
-        <ErrorMessage error={err}/>
         <button
             {...props} disabled={clientState.state == "loading"}
-            onClick={() => {
+            onClick={(event) => {
+              onClick?.(event)
               if (clientState.state == "loading") return;
-              // setErr(undefined)
-              // signIn(clientContext, onClose).catch(reason => {
-              //   setErr(`ログインに失敗しました: {${reason.toString()}}`)
-              // })
               if (modalState.state != "closed") {
                 console.error("modal is open")
                 return
               }
-              modalState.open(<div className={"bg-white w-full h-full"}>
-                <SignInFrame clientState={clientState}/>
-              </div>)
+              modalState.open(
+                  <SignInFrame clientState={clientState} onSignIn={() => {
+                    modalState.close()
+                  }}/>,
+                  {width: "700px", height: "800px"},
+              )
             }}>
           {children || clientState.state == "loading" ? "Loading" : "Login"}
         </button>
@@ -45,4 +43,8 @@ export function SignInButton(
 export interface LoginButtonProps {
   onClose?: () => void
   children?: ReactNode
+  style?: CSSProperties | undefined;
+  onMouseOver?: MouseEventHandler | undefined;
+  onMouseOut?: MouseEventHandler | undefined;
+  onClick?: MouseEventHandler | undefined;
 }

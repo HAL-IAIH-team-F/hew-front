@@ -8,9 +8,10 @@ import {LoadedClientState} from "~/api/context/ClientState";
 
 export default function SignInFrame(
     {
-      clientState,
+      clientState,onSignIn,
     }: {
       clientState: LoadedClientState,
+      onSignIn?: () => void,
     },
 ) {
   const ref = useRef<HTMLIFrameElement | null>(null);
@@ -26,10 +27,11 @@ export default function SignInFrame(
     IdTokenUtl.receiveMessage(ref.current.contentWindow, authenticationImplicitFlowUrl, () => {
       console.debug("idTokenLoader finish")
       setUrl(undefined)
+      onSignIn?.()
     }, clientState.oidcContext, clientState.setIdToken)
   }, [ref.current?.contentWindow == undefined, clientState.state]);
 
   return (
-      <iframe ref={ref} src={url}/>
+      <iframe ref={ref} src={url} className={"w-full h-full"}/>
   )
 }

@@ -2,25 +2,25 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {LoadingState} from "~/auth/State";
 import {ModalOption} from "~/modal/ModalOption";
-import ModalContainer from "~/modal/ModalContainer";
+import LoginModalContainer from "~/modal/LoginModalContainer";
 
 export interface ModalProviderProps {
   children: ReactNode;
 }
 
-const Context = createContext<ModalState>(newLoadingModalState());
+const Context = createContext<LoginModalState>(newLoadingLoginModalState());
 
-export function ModalProvider(
+export function LoginModalProvider(
     {
       children,
     }: ModalProviderProps
 ) {
-  const [ModalState, setModalState] = useState<ModalState>(newLoadingModalState)
+  const [ModalState, setModalState] = useState<LoginModalState>(newLoadingLoginModalState)
 
   useEffect(() => {
     if (ModalState.state != "loading") return
 
-    function set(state: ModalState) {
+    function set(state: LoginModalState) {
       setModalState(state)
     }
 
@@ -29,6 +29,7 @@ export function ModalProvider(
         state: "closed",
         set,
         open,
+        close,
       })
     }
 
@@ -49,37 +50,37 @@ export function ModalProvider(
       value={ModalState}
   >
     {children}
-    <ModalContainer/>
+    <LoginModalContainer/>
   </Context.Provider>;
 }
 
-export function useModalState() {
+export function useLoginModalState() {
   return useContext(Context);
 }
 
-export type ModalState = LoadingModalState | ClosedModalState | OpenedModalState;
+export type LoginModalState = LoadingLoginModalState | ClosedLoginModalState | OpenedLoginModalState;
 
-export interface LoadingModalState extends LoadingState {
+export interface LoadingLoginModalState extends LoadingState {
 }
 
-export function newLoadingModalState(): LoadingModalState {
+export function newLoadingLoginModalState(): LoadingLoginModalState {
   return {
     state: "loading"
   }
 }
 
-export interface ClosedModalState extends AbstractLoadedModalState {
+export interface ClosedLoginModalState extends AbstractLoadedLoginModalState {
   state: "closed"
   open: (node: ReactNode, opt?: ModalOption) => void
 }
 
-export interface OpenedModalState extends AbstractLoadedModalState {
+export interface OpenedLoginModalState extends AbstractLoadedLoginModalState {
   state: "opened"
-  close: () => void
   opt: ModalOption
   node: ReactNode
 }
 
-interface AbstractLoadedModalState {
-  set: (state: ModalState) => void
+interface AbstractLoadedLoginModalState {
+  set: (state: LoginModalState) => void
+  close: () => void
 }

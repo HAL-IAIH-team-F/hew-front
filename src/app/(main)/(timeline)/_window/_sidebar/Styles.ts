@@ -256,7 +256,7 @@ export const ProductWindowStyle = (ProductisOpen: boolean): CSSProperties => ({
     width 0.3s ease,
     height 0.3s ease,
     transform 0.3s`,
-  zIndex: 999,
+  zIndex: 9,
   minWidth: ProductisOpen ? '530px' : '0',
   maxWidth: ProductisOpen ? '750px' : '0',
 });

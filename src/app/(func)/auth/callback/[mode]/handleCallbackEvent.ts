@@ -1,10 +1,10 @@
 import {OidcContext} from "~/auth/keycloak/api/internal/OidcContext"
 import {Nonce} from "~/auth/keycloak/api/internal/Nonce";
-import {Result, Results} from "../../../../util/err/result";
+import {Result, Results} from "../../../../../util/err/result";
 import {
   AuthenticationImplicitFlowIdToken
 } from "~/auth/keycloak/api/internal/authentication/implicit-flow/AuthenticationImplicitFlowIdToken";
-import {ErrorIds} from "../../../../util/err/errorIds";
+import {ErrorIds} from "../../../../../util/err/errorIds";
 import {IdTokenState} from "~/auth/idtoken/IdTokenState";
 
 export default function handleCallbackEvent(
