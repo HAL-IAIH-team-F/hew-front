@@ -7,7 +7,7 @@
 "use client"
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
-import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
+import {SignInOutButton} from "~/auth/SignInOutButton";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {ErrorIds} from "../util/err/errorIds";
 import Image from "../util/Image";

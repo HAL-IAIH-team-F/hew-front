@@ -5,7 +5,7 @@ import {ProductRes} from "@/(main)/search/sample/ProductRes";
 import {ErrorData} from "../../../../../util/err/err";
 import {Api} from "~/api/context/Api";
 import {ErrorMessage} from "../../../../../util/err/ErrorMessage";
-import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
+import {SignInOutButton} from "~/auth/SignInOutButton";
 import {ClientState} from "~/api/context/ClientState";
 
 export default function Page(

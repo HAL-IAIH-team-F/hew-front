@@ -1,5 +1,5 @@
 "use client"
-import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
+import {SignInOutButton} from "~/auth/SignInOutButton";
 import useRoutes from "~/route/useRoutes";
 import {useEffect} from "react";
 
