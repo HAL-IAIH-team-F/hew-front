@@ -17,6 +17,7 @@ export default function ChatSendForm(
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "0px";
@@ -27,13 +28,10 @@ export default function ChatSendForm(
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("chadawdawwd",chat.chat_id)
     if (!message.trim() || clientContext.state !== "registered" || isSubmitting) return;
 
     setIsSubmitting(true);
     try {
-      console.log("送信中のメッセージ:", message.trim());
-      console.log("chat:", chat);
       const result = await clientContext.client.authBody(Api.app.pcm_api_chat__chat_id__message_post,
         {},
         {
@@ -42,7 +40,6 @@ export default function ChatSendForm(
         { chat_id: chat.chat_id},
       )
 
-      console.log("API response:", result);
       if (result.error) {
         console.error("エラー:", result.error);
         return;
@@ -57,16 +54,20 @@ export default function ChatSendForm(
     }
   };
 
+  const isDisabled = !message.trim() || clientContext.state !== "registered" || isSubmitting;
+
   return (
-    <div className="w-full bg-gray-700 p-4 rounded-md">
-      <form onSubmit={handleSubmit} className="flex items-end gap-2">
-        <button type="button" className="text-gray-300 hover:text-white p-2 rounded-full transition-colors" aria-label="添付ファイル">
+    <div className="w-full bg-gray-800 p-4 shadow-lg rounded-lg border border-gray-700">
+      <form onSubmit={handleSubmit} className="flex items-end gap-3">
+        <button
+          type="button"
+          className="p-2 text-gray-400 hover:text-indigo-400 bg-gray-700 hover:bg-gray-600 rounded-full transition-all"
+          aria-label="添付"
+        >
           <PaperClipIcon className="w-5 h-5" />
         </button>
-        <button type="button" className="text-gray-300 hover:text-white p-2 rounded-full transition-colors" aria-label="その他">
-          <PlusIcon className="w-5 h-5" />
-        </button>
-        <div className="flex-1 bg-gray-800 rounded-md px-4 py-2">
+        
+        <div className="flex-1 bg-gray-700 rounded-lg border border-gray-600 focus-within:border-indigo-500 transition-colors overflow-hidden">
           <textarea
             ref={textareaRef}
             value={message}
@@ -79,17 +80,18 @@ export default function ChatSendForm(
             }}
             placeholder={clientContext.state === "registered" ? "メッセージを入力..." : "ログインして会話に参加"}
             disabled={clientContext.state !== "registered"}
-            className="w-full bg-transparent text-white resize-none outline-none py-1 max-h-32 placeholder-gray-400"
+            className="w-full bg-transparent text-white resize-none outline-none p-3 max-h-32 placeholder-gray-400"
             rows={1}
           />
         </div>
+        
         <button
           type="submit"
-          disabled={!message.trim() || clientContext.state !== "registered" || isSubmitting}
-          className={`p-2 rounded-full transition-colors ${
-            message.trim() && clientContext.state === "registered" && !isSubmitting
-              ? "text-white bg-indigo-500 hover:bg-indigo-600"
-              : "text-gray-500 bg-gray-600 cursor-not-allowed"
+          disabled={isDisabled}
+          className={`p-3 rounded-full transition-all shadow-md ${
+            !isDisabled
+              ? "text-white bg-indigo-600 hover:bg-indigo-500 active:scale-95"
+              : "text-gray-400 bg-gray-700 cursor-not-allowed"
           }`}
           aria-label="送信"
         >

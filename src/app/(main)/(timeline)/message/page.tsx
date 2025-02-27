@@ -12,7 +12,7 @@ export default function Page() {
   
   if (clientState.state !== "registered") {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-900">
+      <div className="h-screen w-screen items-center justify-center bg-gray-900">
         <LoginNeed />
       </div>
     );
