@@ -1,6 +1,6 @@
 "use client";
 import React, {ReactNode} from "react";
-import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
+import {SignInOutButton} from "~/auth/SignInOutButton";
 import {UserCircle} from "lucide-react";
 import AccountLink from "@/(main)/(timeline)/account/[userId]/_profile/side/AccountLink";
 import useRoutes from "~/route/useRoutes";

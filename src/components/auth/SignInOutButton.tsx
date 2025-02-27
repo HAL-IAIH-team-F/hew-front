@@ -1,6 +1,6 @@
 "use client"
-import {SignInButton} from "~/auth/nextauth/SignInButton";
-import {SignOutButton} from "~/auth/nextauth/SignOutButton";
+import {SignInButton} from "~/auth/SignInButton";
+import {SignOutButton} from "~/auth/SignOutButton";
 import {useClientState} from "~/api/context/ClientContextProvider";
 
 export function SignInOutButton(
