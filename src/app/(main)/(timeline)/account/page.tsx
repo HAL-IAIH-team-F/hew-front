@@ -1,8 +1,6 @@
 "use client"
-import { SignInOutButton } from "~/auth/nextauth/SignInOutButton";
 import useRoutes from "~/route/useRoutes";
-import { useEffect } from "react";
-import { motion } from "framer-motion";
+import {useEffect} from "react";
 import LoginNeed from "~/UI/loginNeed";
 
 export default function Page({}: {}) {
@@ -14,8 +12,8 @@ export default function Page({}: {}) {
   }, [routes]);
 
   return (
-    <div>
-      <LoginNeed/>
-    </div>
+      <div>
+        <LoginNeed/>
+      </div>
   );
 }
