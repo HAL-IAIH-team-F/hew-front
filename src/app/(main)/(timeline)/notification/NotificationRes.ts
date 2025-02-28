@@ -10,6 +10,7 @@ interface Data {
 export interface ColabRequestData extends Data {
   colab_request_id: string
   from_creator_id: string
+  
 }
 
 export interface ColabWantData extends Data {
@@ -25,9 +26,10 @@ export interface ColabApproveData extends Data {
 }
 
 export interface ColabData extends Data {
-  collabo_id: string
-  owner_id: string
-  title: string
-  description: string
-  creator_ids: string[]
+  collabo_id: string;
+  owner_id: string;
+  title: string;
+  description: string;
+  creator_ids: string[];
+  isApproved?: boolean; 
 }

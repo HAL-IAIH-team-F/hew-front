@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from "react";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {ErrorData} from "../../../../util/err/err";
-import {NotificationRes} from "@/(main)/(timeline)/notification/NotificationRes";
+import {ColabApproveData, ColabData, ColabRequestData, NotificationRes} from "@/(main)/(timeline)/notification/NotificationRes";
 import {Api} from "~/api/context/Api";
 import Notification from "@/(main)/(timeline)/notification/Notification";
 import {ErrorMessage} from "../../../../util/err/ErrorMessage";
@@ -28,6 +28,30 @@ export default function Page(
       setNotifications(value.success);
     });
   }, [clientContext.state]);
+
+  useEffect(() => {
+    if (!notifications || notifications.length === 0) return;
+  
+    // "colab_approve" の collabo_id を収集
+    const approvedIds = new Set(
+      notifications
+        .filter(n => n.data.notification_type === "colab_approve")
+        .map(n => (n.data as ColabApproveData).collabo_id)
+    );
+  
+    // "colab" の中で approvedIds に含まれるものの isApproved を true にする
+    notifications.forEach(notification => {
+      if (notification.data.notification_type === "colab") {
+        const colabData = notification.data as ColabData;
+        if (approvedIds.has(colabData.collabo_id)) {
+          colabData.isApproved = true;
+        }
+      }
+    });
+  
+  }, [notifications]);
+  
+
   if (clientContext.state !== "registered") {
         return (
             <div>
