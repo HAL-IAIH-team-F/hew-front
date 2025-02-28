@@ -18,7 +18,7 @@ export const styles = (width: number, height: number): Record<string, CSSPropert
     left: '30px',
     top: '0',
     borderRadius: '60px',
-    zIndex: 3000,
+    zIndex: 30,
     transition: 'left 0.3s ease, height 0.3s ease, backdrop-filter 0.3s ease',
   },
   
@@ -215,7 +215,7 @@ export const pageWindowStyle = (
       transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
       width 0.3s ease, 
       left 0.3s ease`,
-    zIndex: 999,
+    zIndex: 9,
     display: "flex",
     minWidth: ProductisOpen ? '550px' : '0',
     };
@@ -256,7 +256,7 @@ export const ProductWindowStyle = (ProductisOpen: boolean): CSSProperties => ({
     width 0.3s ease,
     height 0.3s ease,
     transform 0.3s`,
-  zIndex: 999,
+  zIndex: 9,
   minWidth: ProductisOpen ? '530px' : '0',
   maxWidth: ProductisOpen ? '750px' : '0',
 });
