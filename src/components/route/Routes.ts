@@ -2,9 +2,10 @@ import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-
 import {TimelineRouteUrl} from "~/route/TimelineRouteUrl";
 import {TimelinePageRouteUrl} from "~/route/TimelinePageRouteUrl";
 import {RouteUrl} from "~/route/RouteUrl";
-import {SelfUserRes} from "~/res/reses";
+
 import {AccountRoutes} from "~/route/AccountRoutes";
 import {ColabRoutes} from "~/route/ColabRoutes";
+import {SelfUserRes} from "~/res/UserRes";
 
 export class Routes {
   readonly account: AccountRoutes
@@ -49,6 +50,10 @@ export class Routes {
 
   cart() {
     return new TimelinePageRouteUrl(this, "/cart", "/cart")
+  }
+
+  chat() {
+    return new TimelinePageRouteUrl(this, "/chat", "/chat")
   }
 
   lp() {

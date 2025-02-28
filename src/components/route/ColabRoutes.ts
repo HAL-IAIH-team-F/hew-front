@@ -19,10 +19,6 @@ export class ColabRoutes {
     return new TimelinePageRouteUrl(this.routes, `/colab/recruit/register`, "/colab")
   }
 
-  chat() {
-    return new TimelinePageRouteUrl(this.routes, `/colab/chat`, "/colab")
-  }
-
   colabRegister() {
     return new TimelinePageRouteUrl(this.routes, `/colab/register`, "/colab")
   }

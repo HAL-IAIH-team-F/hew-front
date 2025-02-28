@@ -29,7 +29,6 @@ export default function CollabRecruitPage(
             {/* Navigation Links */}
             <nav className="flex-1 px-4">
               <ul className="space-y-1 p-1">
-                <MenuLink routeUrl={routes.colab.chat()} label={"チャット"}/>
                 <MenuLink routeUrl={routes.colab.colabRegister()} label={"コラボ投稿"}/>
                 <MenuLink routeUrl={routes.colab.recruit()} label={"募集一覧"}/>
                 <MenuLink routeUrl={routes.colab.recruitRegister()} label={"募集投稿"}/>
