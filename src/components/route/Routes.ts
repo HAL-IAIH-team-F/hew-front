@@ -52,10 +52,6 @@ export class Routes {
     return new TimelinePageRouteUrl(this, "/cart", "/cart")
   }
 
-  chat() {
-    return new TimelinePageRouteUrl(this, "/chat", "/chat")
-  }
-
   lp() {
     return new RouteUrl(this, "/lp")
   }

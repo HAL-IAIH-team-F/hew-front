@@ -4,8 +4,9 @@ import {OidcContext} from "~/auth/keycloak/api/internal/OidcContext";
 import {AuthIdTokenState, IdTokenState} from "~/auth/idtoken/IdTokenState";
 import {TokenBundle,} from "~/auth/nextauth/TokenBundle";
 import {UnAuthClient} from "~/api/client/UnAuthClient";
-import {SelfUserRes} from "~/res/reses";
+
 import {LoadedClient} from "~/api/client/LoadedClient";
+import {SelfUserRes} from "~/res/UserRes";
 
 export type ClientState =
     LoadingClientState

@@ -6,7 +6,7 @@ import useRoutes from '~/route/useRoutes';
 
 import {useWindowSize} from '@/_hook/useWindowSize';
 import {useProductContext} from '~/products/ContextProvider';
-import {UserResWithImg} from "~/res/reses";
+import {UserResWithImg} from "~/res/UserRes";
 
 export const ProductsGrid: React.FC<{ userdata: UserResWithImg }> = ({userdata}) => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);

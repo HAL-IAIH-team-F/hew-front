@@ -96,7 +96,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
                 style={iconstyles.icon}/></SidebarRoutesLink>
             <SidebarRoutesLink routeUrl={routes.cart()} setTransitions={setTransitions}><IoCartOutline
                 style={iconstyles.icon}/></SidebarRoutesLink>
-            <SidebarRoutesLink routeUrl={routes.chat()} setTransitions={setTransitions}><Handshake
+            <SidebarRoutesLink routeUrl={routes.colab.recruit()} setTransitions={setTransitions}><Handshake
                 style={iconstyles.icon}/></SidebarRoutesLink>
 
           </div>

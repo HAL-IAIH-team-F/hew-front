@@ -4,7 +4,8 @@ import {useClientState} from "~/api/context/ClientContextProvider";
 
 import {Api, Img} from "~/api/context/Api";
 import {ErrorData} from "../../util/err/err";
-import {CreatorRes, UserDataWithImg} from "~/res/reses";
+import {CreatorRes} from "~/res/reses";
+import {UserDataWithImg} from "~/res/UserRes";
 
 
 export default function useCreatorData(creator_id: string):
