@@ -21,7 +21,12 @@ export default function RightWindowProduct({
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-      <Card className="group relative overflow-hidden backdrop-blur-sm">
+      <Card className="group relative overflow-hidden backdrop-blur-sm overflow-y-auto" style={{
+        
+        boxSizing: "border-box",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+      }}>
         <div
             className="relative aspect-square overflow-hidden rounded-t-xl"
             onMouseEnter={() => setIsHovered(true)}
@@ -68,70 +73,8 @@ export default function RightWindowProduct({
         </CardContent>
 
 
-        <CardFooter className="absolute bottom-0 w-full flex justify-end p-4">
-          <Button
-              className="group relative"
-              variant={clientState.state === "registered" ? "default" : "secondary"}
-              disabled={clientState.state !== "registered"}
-              onClick={() => {
-                if (clientState.state !== "registered") {
-                  showNotification("ログインしてください", product);
-                  return;
-                }
-
-                addCart(clientState, setErr, product.product_id)
-                    .then(() => {
-                      showNotification("カートに追加しました！", product);
-                    })
-                    .catch((reason) => {
-                      console.error(reason);
-                      showNotification("カート追加に失敗しました", product);
-                    });
-              }}
-          >
-          <span className="flex items-center justify-center gap-2">
-            {clientState.state === "registered" ? (
-                <>
-                  <ShoppingCart className="h-4 w-4"/> カートに入れる
-                </>
-            ) : (
-                <>
-                  <Lock className="h-4 w-4"/> ログインしてください
-                </>
-            )}
-          </span>
-          </Button>
-        </CardFooter>
+        
       </Card>
   );
 }
 
-async function addCart(
-    clientState: ClientState,
-    setErr: Dispatch<SetStateAction<ErrorData | undefined>>,
-    product_id: string
-) {
-  if (clientState.state != "registered") return;
-  setErr(undefined);
-  const cartResult = await clientState.client.auth(Api.app.gc_api_cart_get, {}, {});
-  if (cartResult.error) return setErr(cartResult.error);
-
-  // noinspection SuspiciousTypeOfGuard
-  if (typeof cartResult.success == "string") {
-    const postResult = await clientState.client.authBody(
-        Api.app.pc_api_cart_post,
-        {},
-        {products: [product_id]},
-        {}
-    );
-    if (postResult.error) return setErr(postResult.error);
-  } else {
-    const patchResult = await clientState.client.authBody(
-        Api.app.pac_api_cart_patch,
-        {},
-        {new_products: [product_id]},
-        {}
-    );
-    if (patchResult.error) return setErr(patchResult.error);
-  }
-}

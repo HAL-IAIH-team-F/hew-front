@@ -5,6 +5,7 @@ import {Api} from "~/api/context/Api";
 import { ProductRes } from "@/(main)/search/sample/ProductRes";
 import DownloadButton from "./DownloadButton";
 import ProductThumbnail from "~/api/useProductThumbnail";
+import LoginNeed from "~/UI/loginNeed";
 
 const PurchaseHistoryCard = () => {
   const [products, setProducts] = useState<ProductRes[]>([])
@@ -20,6 +21,13 @@ const PurchaseHistoryCard = () => {
       setProducts(value.success)
     })
   }, [clientState.state]);
+  if (clientState.state !== "registered") {
+    return (
+        <div>
+          <LoginNeed/>
+        </div>
+    )
+  }
 
   return (
     <div className="p-6 text-gray-100">

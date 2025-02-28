@@ -4,6 +4,7 @@ import { Api } from "~/api/context/Api"
 import { useEffect, useState } from "react"
 import { RegisteredClientState } from "~/api/context/ClientState";
 import { ErrorMessage } from "../../../../../../../util/err/ErrorMessage";
+import LoginNeed from "~/UI/loginNeed";
 
 export default function ProfileEditPage() {
   const clientState = useClientState()
@@ -19,9 +20,9 @@ export default function ProfileEditPage() {
 
   if (clientState.state !== "registered") {
     return (
-      <div className="max-w-md mx-auto mt-8 p-4 bg-red-900/10 text-red-400 rounded-lg border border-red-900/20">
-        ログインが必要です
-      </div>
+        <div>
+          <LoginNeed/>
+        </div>
     )
   }
 

@@ -10,11 +10,12 @@ import {Api} from "~/api/context/Api";
 import useRoutes from "~/route/useRoutes";
 import { useUserData } from "~/api/context/useUserData";
 import { useEffect, useState } from "react";
+import LoginNeed from "~/UI/loginNeed";
 
 
 export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps) {
   const routes = useRoutes()
-  
+  const clientState = useClientState()
   // セッションとクライアントコンテキストの取得
   const clientContext = useClientState();
   const [mail, setMail ] = useState<string>();
@@ -23,6 +24,7 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
     if(clientContext.state !== "registered") return
     setMail(clientContext.user.user_mail)
   })
+  
   // 入力チェックの関数
   const validateForm = (formData: StyledFormData) => {
     const contactAddress = formData.getStr("contact_address");
@@ -37,6 +39,13 @@ export default function CreatorRegisterForm({...props}: CreatorRegisterFormProps
     return;
   };
 
+  if (clientState.state !== "registered") {
+    return (
+        <div>
+          <LoginNeed/>
+        </div>
+    )
+  }
   return (
     
     <StyledForm
