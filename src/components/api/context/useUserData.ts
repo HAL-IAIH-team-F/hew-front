@@ -4,7 +4,7 @@ import {Api, Img} from './Api';
 import {ErrorIds} from '../../../util/err/errorIds';
 import {useClientState} from './ClientContextProvider';
 import {LoadedClientState} from "~/api/context/ClientState";
-import {UserResWithImg} from "~/res/reses";
+import {UserResWithImg} from "~/res/UserRes";
 
 export function useUserData(userId: string | undefined = undefined) {
   const [user, setUser] = useState<UserResWithImg>();

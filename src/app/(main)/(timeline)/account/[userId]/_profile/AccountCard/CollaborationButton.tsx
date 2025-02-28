@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {Api} from "~/api/context/Api";
 import {useClientState} from "~/api/context/ClientContextProvider";
-import {UserResWithImg} from "~/res/reses";
+import {UserResWithImg} from "~/res/UserRes";
 
 
 export default function CollaborationButton(

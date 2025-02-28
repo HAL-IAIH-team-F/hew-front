@@ -7,8 +7,8 @@ export default function Page({}: {}) {
   const routes = useRoutes();
 
   useEffect(() => {
-    if (routes.accountRoutes.account().isCurrent()) return;
-    routes.accountRoutes.account().transition().catch(console.error);
+    if (routes.account.account().isCurrent()) return;
+    routes.account.account().transition().catch(console.error);
   }, [routes]);
 
   return (

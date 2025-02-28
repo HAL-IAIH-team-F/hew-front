@@ -5,10 +5,11 @@ import CreatorsSelector from "@/(main)/(timeline)/colab/register/CreatorsSelecto
 import {StyledButton} from "../../../../../util/form/element/StyledButton";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {Api} from "~/api/context/Api";
-import {useState} from "react";
+import React, {useState} from "react";
 
 import useRoutes from "~/route/useRoutes";
 import {CreatorRes} from "~/res/reses";
+import LoginNeed from "~/UI/loginNeed";
 
 
 
@@ -18,6 +19,14 @@ export default function ColabRegisterpage(
   const clientContext = useClientState()
   const [creators, setCreators] = useState<CreatorRes[]>([])
   const routes = useRoutes()
+  const clientState = useClientState();
+  if (clientState.state !== "registered") {
+    return (
+        <div>
+          <LoginNeed/>
+        </div>
+    )
+  }
 
   return <StyledForm  action={async (formData) => {
     if (clientContext.state !== "registered") {

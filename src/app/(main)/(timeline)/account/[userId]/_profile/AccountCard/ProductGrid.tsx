@@ -6,7 +6,7 @@ import useRoutes from '~/route/useRoutes';
 
 import {useWindowSize} from '@/_hook/useWindowSize';
 import {useProductContext} from '~/products/ContextProvider';
-import {UserResWithImg} from "~/res/reses";
+import {UserResWithImg} from "~/res/UserRes";
 
 export const ProductsGrid: React.FC<{ userdata: UserResWithImg }> = ({userdata}) => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
@@ -79,7 +79,7 @@ export const ProductsGrid: React.FC<{ userdata: UserResWithImg }> = ({userdata})
                   onMouseLeave={() => setHoveredCard(null)} // ホバー終了
                   onClick={
                     event =>
-                        routes.accountRoutes.account().setProductId(product.product_id).transition(event)
+                        routes.account.account().setProductId(product.product_id).transition(event)
                   }
               >
                 {/* サムネイル背景 */}

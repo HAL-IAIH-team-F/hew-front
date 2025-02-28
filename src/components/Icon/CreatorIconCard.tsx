@@ -24,7 +24,7 @@ export default function CreatorIconCard(
   }, [iconUrl, screenId, onDataFetched]);
   return (
       <div
-        onClick={(event) => routes.accountRoutes.account(user_data?.user_id).transition(event)}
+        onClick={(event) => routes.account.account(user_data?.user_id).transition(event)}
       >
         <IconCard userData={user_data}/>
       </div>

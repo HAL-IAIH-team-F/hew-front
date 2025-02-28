@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import {UserDataWithImg} from "~/res/reses";
+import {UserDataWithImg} from "~/res/UserRes";
+
 
 export function IconCard(
     {
