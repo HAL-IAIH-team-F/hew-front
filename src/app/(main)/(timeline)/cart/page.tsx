@@ -6,6 +6,7 @@ import {useProductContext} from '~/products/ContextProvider';
 import {useClientState} from '~/api/context/ClientContextProvider';
 import {Api} from '~/api/context/Api';
 import ProductThumbnail from '~/api/useProductThumbnail';
+import LoginNeed from '~/UI/loginNeed';
 
 interface ErrorData {
   message: string;
@@ -47,6 +48,14 @@ const CartPage = () => {
       setCart(value.success);
     });
   }, [clientState.state]);
+
+  if (clientState.state !== "registered") {
+    return (
+        <div>
+          <LoginNeed/>
+        </div>
+    )
+  }
 
   return (
       <div className="min-h-screen bg-gray-900">

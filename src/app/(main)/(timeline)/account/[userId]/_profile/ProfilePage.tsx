@@ -1,6 +1,6 @@
 "use client";
 import React, {ReactNode} from "react";
-import {SignInOutButton} from "~/auth/nextauth/SignInOutButton";
+import {SignInOutButton} from "~/auth/SignInOutButton";
 import {UserCircle} from "lucide-react";
 import MenuLink from "@/(main)/(timeline)/_window/_main/menu/MenuLink";
 import useRoutes from "~/route/useRoutes";

@@ -1,6 +1,6 @@
 "use client"
 import {ReactNode, useState} from "react";
-import {ErrorMessage} from "../../../util/err/ErrorMessage";
+import {ErrorMessage} from "../../util/err/ErrorMessage";
 import {useClientState} from "~/api/context/ClientContextProvider";
 import {signOut} from "~/auth/clientAuth";
 

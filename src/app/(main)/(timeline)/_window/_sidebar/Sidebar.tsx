@@ -1,6 +1,6 @@
 "use client"
 import React, {useEffect, useState} from 'react';
-import {FaBell, FaSearch, FaSpinner} from 'react-icons/fa';
+import {FaBell, FaSearch, FaSpinner, FaUserSlash} from 'react-icons/fa';
 import {FaRegMessage} from 'react-icons/fa6';
 import {useUserData} from '~/api/context/useUserData';
 import {useProductContext} from '~/products/ContextProvider';
@@ -12,6 +12,7 @@ import {iconstyles, selectedRouteStyle, styles} from "@/(main)/(timeline)/_windo
 import Image from "../../../../../util/Image";
 import {usePathname} from 'next/navigation';
 import {Handshake, House, ImagePlus} from "lucide-react";
+import { useClientState } from '~/api/context/ClientContextProvider';
 
 type SidebarProps = {};
 const Sidebar: React.FC<SidebarProps> = ({}) => {
@@ -24,6 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
   const user = useUserData();
   const routes = useRoutes();
   const pathname = usePathname()
+  const clientState = useClientState()
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [isTransitions, setTransitions] = useState<boolean>(false);
   useEffect(() => {
@@ -73,18 +75,23 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
 
             <SidebarRoutesLink routeUrl={routes.timeline()} setTransitions={setTransitions}><House
                 style={iconstyles.icon}/></SidebarRoutesLink>
-            <SidebarRoutesLink routeUrl={routes.account.account()}
-                               setTransitions={setTransitions}>{user && user.icon ? (
-                <Image
-                    alt="User Icon"
-                    src={user.icon.strUrl()}
-                    width={33}
-                    height={33}
-                    style={iconstyles.userIcon}
-                />
-            ) : (
-                <FaSpinner style={iconstyles.spinner}/>
-            )}</SidebarRoutesLink>
+            <SidebarRoutesLink routeUrl={routes.accountRoutes.account()}
+                   setTransitions={setTransitions}>
+              {clientState.state !== "registered" ? (
+                  <FaUserSlash className="text-white" style={iconstyles.userIcon} />
+
+              ) : user && user.icon ? (
+                  <Image
+                      alt="User Icon"
+                      src={user.icon.strUrl()}
+                      width={33}
+                      height={33}
+                      style={iconstyles.userIcon}
+                  />
+              ) : (
+                  <FaSpinner style={iconstyles.spinner}/>
+              )}
+            </SidebarRoutesLink>
             <SidebarRoutesLink routeUrl={routes.search()} setTransitions={setTransitions}><FaSearch
                 style={iconstyles.icon}/></SidebarRoutesLink>
             <SidebarRoutesLink routeUrl={routes.notification()} setTransitions={setTransitions}><FaBell
@@ -96,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
                 style={iconstyles.icon}/></SidebarRoutesLink>
             <SidebarRoutesLink routeUrl={routes.cart()} setTransitions={setTransitions}><IoCartOutline
                 style={iconstyles.icon}/></SidebarRoutesLink>
-            <SidebarRoutesLink routeUrl={routes.colab.recruit()} setTransitions={setTransitions}><Handshake
+            <SidebarRoutesLink routeUrl={routes.colablisting()} setTransitions={setTransitions}><Handshake
                 style={iconstyles.icon}/></SidebarRoutesLink>
 
           </div>
