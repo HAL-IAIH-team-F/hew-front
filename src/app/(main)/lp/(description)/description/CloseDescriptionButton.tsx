@@ -5,19 +5,17 @@ import {
     useDescriptionSwitchAnimationState
 } from "@/(main)/lp/DescriptionSwitchState";
 
-export default function CloseDescriptionButton(
-    {}: {},
-) {
+export default function CloseDescriptionButton() {
     const [isTransparent, setIsTransparent] = useState(true);
-    const descriptionState = useDescriptionSwitchAnimationState()
+    const descriptionState = useDescriptionSwitchAnimationState();
 
     const handleClick = () => {
-        if (descriptionState.state == "loading") return
+        if (descriptionState.state === "loading") return;
         setIsTransparent(true);
         setTimeout(() => {
             setIsTransparent(false);
         }, 3000);
-        descriptionState.set(createRequestCloseDescriptionAnimationState(descriptionState.set))
+        descriptionState.set(createRequestCloseDescriptionAnimationState(descriptionState.set));
     };
 
     useEffect(() => {
@@ -28,45 +26,64 @@ export default function CloseDescriptionButton(
     }, []);
 
     return (
-        <button
-            onClick={handleClick}
-            style={{
-                position: "fixed",
-                textAlign: "center",
-                top: "6px",
-                left: "50%",
-                zIndex: 10,
-                transform: "translateX(-50%)",
-                fontFamily: 'UDEVGothic, sans-serif',
-                color: 'rgba(255, 255, 255, 0.9)',
-                fontWeight: 'bold',
-                fontSize: "0.8em",
-                backgroundColor: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                opacity: isTransparent ? 0 : 1,
-                transition: 'opacity 0.3s ease, color 0.3s ease, transform 0.3s ease, top 0.3s ease',
-            }}
-            onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'rgba(255, 255, 255, 1)';
-                e.currentTarget.style.transform = 'translateX(-50%) scale(1.1)';
-            }}
-            onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)';
-                e.currentTarget.style.transform = 'translateX(-50%) scale(1)';
-            }}
-        >
-      <span
-          style={{
-              position: 'absolute',
-              top: '-20px',
-              bottom: '-20px',
-              left: '-40px',
-              right: '-40px',
-              content: '""',
-          }}
-      />
-            Return Title
-        </button>
-    )
+        <>
+            <button
+                onClick={handleClick}
+                style={{
+                    position: "fixed",
+                    textAlign: "center",
+                    top: "6px",
+                    left: "50%",
+                    zIndex: 10,
+                    transform: "translateX(-50%)",
+                    fontFamily: 'UDEVGothic, sans-serif',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontWeight: 'bold',
+                    fontSize: "0.8em",
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    opacity: isTransparent ? 0 : 1,
+                    transition: 'opacity 0.3s ease, color 0.3s ease, transform 0.3s ease, top 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 1)';
+                    e.currentTarget.style.transform = 'translateX(-50%) scale(1.1)';
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)';
+                    e.currentTarget.style.transform = 'translateX(-50%) scale(1)';
+                }}
+            >
+                <span
+                    style={{
+                        position: 'absolute',
+                        top: '-20px',
+                        bottom: '-20px',
+                        left: '-40px',
+                        right: '-40px',
+                        content: '""',
+                    }}
+                />
+                Return Title
+            </button>
+
+            {/* YouTube埋め込みプレビュー */}
+            <div
+                style={{
+                    position: "fixed",
+                    textAlign: "center",
+                    top: "100px",
+                    left: "50%",
+                    zIndex: 10,
+                    transform: "translateX(-50%)",
+                    opacity: isTransparent ? 0 : 1,
+                    transition: 'opacity 0.3s ease, transform 0.3s ease',
+                    cursor: 'pointer',
+                }}
+            >
+                 <iframe width="1280" height="720" src="https://www.youtube.com/embed/TVWrXHQTP94" title="画像販売CtoCサービス「DiVER」紹介動画" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+            </div>
+        </>
+    );
 }
