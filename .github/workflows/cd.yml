@@ -47,7 +47,7 @@ jobs:
 
     steps:
       # checkout
-      - run: echo ${{ github.ref }} ${{ github.ref != 'refs/heads/${{ matrix.branch.ref \}\}' }}
+      - run: echo ${{ github.ref }} ${{ github.ref == 'refs/heads/${{ matrix.branch.ref \}\}' }}
       - uses: actions/checkout@v4
         if: github.ref != 'refs/heads/${{ matrix.branch.ref }}'
       - run: exit 1
