@@ -18,7 +18,7 @@ jobs:
             imgBaseUrl: "https://hew-dev-image.kigawa.net/"
           - ref: "refs/heads/main"
             manifestFile: ./diver/front/front.yml
-            name: diver
+            name: hew-front
             keycloakBaseUrl: "https://user.kigawa.net"
             keycloakRealms: "diver"
             siteUrl: "https://diver.kigawa.net"
