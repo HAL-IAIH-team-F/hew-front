@@ -6,6 +6,7 @@ export function middleware(request: NextRequest) {
   const cspHeader = `
     default-src 'self' ${Env.keycloak.baseUrl} ${Env.baseUrl} ${Env.imgBaseUrl};
     script-src 'self' 'unsafe-eval' 'unsafe-inline';
+    script-src-elem 'self' static.cloudflareinsights.com 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data: ${Env.imgBaseUrl};
     font-src 'self';
