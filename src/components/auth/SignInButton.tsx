@@ -9,7 +9,7 @@ export function SignInButton(
     {
       children,
       onClose,
-        onClick,
+      onClick,
       ...props
     }: LoginButtonProps,
 ) {
@@ -34,7 +34,7 @@ export function SignInButton(
                   {width: "700px", height: "800px"},
               )
             }}>
-          {children || clientState.state == "loading" ? "Loading" : "Login"}
+          {children || (clientState.state == "loading" ? "Loading" : "Login")}
         </button>
       </>
   )
