@@ -48,8 +48,8 @@ jobs:
     steps:
       # checkout
       - uses: actions/checkout@v4
-        if: github.ref == 'refs/heads/${{ matrix.branch.ref }}'
-
+        if: github.ref != 'refs/heads/${{ matrix.branch.ref }}'
+      - run: exit 1
       - name: preBuild
         if: github.ref == 'refs/heads/${{ matrix.branch.ref }}' && env.preDockerBuildCmd
         run: ${{ env.preDockerBuildCmd }}
