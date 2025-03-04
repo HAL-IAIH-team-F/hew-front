@@ -15,9 +15,9 @@ function ProfilePage(
   const routes = useRoutes()
 
   return (
-      <div className="flex h-screen bg-gray-900">
+      <div className="flex bg-gray-900 h-full">
         {/* Sidebar */}
-        <div className="w-56 bg-gray-900 border-r border-gray-700">
+        <div className="w-56 bg-gray-900 border-r border-gray-700 h-full">
           <div className="h-full flex flex-col">
             {/* Logo/Header Area */}
             <div className="p-6">
@@ -36,6 +36,10 @@ function ProfilePage(
                 <MenuLink
                     label={"設定"}
                     routeUrl={routes.account.setting()}
+                />
+                <MenuLink
+                    label={"認証"}
+                    routeUrl={routes.account.auth()}
                 />
                 <MenuLink
                     label={"購入履歴"}

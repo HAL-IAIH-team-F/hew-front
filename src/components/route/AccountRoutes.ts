@@ -27,6 +27,9 @@ export class AccountRoutes {
   setting() {
     return new TimelinePageRouteUrl(this.routes, `/account/setting`, "/account")
   }
+  auth() {
+    return new TimelinePageRouteUrl(this.routes, `/account/auth`, "/account")
+  }
 
   private accountPath(userId: string | undefined) {
     if (userId != undefined)
