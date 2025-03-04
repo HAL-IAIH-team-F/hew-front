@@ -28,8 +28,8 @@ jobs:
       harborUser: robot$hew
       name: ${{ matrix.branch.name }}
       dockerArg: |
-        keycloakId=${{ secrets.KEYCLOAK_SECRET }}
-        keycloakSecret=${{ secrets.KEYCLOAK_ID }}
+        keycloakId=${{ secrets.KEYCLOAK_ID }}
+        keycloakSecret=${{ secrets.KEYCLOAK_SECRET }}
         keycloakBaseUrl=${{ matrix.branch.keycloakBaseUrl }}
         authSecret=${{ secrets.AUTH_SECRET }}
         keycloakRealms=${{ matrix.branch.keycloakRealms }}
@@ -126,8 +126,8 @@ jobs:
       harborUser: robot$hew
       name: ${{ matrix.branch.name }}
       dockerArg: |
-        keycloakId=${{ secrets.DIVER_KEYCLOAK_SECRET }}
-        keycloakSecret=${{ secrets.DIVER_KEYCLOAK_ID }}
+        keycloakId=${{ secrets.DIVER_KEYCLOAK_ID }}
+        keycloakSecret=${{ secrets.DIVER_KEYCLOAK_SECRET }}
         keycloakBaseUrl=${{ matrix.branch.keycloakBaseUrl }}
         authSecret=${{ secrets.AUTH_SECRET }}
         keycloakRealms=${{ matrix.branch.keycloakRealms }}
