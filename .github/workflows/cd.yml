@@ -5,6 +5,7 @@ jobs:
     if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/main'
     uses: ./.github/workflows/test.yml
   cd-dev:
+    if: github.ref == 'refs/heads/develop'
     strategy:
       matrix:
         branch:
@@ -102,6 +103,7 @@ jobs:
           git push
 
   cd-prod:
+    if: github.ref == 'refs/heads/main'
     strategy:
       matrix:
         branch:
