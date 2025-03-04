@@ -16,6 +16,8 @@ jobs:
             siteUrl: "https://hew-dev.kigawa.net"
             baseUrl: "https://hew-dev-api.kigawa.net/"
             imgBaseUrl: "https://hew-dev-image.kigawa.net/"
+            keycloakSecret: ${{ secrets.KEYCLOAK_ID }}
+            keycloakId: ${{ secrets.KEYCLOAK_SECRET }}
           - ref: "refs/heads/main"
             manifestFile: ./diver/front/front.yml
             name: hew-front
@@ -24,6 +26,8 @@ jobs:
             siteUrl: "https://diver.kigawa.net"
             baseUrl: "https://diver-api.kigawa.net/"
             imgBaseUrl: "https://diver-image.kigawa.net/"
+            keycloakSecret: ${{ secrets.DIVER_KEYCLOAK_ID }}
+            keycloakId: ${{ secrets.DIVER_KEYCLOAK_SECRET }}
 
     runs-on: ubuntu-latest
 #    needs: [test]
@@ -35,8 +39,8 @@ jobs:
       harborUser: robot$hew
       name: ${{ matrix.branch.name }}
       dockerArg: |
-        keycloakId=${{ secrets.KEYCLOAK_ID }}
-        keycloakSecret=${{ secrets.KEYCLOAK_SECRET }}
+        keycloakId=${{ matrix.branch.keycloakId }}
+        keycloakSecret=${{ matrix.branch.keycloakSecret }}
         keycloakBaseUrl=${{ matrix.branch.keycloakBaseUrl }}
         authSecret=${{ secrets.AUTH_SECRET }}
         keycloakRealms=${{ matrix.branch.keycloakRealms }}
