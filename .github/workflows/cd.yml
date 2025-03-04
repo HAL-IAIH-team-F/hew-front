@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         branch:
-          - ref: "develop"
+          - ref: "refs/heads/develop"
             manifestFile: ./hew-dev/front/front.yml
             name: hew-front
             keycloakBaseUrl: "https://user.kigawa.net"
@@ -16,7 +16,7 @@ jobs:
             siteUrl: "https://hew-dev.kigawa.net"
             baseUrl: "https://hew-dev-api.kigawa.net/"
             imgBaseUrl: "https://hew-dev-image.kigawa.net/"
-          - ref: "main"
+          - ref: "refs/heads/main"
             manifestFile: ./diver/front/front.yml
             name: diver
             keycloakBaseUrl: "https://user.kigawa.net"
@@ -47,12 +47,12 @@ jobs:
 
     steps:
       # checkout
-      - run: echo ${{ github.ref }} ${{ github.ref == 'refs/heads/${{ matrix.branch.ref \}\}' }}
+      - run: echo ${{ github.ref }} ${{ github.ref == matrix.branch.ref }}
       - uses: actions/checkout@v4
-        if: github.ref == 'refs/heads/${{ matrix.branch.ref }}'
+        if: github.ref == matrix.branch.ref
       - run: exit 1
       - name: preBuild
-        if: github.ref == 'refs/heads/${{ matrix.branch.ref }}' && env.preDockerBuildCmd
+        if: github.ref == matrix.branch.ref && env.preDockerBuildCmd
         run: ${{ env.preDockerBuildCmd }}
 
       # docker
