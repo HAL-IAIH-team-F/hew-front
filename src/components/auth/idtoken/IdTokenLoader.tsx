@@ -8,11 +8,11 @@ import useOidcContext from "~/auth/keycloak/api/useOidcContext";
 import {IdTokenUtl} from "~/auth/idtoken/IdTokenUtl";
 
 export default function IdTokenLoader(
-  {
-    reload, update
-  }: {
-    reload?: boolean, update: (tokenState: IdTokenState) => void
-  },
+    {
+      reload, update
+    }: {
+      reload?: boolean, update: (tokenState: IdTokenState) => void
+    },
 ) {
   const ref = useRef<HTMLIFrameElement | null>(null);
   const [url, setUrl] = useState<string>()
@@ -32,13 +32,13 @@ export default function IdTokenLoader(
       setUrl(undefined)
     }, oidc, update)
   }, [reload, oidc, ref.current]);
-
+// console.debug("idTokenLoader", url)
   return (
-    <>
-      <iframe
-        className={"hidden"}
-        src={url} ref={ref}
-      />
-    </>
+      <>
+        <iframe
+            className={"hidden"}
+            src={url} ref={ref}
+        />
+      </>
   )
 }

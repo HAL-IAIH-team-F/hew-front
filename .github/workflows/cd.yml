@@ -2,29 +2,50 @@ on:
   push:
 jobs:
   test:
-    if: github.ref != 'refs/heads/develop'
+    if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/main'
     uses: ./.github/workflows/test.yml
   cd:
+    strategy:
+      matrix:
+        branch:
+          - ref: "develop"
+            manifestFile: ./hew-dev/front/front.yml
+            name: hew-front
+            keycloakBaseUrl: "https://user.kigawa.net"
+            keycloakRealms: "develop"
+            siteUrl: "https://hew-dev.kigawa.net"
+            baseUrl: "https://hew-dev-api.kigawa.net/"
+            imgBaseUrl: "https://hew-dev-image.kigawa.net/"
+          - ref: "main"
+            manifestFile: ./diver/front/front.yml
+            name: diver
+            keycloakBaseUrl: "https://user.kigawa.net"
+            keycloakRealms: "diver"
+            siteUrl: "https://diver.kigawa.net"
+            baseUrl: "https://diver-api.kigawa.net/"
+            imgBaseUrl: "https://diver-image.kigawa.net/"
+
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/${{ matrix.branch.ref }}'
 #    needs: [test]
     env:
       preDockerBuildCmd: ""
       repository: HAL-IAIH-team-F/k8s-hew
-      manifestFile: ./hew-dev/front/front.yml
+      manifestFile: ${{ matrix.branch.manifestFile }}
       dockerFile: Dockerfile
       harborUser: robot$hew
-      name: hew-front
+      name: ${{ matrix.branch.name }}
       dockerArg: |
         keycloakId=${{ secrets.KEYCLOAK_ID }}
         keycloakSecret=${{ secrets.KEYCLOAK_SECRET }}
-        keycloakBaseUrl="https://user.kigawa.net"
+        keycloakBaseUrl=${{ matrix.branch.keycloakBaseUrl }}
         authSecret=${{ secrets.AUTH_SECRET }}
-        keycloakRealms="develop"
-        siteUrl="https://hew-dev.kigawa.net"
-        baseUrl="https://hew-dev-api.kigawa.net/"
-        imgBaseUrl="https://hew-dev-image.kigawa.net/"
+        keycloakRealms=${{ matrix.branch.keycloakRealms }}
+        siteUrl=${{ matrix.branch.siteUrl }}
+        baseUrl=${{ matrix.branch.baseUrl }}
+        imgBaseUrl=${{ matrix.branch.imgBaseUrl }}
       dir: ./
+
     steps:
       # checkout
       - uses: actions/checkout@v4

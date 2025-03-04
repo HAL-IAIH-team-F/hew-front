@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import {NextRequest, NextResponse} from 'next/server'
 import {Env} from "~/env";
 
 export function middleware(request: NextRequest) {
