@@ -8,7 +8,7 @@ import {LoadedClientState} from "~/api/context/ClientState";
 
 export default function SignInFrame(
     {
-      clientState,onSignIn,
+      clientState, onSignIn,
     }: {
       clientState: LoadedClientState,
       onSignIn?: () => void,
