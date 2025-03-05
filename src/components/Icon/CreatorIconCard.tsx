@@ -7,10 +7,12 @@ export default function CreatorIconCard(
     {
       creator_id,
       onDataFetched,
+      isTransition = true,
     }: {
       creator_id: string,
       showView?: boolean,
-      onDataFetched?: (data: { iconUrl: string | null; screenId?: string }) => void
+      onDataFetched?: (data: { iconUrl: string | null; screenId?: string }) => void,
+      isTransition?: boolean
     },
 ) {
   const [_, user_data, __] = useCreatorData(creator_id);
@@ -24,7 +26,9 @@ export default function CreatorIconCard(
   }, [iconUrl, screenId, onDataFetched]);
   return (
       <div
-        onClick={(event) => routes.account.account(user_data?.user_id).transition(event)}
+          onClick={(event) =>
+              isTransition && routes.account.account(user_data?.user_id).transition(event)
+      }
       >
         <IconCard userData={user_data}/>
       </div>

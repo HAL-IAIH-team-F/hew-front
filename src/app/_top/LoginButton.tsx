@@ -5,7 +5,7 @@ import {SignInButton} from "~/auth/SignInButton";
 const LoginButton = () => {
   return (
       <SignInButton style={{
-        padding: '2px 0px',
+        padding: '2px 0',
         margin: "5px",
         fontSize: '1.2em',
         color: 'rgba(255, 255, 255, 0.8)',
@@ -17,7 +17,7 @@ const LoginButton = () => {
         textTransform: 'uppercase',
         transition: 'all 0.3s ease',
         textShadow: '2px 2px 8px rgba(0, 200, 255, 0.5)',
-        width: "200px"
+        width: "250px"
       }}
                     onMouseOver={(e) => {
                       const target = e.target as HTMLButtonElement;
@@ -32,7 +32,7 @@ const LoginButton = () => {
                       target.style.borderColor = 'rgba(255, 255, 255, 0.8)';
                     }}
       >
-        Login
+        Login / Register
       </SignInButton>
   );
 }

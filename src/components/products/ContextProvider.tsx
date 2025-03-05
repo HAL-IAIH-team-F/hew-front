@@ -1,8 +1,8 @@
 "use client"
-import { ProductRes } from '@/(main)/search/sample/ProductRes';
-import {useWindowSize} from '@/_hook/useWindowSize';
+import {ProductRes} from '@/(main)/search/sample/ProductRes';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import { useNotification, usePurchaseYesNo } from '~/notification/notification';
+import {useNotification, usePurchaseYesNo} from '~/notification/notification';
+import useResponsive from "~/hooks/useResponsive";
 
 // Contextの型定義
 interface ProductContextType {
@@ -22,7 +22,7 @@ interface ProductContextType {
 
 // 初期値
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
-export const MOBILE_WIDTH = 1270;
+
 // Providerコンポーネント
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const [productId, setProductId] = useState<string>("none");
@@ -30,42 +30,42 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const toggleProductWindow = () => setisProductOpen((prev) => !prev);
-  const size = useWindowSize()
+
   const [notification, showNotification] = useNotification();
-  const [isModalOpen, setIsModalOpen] = useState(false);  
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [purchaseYesNo, showPurchaseYesNo, purchaseComplete] = usePurchaseYesNo();
+  const responsive = useResponsive().type
 
   useEffect(() => {
-    if (size.width <= MOBILE_WIDTH) {
+    if (responsive != "pc") {
       setIsMobile(true)
-      console.log(size.width)
     } else {
       setIsMobile(false)
     }
-  }, [size])
+  }, [responsive])
 
   return (
-    <ProductContext.Provider
-      value={{
-        isProductOpen,
-        productId,
-        setProductId,
-        toggleProductWindow,
-        isSidebarOpen,
-        setIsSidebarOpen,
-        isMobile,
-        setIsMobile,
-        showNotification,
-        isModalOpen,
-        setIsModalOpen,
-        showPurchaseYesNo,
-      }}
-    >
-      {children}
-      {notification}
-      {purchaseYesNo}
-      {purchaseComplete}
-    </ProductContext.Provider>
+      <ProductContext.Provider
+          value={{
+            isProductOpen,
+            productId,
+            setProductId,
+            toggleProductWindow,
+            isSidebarOpen,
+            setIsSidebarOpen,
+            isMobile,
+            setIsMobile,
+            showNotification,
+            isModalOpen,
+            setIsModalOpen,
+            showPurchaseYesNo,
+          }}
+      >
+        {children}
+        {notification}
+        {purchaseYesNo}
+        {purchaseComplete}
+      </ProductContext.Provider>
   );
 };
 

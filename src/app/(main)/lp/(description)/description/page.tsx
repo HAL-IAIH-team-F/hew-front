@@ -5,7 +5,7 @@ export default function Page(
 ) {
 
 
-    return <div>
+    return <div className={"w-full"}>
         <CloseDescriptionButton/>
     </div>
 }
