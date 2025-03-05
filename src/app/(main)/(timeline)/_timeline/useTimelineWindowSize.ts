@@ -8,7 +8,7 @@ export default function useTimelineWindowSize() {
   const productId = useProductId()
   return useMemo<TimelineWindowSizes>(() => {
     let width = responsive.windowSize.width - 30 - 30
-    let height = responsive.windowSize.height
+    let height = responsive.windowSize.height - yMargin * 2
     let left = 30
     if (responsive.type != "phone") {
       // sidebar
@@ -18,8 +18,27 @@ export default function useTimelineWindowSize() {
       // sidebar main margin
       left += 35
       width -= 35
-
-
+    }
+    if (responsive.type == "phone") {
+      height -= 80
+    }
+    if (responsive.type != "pc") {
+      if (width > 600) width = 600
+      return {
+        responsive: responsive,
+        main: {
+          width: 0,
+          height: height,
+          left: left,
+          top: yMargin
+        },
+        right: {
+          width: width,
+          height: height,
+          left: responsive.windowSize.width - width - 30,
+          top: yMargin
+        }
+      }
     }
     let right: TimelineWindowSize = {
       width: 0,
@@ -27,15 +46,14 @@ export default function useTimelineWindowSize() {
       left: left + width,
       top: responsive.windowSize.height / 2
     }
-    let hideMain = false
     if (productId != undefined) {
       let rightWidth = width * 0.3
-      if (rightWidth < 500) {
+      if (rightWidth <= 500) {
         rightWidth = 500
       }
       right.width = rightWidth - 15
       right.left = responsive.windowSize.width - right.width - 30
-      right.height = responsive.windowSize.height - yMargin * 2
+      right.height = height
       right.top = yMargin
       width -= rightWidth
     }
@@ -44,7 +62,7 @@ export default function useTimelineWindowSize() {
       responsive: responsive,
       main: {
         width: width - 15,
-        height: responsive.windowSize.height - yMargin * 2,
+        height: height,
         left: left,
         top: yMargin
       },

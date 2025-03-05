@@ -94,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
             className={sx(
                 "",
                 responsive == "phone" ?
-                    "h-[80px] w-[700px] px-[30px]" :
+                    "h-[80px] w-[700px] px-[30px] pb-2" :
                     "h-full w-[80px] rounded-full py-[30px] min-h-[700px]"
             )}
         >
