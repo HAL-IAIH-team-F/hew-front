@@ -160,8 +160,9 @@ export default function ProductListingForm() {
                     <StyledInput
                         name="price"
                         type="text"
-                        label="価格"
+                        label="価格(現在商品を販売することはできません。)"
                         className="bg-gray-700/50 border-gray-600 text-gray-100"
+                        value="0"
                     />
                   </div>
 

@@ -2,13 +2,14 @@ import {CreatorRes} from "~/res/reses";
 import CreatorIconCard from "~/Icon/CreatorIconCard";
 
 
-export default function CreatorSelectorItem({
-                                              creator,
-                                              oneSelect,
-                                            }: {
-  creator: CreatorRes;
-  oneSelect: () => void;
-}) {
+export default function CreatorSelectorItem(
+    {
+      creator,
+      oneSelect,
+    }: {
+      creator: CreatorRes;
+      oneSelect: () => void;
+    }) {
   return (
       <div
           className="relative border border-transparent hover:border-gray-500
@@ -16,7 +17,7 @@ export default function CreatorSelectorItem({
                  duration-300 cursor-pointer rounded-lg p-2"
           onClick={oneSelect}
       >
-        <CreatorIconCard creator_id={creator.creator_id}/>
+        <CreatorIconCard creator_id={creator.creator_id} isTransition={false}/>
       </div>
   );
 }
