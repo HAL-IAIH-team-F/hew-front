@@ -83,7 +83,7 @@ export default function Chat({ chat }: { chat: ChatRes }) {
       )}
 
       {/* メッセージ送信フォーム */}
-      <div className="sticky bottom-0 bg-gray-800 p-4 border-t border-gray-700">
+      <div className="sticky bottom-10 pb-10 bg-gray-800 p-1 border-t border-gray-700">
           <ChatSendForm chat={chat} onSend={chat => {
             setMsgs(prevState => [...prevState || [], chat])
           }}/>

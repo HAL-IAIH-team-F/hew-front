@@ -47,10 +47,6 @@ const SearchLayout: React.FC<SearchLayoutProps> = ({ children }) => {
           backdrop-blur-xl bg-gray-900/80 border-b border-gray-800/50
         `}
       >
-        <h1 className="absolute left-7 top-10  text-3xl font-bold mb-8 text-gray-100 flex items-center gap-2">
-          <Search className="w-8 h-8" />
-          検索
-        </h1>
         <div className="max-w-7xl mx-auto px-4 h-28">
           <div className="h-full flex items-center justify-center">
             <div className={`
