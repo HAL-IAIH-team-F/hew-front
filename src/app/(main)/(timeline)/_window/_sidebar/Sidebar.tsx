@@ -66,6 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
   return (
       <div
           className={sx(
+            
               "fixed z-30",
               isSidebarOpen ? "" : "opacity-0",
               responsive == "phone" ? (
@@ -81,7 +82,10 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
               ),
           )}
           style={{
-            transition: "left 0.3s ease, bottom 0.3s ease, height 0.3s ease, backdrop-filter 0.3s ease"
+            transition: "left 0.3s ease, bottom 0.3s ease, height 0.3s ease, backdrop-filter 0.3s ease",
+            boxSizing: "border-box",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
           }}
       >
         <div
@@ -90,6 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
               backdropFilter: 'blur(0px)',
               border: '1px solid rgba(255, 255, 255, 0.1)',
               transition: 'left 0.3s ease, height 0.3s ease, backdrop-filter 0.3s ease',
+
             }}
             className={sx(
                 "",
