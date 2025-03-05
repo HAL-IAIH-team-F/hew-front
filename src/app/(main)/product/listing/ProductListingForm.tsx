@@ -162,6 +162,7 @@ export default function ProductListingForm() {
                         type="text"
                         label="価格"
                         className="bg-gray-700/50 border-gray-600 text-gray-100"
+                        value="0"
                     />
                   </div>
 
