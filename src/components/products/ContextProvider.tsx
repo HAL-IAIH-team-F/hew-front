@@ -34,7 +34,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
   const [notification, showNotification] = useNotification();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [purchaseYesNo, showPurchaseYesNo, purchaseComplete] = usePurchaseYesNo();
-  const responsive = useResponsive()
+  const responsive = useResponsive().type
 
   useEffect(() => {
     if (responsive != "pc") {

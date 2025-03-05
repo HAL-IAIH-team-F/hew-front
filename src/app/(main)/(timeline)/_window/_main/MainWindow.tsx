@@ -20,7 +20,7 @@ const MainWindow: React.FC<{
   const size = useWindowSize()
   const routes = useRoutes()
   const responsive = useResponsive()
-  children = routes.timeline().isCurrent() || (responsive != "pc" && productId != undefined)
+  children = routes.timeline().isCurrent() || (responsive.type != "pc" && productId != undefined)
       ? undefined : children
   const [isRendering, setIsRendering] = useState(children != undefined)
   const [isOpen, setIsOpen] = useState(children != undefined)

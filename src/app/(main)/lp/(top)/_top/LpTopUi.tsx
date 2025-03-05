@@ -16,7 +16,7 @@ function LpTopUi(
     {}: {}
 ) {
   const [isloading, setIsloading] = useState(false);
-  const responsive = useResponsive()
+  const responsive = useResponsive().type
   const clientContext = useClientState();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const checkMarkRef = useRef<HTMLDivElement>(null); // チェックマークの参照

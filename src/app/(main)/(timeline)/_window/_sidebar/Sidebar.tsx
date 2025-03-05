@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
     isSidebarOpen,
     setIsSidebarOpen,
   } = useProductContext();
-  const responsive = useResponsive()
+  const responsive = useResponsive().type
   const user = useUserData();
   const routes = useRoutes();
   const pathname = usePathname()

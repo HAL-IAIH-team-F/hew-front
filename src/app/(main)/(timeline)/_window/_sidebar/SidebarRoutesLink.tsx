@@ -18,7 +18,7 @@ export default function SidebarRoutesLink(
 ) {
   const routes = useRoutes()
   const productId = useProductId()
-  const responsive = useResponsive()
+  const responsive = useResponsive().type
   const isMobile = responsive != "pc";
   const isShown = (!isMobile || productId == undefined) && routeUrl.isCurrent();
   if (isShown) routeUrl = routes.timeline()
