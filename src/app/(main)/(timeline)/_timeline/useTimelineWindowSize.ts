@@ -20,9 +20,12 @@ export default function useTimelineWindowSize() {
       width -= 35
     }
     if (responsive.type == "phone") {
-      height -= 80
+      height -= 50
+      width += 45
+      left -= 15
     }
-    if (responsive.type != "pc") {
+    if (responsive.type != "pc" && productId != undefined) {
+      const rightWidth = width
       if (width > 600) width = 600
       return {
         responsive: responsive,
@@ -33,9 +36,9 @@ export default function useTimelineWindowSize() {
           top: yMargin
         },
         right: {
-          width: width,
+          width: width - 15,
           height: height,
-          left: responsive.windowSize.width - width - 30,
+          left: left + rightWidth - width,
           top: yMargin
         }
       }

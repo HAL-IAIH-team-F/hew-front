@@ -1,7 +1,5 @@
 "use client"
 import React, {ReactNode, useEffect, useState} from 'react';
-import {useProductContext} from '~/products/ContextProvider';
-import {useWindowSize} from '@/_hook/useWindowSize';
 import useProductId from "~/products/useProductId";
 import useRoutes from "~/route/useRoutes";
 import useTimelineWindowSize from "@/(main)/(timeline)/_timeline/useTimelineWindowSize";
@@ -13,11 +11,7 @@ const MainWindow: React.FC<{
 }> = (
     {children}
 ) => {
-  const {
-    isSidebarOpen,
-  } = useProductContext();
   const productId = useProductId()
-  const size = useWindowSize()
   const routes = useRoutes()
   const timelineWindowSize = useTimelineWindowSize()
   children = routes.timeline().isCurrent() || (timelineWindowSize.responsive.type != "pc" && productId != undefined)
@@ -41,25 +35,6 @@ const MainWindow: React.FC<{
     }, 300)
     return () => clearTimeout(timeout)
   }, [children != undefined]);
-
-  // const windowWidth = width
-  // const windowHeight = height
-  //
-  // const calculatedWidth = isSidebarOpen
-  //     ? productId != undefined
-  //         ? windowWidth - 750 // ProductisOpen が true の場合の幅
-  //         : windowWidth - 170 // ProductisOpen が false の場合の幅
-  //     : productId != undefined
-  //         ? windowWidth - 630 // isOpen が false かつ ProductisOpen が true の場合の幅
-  //         : windowWidth - 70; // isOpen が false かつ ProductisOpen が false の場合の幅
-  //
-  // const calculatedLeft = isSidebarOpen
-  //     ? productId != undefined
-  //         ? (windowWidth / 2) - 240 // ProductisOpen が true の場合の位置
-  //         : (windowWidth / 2) + 40 // ProductisOpen が false の場合の位置
-  //     : productId != undefined
-  //         ? (windowWidth / 2) - 300 // isOpen が false かつ ProductisOpen が true の場合の位置
-  //         : windowWidth / 2; // isOpen が false かつ ProductisOpen が false の場合の位置
 
   return (
       isRendering &&
@@ -87,7 +62,7 @@ const MainWindow: React.FC<{
       left 0.3s ease`,
             zIndex: 9,
             display: "flex",
-            minWidth: isOpen ? '550px' : '0',
+            // minWidth: isOpen ? '550px' : '0',
           }
         }
       >
