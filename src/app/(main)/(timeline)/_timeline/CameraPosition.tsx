@@ -15,7 +15,7 @@ export default function CameraPosition(
   const windowSize = useWindowSize()
   const responsive = useResponsive()
   const targetPositionX = useMemo(() => {
-    if (productId == undefined || responsive.type != "pc") return -10
+    if (productId == undefined || responsive.type != "pc") return 0
     else return 50
   }, [productId, windowSize]);
   useEffect(() => {
