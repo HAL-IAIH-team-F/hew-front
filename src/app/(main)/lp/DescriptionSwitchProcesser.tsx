@@ -5,16 +5,13 @@ import {useDescriptionSwitchAnimationState} from "@/(main)/lp/DescriptionSwitchS
 export default function DescriptionSwitchProcesser(
     {}: {},
 ) {
-    const routes = useRoutes()
-    const descriptionState = useDescriptionSwitchAnimationState()
+  const routes = useRoutes()
+  const descriptionState = useDescriptionSwitchAnimationState()
 
-    useEffect(() => {
-        if (descriptionState.state != "requestClose") return
-        routes.lp().transition()
-    }, [descriptionState.state]);
+  useEffect(() => {
+    if (descriptionState.state != "requestClose") return
+    routes.lp().transition()
+  }, [descriptionState.state]);
 
-    return (
-        <>
-        </>
-    )
+  return undefined
 }

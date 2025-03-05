@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
     object-src 'none';
     base-uri 'self';
     form-action 'self';
-    frame-src 'self' ${Env.keycloak.baseUrl} https://www.youtube.com;
+    frame-src 'self' ${Env.keycloak.baseUrl} https://www.youtube.com https://github.com/HAL-IAIH-team-F/terms/blob/main;
     frame-ancestors 'self';
     upgrade-insecure-requests;
 `

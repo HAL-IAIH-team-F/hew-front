@@ -1,5 +1,6 @@
 import { CSSProperties } from 'react';
-const color = 'rgba(42, 42, 44, 0.64)'
+import {Theme} from "@/Theme";
+const color = Theme.bg
 export const styles = (width: number, height: number): Record<string, CSSProperties> => ({
   sidebar: {
     backgroundColor: color,
@@ -135,36 +136,9 @@ export const iconstyles: { [key: string]: CSSProperties } = {
     left: '70px',
   },
 }
-export const selectedRouteStyle: CSSProperties = {
-  position: "absolute",
-  width: "65px", // 幅をアイコンに合わせる
-  height: "calc(12.5% + 24px)", // 高さをパーセンテージから特定のピクセル値を引いた値に調整
-  transition: "top 0.3s ease-in-out", // 背景の滑らかな移動
-  zIndex: -1, // アイコンの下に配置
-  padding: "0px", // padding は負の値が無効なので削除
-  left:"50%",
-  transform: 'translateX(-50%)',
-  
-};
 
 
 
-export const iconContainerStyle = (isHovered: boolean): CSSProperties => ({
-  width: "75px",
-  height: "75px",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  position: "relative",
-  borderRadius: "24px",
-  transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-  overflow: "hidden",
-  pointerEvents: "auto",
-  cursor: "pointer",
-  transform: isHovered ? "scale(1.2)" : "scale(1)",
-  transformOrigin: "center",
-  willChange: "transform",
-});
 
 
 
