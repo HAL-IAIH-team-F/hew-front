@@ -150,18 +150,18 @@ export default function ProductListingForm() {
                   </div>
 
                   {/* カテゴリー & 価格 */}
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="flex gap-6 flex-wrap">
                     <StyledInput
                         name="category"
                         type="text"
                         label="カテゴリー"
-                        className="bg-gray-700/50 border-gray-600 text-gray-100"
+                        className="bg-gray-700/50 border-gray-600 text-gray-100 flex-1 min-w-52"
                     />
                     <StyledInput
                         name="price"
                         type="text"
                         label="価格(現在商品を販売することはできません。)"
-                        className="bg-gray-700/50 border-gray-600 text-gray-100"
+                        className="bg-gray-700/50 border-gray-600 text-gray-100 flex-1 min-w-52"
                         value="0"
                     />
                   </div>
