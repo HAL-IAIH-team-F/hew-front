@@ -94,7 +94,6 @@ function LpTopUi(
                         ) : (
                             <>
                                 <LoginButton/>
-                                <RegisterButton/>
                             </>
                         )}
                     </div>
