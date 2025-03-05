@@ -23,7 +23,7 @@ export default function LoginModalContainer(
           <div
               style={{width: modalState.opt.width ?? "500px", height: modalState.opt.height ?? "500px"}}
               className={sx(
-                  "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-full max-h-full",
+                  "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-full max-h-[90%]",
                   "bg-[#2a2a2ca3] p-2 rounded-3xl"
               )}
           >

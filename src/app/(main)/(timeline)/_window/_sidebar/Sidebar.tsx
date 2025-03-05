@@ -7,12 +7,14 @@ import {useProductContext} from '~/products/ContextProvider';
 import {IoCartOutline} from "react-icons/io5";
 import useRoutes from "~/route/useRoutes";
 import SidebarRoutesLink from "@/(main)/(timeline)/_window/_sidebar/SidebarRoutesLink";
-import {useWindowSize} from "@/_hook/useWindowSize";
-import {iconstyles, selectedRouteStyle, styles} from "@/(main)/(timeline)/_window/_sidebar/Styles";
+import {iconstyles} from "@/(main)/(timeline)/_window/_sidebar/Styles";
 import Image from "../../../../../util/Image";
 import {usePathname} from 'next/navigation';
 import {Handshake, House, ImagePlus} from "lucide-react";
-import { useClientState } from '~/api/context/ClientContextProvider';
+import {useClientState} from '~/api/context/ClientContextProvider';
+import useResponsive from "~/hooks/useResponsive";
+import {Theme} from "@/Theme";
+import {sx} from "../../../../../util/util";
 
 type SidebarProps = {};
 const Sidebar: React.FC<SidebarProps> = ({}) => {
@@ -21,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
     isSidebarOpen,
     setIsSidebarOpen,
   } = useProductContext();
-  const size = useWindowSize()
+  const responsive = useResponsive()
   const user = useUserData();
   const routes = useRoutes();
   const pathname = usePathname()
@@ -49,36 +51,110 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
     if (pathname === "/colablisting") return setActiveIndex(7)
   }, [pathname]);
 
-
+  // console.debug("Sidebar Rendered", responsive,
+  //     responsive == "phone" ? (
+  //         "w-full overflow-x-scroll left-0 " +
+  //         (isSidebarOpen ?
+  //             "bottom-0" :
+  //             "bottom-[-170px] backdrop-blur-lg")
+  //     ) : (
+  //         "py-[30px] pl-[30px] h-full top-0 overflow-y-scroll " +
+  //         (isSidebarOpen ?
+  //             "left-0" :
+  //             "left-[-170px] backdrop-blur-lg")
+  //     ))
   return (
-      <div>
+      <div
+          className={sx(
+              "fixed z-30",
+              responsive == "phone" ? (
+                  "w-full overflow-x-scroll left-0 " +
+                  (isSidebarOpen ?
+                      "bottom-0" :
+                      "bottom-[-170px] backdrop-blur-lg")
+              ) : (
+                  "py-[30px] pl-[30px] h-full top-0 overflow-y-scroll " +
+                  (isSidebarOpen ?
+                      "left-0" :
+                      "left-[-170px] backdrop-blur-lg")
+              ),
+          )}
+          style={{
+            transition: "left 0.3s ease, height 0.3s ease, backdrop-filter 0.3s ease"
+          }}
+      >
         <div
-            style={isSidebarOpen ? styles(size.width, size.height).sidebar : styles(size.width, size.height).collapsedSidebar}>
+            style={{
+              backgroundColor: Theme.bg,
+              backdropFilter: 'blur(0px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              transition: 'left 0.3s ease, height 0.3s ease, backdrop-filter 0.3s ease',
+            }}
+            className={sx(
+                "",
+                responsive == "phone" ?
+                    "h-[80px] w-[700px] px-[30px]" :
+                    "h-full w-[80px] rounded-full py-[30px] min-h-[700px]"
+            )}
+        >
 
-          <div style={{height: "100%", boxSizing: "border-box", position: "relative"}}>
+          <div style={{height: "100%", boxSizing: "border-box", position: "relative"}}
+               className={sx(
+                   "flex",
+                   responsive == "phone" ?
+                       "flex-row" :
+                       "flex-col"
+               )}
+          >
             {/* 背景のアニメーションを適用 */}
             {activeIndex !== null && (
 
-                <div style={{...selectedRouteStyle, boxSizing: "border-box", top: `calc(${activeIndex * 12.5}%)`}}>
+                <div style={{
+                  position: "absolute",
+                  transition: "top 0.3s ease-in-out, left 0.3s ease-in-out",
+                  zIndex: -1, // アイコンの下に配置
+                  boxSizing: "border-box", ...(
+                      responsive == "phone" ? {
+                        left: `${activeIndex * 12.5}%`,
+                        top: "50%",
+                        transform: 'translateY(-50%)',
+                        height: "65px",
+                        width: "calc(12.5% + 24px)",
+                      } : {
+                        top: `${activeIndex * 12.5}%`,
+                        left: "50%",
+                        transform: 'translateX(-50%)',
+                        width: "65px",
+                        height: "calc(12.5% + 24px)",
+                      }
+                  )
+                }}>
                   <div style={{
-                    height: "100%",
-                    marginTop: "-12px",
-                    padding: "12px 0",
                     backgroundColor: "rgb(255, 255, 255,0.4)",
                     borderRadius: '60px',
-                    border: '1px solid rgb(255, 255, 255,0.4)'
-                  }}>
-
-                  </div>
+                    border: '1px solid rgb(255, 255, 255,0.4)', ...(
+                        responsive == "phone" ? {
+                          width: "100%",
+                          height: "100%",
+                          marginLeft: "-12px",
+                          padding: "0 12px",
+                        } : {
+                          height: "100%",
+                          width: "100%",
+                          marginTop: "-12px",
+                          padding: "12px 0",
+                        }
+                    )
+                  }}/>
                 </div>
             )}
 
             <SidebarRoutesLink routeUrl={routes.timeline()} setTransitions={setTransitions}><House
                 style={iconstyles.icon}/></SidebarRoutesLink>
             <SidebarRoutesLink routeUrl={routes.account.account()}
-                   setTransitions={setTransitions}>
+                               setTransitions={setTransitions}>
               {clientState.state !== "registered" ? (
-                  <FaUserSlash className="text-white" style={iconstyles.userIcon} />
+                  <FaUserSlash className="text-white" style={iconstyles.userIcon}/>
 
               ) : user && user.icon ? (
                   <Image

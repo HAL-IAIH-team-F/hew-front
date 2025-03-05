@@ -18,14 +18,14 @@ export default function SignInFrame(
   const [url, setUrl] = useState<string>()
 
   useEffect(() => {
-    console.debug("signInFrame start", clientState, ref, url)
+    // console.debug("signInFrame start", clientState, ref, url)
     if (ref.current == undefined) return
     if (ref.current.contentWindow == undefined) return;
     const nonce = new Nonce(window)
     const authenticationImplicitFlowUrl = new AuthenticationImplicitFlowUrl(nonce, "login", "iframe")
     setUrl(authenticationImplicitFlowUrl.url().toString())
     IdTokenUtl.receiveMessage(ref.current.contentWindow, authenticationImplicitFlowUrl, () => {
-      console.debug("idTokenLoader finish")
+      // console.debug("idTokenLoader finish")
       setUrl(undefined)
       onSignIn?.()
     }, clientState.oidcContext, clientState.setIdToken)
