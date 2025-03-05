@@ -1,75 +1,100 @@
 "use client"
 import React, {ReactNode, useEffect, useState} from 'react';
-import {inAppPageStyle, pageWindowStyle} from '../_sidebar/Styles';
-import {MOBILE_WIDTH, useProductContext} from '~/products/ContextProvider';
+import {useProductContext} from '~/products/ContextProvider';
 import {useWindowSize} from '@/_hook/useWindowSize';
 import useProductId from "~/products/useProductId";
 import useRoutes from "~/route/useRoutes";
-import { X } from "lucide-react";
+import useTimelineWindowSize from "@/(main)/(timeline)/_timeline/useTimelineWindowSize";
+import MainWindowBg from "@/(main)/(timeline)/_window/_main/MainWindowBg";
+import {Theme} from "@/Theme";
 
 const MainWindow: React.FC<{
-    children?: ReactNode
+  children?: ReactNode
 }> = (
     {children}
 ) => {
-    const {
-        isSidebarOpen,
-    } = useProductContext();
-    const productId = useProductId()
-    const size = useWindowSize()
-    const routes = useRoutes()
-    children = routes.timeline().isCurrent() || (size.width < MOBILE_WIDTH && productId != undefined)
-        ? undefined : children
-    const [isRendering, setIsRendering] = useState(children != undefined)
-    const [isOpen, setIsOpen] = useState(children != undefined)
-    const windowSize = useWindowSize();
-    
-    const closeHandler = () => {
-        routes.timeline().transition()
+  const {
+    isSidebarOpen,
+  } = useProductContext();
+  const productId = useProductId()
+  const size = useWindowSize()
+  const routes = useRoutes()
+  const timelineWindowSize = useTimelineWindowSize()
+  children = routes.timeline().isCurrent() || (timelineWindowSize.responsive.type != "pc" && productId != undefined)
+      ? undefined : children
+  const [isRendering, setIsRendering] = useState(children != undefined)
+  const [isOpen, setIsOpen] = useState(children != undefined)
+
+
+  useEffect(() => {
+    const isNextRendering = children != undefined
+    if (isNextRendering) {
+      setIsRendering(true)
+      const timeout = setTimeout(() => {
+        setIsOpen(true)
+      }, 0)
+      return () => clearTimeout(timeout)
     }
+    setIsOpen(false)
+    const timeout = setTimeout(() => {
+      setIsRendering(false)
+    }, 300)
+    return () => clearTimeout(timeout)
+  }, [children != undefined]);
 
-    useEffect(() => {
-        const isNextRendering = children != undefined
-        if (isNextRendering) {
-            setIsRendering(true)
-            const timeout = setTimeout(() => {
-                setIsOpen(true)
-            }, 0)
-            return () => clearTimeout(timeout)
+  // const windowWidth = width
+  // const windowHeight = height
+  //
+  // const calculatedWidth = isSidebarOpen
+  //     ? productId != undefined
+  //         ? windowWidth - 750 // ProductisOpen が true の場合の幅
+  //         : windowWidth - 170 // ProductisOpen が false の場合の幅
+  //     : productId != undefined
+  //         ? windowWidth - 630 // isOpen が false かつ ProductisOpen が true の場合の幅
+  //         : windowWidth - 70; // isOpen が false かつ ProductisOpen が false の場合の幅
+  //
+  // const calculatedLeft = isSidebarOpen
+  //     ? productId != undefined
+  //         ? (windowWidth / 2) - 240 // ProductisOpen が true の場合の位置
+  //         : (windowWidth / 2) + 40 // ProductisOpen が false の場合の位置
+  //     : productId != undefined
+  //         ? (windowWidth / 2) - 300 // isOpen が false かつ ProductisOpen が true の場合の位置
+  //         : windowWidth / 2; // isOpen が false かつ ProductisOpen が false の場合の位置
+
+  return (
+      isRendering &&
+      <div
+        style={
+          // pageWindowStyle(isSidebarOpen, productId != undefined, isOpen, size.width, size.height)
+          {
+            backgroundColor: Theme.bg,
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            width: `${timelineWindowSize.main.width}px`,
+            height: `${timelineWindowSize.main.height}px`,
+            position: 'fixed',
+            left: `${timelineWindowSize.main.left}px`,
+            top: `${timelineWindowSize.main.top}px`,
+            transform: isOpen
+                ? 'translateX(0)'
+                : 'translateX(-50%)',
+            borderRadius: '28px',
+            opacity: isOpen ? 1 : 0,
+            transition: `
+      opacity 0.3s ease-in-out, 
+      transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+      width 0.3s ease, 
+      left 0.3s ease`,
+            zIndex: 9,
+            display: "flex",
+            minWidth: isOpen ? '550px' : '0',
+          }
         }
-        setIsOpen(false)
-        const timeout = setTimeout(() => {
-            setIsRendering(false)
-        }, 300)
-        return () => clearTimeout(timeout)
-    }, [children != undefined]);
-    
-    return (
-        isRendering &&
-        <div
-            style={pageWindowStyle(isSidebarOpen, productId != undefined, isOpen, size.width, size.height)}
-            >
-                
-            <div style={inAppPageStyle(children != undefined)} className="relative">
-                <button
-                      onClick={closeHandler}
-                      className="group absolute top-3 right-3 p-2 rounded-full
-                                bg-zinc-900/40 backdrop-blur-sm
-                                border border-zinc-300/50
-                                transition-all duration-300 ease-in-out
-                                hover:scale-110 hover:bg-zinc-800/60
-                                hover:border-zinc-600 z-[9999]"
-                    >
-                    <X className="w-5 h-5 text-zinc-300 transition-colors duration-300 
-                                  group-hover:text-white" />
-                </button>
-                <div style={{ display: "block" }} className={"h-full"}>
-                    {children}
-                </div>
-            </div>
-        </div>
+      >
+        <MainWindowBg>{children}</MainWindowBg>
+      </div>
 
-    );
+  );
 };
 
 export default MainWindow;
