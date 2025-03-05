@@ -48,25 +48,26 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
     if (pathname === "/message") return setActiveIndex(4)
     if (pathname === "/product/listing") return setActiveIndex(5)
     if (pathname === "/cart") return setActiveIndex(6)
-    if (pathname === "/colablisting") return setActiveIndex(7)
+    if (pathname.startsWith("/colab")) return setActiveIndex(7)
   }, [pathname]);
 
-  // console.debug("Sidebar Rendered", responsive,
-  //     responsive == "phone" ? (
-  //         "w-full overflow-x-scroll left-0 " +
-  //         (isSidebarOpen ?
-  //             "bottom-0" :
-  //             "bottom-[-170px] backdrop-blur-lg")
-  //     ) : (
-  //         "py-[30px] pl-[30px] h-full top-0 overflow-y-scroll " +
-  //         (isSidebarOpen ?
-  //             "left-0" :
-  //             "left-[-170px] backdrop-blur-lg")
-  //     ))
+  console.debug("Sidebar Rendered", responsive,
+      responsive == "phone" ? (
+          "w-full overflow-x-scroll left-0 " +
+          (isSidebarOpen ?
+              "bottom-0" :
+              "bottom-[-170px] backdrop-blur-lg")
+      ) : (
+          "py-[30px] pl-[30px] h-full top-0 overflow-y-scroll " +
+          (isSidebarOpen ?
+              "left-0" :
+              "left-[-170px] backdrop-blur-lg")
+      ))
   return (
       <div
           className={sx(
               "fixed z-30",
+              isSidebarOpen ? "" : "opacity-0",
               responsive == "phone" ? (
                   "w-full overflow-x-scroll left-0 " +
                   (isSidebarOpen ?
@@ -80,7 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
               ),
           )}
           style={{
-            transition: "left 0.3s ease, height 0.3s ease, backdrop-filter 0.3s ease"
+            transition: "left 0.3s ease, bottom 0.3s ease, height 0.3s ease, backdrop-filter 0.3s ease"
           }}
       >
         <div
