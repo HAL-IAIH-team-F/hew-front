@@ -104,7 +104,7 @@ export default function ProductListingForm() {
       )
   }
   return (
-      <div className="flex-1 flex-grow overflow-y-auto transition-all duration-300 ease-out bg-gray-900">
+      <div className="flex-1 flex-grow overflow-y-auto transition-all duration-300 ease-out bg-gray-900 h-full">
         <div className="min-h-screen bg-gray-900 h-full">
           <StyledForm
               action={handleSubmit}
