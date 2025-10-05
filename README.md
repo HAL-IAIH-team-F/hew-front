@@ -44,3 +44,9 @@
     * fixディレクトリ
         * 修正に関する追加
 2. `PullRequest`を作成し、レビューを依頼する
+
+
+## Links
+
+* [LP](https://diver.kigawa.net/lp)
+* [Top](https://diver.kigawa.net/)
